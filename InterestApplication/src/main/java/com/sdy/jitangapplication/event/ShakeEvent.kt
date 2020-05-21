@@ -29,13 +29,18 @@ class UpdateFindByTagEvent()
 class UpdateFindByTagListEvent(var position: Int = -1, var accid: String = "")
 
 //更新附近的人筛选参数
-class UpdateNearPeopleParamsEvent(var params: HashMap<String, Int>, var changed: Boolean = false)
+class UpdateNearPeopleParamsEvent()
+
+
+//更新附近的人筛选参数
+class UpdateSameCityVipEvent()
+
+//更新头部横幅
+class UpdateShowTopAlert()
 
 //更新今日意向
 class UpdateTodayWantEvent(val todayWantBean: CheckBean?)
 
-//更新首页的糖果数
-class UpdateIndexCandyEvent(var candyCount: Int)
 
 
 

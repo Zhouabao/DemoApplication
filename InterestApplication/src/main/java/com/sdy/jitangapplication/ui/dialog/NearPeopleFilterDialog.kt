@@ -152,7 +152,7 @@ class NearPeopleFilterDialog(var context1: Context) :
             rbSexAll.check(R.id.switchSexAll)
 
             params.clear()
-            EventBus.getDefault().post(UpdateNearPeopleParamsEvent(params))
+            EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
             UserManager.clearNearFilterParams()
             dismiss()
         }
@@ -179,7 +179,7 @@ class NearPeopleFilterDialog(var context1: Context) :
             }
 
             UserManager.saveNearFilterParams(params)
-            EventBus.getDefault().post(UpdateNearPeopleParamsEvent(params))
+            EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
             dismiss()
         }
 

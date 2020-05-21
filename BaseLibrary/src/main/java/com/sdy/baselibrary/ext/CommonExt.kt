@@ -86,7 +86,7 @@ fun Button.enable(et: EditText, method: () -> Boolean) {
 /*
     多状态视图开始加载
  */
-//TODO: 多状态视图加载内容
+//: 多状态视图加载内容
 fun MultiStateView.startLoading() {
 //    viewState = MultiStateView.VIEW_STATE_LOADING
 //    val loadingView = getView(MultiStateView.VIEW_STATE_LOADING)

@@ -3,9 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputFilter
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
@@ -57,6 +55,7 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         userGender.setOnClickListener(this)
         userBirth.setOnClickListener(this)
         nextBtn.setOnClickListener(this)
+        chooseContactBtn.setOnClickListener(this)
 
         userNickName.setFilters(arrayOf<InputFilter>(InputFilter { source, start, end, dest, dstart, dend ->
             if (source.equals(" ") || source.toString().contentEquals("\n")) {
@@ -65,20 +64,15 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 null
             }
         }))
-        userNickName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                checkConfirmEnable()
-            }
+        userNickName.addTextChangedListener {
+            checkConfirmEnable()
+        }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-        })
         userSign.addTextChangedListener {
+            checkConfirmEnable()
+        }
+
+        contactWayEt.addTextChangedListener {
             checkConfirmEnable()
         }
 
@@ -112,19 +106,25 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 && userBirth.text.isNotEmpty()
                 && userNickName.text.isNotEmpty()
                 && userSign.text.isNotEmpty()
+                && contactWay != -1
+                && contactWayEt.text.isNotEmpty()
     }
 
     override fun onLazyClick(v: View) {
         when (v.id) {
-            R.id.userGender -> {
+            R.id.userGender -> {//性别选择
                 KeyboardUtils.hideSoftInput(this)
                 showGenderPicker()
             }
-            R.id.userBirth -> {
+            R.id.userBirth -> {//选择生日
                 KeyboardUtils.hideSoftInput(this)
                 showBirthdayPicker()
             }
-            R.id.nextBtn -> {
+            R.id.chooseContactBtn -> {//选择联系方式
+                KeyboardUtils.hideSoftInput(this)
+                showContactPicker()
+            }
+            R.id.nextBtn -> {//下一步
                 if (!alertGender) {
                     CommonAlertDialog.Builder(this)
                         .setTitle("提示")
@@ -134,6 +134,8 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                             override fun onClick(dialog: Dialog) {
                                 params["nickname"] = userNickName.text.trim().toString()
                                 params["sign"] = userSign.text.trim().toString()
+                                params["contact_way"] = contactWay
+                                params["contact_way_content"] = contactWayEt.text.trim().toString()
                                 mPresenter.setProfileCandy(1, params)
                                 dialog.dismiss()
                             }
@@ -151,6 +153,8 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 } else {
                     params["nickname"] = userNickName.text.trim().toString()
                     params["sign"] = userSign.text.trim().toString()
+                    params["contact_way"] = contactWay
+                    params["contact_way_content"] = contactWayEt.text.trim().toString()
                     mPresenter.setProfileCandy(1, params)
                 }
 
@@ -219,12 +223,49 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         pvOptions.show()
     }
 
+    /**
+     * 展示联系方式
+     */
+    private var contactWay = 1 //0手机号   1微信  2QQ
+    private val contactWays by lazy { mutableListOf("手机号", "微信", "QQ") }
+    private val contactWaysIcon by lazy {
+        mutableListOf(
+            R.drawable.icon_phone_reg,
+            R.drawable.icon_wechat_reg,
+            R.drawable.icon_qq_reg
+        )
+    }
+
+    private fun showContactPicker() {
+        //条件选择器
+        val pvOptions = OptionsPickerBuilder(this,
+            OnOptionsSelectListener { options1, options2, options3, v ->
+                chooseContactBtn.setImageResource(contactWaysIcon[options1])
+                contactWay = options1
+                checkConfirmEnable()
+            })
+            .setSubmitText("确定")
+            .setTitleText("联系方式")
+            .setTitleColor(resources.getColor(R.color.colorBlack))
+            .setTitleSize(16)
+            .setDividerColor(resources.getColor(R.color.colorDivider))
+            .setContentTextSize(20)
+            .setDecorView(window.decorView.findViewById(android.R.id.content) as ViewGroup)
+            .setSubmitColor(resources.getColor(R.color.colorBlueSky1))
+            .build<String>()
+
+        pvOptions.setPicker(contactWays)
+        pvOptions.setSelectOptions(1)
+        pvOptions.show()
+    }
+
     override fun onUploadUserInfoResult(
         uploadResult: Boolean,
         msg: String?,
         moreMatchBean: MoreMatchBean?
     ) {
         if (uploadResult) {
+            UserManager.saveForceOpenVip(moreMatchBean?.force_vip ?: false)
             SPUtils.getInstance(Constants.SPNAME).put("gender", params["gender"] as Int)
             startActivity<UserAvatorActivity>()
         } else {

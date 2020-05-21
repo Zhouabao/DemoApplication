@@ -1,139 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:background="@drawable/gradient_vip_charge_bg_0dp"
-        tools:context=".ui.activity.LoginActivity">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.LoginActivity">
+
+    <VideoView
+        android:id="@+id/videoPreview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageView
-            android:id="@+id/v1"
-            android:layout_marginTop="150dp"
-            android:src="@drawable/icon_logo_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-            android:id="@+id/v2"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/icon_logo_name_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/v1"/>
+        android:id="@+id/v1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="176dp"
+        android:src="@drawable/icon_logo_login"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-            android:id="@+id/moreInfoTitle"
-            android:textColor="@color/colorWhite"
-            android:layout_marginTop="15dp"
-            android:text="遇见你就是最好的礼物"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/v2"/>
-
-    <RelativeLayout
-            android:id="@+id/wechatLoginBtn"
-            android:background="@drawable/shape_rectangle_gray_white_15dp"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@id/phoneLoginBtn"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            >
-
-        <TextView
-                android:textSize="16sp"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:drawablePadding="10dp"
-                android:textColor="@color/colorGreen"
-                android:text="微信登录"
-                android:textStyle="bold"
-                android:drawableLeft="@drawable/icon_wechat_green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </RelativeLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="积糖"
+        android:textColor="#ffffffff"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/v1"
+        app:layout_constraintLeft_toRightOf="@id/v1"
+        app:layout_constraintTop_toTopOf="@id/v1" />
 
 
     <TextView
-            android:id="@+id/phoneLoginBtn"
-            android:layout_marginBottom="20dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:gravity="center"
-            android:text="手机号码登录"
-            android:textStyle="bold"
-            android:textColor="#fffcfcfc"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/t2"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="遇见你就是最好的礼物"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="@id/v1"
+        app:layout_constraintTop_toBottomOf="@id/v1" />
+
+    <ImageView
+        android:id="@+id/wechatLoginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/icon_login_wechat"
+        app:layout_constraintBottom_toTopOf="@id/phoneLoginBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <TextView
+        android:id="@+id/phoneLoginBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="手机号码登录"
+        android:textColor="#fffcfcfc"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/t2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
-            android:id="@+id/t2"
-            android:orientation="horizontal"
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="登录即代表同意 "
+            android:textColor="#ffffffff"
+            android:textSize="12sp" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:text="登录即代表同意 "
-                android:textColor="#ffffffff"
-                android:textSize="12sp"
-                />
+            android:id="@+id/userAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="积糖用户协议"
+            android:textColor="#ffffffff"
+            android:textSize="12sp" />
 
         <TextView
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/userAgreement"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="积糖用户协议"
-                android:textColor="#ffffffff"
-                android:textSize="12sp"
-                />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text=" 及 "
+            android:textColor="#ffffffff"
+            android:textSize="12sp" />
 
         <TextView
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=" 及 "
-                android:textColor="#ffffffff"
-                android:textSize="12sp"
-                />
-
-        <TextView
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/privacyPolicy"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="隐私条款 "
-                android:textColor="#ffffffff"
-                android:textSize="12sp"
-                />
+            android:id="@+id/privacyPolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="隐私条款 "
+            android:textColor="#ffffffff"
+            android:textSize="12sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

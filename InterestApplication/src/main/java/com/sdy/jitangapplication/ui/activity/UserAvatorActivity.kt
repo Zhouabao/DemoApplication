@@ -16,6 +16,8 @@ import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -280,6 +282,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                                     )
                                     userAvator.isVisible = true
                                     userAvatorTip.setImageResource(R.drawable.icon_bg_transparent_avator_change_bg)
+
                                     val key =
                                         "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(
                                             Constants.SPNAME
@@ -377,6 +380,25 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     }
 
 
+    private fun showAplhaAnimation(isShow: Boolean) {
+
+        YoYo.with(
+            if (isShow) {
+                Techniques.FadeInUp
+            } else {
+                Techniques.FadeOutDown
+            }
+        )
+            .duration(1000L)
+            .repeat(0)
+            .playOn(userPhotosRv)
+
+//        val objctAnimator = ObjectAnimator.ofFloat(userPhotosRv, "alpha", from, to)
+//        objctAnimator.duration = 800L
+//        objctAnimator.start()
+    }
+
+
     /**
      * 上传照片
      * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
@@ -449,7 +471,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         btnNextStep.isEnabled = checkResult
         avatorNotify.text = "$msg"
         startAnimation(true)
-
+        if (checkResult)
+            showAplhaAnimation(true)
     }
 
 

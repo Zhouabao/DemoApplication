@@ -13,6 +13,8 @@ import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.IndexRecommendBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_privacy.*
@@ -25,9 +27,8 @@ import kotlinx.android.synthetic.main.dialog_privacy.*
  */
 class PrivacyDialog(
     val context1: Context,
-    var completeGuide: Boolean = false,
-    var showPull: Boolean = true,
-    val todayWantDialog: TodayWantDialog
+    val nearBean: NearBean?,
+    val indexRecommends: MutableList<IndexRecommendBean>
 ) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,9 +131,21 @@ class PrivacyDialog(
 
     override fun dismiss() {
         super.dismiss()
-        if (showPull) {
-            todayWantDialog.show()
+        //否则直接判断有没有显示过引导页面
+        //是否今日缘分
+        //是否今日意向
+        //资料完善度
+        if (nearBean != null && nearBean?.iscompleteguide != true) {
+            GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
+        } else if (!indexRecommends.isNullOrEmpty()) {
+            TodayFateDialog(context1, nearBean, indexRecommends).show()
+        } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
+            TodayWantDialog(context1, nearBean).show()
+        } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            CompleteUserCenterDialog(context1).show()
         }
+
     }
 
 

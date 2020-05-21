@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.ui.adapter.TodayWantAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_today_want.*
@@ -27,7 +28,10 @@ import org.greenrobot.eventbus.EventBus
  *    desc   :选择今日意向
  *    version: 1.0
  */
-class TodayWantDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class TodayWantDialog(
+    val myContext: Context,
+    val nearBean: NearBean?
+) : Dialog(myContext, R.style.MyDialog) {
 
     public var checkWantId = -1
 
@@ -156,13 +160,12 @@ class TodayWantDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     }
 
 
-    override fun show() {
-        super.show()
+    override fun dismiss() {
+        super.dismiss()
+        if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            CompleteUserCenterDialog(myContext).show()
+        }
     }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
 
 }

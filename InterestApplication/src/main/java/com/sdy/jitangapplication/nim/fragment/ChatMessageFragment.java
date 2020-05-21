@@ -75,6 +75,7 @@ import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 import com.sdy.jitangapplication.nim.session.ChatChooseGiftAction;
+import com.sdy.jitangapplication.nim.session.ChatContactAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
@@ -557,6 +558,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         actions.add(new ChatPickImageAction()); //图片
         actions.add(new ChatTakeImageAction()); //拍照
         actions.add(new MyLocationAction()); //位置
+        actions.add(new ChatContactAction()); //联系方式
         actions.add(new ChatChooseGiftAction()); //礼物
 //        actions.add(new PhoneCallAction()); //语音通话
 

@@ -195,6 +195,7 @@
                             app:layout_constraintTop_toBottomOf="@id/userGender" />
 
                         <TextView
+                            android:id="@+id/t3"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:alpha="0.5"
@@ -223,6 +224,43 @@
                             tools:text="1993/07/15" />
 
                         <View
+                            android:id="@+id/dash3"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:background="@color/colorDivider"
+                            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+                            app:layout_constraintRight_toRightOf="@id/userNickName"
+                            app:layout_constraintTop_toBottomOf="@id/userBirth" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:alpha="0.5"
+                            android:gravity="center_vertical"
+                            android:text="联系方式"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@id/userContact"
+                            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+                            app:layout_constraintRight_toRightOf="@id/moreInfoTitle"
+                            app:layout_constraintTop_toTopOf="@id/userContact" />
+
+
+                        <TextView
+                            android:id="@+id/userContact"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:drawableRight="@drawable/icon_more_right"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+                            app:layout_constraintRight_toRightOf="@id/userNickName"
+                            app:layout_constraintTop_toBottomOf="@id/dash3"
+                            android:text="点击变更或隐藏" />
+
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
                             android:background="@color/colorDivider"
@@ -244,7 +282,7 @@
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/userBirth" />
+                            app:layout_constraintTop_toBottomOf="@id/userContact" />
 
                         <include
                             android:id="@+id/userScoreAboutMe"
@@ -345,6 +383,7 @@
                     layout="@layout/layout_add_score"
                     android:layout_width="wrap_content"
                     android:layout_height="22dp"
+                    android:visibility="gone"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="90dp"
@@ -376,7 +415,7 @@
                     android:text="0%"
                     android:textColor="@color/colorOrange"
                     android:textSize="12sp"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"/>
 
             </RelativeLayout>
 

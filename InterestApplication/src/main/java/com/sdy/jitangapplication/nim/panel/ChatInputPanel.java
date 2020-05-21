@@ -1041,14 +1041,14 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         GridView gridView = view.findViewById(R.id.viewPager);
         adapter = new ChatActionsGridviewAdapter(view.getContext(), actions);
         gridView.setAdapter(adapter);
-        gridView.setNumColumns(4);
+        gridView.setNumColumns(5);
         gridView.setSelector(R.color.transparent);
         gridView.setHorizontalSpacing(0);
         gridView.setVerticalSpacing(0);
         gridView.setGravity(Gravity.CENTER);
         //图片、拍照、位置
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
-            if (disable && position != 3) {
+            if (disable && position != 3 && position != 4) {
                 CommonFunction.INSTANCE.toast("打招呼仅限语音,文本,表情");
                 return;
             }

@@ -15,11 +15,11 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -67,9 +67,9 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         switchOnLine.isVisible = UserManager.isUserVip()
         switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
-        switchSameCity.isVisible = UserManager.isUserVip()
+//        switchSameCity.isVisible = UserManager.isUserVip()
         btnGoVip.isVisible = !UserManager.isUserVip()
-        switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
+//        switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
 //        btnGoVip.isVisible = false
 //        switchSameCity.isVisible = true
 
@@ -98,7 +98,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
                 CommonFunction.toast("认证正在审核中，请耐心等待哦~")
             } else {
-                context1.startActivity<IDVerifyActivity>()
+                IDVerifyActivity.startActivity(context1)
             }
         }
         seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
@@ -128,12 +128,12 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                     sp.put("filter_gender", 3)
                 }
             }
-            if (switchSameCity.isChecked) {
-                sp.put("local_only", 2)
-                sp.put("city_code", UserManager.getCityCode())
-            } else {
-                sp.put("local_only", 1)
-            }
+//            if (switchSameCity.isChecked) {
+//                sp.put("local_only", 2)
+//                sp.put("city_code", UserManager.getCityCode())
+//            } else {
+//                sp.put("local_only", 1)
+//            }
             if (UserManager.isUserVerify() == 1)
                 if (switchShowVerify.isChecked) {
                     sp.put("audit_only", 2)
@@ -148,6 +148,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 sp.put("online_only", 1)
             }
             EventBus.getDefault().post(RefreshEvent(true))
+            EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
             dismiss()
         }
 

@@ -88,21 +88,5 @@ class MainPresenter : BasePresenter<MainView>() {
     }
 
 
-    /**
-     * 今日推荐
-     */
-    fun todayRecommend() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .todayRecommend(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
-                    mView.onTodayRecommend(t.data)
-                }
 
-                override fun onError(e: Throwable?) {
-
-                }
-
-            })
-    }
 }

@@ -21,6 +21,7 @@
 
     <!-- session -->
     <string name="input_panel_gift">礼物</string>
+    <string name="input_contact_panel">联系方式</string>
     <string name="input_panel_photo">图片</string>
     <string name="input_panel_take_photo">拍照</string>
     <string name="input_panel_video">视频</string>

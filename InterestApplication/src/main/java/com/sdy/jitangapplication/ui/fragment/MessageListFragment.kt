@@ -44,10 +44,7 @@ import com.sdy.jitangapplication.model.ApproveBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
-import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
-import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
+import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
 import com.sdy.jitangapplication.ui.activity.*
@@ -485,7 +482,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 while (iterator.hasNext()) {
                     val message = iterator.next()
                     val isSend = message.direct == MsgDirectionEnum.Out
-                    if (message.attachment is SendCustomTipAttachment && (message.attachment as SendCustomTipAttachment).ifSendUserShow != isSend) {
+                    if ((message.attachment is SendCustomTipAttachment && (message.attachment as SendCustomTipAttachment).ifSendUserShow != isSend)
+                        || (message.attachment is ContactAttachment && message.direct == MsgDirectionEnum.Out)
+                    ) {
                         NIMClient.getService(MsgService::class.java).deleteChattingHistory(message)
                     }
                 }

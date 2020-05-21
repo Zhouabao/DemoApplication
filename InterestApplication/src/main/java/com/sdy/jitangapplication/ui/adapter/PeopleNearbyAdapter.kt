@@ -1,10 +1,11 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
@@ -13,7 +14,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
 
@@ -27,75 +27,88 @@ class PeopleNearbyAdapter :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
+        val params = itemView.layoutParams as RecyclerView.LayoutParams
+        params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+        params.height = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+        if (helper.layoutPosition == 0)
+            params.topMargin = SizeUtils.dp2px(15F)
+        params.bottomMargin = SizeUtils.dp2px(10F)
+        itemView.layoutParams = params
 
-        GlideUtil.loadCircleImg(mContext, item.avatar, itemView.nearPeopleAvator)
-        itemView.nearPeopleName.text = item.nickname
-        itemView.nearPeopleSign.text = item.sign
-        itemView.nearPeopleVerify.isVisible = item.isfaced
-        itemView.nearPeopleVip.isVisible = item.isvip
+        GlideUtil.loadRoundImgCenterCrop(
+            mContext,
+            item.avatar,
+            itemView.userAvator,
+            SizeUtils.dp2px(10F)
+        )
+
+        SpanUtils.with(itemView.userNameAge)
+            .append(item.nickname)
+            .setFontSize(19, true)
+            .append(" ${item.age}岁")
+            .create()
+        itemView.userVerify.isVisible = item.isfaced == 1
+        itemView.userVip.isVisible = item.isvip
         if (item.intention_title.isNullOrEmpty()) {
-            itemView.nearPeopleIntention.isVisible = false
-            itemView.nearPeopleAvator.borderWidth = 0
+            itemView.userIntention.isVisible = false
         } else {
-            itemView.nearPeopleIntention.isVisible = true
-            itemView.nearPeopleIntention1.text = item.intention_title
-            itemView.nearPeopleAvator.borderWidth = SizeUtils.dp2px(1F)
+            itemView.userIntention.isVisible = true
+            itemView.userIntentionContent.text = item.intention_title
+//            GlideUtil.loadCircleImg(mContext, item.intention_icon, itemView.userIntentionIcon)
         }
 
-        itemView.nearPeopleDistance.text =
+        itemView.userOnline.text =
             "${item.distance}${if (!item.online_time.isNullOrEmpty()) {
-                "·${item.online_time}"
+                ",\t${item.online_time}"
             } else {
                 ""
             }}"
-        itemView.nearPeopleGender.text = "${item.age}岁"
-        if (item.gender == 1) {
-            itemView.nearPeopleGender.setCompoundDrawablesWithIntrinsicBounds(
-                mContext.resources.getDrawable(
-                    R.drawable.icon_gender_man_near_people
-                ), null, null, null
-            )
-        } else {
-            itemView.nearPeopleGender.setCompoundDrawablesWithIntrinsicBounds(
-                mContext.resources.getDrawable(
-                    R.drawable.icon_gender_woman_near_people
-                ), null, null, null
-            )
-        }
-        itemView.nearPeopleCollapstation.text = item.constellation
-        if (item.photos.isNotEmpty()) {
-            itemView.nearPeoplePhotos.isVisible = true
-            itemView.nearPeoplePhotos.layoutManager = GridLayoutManager(mContext, 5)
-            val adapter = PeopleNearbyPhotosAdapter(item.accid, item.wish_data.isNotEmpty())
-            itemView.nearPeoplePhotos.adapter = adapter
-            adapter.plusPhotos = item.plus_photo
-            adapter.setNewData(item.photos)
-        } else {
-            itemView.nearPeoplePhotos.isVisible = false
+
+
+        //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
+        when (item.contact_way) {
+            1 -> {
+                itemView.userContactBtn.isVisible = true
+                itemView.userContactBtn.setImageResource(R.drawable.icon_phone_heartbeat)
+            }
+            2 -> {
+                itemView.userContactBtn.isVisible = true
+                itemView.userContactBtn.setImageResource(R.drawable.icon_wechat_heartbeat)
+            }
+            3 -> {
+                itemView.userContactBtn.isVisible = true
+                itemView.userContactBtn.setImageResource(R.drawable.icon_qq_heartbeat)
+            }
+            else -> {
+                itemView.userContactBtn.isVisible = false
+            }
         }
 
+
+        //获取联系方式
+        itemView.userContactBtn.clickWithTrigger {
+            CommonFunction.checkUnlockContact(mContext, item.accid, item.gender)
+        }
 
         itemView.clickWithTrigger {
             MatchDetailActivity.start(mContext, item.accid)
         }
 
 
-        if (item.wish_data.isNullOrEmpty()) {
-            itemView.nearPeopleGifts.isVisible = false
-        } else {
-            itemView.nearPeopleGifts.isVisible = true
-            itemView.nearPeopleGifts.layoutManager =
+        if (!item.want.isNullOrEmpty()) {
+            itemView.userRelationshipRv.isVisible = true
+            itemView.userRelationshipRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            val giftAdapter = PeopleNearByWishGiftAdapter(item.accid)
-            //增加这一段即可
-            if (itemView.nearPeopleGifts.onFlingListener == null) {
-                CustomPagerSnapHelper().attachToRecyclerView(itemView.nearPeopleGifts)
+            val adapter = UserRelationshipAdapter()
+            itemView.userRelationshipRv.adapter = adapter
+            adapter.setNewData(item.want)
+            itemView.userRelationshipRv.setOnTouchListener { v, event ->
+                itemView.onTouchEvent(event)
             }
-            itemView.nearPeopleGifts.adapter = giftAdapter
-            giftAdapter.setNewData(item.wish_data)
+        } else {
+            itemView.userRelationshipRv.isVisible = false
         }
-        itemView.nearPeopleGifts.setOnTouchListener { v, event -> itemView.onTouchEvent(event) }
-        itemView.nearPeoplePhotos.setOnTouchListener { v, event -> itemView.onTouchEvent(event) }
+
 
         //打招呼
         //1.男性打招呼 首先判断是不是会员 不是会员拉起付费弹窗
@@ -104,15 +117,17 @@ class PeopleNearbyAdapter :
         //
         //2.女性打招呼 不管男方有无意愿，都判断认证开关，如果开关开启就判断女性有没有认证 认证了就直接送出招呼
         //                                                                            未认证就弹起认证弹窗
-        itemView.hiBtn.clickWithTrigger {
+        itemView.userChatBtn.clickWithTrigger {
             CommonFunction.commonGreet(
                 mContext,
                 item.accid,
-                itemView.hiBtn,
+                itemView.userChatBtn,
                 helper.layoutPosition,
                 item.avatar,
                 false
             )
         }
+
+
     }
 }

@@ -104,7 +104,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLa
     private val matchParams by lazy {
         hashMapOf(
             "lng" to UserManager.getlongtitude().toFloat(),
-            "lng" to UserManager.getlongtitude().toFloat(),
+            "lat" to UserManager.getlatitude().toFloat(),
             "city_name" to UserManager.getCity(),
             "province_name" to UserManager.getProvince(),
             "type" to 1
@@ -318,8 +318,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLa
                 //头像等级
                 ranking_level = matchBeans.ranking_level
 
-
-                EventBus.getDefault().post(UpdateIndexCandyEvent(matchBeans.my_candy_amount))
                 //第一次加载的时候就显示顶部提示条
                 if (firstLoad) {
                     if (ranking_level == 2) {//2 真人提示
@@ -439,7 +437,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLa
          * 今日推荐获取结果
          */
         if (!data.isNullOrEmpty()) {
-            TodayFateDialog(activity!!, data).show()
+            TodayFateDialog(activity!!, null, data).show()
         }
     }
 

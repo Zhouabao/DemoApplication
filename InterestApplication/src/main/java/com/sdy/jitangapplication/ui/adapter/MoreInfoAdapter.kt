@@ -39,7 +39,7 @@ class MoreInfoAdapter() :
             itemView.moreInfoContent.text = item.find_tag!!.title
             itemView.moreInfoAnimation.isVisible = false
         } else {
-            itemView.moreInfoAnimation.isVisible = true
+            itemView.moreInfoAnimation.isVisible = false
         }
         itemView.moreInfoAnimation.tvAddScoreSmile.text = "+${item.point}"
 

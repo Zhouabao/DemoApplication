@@ -13,6 +13,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.IndexRecommendBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -26,10 +28,10 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class GuideSendCandyDialog(
-    context: Context,
-    val showPull: Boolean,
-    val todayWantDialog: TodayWantDialog
-) : Dialog(context, R.style.MyDialog) {
+    val myContext: Context,
+    val nearBean: NearBean?,
+    val indexRecommends: MutableList<IndexRecommendBean>
+) : Dialog(myContext, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_guide_send_candy)
@@ -81,9 +83,13 @@ class GuideSendCandyDialog(
 
     override fun dismiss() {
         super.dismiss()
-        if (showPull) {
-            todayWantDialog.show()
+        if (!indexRecommends.isNullOrEmpty()) {
+            TodayFateDialog(myContext, nearBean, indexRecommends).show()
+        } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
+            TodayWantDialog(myContext, nearBean).show()
+        } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            CompleteUserCenterDialog(myContext).show()
         }
-
     }
 }

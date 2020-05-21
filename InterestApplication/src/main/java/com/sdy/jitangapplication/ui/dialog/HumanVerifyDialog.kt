@@ -39,7 +39,7 @@ class HumanVerifyDialog(val context1: Context) :
     fun initView() {
         verifyBtn.onClick {
             if (type == HUMAN_VERIFY)
-                context1.startActivity<IDVerifyActivity>("face_source_type" to 1)
+                IDVerifyActivity.startActivity(context1)
             else
                 if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
                     context.startActivity<NewUserInfoSettingsActivity>()

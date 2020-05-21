@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:context=".ui.fragment.MatchFragment">
 
 
@@ -107,7 +107,7 @@
         <include
             android:id="@+id/loadingLayout"
             layout="@layout/loading_layout_match_lottie"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <include
             android:id="@+id/errorLayout"

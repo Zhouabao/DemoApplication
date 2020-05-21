@@ -118,8 +118,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                             @Override
                             public void onClick(@NonNull View widget) {
-                                Intent intent = new Intent(context, IDVerifyActivity.class);
-                                context.startActivity(intent);
+                                IDVerifyActivity.Companion.startActivity(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
                             }
                         })
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
@@ -251,8 +250,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                                 @Override
                                 public void onClick(@NonNull View widget) {
-                                    Intent intent = new Intent(context, IDVerifyActivity.class);
-                                    context.startActivity(intent);
+                                    IDVerifyActivity.Companion.startActivity(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
                                 }
                             })
                             .setForegroundColor(Color.parseColor("#FF6796FA"))

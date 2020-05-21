@@ -10,7 +10,6 @@ import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -39,6 +38,7 @@ import com.sdy.jitangapplication.presenter.LikeMeReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.LikeMeReceivedView
 import com.sdy.jitangapplication.ui.adapter.LikeMeUserAdapter
 import com.sdy.jitangapplication.ui.dialog.GuideLikeDialog
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_like_me_received.*
@@ -53,7 +53,8 @@ import org.jetbrains.anko.startActivity
 /**
  * 对我感兴趣未读
  */
-class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeMeReceivedView, CardStackListener {
+class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeMeReceivedView,
+    CardStackListener {
     //我的资料完整度
     private var my_percent_complete: Int = 0//（我的资料完整度）
     //标准完整度
@@ -81,8 +82,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
 
     private fun initView() {
         EventBus.getDefault().register(this)
-
-        BarUtils.setStatusBarLightMode(this, false)
+        StatusBarUtil.immersive(this)
 
         mPresenter = LikeMeReceivedPresenter()
         mPresenter.mView = this
@@ -138,45 +138,46 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
 
     private var hasMore = true
     private var likeCount = 0
-    override fun onGreatListResult(t: BaseResp<NewLikeMeBean?>) = if (t.data != null && t.code == 200) {
-        if (t.data!!.list.isNullOrEmpty() || t.data!!.list.size < Constants.PAGESIZE) {
-            hasMore = false
-        }
-        stateLikeReceived.viewState = MultiStateView.VIEW_STATE_CONTENT
-        adapter.addData(t.data!!.list)
-        if ((page == 1 && t.data!!.list.isNullOrEmpty()) || (page > 1 && !hasMore)) {
-            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
-        } else {
-            if (!UserManager.isShowGuideLike()) {
-                GuideLikeDialog(this).show()
+    override fun onGreatListResult(t: BaseResp<NewLikeMeBean?>) =
+        if (t.data != null && t.code == 200) {
+            if (t.data!!.list.isNullOrEmpty() || t.data!!.list.size < Constants.PAGESIZE) {
+                hasMore = false
             }
-        }
-        if (page == 1) {
-            mPresenter.markLikeRead()
-        }
+            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_CONTENT
+            adapter.addData(t.data!!.list)
+            if ((page == 1 && t.data!!.list.isNullOrEmpty()) || (page > 1 && !hasMore)) {
+                stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
+            } else {
+                if (!UserManager.isShowGuideLike()) {
+                    GuideLikeDialog(this).show()
+                }
+            }
+            if (page == 1) {
+                mPresenter.markLikeRead()
+            }
 
-        my_percent_complete = t.data!!.my_percent_complete
-        normal_percent_complete = t.data!!.normal_percent_complete
-        myCount = t.data!!.my_like_times
-        maxCount = t.data!!.total_like_times
+            my_percent_complete = t.data!!.my_percent_complete
+            normal_percent_complete = t.data!!.normal_percent_complete
+            myCount = t.data!!.my_like_times
+            maxCount = t.data!!.total_like_times
 
-        likeCount = t.data!!.count
-        if (t.data!!.count > 0) {
-            likeLeftCount.isVisible = true
-            likeLeftCount.text = SpanUtils.with(likeLeftCount)
-                .append("有")
-                .append(" ${t.data!!.count} ")
-                .setForegroundColor(resources.getColor(R.color.colorOrange))
-                .setBold()
-                .append("个人喜欢你")
-                .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                .create()
+            likeCount = t.data!!.count
+            if (t.data!!.count > 0) {
+                likeLeftCount.isVisible = true
+                likeLeftCount.text = SpanUtils.with(likeLeftCount)
+                    .append("有")
+                    .append(" ${t.data!!.count} ")
+                    .setForegroundColor(resources.getColor(R.color.colorOrange))
+                    .setBold()
+                    .append("个人喜欢你")
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                    .create()
+            } else {
+                likeLeftCount.isVisible = false
+            }
         } else {
-            likeLeftCount.isVisible = false
+            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_ERROR
         }
-    } else {
-        stateLikeReceived.viewState = MultiStateView.VIEW_STATE_ERROR
-    }
 
 
     //     * type:1 dianji  2 youhua
@@ -336,7 +337,8 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.leftMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_dislike.layoutParams = params
 
             }
@@ -353,7 +355,8 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.rightMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_like.layoutParams = params
             }
         }

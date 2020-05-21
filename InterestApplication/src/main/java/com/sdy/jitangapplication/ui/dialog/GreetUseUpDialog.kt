@@ -138,7 +138,7 @@ class GreetUseUpDialog(val context1: Context, val type: Int, var greetTimesBean:
                         .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
                         .append("个招呼")
                         .create()
-                    context1.startActivity<IDVerifyActivity>()
+                    IDVerifyActivity.startActivity(context1)
                     dismiss()
                 }
                 GREET_USE_UP_TOMORROW -> {

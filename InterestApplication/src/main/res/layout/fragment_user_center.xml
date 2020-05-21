@@ -10,6 +10,7 @@
     app:msv_loadingView="@layout/loading_layout"
     app:msv_viewState="loading">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -116,14 +117,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:text="Barry Frank"
                             android:textColor="#ff191919"
                             android:textSize="22sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toTopOf="@id/userSign"
                             app:layout_constraintLeft_toRightOf="@id/userAvator"
                             app:layout_constraintTop_toTopOf="@id/userAvator"
-                            tools:text="Username" />
+                            tools:text="哈哈哈哈哈哈哈哈哈哈" />
 
                         <TextView
                             android:id="@+id/userSign"
@@ -151,15 +151,31 @@
                             app:layout_constraintLeft_toRightOf="@id/userName"
                             app:layout_constraintTop_toTopOf="@id/userName" />
 
+
+                        <TextView
+                            android:id="@+id/verifyState"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:background="@drawable/shape_rectangle_gray_divider_11dp"
+                            android:gravity="center"
+                            android:paddingLeft="22dp"
+                            android:paddingRight="6dp"
+                            android:text="立即认证"
+                            android:textColor="#ffc5c6c8"
+                            android:textSize="10sp"
+                            app:layout_constraintBottom_toBottomOf="@id/userVerify"
+                            app:layout_constraintLeft_toLeftOf="@id/userVerify"
+                            app:layout_constraintTop_toTopOf="@id/userVerify" />
+
                         <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/userVerify"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_marginLeft="8dp"
+                            android:src="@drawable/icon_verify_not"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
                             app:layout_constraintLeft_toRightOf="@id/userVip"
                             app:layout_constraintTop_toTopOf="@id/userName" />
-
 
                         <LinearLayout
                             android:id="@+id/vipPowerLl"
@@ -241,12 +257,12 @@
                                 android:layout_marginTop="5dp"
                                 android:layout_marginBottom="8dp"
                                 android:gravity="center"
-                                android:text="365.22k"
                                 android:textColor="#ffff6318"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 app:layout_constraintLeft_toLeftOf="@id/tvCandy"
-                                app:layout_constraintTop_toBottomOf="@id/tvCandy" />
+                                app:layout_constraintTop_toBottomOf="@id/tvCandy"
+                                tools:text="365.22k" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

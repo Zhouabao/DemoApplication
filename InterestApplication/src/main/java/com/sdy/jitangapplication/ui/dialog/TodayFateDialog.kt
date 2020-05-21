@@ -24,6 +24,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.BatchGreetBean
 import com.sdy.jitangapplication.model.IndexRecommendBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -35,7 +36,11 @@ import kotlinx.android.synthetic.main.dialog_today_fate.*
  *    desc   : 今日缘分
  *    version: 1.0
  */
-class TodayFateDialog(val context1: Context, val data: MutableList<IndexRecommendBean>) :
+class TodayFateDialog(
+    val context1: Context,
+    val nearBean: NearBean?,
+    val data: MutableList<IndexRecommendBean>
+) :
     Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,7 +129,7 @@ class TodayFateDialog(val context1: Context, val data: MutableList<IndexRecommen
 
                 override fun onNext(t: BaseResp<MutableList<BatchGreetBean>?>) {
                     super.onNext(t)
-                    if (t.code == 200) {
+                    if (t.code == 200 && !t.data.isNullOrEmpty()) {
                         for (data in (t.data ?: mutableListOf()).withIndex()) {
                             if (!data.value.msg.isNullOrEmpty()) {
                                 //发送招呼消息
@@ -181,6 +186,17 @@ class TodayFateDialog(val context1: Context, val data: MutableList<IndexRecommen
                 }
             })
 
+    }
+
+
+    override fun dismiss() {
+        super.dismiss()
+        if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
+            TodayWantDialog(context1, nearBean).show()
+        } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            CompleteUserCenterDialog(context1).show()
+        }
     }
 
 }

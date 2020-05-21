@@ -79,6 +79,7 @@ import com.sdy.jitangapplication.event.RefreshCandyMessageEvent;
 import com.sdy.jitangapplication.model.ChatGiftStateBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
+import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
@@ -347,14 +348,15 @@ public class ChatMessageListPanelEx {
 
     public void onIncomingMessage(List<IMMessage> messages) {
         try {
-            //首先剔除自定义的tip消息
+            //首先剔除自定义的tip消息 以及自己发送出去的
             Iterator iterator = messages.iterator();
             while (iterator.hasNext()) {
                 IMMessage message = (IMMessage) iterator.next();
                 boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
-                if (message.getAttachment() instanceof SendCustomTipAttachment
+                if ((message.getAttachment() instanceof SendCustomTipAttachment
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
-                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
+                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
+                        || (message.getAttachment() instanceof ContactAttachment && message.getDirect() == MsgDirectionEnum.Out)) {
                     NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                     iterator.remove();
                 }
@@ -395,9 +397,10 @@ public class ChatMessageListPanelEx {
             return;
         }
 
-        if (message.getAttachment() instanceof SendCustomTipAttachment
+        if ((message.getAttachment() instanceof SendCustomTipAttachment
                 && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
-                && !((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow()) {
+                && !((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow())
+                || (message.getAttachment() instanceof ContactAttachment && message.getDirect() == MsgDirectionEnum.Out)) {
             return;
         }
 
@@ -671,9 +674,11 @@ public class ChatMessageListPanelEx {
                             IMMessage message = (IMMessage) iterator.next();
                             boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
                             //消息的来源是发送方 并且是发送显示就不剔除 反之则反
-                            if (message.getAttachment() instanceof SendCustomTipAttachment
+                            if ((message.getAttachment() instanceof SendCustomTipAttachment
                                     && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
-                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
+                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
+                                    || (message.getAttachment() instanceof ContactAttachment && isSend)
+                            ) {
                                 NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                                 iterator.remove();
                             }
@@ -1313,6 +1318,7 @@ public class ChatMessageListPanelEx {
                 && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
                 && !(msg.getAttachment() instanceof SendCustomTipAttachment)
+                && !(msg.getAttachment() instanceof ContactAttachment && msg.getDirect() == MsgDirectionEnum.Out)
                 && msg.isRemoteRead();
 
     }

@@ -40,7 +40,7 @@ class HarassmentDialog(val context1: Context, var from: Int) : Dialog(context1, 
                 harassmentContent.text = "对方已开启认证招呼，请先进行实名认证"
                 harassmentBtn.text = "前往认证"
                 harassmentBtn.onClick {
-                    context1.startActivity<IDVerifyActivity>()
+                    IDVerifyActivity.startActivity(context1)
                     dismiss()
                 }
 

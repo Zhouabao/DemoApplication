@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
+
 /**
  *    author : ZFM
  *    date   : 2020/4/2715:58
@@ -25,5 +27,15 @@ data class MyTapsBean(
     var use_cnt: Int = 0,
     var title: String = "",
     var checked: Boolean = false,
-    var child: MutableList<MyTapsBean>
-)
+    var type: Int = TYPE_MYTAP,
+    var child: MutableList<MyTapsBean> = mutableListOf()
+) : MultiItemEntity {
+    companion object {
+        const val TYPE_INVESTIGATION = 0
+        const val TYPE_MYTAP = 1
+    }
+
+    override fun getItemType(): Int {
+        return type
+    }
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,9 +9,9 @@
     android:overScrollMode="never"
     tools:context=".ui.activity.GetRelationshipActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
         <com.sdy.jitangapplication.widgets.DancingNumberView
             android:id="@+id/watingMatchCount"
@@ -31,12 +31,12 @@
             android:id="@+id/t1"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
+            android:layout_marginLeft="40dp"
+            android:gravity="center"
             android:text="个待筛选用户"
             android:textColor="@color/colorBlack19"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginLeft="40dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/watingMatchCount" />
@@ -77,8 +77,8 @@
             android:gravity="center"
             android:text="2"
             android:textColor="#C5C6C8"
-            app:layout_constraintLeft_toLeftOf="@id/completeProgress"
-            app:layout_constraintRight_toRightOf="@id/completeProgress"
+            app:layout_constraintLeft_toRightOf="@id/step1"
+            app:layout_constraintRight_toLeftOf="@id/step3"
             app:layout_constraintTop_toTopOf="@id/step1" />
 
         <TextView
@@ -89,6 +89,19 @@
             android:background="@drawable/shape_oval_1dp_c5c6c8"
             android:gravity="center"
             android:text="3"
+            android:textColor="#C5C6C8"
+            app:layout_constraintLeft_toRightOf="@id/step2"
+            app:layout_constraintRight_toLeftOf="@id/step4"
+            app:layout_constraintTop_toTopOf="@id/step1" />
+
+        <TextView
+            android:id="@+id/step4"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/shape_oval_1dp_c5c6c8"
+            android:gravity="center"
+            android:text="4"
             android:textColor="#C5C6C8"
             app:layout_constraintRight_toRightOf="@id/completeProgress"
             app:layout_constraintTop_toTopOf="@id/step1" />
@@ -115,8 +128,8 @@
             android:text="下一步"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vpRelationship" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            app:layout_constraintRight_toRightOf="parent" />
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

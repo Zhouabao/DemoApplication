@@ -3,32 +3,26 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.ShowNearCountEvent
-import com.sdy.jitangapplication.event.UpdateIndexCandyEvent
 import com.sdy.jitangapplication.event.UpdateSlideCountEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
-import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
@@ -53,10 +47,11 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("附近", "匹配") }
-    private val matchFragment by lazy { MatchFragment() }
+    private val titles by lazy { arrayOf("推荐", "附近") }
+//    private val matchFragment by lazy { MatchFragment() }
+    private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
     //    private val findByTagFragment by lazy { FindByTagFragment() }
-    private val peopleNearByFragment by lazy { PeopleNearbyFragment() }
+    private val sameCityFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_SAMECITY) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +63,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     }
 
     //    val titleAdapter by lazy { IndexSwitchAdapter() }
-    private val todayWantDialog by lazy { TodayWantDialog(activity!!) }
+    private val todayWantDialog by lazy { TodayWantDialog(activity!!, null) }
 
     override fun loadData() {
         EventBus.getDefault().register(this)
@@ -80,11 +75,6 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
             FilterUserDialog(activity!!).show()
         }
 
-        myCandyAmount.clickWithTrigger {
-            RechargeCandyDialog(activity!!).show()
-        }
-
-
         //选择今日意向
         todayWantCl.clickWithTrigger {
             todayWantDialog.show()
@@ -95,8 +85,8 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     private fun initFragments() {
 
 
-        fragments.add(peopleNearByFragment)
-        fragments.add(matchFragment)
+        fragments.add(recommendFragment)
+        fragments.add(sameCityFragment)
 
         vpIndex.setScrollable(true)
         vpIndex.offscreenPageLimit = 2
@@ -114,7 +104,6 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
             }
 
             override fun onPageSelected(position: Int) {
-                filterBtn.isVisible = position == 1
                 if (position == 0) {
                     EventBus.getDefault().post(ShowNearCountEvent())
                 }
@@ -172,27 +161,13 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateIndexCandyEvent(event: UpdateIndexCandyEvent) {
-        myCandyAmount.isVisible = true
-        myCandyAmount.text = SpanUtils.with(myCandyAmount)
-            .append("${event.candyCount}")
-            .setTypeface(Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf"))
-            .setVerticalAlign(SpanUtils.ALIGN_CENTER)
-            .setFontSize(16, true)
-            .setBold()
-            .append("\t充值")
-            .setFontSize(12, true)
-            .setVerticalAlign(SpanUtils.ALIGN_CENTER)
-            .create()
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateTodayWantEvent(event: UpdateTodayWantEvent) {
         if (event.todayWantBean != null) {
             todayWantContent.text = event.todayWantBean.title
-            GlideUtil.loadCircleImg(activity!!, event.todayWantBean.icon, todayWantIcon)
+//            GlideUtil.loadCircleImg(activity!!, event.todayWantBean.icon, todayWantIcon)
         } else {
             todayWantContent.text = "选择意向"
             todayWantIcon.setImageResource(R.drawable.icon_today_want)

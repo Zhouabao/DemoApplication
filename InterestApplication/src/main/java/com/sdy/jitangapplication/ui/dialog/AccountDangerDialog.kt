@@ -62,7 +62,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    context1.startActivity<IDVerifyActivity>()
+                    IDVerifyActivity.startActivity(context1)
                 }
             }
             VERIFY_NEED_ACCOUNT_DANGER -> {
@@ -76,7 +76,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    context1.startActivity<IDVerifyActivity>("type" to IDVerifyActivity.TYPE_ACCOUNT_DANGER)
+                    IDVerifyActivity.startActivity(context1,IDVerifyActivity.TYPE_ACCOUNT_DANGER)
                 }
             }
             VERIFY_ING -> {

@@ -4,42 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:background="@drawable/icon_bg_people_near"
-    android:paddingBottom="10dp">
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:background="@drawable/rectangle_white_10dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/nearPeopleAvator"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/icon_default_avator"
-        app:civ_border_color="#FF599F"
-        app:civ_border_width="1dp"
-        app:layout_constraintBottom_toTopOf="@id/nearPeoplePhotos"
+    <ImageView
+        android:id="@+id/userAvator"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/default_image_10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/nearPeopleIntention"
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rectangle_bottom_cover_10dp"
+        app:layout_constraintBottom_toBottomOf="@id/userAvator"
+        app:layout_constraintLeft_toLeftOf="@id/userAvator"
+        app:layout_constraintRight_toRightOf="@id/userAvator"
+        app:layout_constraintTop_toTopOf="@id/userIntention" />
+
+    <TextView
+        android:id="@+id/userOnline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient_pink_11dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/nearPeopleAvator"
-        app:layout_constraintLeft_toLeftOf="@id/nearPeopleAvator"
-        app:layout_constraintRight_toRightOf="@id/nearPeopleAvator">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rectangle_cover_bg_17dp"
+        android:drawableLeft="@drawable/icon_online_state_gray"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:paddingLeft="3dp"
+        android:paddingTop="2dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="2dp"
+        android:text="30分钟前在线，300m"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/userAvator"
+        app:layout_constraintTop_toTopOf="@id/userAvator" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+    <ImageView
+        android:id="@+id/userChatBtn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_hi_heartbeat"
+        app:layout_constraintRight_toRightOf="@id/userAvator"
+        app:layout_constraintTop_toTopOf="@id/userAvator" />
+
+
+    <ImageView
+        android:id="@+id/userContactBtn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/icon_wechat_heartbeat"
+        app:layout_constraintLeft_toLeftOf="@id/userChatBtn"
+        app:layout_constraintTop_toBottomOf="@id/userChatBtn" />
+
+    <LinearLayout
+        android:id="@+id/userIntention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gradient_orange_11dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/userNameAge"
+        app:layout_constraintLeft_toLeftOf="@id/userOnline">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userIntentionIcon"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:src="@drawable/icon_today_want_heart" />
 
         <TextView
-            android:id="@+id/nearPeopleIntention1"
+            android:id="@+id/userIntentionContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -49,160 +94,52 @@
             android:layout_marginBottom="2dp"
             android:gravity="center"
             android:textColor="@color/colorWhite"
-            android:textSize="10sp"
+            android:textSize="12sp"
+            android:textStyle="bold"
             tools:text="运动" />
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/nameCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/nearPeopleGender"
-        app:layout_constraintLeft_toRightOf="@id/nearPeopleAvator"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/nearPeopleAvator">
-
-
-        <TextView
-            android:id="@+id/nearPeopleName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="left"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:textColor="#ff191919"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="微微微微微" />
-
-
-        <ImageView
-            android:id="@+id/nearPeopleVip"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/icon_vip"
-            app:layout_constraintBottom_toBottomOf="@id/nearPeopleName"
-            app:layout_constraintLeft_toRightOf="@id/nearPeopleName"
-            app:layout_constraintTop_toTopOf="@id/nearPeopleName" />
-
-        <ImageView
-            android:id="@+id/nearPeopleVerify"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/icon_verify_pass"
-            app:layout_constraintBottom_toBottomOf="@id/nearPeopleName"
-            app:layout_constraintLeft_toRightOf="@id/nearPeopleVip"
-            app:layout_constraintTop_toTopOf="@id/nearPeopleName" />
-
-
-        <ImageView
-            android:id="@+id/hiBtn"
-            android:layout_width="62dp"
-            android:layout_height="26dp"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/icon_hi_btn"
-            app:layout_constraintRight_toRightOf="@id/nearPeopleDistance"
-            app:layout_constraintTop_toTopOf="@id/nearPeopleName" />
-
-    </LinearLayout>
-
-
     <TextView
-        android:id="@+id/nearPeopleGender"
+        android:id="@+id/userNameAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/icon_gender_man_near_people"
-        android:drawablePadding="3dp"
-        android:gravity="center"
-        android:textColor="#ffc5c6c8"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/nearPeopleSign"
-        app:layout_constraintLeft_toLeftOf="@id/nameCl"
-        app:layout_constraintTop_toBottomOf="@id/nameCl"
-        tools:text="23岁" />
-
-    <TextView
-        android:id="@+id/nearPeopleCollapstation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:drawableLeft="@drawable/icon_collapstation_near_people"
-        android:gravity="center"
-        android:textColor="#ffc5c6c8"
-        android:textSize="12sp"
-        app:layout_constraintLeft_toRightOf="@id/nearPeopleGender"
-        app:layout_constraintTop_toTopOf="@id/nearPeopleGender"
-        tools:text="处女座" />
-
-
-    <TextView
-        android:id="@+id/nearPeopleDistance"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:gravity="right|bottom"
-        android:maxLines="1"
-        android:textColor="#ffc5c6c8"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/nearPeopleGender"
-        app:layout_constraintLeft_toRightOf="@id/nearPeopleCollapstation"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/nearPeopleGender"
-        tools:text="300m·在线" />
-
-
-    <TextView
-        android:id="@+id/nearPeopleSign"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="#ff888d92"
+        android:layout_marginBottom="10dp"
+        android:text="青青草地 21岁"
+        android:textColor="#ffffffff"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/nearPeopleAvator"
-        app:layout_constraintLeft_toLeftOf="@id/nameCl"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nearPeopleGender"
-        tools:text="即使第一百次跌倒，我还可以第一百我还可以第一百我还可以第一百" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/userRelationshipRv"
+        app:layout_constraintLeft_toLeftOf="@id/userOnline" />
+
+    <ImageView
+        android:id="@+id/userVip"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/icon_vip"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
+        app:layout_constraintLeft_toRightOf="@id/userNameAge"
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
+
+    <ImageView
+        android:id="@+id/userVerify"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/icon_verify_pass"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
+        app:layout_constraintLeft_toRightOf="@id/userVip"
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nearPeoplePhotos"
-        android:layout_width="0dp"
+        android:id="@+id/userRelationshipRv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/icon_bg_near_people_bottom"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/nearPeopleGifts"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nearPeopleAvator" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nearPeopleGifts"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="20dp"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/nearPeoplePhotos"
-        app:layout_constraintRight_toRightOf="@id/nearPeoplePhotos"
-        app:layout_constraintTop_toBottomOf="@id/nearPeoplePhotos" />
+        app:layout_constraintBottom_toBottomOf="@id/userAvator"
+        app:layout_constraintLeft_toLeftOf="@id/userOnline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

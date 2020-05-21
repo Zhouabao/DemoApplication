@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,109 +8,75 @@
     android:orientation="vertical"
     tools:context=".ui.fragment.IndexFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
-
-            <net.lucode.hackware.magicindicator.MagicIndicator
-                android:id="@+id/titleIndex"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:layout_marginLeft="10dp"
-                android:background="@color/colorWhite"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/myCandyAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/shape_rectangle_orange_white_15dp"
-                android:drawableLeft="@drawable/icon_candy_small"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:paddingTop="4dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="4dp"
-                android:text="3999  充值"
-                android:textColor="#ffff6318"
-                android:textSize="12sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/filterBtn"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/filterBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/icon_filter"
-                android:textColor="#FF191919"
-                android:textSize="15sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.sdy.jitangapplication.widgets.NoScrollViewPager
-            android:id="@+id/vpIndex"
-            android:overScrollMode="never"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite" />
-    </LinearLayout>
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/todayWantCl"
-        android:layout_width="86dp"
-        android:layout_height="86dp"
-        android:layout_marginBottom="167dp"
-        android:layout_gravity="bottom|right"
-        android:background="@drawable/icon_today_want_bg">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/todayWantIcon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_today_want"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/titleIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorWhite"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/todayWantCl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/gradient_orange_11dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/filterBtn"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/todayWantIcon"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/icon_today_want_heart" />
+
+            <TextView
+                android:id="@+id/todayWantContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:text="选择意向"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/filterBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/icon_filter"
+            android:textColor="#FF191919"
+            android:textSize="15sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/todayWantContent"
-            android:layout_width="62dp"
-            android:layout_height="18dp"
-            android:background="@drawable/gradient_pink_11dp"
-            android:gravity="center"
-            android:shadowColor="#29b40549"
-            android:shadowDy="2"
-            android:text="选择意向"
-            android:textColor="#ffffffff"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/todayWantIcon"
-            app:layout_constraintRight_toRightOf="@id/todayWantIcon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+        android:id="@+id/vpIndex"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:overScrollMode="never" />
+</LinearLayout>
 
-</FrameLayout>

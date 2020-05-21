@@ -97,10 +97,8 @@ public class ImageTakeActivity extends ImageBaseActivity {
             }
         }
         if (takeImageFile == null) {
-            //TODO
             return;
         }
-        //FIXME
         imagePicker.setTakeImageFile(takeImageFile);
         startActivityForResult(takePictureIntent, Constants.REQUEST_CODE_TAKE);
     }

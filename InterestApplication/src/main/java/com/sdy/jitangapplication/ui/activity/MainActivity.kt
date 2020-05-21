@@ -32,7 +32,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
@@ -55,7 +54,7 @@ import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("首页", "发现", "消息", "我的")
+    private val titles = arrayOf("心动", "发现", "消息", "我的")
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //首页
@@ -84,8 +83,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         )
 
         //获取调查问卷数据
-        if (UserManager.getCurrentSurveyVersion().isEmpty() || UserManager.getCurrentSurveyVersion() != AppUtils.getAppVersionName())
-            mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
+//        if (UserManager.getCurrentSurveyVersion().isEmpty() || UserManager.getCurrentSurveyVersion() != AppUtils.getAppVersionName())
+//            mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
 
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
@@ -213,7 +212,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         when (position) {
             0 -> {
                 onUpdateSlideCountEvent(UpdateSlideCountEvent(indexFragment.currentPos == 1))
-
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match_checked),
+                    null,
+                    null
+                )
                 publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
@@ -276,8 +281,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 } else {
                     publishGuideIv.isVisible = false
                 }
-                tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -304,8 +307,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             2 -> {
-                tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -334,8 +335,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             3 -> {
-                tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -369,31 +368,29 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
-        if (vpMain.currentItem == 0) {
-            if (!UserManager.isUserVip() && event.showCardTimes) {
-                tabMatch.isVisible = true
-                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    null,
-                    null,
-                    null
-                )
-            } else {
-                tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
-                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                tabMatchCount.setPadding(0)
-                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_match_checked),
-                    null,
-                    null
-                )
-            }
-        }
+//        if (vpMain.currentItem == 0) {
+//            if (!UserManager.isUserVip() && event.showCardTimes) {
+//                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
+//                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
+//                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
+//                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+//                    null,
+//                    null,
+//                    null,
+//                    null
+//                )
+//            } else {
+//                tabMatchCount.text = "首页"
+//                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+//                tabMatchCount.setPadding(0)
+//                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+//                    null,
+//                    resources.getDrawable(R.drawable.icon_tab_match_checked),
+//                    null,
+//                    null
+//                )
+//            }
+//        }
     }
 
 
@@ -402,7 +399,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             R.id.labelAddBtn -> { //兴趣添加
                 startActivity<MyLabelActivity>()
             }
-            R.id.tabMatchCount, R.id.tabMatch -> {
+            R.id.tabMatchCount -> {
                 vpMain.currentItem = 0
             }
             R.id.tabSquare -> {
@@ -518,16 +515,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         UserManager.saveShowSurveyCount(investigateBean.showcard_cnt)
         if (investigateDialog == null) {
             investigateDialog = InvestigateDialog(this, investigateBean)
-        }
-    }
-
-
-    /**
-     * 今日推荐获取结果
-     */
-    override fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
-        if (!data.isNullOrEmpty()) {
-            TodayFateDialog(this, data!!).show()
         }
     }
 
@@ -770,9 +757,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             accountDangerDialog!!.dismiss()
             accountDangerDialog = null
         }
-        accountDangerDialog = AccountDangerDialog(ActivityUtils.getTopActivity())
-        accountDangerDialog!!.show()
-        accountDangerDialog!!.changeVerifyStatus(event.type)
+
+        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
+            accountDangerDialog = AccountDangerDialog(ActivityUtils.getTopActivity())
+            accountDangerDialog!!.show()
+            accountDangerDialog!!.changeVerifyStatus(event.type)
+        }
         if (EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
             EventBus.getDefault()

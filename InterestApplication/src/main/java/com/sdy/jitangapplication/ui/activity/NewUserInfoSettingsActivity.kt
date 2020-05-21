@@ -14,7 +14,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -63,6 +62,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_more_info.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import top.zibin.luban.OnCompressListener
 import java.io.File
@@ -119,6 +119,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         saveBtn.setOnClickListener(this)
         userScore80.setOnClickListener(this)
         userScoreVip.setOnClickListener(this)
+        userContact.setOnClickListener(this)
 
 
         //更多信息
@@ -276,8 +277,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 userScoreVip.setImageResource(R.drawable.icon_vip_score_highlight)
                 userScoreVip.isEnabled = false
             } else {
-                userScore80.isVisible = true
-                userScoreVip.isVisible = true
+//                userScore80.isVisible = true
+//                userScoreVip.isVisible = true
+                userScore80.isVisible = false
+                userScoreVip.isVisible = false
                 userScoreVip.setImageResource(R.drawable.icon_vip_score)
                 userScoreVip.isEnabled = true
             }
@@ -677,6 +680,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         if (data != null) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             setData(data)
+            if (intent.getBooleanExtra("showToast", false)) {
+                CommonFunction.toast("您已认证过，请主动替换真实头像")
+            }
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 
@@ -841,6 +847,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.saveBtn -> {
                 updatePhotos(0)
             }
+            R.id.userContact -> { //更改用户的联系方式
+                startActivity<ChangeUserContactActivity>()
+            }
 
         }
 
@@ -859,11 +868,31 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
     override fun onBackPressed() {
         checkIsForceChangeAvator()
+        if (intent.getIntExtra(
+                "type",
+                IDVerifyActivity.TYPE_ACCOUNT_NORMAL
+            ) == IDVerifyActivity.TYPE_ACCOUNT_DANGER
+        )
+            EventBus.getDefault().postSticky(
+                AccountDangerEvent(
+                    AccountDangerDialog.VERIFY_ING
+                )
+            )
     }
 
 
     override fun scrollToFinishActivity() {
         checkIsForceChangeAvator()
+        if (intent.getIntExtra(
+                "type",
+                IDVerifyActivity.TYPE_ACCOUNT_NORMAL
+            ) == IDVerifyActivity.TYPE_ACCOUNT_DANGER
+        )
+            EventBus.getDefault().postSticky(
+                AccountDangerEvent(
+                    AccountDangerDialog.VERIFY_ING
+                )
+            )
         super.scrollToFinishActivity()
     }
 
@@ -935,70 +964,71 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      */
     private fun updateScoreStatus(view: View? = null, score: Int, update: Boolean? = false) {
         //会员的时候不显示添加分数
-        if (view != null) {
-            view.tvAddScoreSmile.text = "+$score"
-            //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
-            if (view.isVisible && update == true) {
-                val translateAnimationRight = TranslateAnimation(
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0f,
-                    TranslateAnimation.ABSOLUTE,
-                    (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0f,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F
-
-                )
-                translateAnimationRight.duration = 500
-                translateAnimationRight.fillAfter = true
-                translateAnimationRight.interpolator = LinearInterpolator()
-
-                val translateAnimationTop = TranslateAnimation(
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0f,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0f,
-                    TranslateAnimation.RELATIVE_TO_PARENT,
-                    -0.7F
-
-                )
-                translateAnimationTop.duration = 500
-                translateAnimationTop.fillAfter = true
-                translateAnimationTop.interpolator = DecelerateInterpolator()
-                val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
-                scaleAnimation.duration = 500
-                scaleAnimation.fillAfter = true
-                val alphaAnimation = AlphaAnimation(0F, 1F)
-                alphaAnimation.duration = 500
-                alphaAnimation.fillAfter = true
-                val animationSet = AnimationSet(true)
-                animationSet.addAnimation(translateAnimationTop)
-                animationSet.addAnimation(scaleAnimation)
-                animationSet.addAnimation(alphaAnimation)
-                animationSet.fillAfter = true
-
-                translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationRepeat(p0: Animation?) {
-
-                    }
-
-                    override fun onAnimationEnd(p0: Animation?) {
-                        view.postDelayed({
-                            view.isVisible = false
-                        }, 200)
-                    }
-
-                    override fun onAnimationStart(p0: Animation?) {
-                        view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
-                        view.tvAddScoreSmile.startAnimation(animationSet)
-                    }
-                })
-                view.ivAddScoreSmile.startAnimation(translateAnimationRight)
-            }
-        }
+        view?.isVisible = false
+//        if (view != null) {
+//            view.tvAddScoreSmile.text = "+$score"
+//            //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
+//            if (view.isVisible && update == true) {
+//                val translateAnimationRight = TranslateAnimation(
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0f,
+//                    TranslateAnimation.ABSOLUTE,
+//                    (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0f,
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0F
+//
+//                )
+//                translateAnimationRight.duration = 500
+//                translateAnimationRight.fillAfter = true
+//                translateAnimationRight.interpolator = LinearInterpolator()
+//
+//                val translateAnimationTop = TranslateAnimation(
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0f,
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0F,
+//                    TranslateAnimation.RELATIVE_TO_SELF,
+//                    0f,
+//                    TranslateAnimation.RELATIVE_TO_PARENT,
+//                    -0.7F
+//
+//                )
+//                translateAnimationTop.duration = 500
+//                translateAnimationTop.fillAfter = true
+//                translateAnimationTop.interpolator = DecelerateInterpolator()
+//                val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
+//                scaleAnimation.duration = 500
+//                scaleAnimation.fillAfter = true
+//                val alphaAnimation = AlphaAnimation(0F, 1F)
+//                alphaAnimation.duration = 500
+//                alphaAnimation.fillAfter = true
+//                val animationSet = AnimationSet(true)
+//                animationSet.addAnimation(translateAnimationTop)
+//                animationSet.addAnimation(scaleAnimation)
+//                animationSet.addAnimation(alphaAnimation)
+//                animationSet.fillAfter = true
+//
+//                translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
+//                    override fun onAnimationRepeat(p0: Animation?) {
+//
+//                    }
+//
+//                    override fun onAnimationEnd(p0: Animation?) {
+//                        view.postDelayed({
+//                            view.isVisible = false
+//                        }, 200)
+//                    }
+//
+//                    override fun onAnimationStart(p0: Animation?) {
+//                        view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
+//                        view.tvAddScoreSmile.startAnimation(animationSet)
+//                    }
+//                })
+//                view.ivAddScoreSmile.startAnimation(translateAnimationRight)
+//            }
+//        }
 
         if (update == true)
             setScroeProgress(score)
@@ -1040,7 +1070,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         translate.start()
 
         if (!UserManager.isUserVip()) {
-            userScore80.isVisible = (progress < 80)
+//            userScore80.isVisible = (progress < 80)
+            userScore80.isVisible = false
         }
 
     }

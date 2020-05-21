@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.net.Uri
 import android.os.Bundle
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -22,6 +23,12 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
 //        BarUtils.setStatusBarLightMode(this,true)
 //        ScreenUtils.setFullScreen(this)
+        initView()
+        showVideoPreview()
+
+    }
+
+    private fun initView() {
         StatusBarUtil.immersive(this)
 
         userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
@@ -39,7 +46,7 @@ class LoginActivity : BaseActivity() {
                 finish()
             } else {
                 UserManager.clearLoginData()
-//                startActivity<SetInfoActivity>()
+                //                startActivity<SetInfoActivity>()
             }
         }
 
@@ -62,11 +69,34 @@ class LoginActivity : BaseActivity() {
         userAgreement.clickWithTrigger {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
+    }
 
+
+    private fun showVideoPreview() {
+//        videoPreview.setMediaController(MediaController(this))
+        videoPreview.setVideoURI(Uri.parse("android.resource://com.sdy.jitangapplication/${R.raw.login_video}"))
+        videoPreview.setOnCompletionListener {
+            videoPreview.start()
+        }
+
+        videoPreview.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+//        videoPreview.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!videoPreview.isPlaying)
+            videoPreview.start()
+//        videoPreview.resume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         UMShareAPI.get(this).release()
+        videoPreview.stopPlayback()
     }
 }

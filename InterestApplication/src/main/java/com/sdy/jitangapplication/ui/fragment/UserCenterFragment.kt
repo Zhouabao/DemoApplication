@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
@@ -56,6 +57,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.startActivityForResult
+import org.jetbrains.anko.textColor
 import java.util.*
 import kotlin.math.abs
 
@@ -109,6 +111,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
+        verifyState.setOnClickListener(this)
         candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
 
         tabMySquareAndTag.viewTreeObserver.addOnGlobalLayoutListener {
@@ -243,14 +246,17 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
+        if ((userInfoBean?.userinfo?.nickname ?: "").length > 6) {
+            userName.textSize = 16F
+        } else {
+            userName.textSize = 22F
+        }
         userName1.text = userInfoBean?.userinfo?.nickname ?: ""
         userSign.text = userInfoBean?.sign ?: ""
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
-        EventBus.getDefault()
-            .post(UpdateIndexCandyEvent(userInfoBean?.userinfo?.my_candy_amount ?: 0))
         checkVerify()
         checkVip()
         for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
@@ -270,10 +276,19 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             userVerify.imageAssetsFolder = "images_verify"
             userVerify.setAnimation("data_verify.json")
             userVerify.playAnimation()
+            verifyState.text = "已认证"
+            verifyState.textColor = resources.getColor(R.color.colorWhite)
+            verifyState.setBackgroundResource(R.drawable.gradient_blue_11dp)
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
-            userVerify.setImageResource(R.drawable.icon_verify_reject)
+            userVerify.setImageResource(R.drawable.icon_verify_not)
+            verifyState.text = "审核中"
+            verifyState.textColor = Color.parseColor("#FFC5C6C8")
+            verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_not)
+            verifyState.text = "立即认证"
+            verifyState.textColor = Color.parseColor("#FFC5C6C8")
+            verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
         }
 
     }
@@ -282,6 +297,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun checkVip() {
         //是否会员
         if (userInfoBean?.userinfo?.isvip == 1) {
+            EventBus.getDefault().post(UpdateSameCityVipEvent())
             userVip.visibility = View.VISIBLE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "会员权益"
@@ -319,7 +335,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 //            params.height = SizeUtils.dp2px(46F)
 //            contentView.iconGuideVerify.layoutParams = params
             contentView.iconGuideVerify.text = guideContent
-            contentView.iconGuideVerify.setOnClickListener {
+            contentView.iconGuideVerify.clickWithTrigger {
+                UserManager.saveShowGuideVerify(true)
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
+                dismiss()
+            }
+            contentView.okBtn.clickWithTrigger {
                 UserManager.saveShowGuideVerify(true)
                 userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
                 dismiss()
@@ -409,7 +430,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 )
             }
             //认证中心
-            R.id.userVerify -> {
+            R.id.userVerify, R.id.verifyState -> {
                 when (userInfoBean?.userinfo?.isfaced) {
                     1 -> {
                         CommonFunction.toast("您已通过认证")
@@ -418,7 +439,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                         CommonFunction.toast("认证审核中...")
                     }
                     else -> {
-                        startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
+                        IDVerifyActivity.startActivityForResult(
+                            activity!!,
+                            requestCode = REQUEST_ID_VERIFY
+                        )
                     }
 
                 }
@@ -445,20 +469,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 ?: 0) >= event.candyCount && event.candyCount >= 0
         ) {
             candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
-            EventBus.getDefault().post(
-                UpdateIndexCandyEvent(
-                    (userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount
-                )
-            )
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSetMyCandyEvent(event: SetMyCandyEvent) {
         candyCount.text = "${event.candyCount}"
-        EventBus.getDefault().post(
-            UpdateIndexCandyEvent(event.candyCount)
-        )
     }
 
 
@@ -480,10 +496,13 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     SizeUtils.dp2px(-20F)
                 )
                 multiStateView.postDelayed({
-                    if (guideVerifyWindow.isShowing) {
-                        guideVerifyWindow.dismiss()
-                        UserManager.saveShowGuideVerify(true)
-                        userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    try {
+                        if (guideVerifyWindow.isShowing) {
+                            guideVerifyWindow.dismiss()
+                            UserManager.saveShowGuideVerify(true)
+                            userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    } catch (e: Exception) {
                     }
                 }, 3000L)
             } else {

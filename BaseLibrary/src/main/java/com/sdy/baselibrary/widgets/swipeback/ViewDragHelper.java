@@ -1006,7 +1006,7 @@ public class ViewDragHelper {
             // Count backwards - let topmost views consume scroll distance
             // first.
             for (int i = count - 1; i >= 0; i--) {
-                // TODO: Add versioned support here for transformed views.
+                // : Add versioned support here for transformed views.
                 // This will not work for transformed views in Honeycomb+
                 final View child = group.getChildAt(i);
                 if (x + scrollX >= child.getLeft()

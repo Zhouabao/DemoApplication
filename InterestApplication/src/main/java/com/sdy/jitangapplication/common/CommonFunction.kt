@@ -32,10 +32,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.GiftStateBean
-import com.sdy.jitangapplication.model.GreetCheckBean
-import com.sdy.jitangapplication.model.GreetTimesBean
-import com.sdy.jitangapplication.model.SendTipBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
@@ -231,7 +228,7 @@ object CommonFunction {
                                 })
                                 .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                                     override fun onClick(dialog: Dialog) {
-                                        context1.startActivity<IDVerifyActivity>()
+                                        IDVerifyActivity.startActivity(context1)
                                         dialog.dismiss()
                                     }
                                 })
@@ -254,7 +251,7 @@ object CommonFunction {
                                 })
                                 .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                                     override fun onClick(dialog: Dialog) {
-                                        context1.startActivity<IDVerifyActivity>()
+                                        IDVerifyActivity.startActivity(context1)
                                         dialog.dismiss()
                                     }
                                 })
@@ -463,6 +460,50 @@ object CommonFunction {
 
                 }
             })
+    }
+
+
+    /**
+     * 验证糖果解锁
+     */
+    fun checkUnlockContact(context: Context, target_accid: String, gender: Int) {
+        if (!UserManager.isUserVip()) {
+            ChargeVipDialog(ChargeVipDialog.GET_CONTACT, context).show()
+        } else {
+            val loading = LoadingDialog(context)
+            RetrofitFactory.instance.create(Api::class.java)
+                .checkUnlockContact(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
+                .excute(object : BaseSubscriber<BaseResp<GiftBean?>>() {
+                    override fun onStart() {
+                        super.onStart()
+                        loading.show()
+                    }
+
+                    override fun onNext(t: BaseResp<GiftBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            UnlockContactDialog(
+                                context,
+                                target_accid,
+                                t.data!!.amount,
+                                gender
+                            ).show()
+                        } else if (t.code == 222) {
+                            ChatActivity.start(context, target_accid)
+                        }
+                    }
+
+                    override fun onCompleted() {
+                        super.onCompleted()
+                        loading.dismiss()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        super.onError(e)
+                        loading.dismiss()
+                    }
+                })
+        }
     }
 
 

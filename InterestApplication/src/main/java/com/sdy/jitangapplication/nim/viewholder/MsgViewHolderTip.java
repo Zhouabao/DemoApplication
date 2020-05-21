@@ -68,8 +68,7 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
                                     Intent intent = new Intent(context, MyCandyActivity.class);
                                     context.startActivity(intent);
                                 } else if (type == 2) {
-                                    Intent intent = new Intent(context, IDVerifyActivity.class);
-                                    context.startActivity(intent);
+                                    IDVerifyActivity.Companion.startActivity(context,IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
                                 } else if (type == 3) {
                                     Intent intent = new Intent(context, CandyMallActivity.class);
                                     context.startActivity(intent);

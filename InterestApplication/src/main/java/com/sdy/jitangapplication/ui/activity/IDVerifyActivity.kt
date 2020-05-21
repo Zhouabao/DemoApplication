@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -49,6 +50,8 @@ import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -64,7 +67,83 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     companion object {
         const val TYPE_ACCOUNT_DANGER = 1 //账户异常发起
         const val TYPE_ACCOUNT_NORMAL = 2  //用户主动发起
+
+        fun startActivity(
+            context1: Context,
+            type: Int = TYPE_ACCOUNT_NORMAL
+        ) {
+            if (!UserManager.isHasFaceUrl()) {
+                CommonAlertDialog.Builder(context1)
+                    .setIconVisible(false)
+                    .setCancelIconIsVisibility(true)
+                    .setTitle("认证提醒")
+                    .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
+                    .setConfirmText("确定")
+                    .setCancelText("取消")
+                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                        override fun onClick(dialog: Dialog) {
+                            dialog.dismiss()
+                            context1.startActivity<IDVerifyActivity>(
+                                "type" to type
+                            )
+                        }
+                    })
+                    .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
+                        CommonAlertDialog.OnCancelListener {
+                        override fun onClick(dialog: Dialog) {
+                            dialog.dismiss()
+                        }
+
+                    })
+                    .create()
+                    .show()
+            } else {
+                context1.startActivity<NewUserInfoSettingsActivity>(
+                    "showToast" to true,
+                    "type" to type
+                )
+            }
+        }
+
+
+        fun startActivityForResult(
+            context1: Activity,
+            face_source_type: Int = 0,
+            type: Int = TYPE_ACCOUNT_NORMAL, requestCode: Int
+        ) {
+
+            if (!UserManager.isHasFaceUrl()) {
+                CommonAlertDialog.Builder(context1)
+                    .setIconVisible(false)
+                    .setCancelIconIsVisibility(true)
+                    .setTitle("认证提醒")
+                    .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
+                    .setConfirmText("确定")
+                    .setCancelText("取消")
+                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                        override fun onClick(dialog: Dialog) {
+                            dialog.dismiss()
+                            context1.startActivityForResult<IDVerifyActivity>(
+                                requestCode, "face_source_type" to face_source_type,
+                                "type" to type
+                            )
+                        }
+                    })
+                    .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
+                        CommonAlertDialog.OnCancelListener {
+                        override fun onClick(dialog: Dialog) {
+                            dialog.dismiss()
+                        }
+
+                    })
+                    .create()
+                    .show()
+            } else {
+                context1.startActivity<NewUserInfoSettingsActivity>("showToast" to true)
+            }
+        }
     }
+
 
     override fun getSwipeBackLayout(): SwipeBackLayout {
         return mHelper.swipeBackLayout
@@ -149,28 +228,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             .initialize(this, Constants.licenseID, Constants.licenseFileName)
 
 
-        CommonAlertDialog.Builder(this)
-            .setIconVisible(false)
-            .setCancelIconIsVisibility(true)
-            .setTitle("认证提醒")
-            .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
-            .setConfirmText("确定")
-            .setCancelText("取消")
-            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                override fun onClick(dialog: Dialog) {
-                    dialog.dismiss()
-                }
-            })
-            .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
-                CommonAlertDialog.OnCancelListener {
-                override fun onClick(dialog: Dialog) {
-                    finish()
-                }
-
-            })
-            .create()
-            .show()
-
         //获取accesstoken
         //        getAccessToken()
         //获取图片的base64
@@ -249,6 +306,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     /**
      * 上传照片
      * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+     * face_source_type是否是消息过来的上传 1是 0否
      */
     private fun uploadProfile(filePath: ByteArray, imagePath: String) {
         if (!NetWorkUtils.isNetWorkAvailable(this)) {
@@ -291,6 +349,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         t.code == 200 -> {
                             CommonFunction.toast("审核提交成功")
                             UserManager.saveUserVerify(2)
+                            UserManager.saveHasFaceUrl(true)
                             setResult(Activity.RESULT_OK)
                             finish()
                             if (intent.getIntExtra(

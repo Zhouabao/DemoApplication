@@ -147,7 +147,11 @@ class MyApplication : BaseApplication() {
                     }
 
                     //8账号异常提示去变更账号
-                    8 -> {
+                    //const SHUMEI_APPROVE = 8; // 数美强制认证（没有人脸时别过）
+                    //const SHUMEI_APPROVE_FACE = 81; // 数美强制认证（有人脸时别过）
+                    //const SUCCESS_FORCE = 10; // 强制认证（没有人脸时别过）
+                    //const SUCCESS_FORCE_FACE = 101; // 强制认证（有人脸时别过）
+                    8, 81 -> {
                         UserManager.saveAccountDanger(true)
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
@@ -161,6 +165,7 @@ class MyApplication : BaseApplication() {
                             UserManager.saveAccountDangerAvatorNotPass(false)
                         }
                         UserManager.saveUserVerify(1)
+                        UserManager.saveHasFaceUrl(true)
                         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
                             SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
                             //发送通知更新内容
@@ -176,7 +181,7 @@ class MyApplication : BaseApplication() {
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
                     }
                     //10头像未通过审核去进行人脸认证
-                    10 -> {
+                    10, 101 -> {
                         UserManager.saveAccountDangerAvatorNotPass(true)
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))

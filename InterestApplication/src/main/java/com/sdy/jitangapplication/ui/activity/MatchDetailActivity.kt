@@ -15,6 +15,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -139,6 +140,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         layoutParams.height = ScreenUtils.getScreenWidth()
         clPhotos.layoutParams = layoutParams
 
+
+        val contactNumberparams1 = (contactNumber.layoutParams as FrameLayout.LayoutParams)
+        contactNumberparams1.topMargin =
+            layoutParams.height - SizeUtils.dp2px(49F) - SizeUtils.dp2px(38F)
+        contactNumber.layoutParams = contactNumberparams1
+
+
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
@@ -152,6 +160,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
         notifyAddTagBtn.setOnClickListener(this)
+        contactNumber.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
@@ -217,7 +226,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         usergiftAdapter.setEmptyView(R.layout.empty_gift, rvGift)
         usergiftAdapter.isUseEmpty(false)
 
-
+        adapter.setPreLoadNumber(Constants.PAGESIZE * page - 5)
         adapter.setOnLoadMoreListener({
             if (adapter.data.size < page * Constants.PAGESIZE) {
                 adapter.loadMoreEnd()
@@ -225,6 +234,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 page += 1
                 params1["page"] = page
                 mPresenter.getSomeoneSquare(params1)
+                adapter.setPreLoadNumber(Constants.PAGESIZE * page - 5)
             }
         }, listSquareRv)
 
@@ -304,6 +314,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         val data = matchBean!!.label_quality
         if (!matchBean!!.label_quality.isNullOrEmpty() && matchBean!!.label_quality.size > 6) {
             userTagAdapter.setFooterView(initTagFooterView())
+            notifyAddTagBtn.isVisible = false
             userTagAdapter.addData(data.subList(0, 6))
         } else if (matchBean!!.label_quality.isNullOrEmpty()) {
             notifyAddTagBtn.isVisible = true
@@ -326,7 +337,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             userTagAdapter.addData(data)
         }
 
-        guidelWishHelp.isVisible = !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
+        guidelWishHelp.isVisible =
+            !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
         val scaleAni = ObjectAnimator.ofFloat(guidelWishHelp, "scaleX", 0.9F, 1F, 0.9F)
         scaleAni.repeatCount = 2
         scaleAni.duration = 1500L
@@ -382,6 +394,41 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         detailUserName.text = matchBean!!.nickname ?: ""
         titleUsername.text = matchBean!!.nickname ?: ""
+
+        //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
+        when (matchBean!!.contact_way) {
+            1 -> {
+                contactNumber.isVisible = true
+                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_phone_reg),
+                    null,
+                    null,
+                    null
+                )
+            }
+            2 -> {
+                contactNumber.isVisible = true
+                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_wechat_reg),
+                    null,
+                    null,
+                    null
+                )
+            }
+            3 -> {
+                contactNumber.isVisible = true
+                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_qq_reg),
+                    null,
+                    null,
+                    null
+                )
+            }
+            else -> {
+                contactNumber.isVisible = false
+            }
+        }
+
         if (matchBean!!.intention_title.isNullOrEmpty()) {
             detailUserIntention1.isVisible = false
         } else {
@@ -546,6 +593,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
+            "pagesize" to Constants.PAGESIZE,
             "target_accid" to targetAccid
         )
     }
@@ -837,9 +885,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 guidelWishHelp.isVisible = false
                 UserManager.saveShowGuideHelpWish(true)
             }
-            R.id.notifyAddTagBtn -> {//
+            R.id.notifyAddTagBtn -> {//通知对方添加特质
                 mPresenter.needNotice(hashMapOf<String, Any>("target_accid" to matchBean!!.accid))
                 notifyAddTagBtn.isEnabled = false
+            }
+            R.id.contactNumber -> {//获取联系方式
+                CommonFunction.checkUnlockContact(
+                    this,
+                    matchBean!!.accid,
+                    matchBean!!.gender ?: 1
+                )
             }
         }
 

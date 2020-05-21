@@ -83,6 +83,7 @@
         android:layout_marginRight="25dp"
         android:nestedScrollingEnabled="false"
         android:overScrollMode="never"
+        android:alpha="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userAvatorTake" />

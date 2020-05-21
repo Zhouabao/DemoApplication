@@ -112,17 +112,7 @@
             android:layout_gravity="center"
             android:background="@color/colorWhite">
 
-            <ImageView
-                android:id="@+id/tabMatch"
-                android:layout_width="0dp"
-                android:layout_height="41dp"
-                android:src="@drawable/icon_tab_match_checked1"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/tabSquare"
-                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/tabMatchCount"
@@ -130,7 +120,7 @@
                 android:layout_height="41dp"
                 android:drawableTop="@drawable/icon_tab_match_checked"
                 android:gravity="center_horizontal|bottom"
-                android:text="首页"
+                android:text="心动"
                 android:textColor="@color/colorOrange"
                 android:textSize="12sp"
                 android:textStyle="bold"

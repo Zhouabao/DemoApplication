@@ -1,13 +1,17 @@
 package com.sdy.jitangapplication.ui.fragment
 
-import android.graphics.Color
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -16,12 +20,16 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
+import com.sdy.jitangapplication.event.UpdateSameCityVipEvent
+import com.sdy.jitangapplication.event.UpdateShowTopAlert
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
@@ -31,22 +39,26 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_people_nearby.*
-import kotlinx.android.synthetic.main.header_item_near_by.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.textColor
-import kotlin.math.abs
 
 /**
  * 附近的人
  */
-class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), PeopleNearbyView,
+class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
+    BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), PeopleNearbyView,
     OnRefreshListener, OnLoadMoreListener {
+    companion object {
+        const val TYPE_RECOMMEND = 1
+        const val TYPE_SAMECITY = 2
+    }
 
     private val adapter by lazy { PeopleNearbyAdapter() }
-
+    private var firstLoad = true
+    private var ranking_level: Int = 0
     private var page = 1
+    private var isLoadingMore = false
     private val params by lazy {
         hashMapOf<String, Any>(
             "lng" to UserManager.getlongtitude().toFloat(),
@@ -75,6 +87,8 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
     }
 
     override fun loadData() {
+        showOpenVipCl()
+
 
         EventBus.getDefault().register(this)
 
@@ -89,81 +103,173 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_LOADING
             refreshPeopleNearby.autoRefresh()
         }
+        changeAvatorCloseBtn.clickWithTrigger {
 
-
-        nearFilterLl.clickWithTrigger {
-            NearPeopleFilterDialog(activity!!).show()
+            EventBus.getDefault().post(UpdateShowTopAlert())
         }
-
 
         rvPeopleNearby.layoutManager = linearLayoutManager
         rvPeopleNearby.adapter = adapter
-        adapter.addHeaderView(initHeadView())
+//        adapter.addHeaderView(initHeadView())
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
         adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
         adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.setHeaderAndEmpty(true)
 
-
-
         rvPeopleNearby.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                nearFilterLl.isVisible =
-                    abs(recyclerView.computeVerticalScrollOffset()) >= SizeUtils.dp2px(72f)
+                val lastVisible = linearLayoutManager.findLastVisibleItemPosition()
+                val total = linearLayoutManager.itemCount
+                if (lastVisible >= total - 5 && dy > 0) {
+                    if (!isLoadingMore) {
+                        onLoadMore(refreshPeopleNearby)
+                        isLoadingMore = true
+                    }
+                }
             }
         })
 
-        mPresenter.nearlyIndex(params)
+        updateFilterParams()
+
+        mPresenter.todayRecommend()
+
     }
 
-    //附近的人筛选条件
-    fun initHeadView(): View {
-        val headNearBy = layoutInflater.inflate(R.layout.header_item_near_by, rvPeopleNearby, false)
-        headNearBy.clickWithTrigger {
-            NearPeopleFilterDialog(activity!!).show()
+    private fun showOpenVipCl() {
+        if (!UserManager.isUserVip() && type == TYPE_SAMECITY) {
+            openVipCl.isVisible = true
+            t2.text = if (UserManager.getGender() == 1) {
+                "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
+                    "people_amount",
+                    0
+                )}名糖宝女孩\n满足你的需求"
+            } else {
+                "${UserManager.getCity()}的${SPUtils.getInstance(Constants.SPNAME).getInt(
+                    "people_amount",
+                    0
+                )}位${if (UserManager.getGender() == 1) {
+                    "女"
+                } else {
+                    "男"
+                }}性正等待你联络"
+            }
+
+            openVipBtn.text = if (UserManager.getGender() == 1) {
+                "开通会员联系她们"
+            } else {
+                "开通会员"
+            }
+            GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), myAvator)
+            openVipBtn.clickWithTrigger {
+                ChargeVipDialog(ChargeVipDialog.LOOK_SAME_CITY, activity!!).show()
+            }
+            if (UserManager.getGender() == 1) {
+                lottieMoreMatch.imageAssetsFolder = "images_boy"
+                lottieMoreMatch.setAnimation("data_boy_more_match.json")
+            } else {
+                lottieMoreMatch.imageAssetsFolder = "images_girl"
+                lottieMoreMatch.setAnimation("data_girl_more_match.json")
+            }
+
+
+            val scaleAnimationX = ObjectAnimator.ofFloat(myAvator, "scaleX", 0F, 1F)
+            val scaleAnimationY = ObjectAnimator.ofFloat(myAvator, "scaleY", 0F, 1F)
+            val alphaAnimation = ObjectAnimator.ofFloat(myAvator, "alpha", 0F, 1F)
+            val animationSet = AnimatorSet()
+            animationSet.duration = 500
+            animationSet.playTogether(scaleAnimationX, scaleAnimationY, alphaAnimation)
+            animationSet.start()
+
+            animationSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    lottieMoreMatch.playAnimation()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+
+
+            lottieMoreMatch.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    lottieMoreMatchRipple1.postDelayed({
+                        try {
+                            lottieMoreMatchRipple1.playAnimation()
+                        } catch (e: Exception) {
+                        }
+                    }, 2000L)
+
+                    lottieMoreMatchRipple2.postDelayed({
+                        try {
+                            lottieMoreMatchRipple2.playAnimation()
+                        } catch (e: Exception) {
+                        }
+                    }, 4000L)
+
+
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                    lottieMoreMatchRipple.playAnimation()
+                }
+
+            })
+
+        } else {
+            openVipCl.isVisible = false
         }
-        return headNearBy
     }
+
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
-        mPresenter.nearlyIndex(params)
+        mPresenter.nearlyIndex(params, type)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page += 1
         params["page"] = page
-        mPresenter.nearlyIndex(params)
+        mPresenter.nearlyIndex(params, type)
     }
 
 
-    private val todayWantDialog by lazy { TodayWantDialog(activity!!) }
     override fun nearlyIndexResult(success: Boolean, nearBean: NearBean?) {
         if (success) {
-            //如果没有显示过协议，那就协议先出，再弹引导。
-//            否则直接判断有没有显示过引导页面
+            //如果没有显示过协议
+            //否则直接判断有没有显示过引导页面
+            //是否今日缘分
+            //是否今日意向
+            //资料完善度
             if (!UserManager.getAlertProtocol()) {
-                PrivacyDialog(
-                    activity!!, nearBean?.iscompleteguide ?: false,
-                    nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull, todayWantDialog
-                ).show()
+                PrivacyDialog(activity!!, nearBean, indexRecommends).show()
             } else if (nearBean?.iscompleteguide != true) {
-                GuideSendCandyDialog(
-                    activity!!,
-                    nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull,
-                    todayWantDialog
-                ).show()
+                GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
+            } else if (!indexRecommends.isNullOrEmpty()) {
+                TodayFateDialog(activity!!, nearBean, indexRecommends).show()
             } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
-                todayWantDialog.show()
+                TodayWantDialog(activity!!, nearBean).show()
             } else if (nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
                 //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
                 CompleteUserCenterDialog(activity!!).show()
             }
-
 
             if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
                 EventBus.getDefault().post(
@@ -189,6 +295,45 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
             } else {
                 refreshPeopleNearby.finishLoadMore(true)
             }
+
+            //头像等级
+            ranking_level = nearBean!!.ranking_level
+            //保存 VIP信息
+            UserManager.saveUserVip(
+                if (nearBean.isvip) {
+                    1
+                } else {
+                    0
+                }
+            )
+            onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
+            //保存认证信息
+            UserManager.saveUserVerify(nearBean.isfaced)
+            //保存是否进行过人脸验证
+            UserManager.saveHasFaceUrl(nearBean.has_face_url)
+
+            //第一次加载的时候就显示顶部提示条
+            if (firstLoad) {
+                if (ranking_level == 2) {//2 真人提示
+                    (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
+                        SizeUtils.dp2px(41F)
+                    lieAvatorLl.isVisible = true
+                    lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
+                    changeAvatorBtn.text = "立即替换"
+                    changeAvatorCloseBtn.isVisible = false
+                } else if (!nearBean.is_full) {
+                    (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
+                        SizeUtils.dp2px(41F)
+                    lieAvatorLl.isVisible = true
+                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
+                    changeAvatorBtn.text = "立即完善"
+                    changeAvatorCloseBtn.isVisible = true
+                } else {
+                    lieAvatorLl.isVisible = false
+                }
+                firstLoad = false
+            }
+
             adapter.addData(nearBean?.list ?: mutableListOf())
 
             if (adapter.data.isNullOrEmpty()) {
@@ -199,7 +344,19 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
             refreshPeopleNearby.finishRefresh(false)
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_ERROR
         }
+        isLoadingMore = false
 
+    }
+
+    private var indexRecommends: MutableList<IndexRecommendBean> = mutableListOf()
+    override fun onTodayRecommendResult(data: MutableList<IndexRecommendBean>?) {
+        /**
+         * 今日推荐获取结果
+         */
+        if (!data.isNullOrEmpty()) {
+            indexRecommends = data
+        }
+        mPresenter.nearlyIndex(params, type)
     }
 
 
@@ -208,55 +365,47 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         EventBus.getDefault().unregister(this)
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateNearPeopleParamsEvent(event: UpdateNearPeopleParamsEvent) {
-        if (event.params.isEmpty()) {
-            nearFilterContent.text = "同城筛选"
-            nearFilterContent.textColor = Color.parseColor("#191919")
-            adapter.headerLayout.headFilterContent.setCompoundDrawablesWithIntrinsicBounds(
-                activity!!.resources.getDrawable(
-                    R.drawable.icon_filter_small
-                ), null, null, null
-            )
-            adapter.headerLayout.headFilterContent.text = "同城筛选"
-            adapter.headerLayout.headFilterContent.textColor = Color.parseColor("#191919")
-            nearFilterContent.setCompoundDrawablesWithIntrinsicBounds(
-                activity!!.resources.getDrawable(
-                    R.drawable.icon_filter_small
-                ), null, null, null
-            )
-            params.clear()
-            params["page"] = 1
-            params["pagesize"] = Constants.PAGESIZE
-        } else {
-//            1智能 2距离 3在线
-            adapter.headerLayout.headFilterContent.text =
-                "已筛选\t${when (event.params["rank_type_nearly"]) {
-                    1 -> "智能推荐"
-                    2 -> "距离优先"
-                    else -> "在线优先"
-                }}\t${when (event.params["gender_nearly"]) {
-                    1 -> "男"
-                    2 -> "女"
-                    else -> "性别不限"
-                }}\t${event.params["limit_age_low_nearly"]}-${event.params["limit_age_high_nearly"]}岁"
-            adapter.headerLayout.headFilterContent.textColor = Color.parseColor("#FF6318")
-            adapter.headerLayout.headFilterContent.setCompoundDrawablesWithIntrinsicBounds(
-                activity!!.resources.getDrawable(
-                    R.drawable.icon_filter_orange_small
-                ), null, null, null
-            )
-            nearFilterContent.text = adapter.headerLayout.headFilterContent.text
-            nearFilterContent.textColor = Color.parseColor("#FF6318")
-            nearFilterContent.setCompoundDrawablesWithIntrinsicBounds(
-                activity!!.resources.getDrawable(
-                    R.drawable.icon_filter_orange_small
-                ), null, null, null
-            )
-            params.putAll(event.params)
-        }
+        updateFilterParams()
         refreshPeopleNearby.autoRefresh()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
+        if (type == TYPE_SAMECITY)
+            showOpenVipCl()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateShowTopAlert(event: UpdateShowTopAlert) {
+        (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin = 0
+        lieAvatorLl.isVisible = false
+        firstLoad = false
+    }
+
+    private fun updateFilterParams() {
+        //加入本地的筛选对话框的筛选条件
+        if (params["audit_only"] != null)
+            params.remove("audit_only")
+//        if (params["local_only"] != null)
+//            params.remove("local_only")
+        val params1 = UserManager.getFilterConditions()
+        params1.forEach {
+            params[it.key] = it.value
+        }
+        if (params["lng"] == 0.0F) {
+            params["lat"] = UserManager.getlongtitude().toFloat()
+            params["lng"] = UserManager.getlatitude().toFloat()
+            params["city_code"] = UserManager.getCityCode()
+        }
     }
 
 }

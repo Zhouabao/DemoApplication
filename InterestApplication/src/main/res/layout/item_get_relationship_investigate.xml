@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+
+    <TextView
+        android:id="@+id/investigateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="8dp"
+        android:text="首先，您在哪里得知的积糖呢"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/investigateEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="35dp"
+        android:background="@null"
+        android:hint="请输入你看到积糖的渠道"
+        android:overScrollMode="never"
+        android:textColor="@color/colorBlack19"
+        android:textColorHint="#ffc1c3c4"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/investigateTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/investigateTitle" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:background="#FFC1C3C4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/investigateEt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

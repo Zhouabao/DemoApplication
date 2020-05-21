@@ -16,6 +16,7 @@ import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.AMapManager
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
@@ -37,7 +38,8 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_splash)
+        setContentView(R.layout.activity_splash)
+        StatusBarUtil.immersive(this)
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //            BarUtils.setStatusBarVisibility(this, false)

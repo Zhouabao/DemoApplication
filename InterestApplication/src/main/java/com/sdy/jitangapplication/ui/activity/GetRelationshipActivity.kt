@@ -26,7 +26,6 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
     private val getRelationshipVpAdapter by lazy {
         GetRelationshipVpAdapter(
-            watingMatchCount,
             completeProgress
         )
     }
@@ -52,7 +51,12 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.nextStep -> {
-                if (getRelationshipVpAdapter.checkList.isNullOrEmpty() || getRelationshipVpAdapter.checkList[currentPos] == null) {
+                if (vpRelationship.currentItem == 0 && getRelationshipVpAdapter.channel_string.isNullOrEmpty()) {
+                    CommonFunction.toast("请先填写了解的渠道奥")
+                    return
+                }
+
+                if (vpRelationship.currentItem != 0 && (getRelationshipVpAdapter.checkList.isNullOrEmpty() || getRelationshipVpAdapter.checkList[currentPos] == -1)) {
                     CommonFunction.toast("请先勾选相应项")
                     return
                 }
@@ -66,8 +70,12 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
                         step3.setTextColor(Color.parseColor("#C5C6C8"))
                         step3.setBackgroundResource(R.drawable.shape_oval_1dp_c5c6c8)
+
+                        step4.setTextColor(Color.parseColor("#C5C6C8"))
+                        step4.setBackgroundResource(R.drawable.shape_oval_1dp_c5c6c8)
                     }
-                    1, 2 -> {
+                    1 -> {
+
                         step1.setTextColor(Color.WHITE)
                         step1.setBackgroundResource(R.drawable.shape_oval_orange)
 
@@ -76,6 +84,25 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
                         step3.setTextColor(Color.WHITE)
                         step3.setBackgroundResource(R.drawable.shape_oval_orange)
+
+                        step4.setTextColor(Color.parseColor("#C5C6C8"))
+                        step4.setBackgroundResource(R.drawable.shape_oval_1dp_c5c6c8)
+
+
+                    }
+
+                    2, 3 -> {
+                        step1.setTextColor(Color.WHITE)
+                        step1.setBackgroundResource(R.drawable.shape_oval_orange)
+
+                        step2.setTextColor(Color.WHITE)
+                        step2.setBackgroundResource(R.drawable.shape_oval_orange)
+
+                        step3.setTextColor(Color.WHITE)
+                        step3.setBackgroundResource(R.drawable.shape_oval_orange)
+
+                        step4.setTextColor(Color.WHITE)
+                        step4.setBackgroundResource(R.drawable.shape_oval_orange)
 
                     }
                 }
@@ -88,8 +115,9 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
                 } else { //
                     mPresenter.addWant(
                         hashMapOf(
+                            "channel_string" to getRelationshipVpAdapter.channel_string,
                             "find_id" to Gson().toJson(
-                                getRelationshipVpAdapter.checkList
+                                getRelationshipVpAdapter.checkList.subList(1, 4)
                             )
                         )
                     )
@@ -114,7 +142,17 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
     }
 
     override fun onGetMyTaps(data: MutableList<MyTapsBean>) {
-        getRelationshipVpAdapter.setNewData(data)
+        getRelationshipVpAdapter.addData(
+            MyTapsBean(
+                title = "首先，您在哪里得知的积糖呢",
+                type = MyTapsBean.TYPE_INVESTIGATION,
+                use_cnt = data[0].use_cnt
+            )
+        )
+        for (tdata in data) {
+            tdata.type = MyTapsBean.TYPE_MYTAP
+        }
+        getRelationshipVpAdapter.addData(data)
         if (!data.isNullOrEmpty() && data.size > 0) {
             watingMatchCount.text = "${data[0].use_cnt}"
         } else {

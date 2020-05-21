@@ -81,6 +81,8 @@ class ChargeVipDialog(
         const val FILTER_ONLINE = 6//会员独享筛选项
         const val LOOKED_ME = 7//看过我的
         const val COMMENT_FREE = 8//广场评论
+        const val GET_CONTACT = 9//获取联系人
+        const val LOOK_SAME_CITY = 10//获取联系人
 
         const val FILTER = 8//已读功能
         //购买类型

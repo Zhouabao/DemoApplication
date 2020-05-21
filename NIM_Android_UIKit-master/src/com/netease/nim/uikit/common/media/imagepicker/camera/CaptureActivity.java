@@ -24,9 +24,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nim.uikit.common.media.imagepicker.Constants;
@@ -214,8 +216,8 @@ public class CaptureActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 GLImage yixinVideo = GLImage.Builder.newBuilder().setAddTime(TimeUtil.getNow_millisecond()).setDuration(
                         currentTime * 1000).setSize(new File(videoSavePath).length()).setHeight(videoHeight).setWidth(
-                        videoWidth).setMimeType("video/mp4") // FIXME
-                                                    .setPath(videoSavePath).build();
+                        videoWidth).setMimeType("video/mp4")
+                        .setPath(videoSavePath).build();
                 ArrayList<GLImage> selectedVideos = new ArrayList<>(1);
                 selectedVideos.add(yixinVideo);
                 Intent intent = new Intent();
@@ -262,7 +264,7 @@ public class CaptureActivity extends AppCompatActivity {
                 String pictureName = pictureFile.getName();
                 BitmapFactory.Options options = ImageUtil.getOptions(pictureSavePath);
                 GLImage image = GLImage.Builder.newBuilder().setWidth(options.outWidth).setHeight(options.outHeight)
-                                               .setMimeType(options.outMimeType).setPath(pictureSavePath).setName(
+                        .setMimeType(options.outMimeType).setPath(pictureSavePath).setName(
                                 pictureName).setSize(pictureFile.length()).setAddTime(now).build();
                 ImagePreviewRetakeActivity.start(CaptureActivity.this, image);
             } catch (FileNotFoundException e) {
@@ -575,13 +577,13 @@ public class CaptureActivity extends AppCompatActivity {
                 for (int result : grantResults) {
                     if (result != PackageManager.PERMISSION_GRANTED) {
                         ErrorDialog.newInstance(getString(R.string.permission_request)).show(getFragmentManager(),
-                                                                                             PERMISSIONS_FRAGMENT_DIALOG);
+                                PERMISSIONS_FRAGMENT_DIALOG);
                         break;
                     }
                 }
             } else {
                 ErrorDialog.newInstance(getString(R.string.permission_request)).show(getFragmentManager(),
-                                                                                     PERMISSIONS_FRAGMENT_DIALOG);
+                        PERMISSIONS_FRAGMENT_DIALOG);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

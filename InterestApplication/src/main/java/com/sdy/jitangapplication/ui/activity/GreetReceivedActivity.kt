@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
 import com.sdy.jitangapplication.ui.adapter.GreetUserAdapter
 import com.sdy.jitangapplication.ui.dialog.GuideGreetDialog
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_greet_received.*
@@ -77,7 +78,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
 
 
     private fun initView() {
-        BarUtils.setStatusBarLightMode(this, false)
+        StatusBarUtil.immersive(this)
 
         mPresenter = GreetReceivedPresenter()
         mPresenter.mView = this

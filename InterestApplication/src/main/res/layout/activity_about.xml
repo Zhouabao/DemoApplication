@@ -144,7 +144,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="20dp"
             android:lineSpacingMultiplier="1.2"
-            android:text="Copyright© 2019\n
+            android:text="Copyright© 2020\n
 成都霜冻夜科技有限公司 版权所有"
             android:textColor="#40000000"
             android:textSize="12sp"

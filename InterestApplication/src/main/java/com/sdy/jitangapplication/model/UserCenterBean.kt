@@ -220,5 +220,13 @@ data class MoreMatchBean(
     var gender_str: String = "",
     var people_amount: Int = 0,
     var avatar: String = "",
+    var force_vip: Boolean = false,
     var isvip: Boolean = false
 ) : Serializable
+
+
+data class ContactWayBean(
+    var contact_way: Int = 0,
+    var contact_way_content: String = "",
+    var contact_way_hide: Int = 0
+)

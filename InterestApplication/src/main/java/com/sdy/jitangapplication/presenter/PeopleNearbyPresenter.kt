@@ -7,10 +7,11 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.ui.fragment.PeopleNearbyFragment
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -24,23 +25,65 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
     /**
      * 获取首页附近的人
      */
-    fun nearlyIndex(params: HashMap<String, Any>) {
+    fun nearlyIndex(params: HashMap<String, Any>, type: Int) {
+
+        when (type) {
+            PeopleNearbyFragment.TYPE_RECOMMEND -> {
+                RetrofitFactory.instance.create(Api::class.java)
+                    .recommendIndex(UserManager.getSignParams(params))
+                    .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                        override fun onNext(t: BaseResp<NearBean?>) {
+                            super.onNext(t)
+                            mView.nearlyIndexResult(t.code == 200, t.data)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            super.onError(e)
+                            if (e is BaseException) {
+                                TickDialog(context).show()
+                            } else
+                                mView.nearlyIndexResult(false, null)
+                        }
+                    })
+            }
+            PeopleNearbyFragment.TYPE_SAMECITY -> {
+                RetrofitFactory.instance.create(Api::class.java)
+                    .theSameCity(UserManager.getSignParams(params))
+                    .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                        override fun onNext(t: BaseResp<NearBean?>) {
+                            super.onNext(t)
+                            mView.nearlyIndexResult(t.code == 200, t.data)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            super.onError(e)
+                            if (e is BaseException) {
+                                TickDialog(context).show()
+                            } else
+                                mView.nearlyIndexResult(false, null)
+                        }
+                    })
+            }
+        }
+
+    }
+
+
+    /**
+     * 获取今日缘分
+     */
+    fun todayRecommend() {
         RetrofitFactory.instance.create(Api::class.java)
-            .nearlyIndexEnd(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
-                override fun onNext(t: BaseResp<NearBean?>) {
-                    super.onNext(t)
-                    mView.nearlyIndexResult(t.code == 200, t.data)
+            .todayRecommend(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
+                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
+                    mView.onTodayRecommendResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {
-                    super.onError(e)
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        CommonFunction.getErrorMsg(context)
+
                 }
+
             })
     }
-
 }

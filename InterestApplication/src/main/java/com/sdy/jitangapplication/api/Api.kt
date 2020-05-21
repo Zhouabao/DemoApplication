@@ -289,6 +289,22 @@ interface Api {
     fun needNotice(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
+    /**
+     * 验证解锁联系方式
+     */
+    @FormUrlEncoded
+    @POST("Candy/checkUnlockContact${Constants.END_BASE_URL}")
+    fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBean?>>
+
+
+    /**
+     * 解锁联系方式
+     */
+    @FormUrlEncoded
+    @POST("Candy/unlockContact${Constants.END_BASE_URL}")
+    fun unlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockBean?>>
+
+
     /**********************匹配**************************/
 
     /**
@@ -318,12 +334,21 @@ interface Api {
 
 
     /**
-     * 获取附近的人
+     * 同城
      *
      */
     @FormUrlEncoded
-    @POST("Index/nearlyIndexEnd${Constants.END_BASE_URL}")
-    fun nearlyIndexEnd(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
+    @POST("Home/theSameCity${Constants.END_BASE_URL}")
+    fun theSameCity(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
+
+
+    /**
+     * 推荐
+     * recommendIndex
+     */
+    @FormUrlEncoded
+    @POST("Home/recommendIndex${Constants.END_BASE_URL}")
+    fun recommendIndex(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
 
 
     /**
@@ -399,7 +424,6 @@ interface Api {
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
 
 
-
     /**
      * 打招呼验证是否能打
      */
@@ -467,10 +491,24 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/someoneSquareCandy${Constants.END_BASE_URL}")
-    fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
+    fun someoneSquareCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
 
     /*******************************个人中心*****************************************/
+    /**
+     * 获取联系方式
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getContact${Constants.END_BASE_URL}")
+    fun getContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ContactWayBean?>>
+
+    /**
+     * 设置联系方式
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/setContact${Constants.END_BASE_URL}")
+    fun setContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
     /**
      * 个人中心
      */
@@ -579,7 +617,6 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/registerAddPhoto${Constants.END_BASE_URL}")
     fun registerAddPhoto(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MoreMatchBean?>>
-
 
 
     /**

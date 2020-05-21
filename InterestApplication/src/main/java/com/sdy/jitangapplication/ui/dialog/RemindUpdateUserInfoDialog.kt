@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_new_user_info_settings.*
 /**
  *    author : ZFM
  *    date   : 2019/8/1513:59
- *    desc   : 兑换成功弹窗
+ *    desc   : 提醒用户填写信息
  *    version: 1.0
  */
 class RemindUpdateUserInfoDialog(var context1: Context, val answerList: MutableList<AnswerBean>) :
@@ -50,7 +50,12 @@ class RemindUpdateUserInfoDialog(var context1: Context, val answerList: MutableL
 
     override fun show() {
         super.show()
-        rvMoreInfo.postDelayed({ dismiss() }, 3000L)
+        rvMoreInfo.postDelayed({
+            try {
+                dismiss()
+            } catch (e: Exception) {
+            }
+        }, 3000L)
     }
 
 }

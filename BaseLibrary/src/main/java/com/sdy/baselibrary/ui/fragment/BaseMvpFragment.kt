@@ -22,7 +22,7 @@ abstract open class BaseMvpFragment<T : BasePresenter<*>> : BaseFragment(), Base
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //初始加载框
-        TODO("初始化加载框")
+        ("初始化加载框")
         //mLoadingDialog = ProgressLoading.create(context!!)
         return super.onCreateView(inflater, container, savedInstanceState)
     }

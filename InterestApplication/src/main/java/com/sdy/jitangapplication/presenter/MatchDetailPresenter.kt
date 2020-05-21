@@ -38,7 +38,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     fun getSomeoneSquare(params: HashMap<String, Any>) {
 
         RetrofitFactory.instance.create(Api::class.java)
-            .someoneSquare(UserManager.getSignParams(params))
+            .someoneSquareCandy(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()

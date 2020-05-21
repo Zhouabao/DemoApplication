@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="15dp"
+    android:paddingTop="8dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp">
+
+
+    <ImageView
+        android:id="@+id/contactImg"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:src="@drawable/icon_wechat_account" />
+
+    <TextView
+        android:id="@+id/contactContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="13543467899"
+        android:textColor="#ff191919"
+        android:textSize="15sp" />
+
+</LinearLayout>

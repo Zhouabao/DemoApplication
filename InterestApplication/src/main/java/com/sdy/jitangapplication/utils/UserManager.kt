@@ -442,9 +442,9 @@ object UserManager {
         if (sp.getInt("limit_age_high", -1) != -1) {
             parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
         }
-        if (sp.getInt("local_only", -1) != -1) {
-            parmas["local_only"] = sp.getInt("local_only", -1)
-        }
+//        if (sp.getInt("local_only", -1) != -1) {
+//            parmas["local_only"] = sp.getInt("local_only", -1)
+//        }
         if (sp.getInt("audit_only", -1) != -1) {
             parmas["audit_only"] = sp.getInt("audit_only", -1)
         }
@@ -570,6 +570,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("hasFaceUrl")
 
         /**
          * 弹窗缓存信息清空
@@ -734,6 +735,18 @@ object UserManager {
     }
 
 
+    /**
+     * 是否展示赠送礼物规则提醒
+     */
+    fun isHasFaceUrl(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("hasFaceUrl", false)
+    }
+
+    fun saveHasFaceUrl(has_face_url: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("hasFaceUrl", has_face_url)
+    }
+
+
     fun getBaseParams(): HashMap<String, Any> {
         return hashMapOf(
             "token" to getToken(),
@@ -808,7 +821,7 @@ object UserManager {
                 "moreMatch" to MoreMatchBean(
                     data.extra_data?.city_name ?: "",
                     data.extra_data?.gender_str ?: "",
-                    data?.extra_data?.people_amount?:0
+                    data?.extra_data?.people_amount ?: 0
                 ),
                 "force_vip" to data.extra_data?.force_vip
             )
@@ -820,13 +833,15 @@ object UserManager {
                 ActivityUtils.getTopActivity(), MoreMatchBean(
                     data.extra_data?.city_name ?: "",
                     data.extra_data?.gender_str ?: "",
-                    data?.extra_data?.people_amount?:0
+                    data?.extra_data?.people_amount ?: 0
                 ),
                 force_vip = isForceOpenVip()
             ).show()
         } else {
             //跳到主页
             //保存个人信息
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("people_amount", data?.extra_data?.people_amount)
             saveUserInfo(data)
 //            AppManager.instance.finishAllActivity()
             context.startActivity<MainActivity>()
@@ -879,4 +894,5 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("rank_type_nearly")
         SPUtils.getInstance(Constants.SPNAME).remove("gender_nearly")
     }
+
 }

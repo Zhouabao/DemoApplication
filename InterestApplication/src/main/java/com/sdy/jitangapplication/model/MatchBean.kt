@@ -77,6 +77,7 @@ data class MatchBean(
     var isliked: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,
+    var contact_way: Int = 0,
     var photos: MutableList<String>? = null,
     var sign: String? = null,
     var job: String? = null,
@@ -213,31 +214,64 @@ data class NearBean(
     var list: MutableList<NearPersonBean> = mutableListOf(),
     var today_find: CheckBean? = null,
     var iscompleteguide: Boolean = false,
+    var isvip: Boolean = false,    //是否会员 true是 false不是
+    var isfaced: Int = 0,   //0未认证/认证不成功     1认证通过     2认证中
+    var is_full: Boolean = false,//兴趣是否完整
+    var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var today_find_pull: Boolean = false,
+    var has_face_url: Boolean = false,  //是否进行过人脸验证，true验证过 false未验证
     val complete_percent: Int,//（我的资料完整度）
     val complete_percent_normal: Int//（标准完整度新的）
 )
 
-data class NearPersonBean(
-    var accid: String = "",
-    var intention_title: String = "",
-    var age: Int = 0,
-    var avatar: String = "",
-    var birth: Int = 0,
-    var constellation: String = "",
-    var gender: Int = 0,
-    var juli: String = "",
-    var nickname: String = "",
-    var photos: MutableList<String> = mutableListOf(),
-    var sign: String = "",
-    var distance: String = "",
-    var online_time: String = "",
-    var isfaced: Boolean = false,
-    var isvip: Boolean = false,
-    var wish_data: MutableList<GiftBean> = mutableListOf(),
-    var plus_photo: Int = 0
+data class UnlockBean(
+    var isnew_friend: Boolean = false,
+    var contact_way: Int,
+    var contact_content: String
 )
 
+//data class NearPersonBean(
+//    var accid: String = "",
+//    var intention_title: String = "",
+//    var intention_icon: String = "",
+//    var age: Int = 0,
+//    var avatar: String = "",
+//    var birth: Int = 0,
+//    var constellation: String = "",
+//    var gender: Int = 0,
+//    var juli: String = "",
+//    var nickname: String = "",
+//    var photos: MutableList<String> = mutableListOf(),
+//    var sign: String = "",
+//    var distance: String = "",
+//    var online_time: String = "",
+//    var isfaced: Boolean = false,
+//    var isvip: Boolean = false,
+//    var wish_data: MutableList<GiftBean> = mutableListOf(),
+//    var plus_photo: Int = 0
+//)
+
+
+data class NearPersonBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var all_c: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var contact_way: Int = 0,
+    var distance: String = "",
+    var face_auditing_state: Int = 0,
+    var gender: Int = 0,
+    var intention_icon: String = "",
+    var intention_title: String = "",
+    var isfaced: Int = 0,
+    var isvip: Boolean = false,
+    var member_level: Int = 0,
+    var nickname: String = "",
+    var online_time: String = "",
+    var sign: String = "",
+    var want: MutableList<String> = mutableListOf()
+)
 
 /**
  * 开屏页推荐
