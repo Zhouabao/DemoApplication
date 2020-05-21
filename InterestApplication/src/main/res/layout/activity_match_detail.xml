@@ -135,7 +135,7 @@
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            tools:text="用户名最大长度十个字" />
+                            tools:text="小周小周，万事无忧。" />
 
                         <ImageView
                             android:id="@+id/detailUserVip"

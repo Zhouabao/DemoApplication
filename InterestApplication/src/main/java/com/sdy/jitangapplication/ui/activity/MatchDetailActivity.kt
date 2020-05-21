@@ -393,6 +393,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //        EventBus.getDefault().post(UpdateSquareEvent())
 
         detailUserName.text = matchBean!!.nickname ?: ""
+        detailUserName.textSize = if ((matchBean!!.nickname ?: "").length > 6) {
+            22F
+        } else {
+            25F
+        }
         titleUsername.text = matchBean!!.nickname ?: ""
 
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏

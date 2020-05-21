@@ -23,7 +23,6 @@ import com.sdy.jitangapplication.event.MatchByWishHelpEvent
 import com.sdy.jitangapplication.model.UnlockBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.nim.attachment.ContactAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -53,8 +52,6 @@ class UnlockContactDialog(
 
     private fun initView() {
         unlockBtn.text = "${costCandy}糖果解锁"
-
-
         unlockBtn.clickWithTrigger {
             dismiss()
             CommonAlertDialog.Builder(myContext)
@@ -107,73 +104,52 @@ class UnlockContactDialog(
      * 解锁联系方式
      */
     fun unlockContact() {
+        val loading = LoadingDialog(myContext)
         RetrofitFactory.instance.create(Api::class.java)
             .unlockContact(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
             .excute(object : BaseSubscriber<BaseResp<UnlockBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
+
                 override fun onNext(t: BaseResp<UnlockBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         if (t.data!!.isnew_friend) {
-                            sendMatchFriendMessage()
+                            sendMatchFriendMessage(loading)
                         } else {
-                            EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+                            loading.dismiss()
+                            if (ActivityUtils.getTopActivity() is MatchDetailActivity)
+                                EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
                             if (ActivityUtils.getTopActivity() !is ChatActivity)
-                                ChatActivity.start(myContext, target_accid)
-                            dismiss()
-//                            sendContactMessage(t.data!!.contact_content, t.data!!.contact_way)
+                                ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
                         }
                     } else if (t.code == 222) { //已经解锁过
+                        loading.dismiss()
                         if (ActivityUtils.getTopActivity() !is ChatActivity)
-                            ChatActivity.start(myContext, target_accid)
-                        dismiss()
+                            ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
                     } else if (t.code == 419) {
+                        loading.dismiss()
                         RechargeCandyDialog(context).show()
+                    } else {
+                        loading.dismiss()
                     }
 
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
+                    loading.dismiss()
                 }
             })
     }
 
-    fun sendContactMessage(contactContent: String, contactWay: Int) {
-        val contactAttachment =
-            ContactAttachment(contactContent, contactWay)
-        val config = CustomMessageConfig()
-        config.enablePush = false
-        val message = MessageBuilder.createCustomMessage(
-            target_accid,
-            SessionTypeEnum.P2P,
-            "",
-            contactAttachment,
-            config
-        )
 
-        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-            .setCallback(object :
-                RequestCallback<Void?> {
-                override fun onSuccess(param: Void?) {
-                    if (ActivityUtils.getTopActivity() is MatchDetailActivity)
-                        EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
-                    ChatActivity.start(myContext, target_accid)
-                    dismiss()
-                }
-
-                override fun onFailed(code: Int) {
-                }
-
-                override fun onException(exception: Throwable) {
-                }
-            })
-    }
-
-    private fun sendMatchFriendMessage() {
+    private fun sendMatchFriendMessage(loadingDialog: LoadingDialog) {
         val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
         val config = CustomMessageConfig()
-        config.enableUnreadCount = true
-        config.enablePush = true
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             target_accid,
             SessionTypeEnum.P2P,
@@ -183,23 +159,26 @@ class UnlockContactDialog(
         )
 
         NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-            .setCallback(object :
-                RequestCallback<Void?> {
+            .setCallback(object : RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
-                    EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
-                    if (ActivityUtils.getTopActivity() !is ChatActivity)
-                        unlockBtn.postDelayed({
-                            ChatActivity.start(myContext, target_accid)
-                        }, 750L)
-                    dismiss()
+                    if (ActivityUtils.getTopActivity() is MatchDetailActivity)
+                        EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+                    if (ActivityUtils.getTopActivity() !is ChatActivity) {
+                        Thread.sleep(750L)
+                        loadingDialog.dismiss()
+                        ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+                    } else {
+                        loadingDialog.dismiss()
+                    }
 //                    sendContactMessage(contactContent, contactWay)
                 }
 
                 override fun onFailed(code: Int) {
+                    loadingDialog.dismiss()
                 }
 
                 override fun onException(exception: Throwable) {
-
+                    loadingDialog.dismiss()
                 }
             })
     }

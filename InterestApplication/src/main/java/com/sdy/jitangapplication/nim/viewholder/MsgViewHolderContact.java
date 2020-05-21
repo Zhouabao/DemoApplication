@@ -1,11 +1,19 @@
 package com.sdy.jitangapplication.nim.viewholder;
 
+import android.graphics.Color;
+import android.text.style.ClickableSpan;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.SpanUtils;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.netease.nim.uikit.common.util.sys.ClipboardUtil;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 
 /**
@@ -49,7 +57,19 @@ public class MsgViewHolderContact extends MsgViewHolderBase {
         } else if (attachment.getContactWay() == 3) {
             contactImg.setImageResource(R.drawable.icon_qq_circle);
         }
-        contactContent.setText(attachment.getContactContent());
+
+        SpanUtils.with(contactContent)
+                .append(attachment.getContactContent())
+                .setClickSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        ClipboardUtil.clipboardCopyText(context, attachment.getContactContent());
+                        CommonFunction.INSTANCE.toast("已复制联系方式");
+                    }
+                })
+                .setForegroundColor(Color.parseColor("#FF6318"))
+                .create();
+//        contactContent.setText(attachment.getContactContent());
     }
 
     @Override
