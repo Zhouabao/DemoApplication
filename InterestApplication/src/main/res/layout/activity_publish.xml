@@ -196,8 +196,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
         <ImageView
-                android:id="@+id/btn_emo"
-                android:visibility="gone"
+            android:visibility="gone"
                 android:src="@drawable/icon_emo"
                 android:layout_width="24dp"
                 android:layout_marginRight="15dp"

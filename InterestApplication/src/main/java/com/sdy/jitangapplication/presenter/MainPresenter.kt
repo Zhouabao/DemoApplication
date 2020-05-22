@@ -7,8 +7,6 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.AllMsgCount
-import com.sdy.jitangapplication.model.IndexRecommendBean
-import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.utils.UserManager
@@ -66,26 +64,6 @@ class MainPresenter : BasePresenter<MainView>() {
 
     }
 
-
-    /**
-     * 调查问卷请求
-     */
-    fun getQuestion(token: String, accid: String) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getQuestion(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<InvestigateBean?>>(mView) {
-                override fun onNext(t: BaseResp<InvestigateBean?>) {
-                    if (t.code == 200 && t.data != null) {
-                        mView.onInvestigateResult(t.data!!)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-
-                }
-
-            })
-    }
 
 
 

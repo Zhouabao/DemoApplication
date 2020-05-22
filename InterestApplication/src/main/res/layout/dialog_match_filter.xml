@@ -256,7 +256,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv3" />
 
     <Switch
-        android:id="@+id/switchSameCity"
         android:layout_width="44dp"
         android:layout_height="26dp"
         android:checked="false"

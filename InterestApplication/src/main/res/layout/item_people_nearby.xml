@@ -78,7 +78,6 @@
         app:layout_constraintLeft_toLeftOf="@id/userOnline">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userIntentionIcon"
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:src="@drawable/icon_today_want_heart" />

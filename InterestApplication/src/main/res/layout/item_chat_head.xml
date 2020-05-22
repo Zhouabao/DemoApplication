@@ -15,8 +15,7 @@
             android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/userInfoCl"
-                android:layout_marginLeft="15dp"
+            android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@drawable/shape_rectangle_gray_white_15dp"
                 android:layout_width="0dp"

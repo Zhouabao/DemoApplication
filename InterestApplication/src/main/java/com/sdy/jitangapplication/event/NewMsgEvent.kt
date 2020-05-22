@@ -24,10 +24,6 @@ class AccountDangerEvent(val type: Int)
 class UpdateSlideCountEvent(var showCardTimes: Boolean = true)
 
 
-//展示调研弹窗的event
-class ShowSurveyDialogEvent(val slideCount: Int)
-
-
 /**
  * 展示附近的数量
  */

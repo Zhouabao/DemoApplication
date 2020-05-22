@@ -405,11 +405,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLa
     ) {
         if (data.code == 200) {
             if (data.data != null) {
-                if (UserManager.getCurrentSurveyVersion().isEmpty()) {
-                    UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
-                    EventBus.getDefault()
-                        .post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
-                }
 
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
                     sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)

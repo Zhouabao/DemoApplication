@@ -12,14 +12,6 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="SplashTheme" parent="MyAppTheme">
-        <!-- Customize your theme here. -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@drawable/bg_splash</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
-    </style>
 
 
     <!--微信支付 -->
@@ -192,22 +184,5 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="matchdetailTitleCollpseStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">17sp</item>
-    </style>
-
-
-    <style name="RadingStyle" parent="@android:style/Widget.RatingBar">
-        <!-- 定义星星图片 -->
-        <item name="android:progressDrawable">@drawable/ratingbar_bg</item>
-        <!-- 根据自定义星星图片的大小,设置相应的值,否则可能显示不全 -->
-        <item name="android:minHeight">36dp</item>
-        <item name="android:stepSize">1</item>
-    </style>
 
 </resources>

@@ -46,7 +46,6 @@
         app:layout_constraintTop_toTopOf="@id/moreInfoContent" />
 
     <View
-        android:id="@+id/dash4"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/colorDivider"

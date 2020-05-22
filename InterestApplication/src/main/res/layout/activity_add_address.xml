@@ -219,7 +219,6 @@
                 app:layout_constraintTop_toTopOf="@id/t5" />
 
             <View
-                android:id="@+id/view5"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
@@ -251,7 +250,6 @@
                 app:layout_constraintTop_toTopOf="@id/t6" />
 
             <View
-                android:id="@+id/view6"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"

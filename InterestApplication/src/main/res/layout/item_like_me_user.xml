@@ -155,8 +155,7 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/matchUserAge1"
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
                     android:background="@drawable/rectangle_white_15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"

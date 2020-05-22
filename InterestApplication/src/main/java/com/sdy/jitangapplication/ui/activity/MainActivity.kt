@@ -32,12 +32,14 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
-import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.ChangeAvatarRealManDialog
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
+import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog
 import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
@@ -81,10 +83,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             UserManager.getProvince(),
             UserManager.getCity()
         )
-
-        //获取调查问卷数据
-//        if (UserManager.getCurrentSurveyVersion().isEmpty() || UserManager.getCurrentSurveyVersion() != AppUtils.getAppVersionName())
-//            mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
 
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
@@ -505,19 +503,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    /**
-     * 获取调查问卷数据
-     */
-    private var investigateDialog: InvestigateDialog? = null
-
-    override fun onInvestigateResult(investigateBean: InvestigateBean) {
-        //保存滑动多少次引导弹窗
-        UserManager.saveShowSurveyCount(investigateBean.showcard_cnt)
-        if (investigateDialog == null) {
-            investigateDialog = InvestigateDialog(this, investigateBean)
-        }
-    }
-
     private var canShowNear = false
     override fun startupRecordResult(data: NearCountBean?) {
         if (data != null && data.nearly_tips_cnt > 0) {
@@ -543,22 +528,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
-    /**
-     * 展示调查问卷dialog
-     */
-    private fun showInvestigateDialog() {
-        if (investigateDialog != null) {
-            if (!investigateDialog!!.isShowing) {
-                investigateDialog!!.show()
-                //显示了调研结果，就保存当前版本号
-                UserManager.saveCurrentSurveyVersion()
-                //清除保存的展示次数
-                SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
-                //清除用于显示调研结果弹窗的滑动次数
-                SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
-            }
-        }
-    }
+
 
 
     /**
@@ -589,12 +559,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onShowSurveyDialogEvent(event: ShowSurveyDialogEvent) {
-        if (event.slideCount == UserManager.getShowSurveyCount()) {
-            showInvestigateDialog()
-        }
-    }
 
 
     private var showNear = false

@@ -178,7 +178,7 @@ class WithdrawCandyDialog(val myContext: Context) : BottomSheetDialog(myContext,
                         withdrawID.text = "${t.data?.trade_no}"
                         withdrawTime.text = "${t.data?.create_tme}"
                         withdrawCandy.text = "${t.data?.candy_amount}颗"
-                        withdrawMoney.text = "¥${t.data?.money_amount}"
+                        withdrawMoney1.text = "¥${t.data?.money_amount}"
                         EventBus.getDefault().post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
                     } else {
                         CommonFunction.toast(t.msg)

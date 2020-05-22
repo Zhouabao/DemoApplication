@@ -94,7 +94,6 @@
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/userInfoCl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorWhite">
@@ -191,7 +190,6 @@
                             app:layout_constraintTop_toBottomOf="@id/userAvator">
 
                             <ImageView
-                                android:id="@+id/isVipIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -329,7 +327,6 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/tvFoot1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="9dp"
