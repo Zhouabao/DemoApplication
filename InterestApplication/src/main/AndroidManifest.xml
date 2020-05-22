@@ -134,30 +134,20 @@
         <activity
             android:name=".ui.activity.MessageLikeMeOneDayActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.FindByTagListActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.GreetReceivedActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.VipPowerActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AllTitleActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.SquareSamePersonActivity"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".ui.activity.TagDetailCategoryActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MyIntentionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MyIntentionActivity1"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".ui.activity.ChooseLabelActivity"
             android:screenOrientation="portrait" />
@@ -182,9 +172,7 @@
         <activity
             android:name=".ui.activity.MyFootPrintActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.LoginOffActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.ChangeAccountActivity"
             android:screenOrientation="portrait" />
@@ -207,9 +195,7 @@
             android:name=".ui.activity.LoginHelpReasonActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".ui.activity.ChooseSchoolActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.ReportReasonActivity"
             android:screenOrientation="portrait" />
@@ -299,9 +285,7 @@
         <activity
             android:name=".ui.activity.MyCollectionEtcActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MyQuestionActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:screenOrientation="portrait" />

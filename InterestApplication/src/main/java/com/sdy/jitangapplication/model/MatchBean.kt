@@ -230,27 +230,6 @@ data class UnlockBean(
     var contact_content: String
 )
 
-//data class NearPersonBean(
-//    var accid: String = "",
-//    var intention_title: String = "",
-//    var intention_icon: String = "",
-//    var age: Int = 0,
-//    var avatar: String = "",
-//    var birth: Int = 0,
-//    var constellation: String = "",
-//    var gender: Int = 0,
-//    var juli: String = "",
-//    var nickname: String = "",
-//    var photos: MutableList<String> = mutableListOf(),
-//    var sign: String = "",
-//    var distance: String = "",
-//    var online_time: String = "",
-//    var isfaced: Boolean = false,
-//    var isvip: Boolean = false,
-//    var wish_data: MutableList<GiftBean> = mutableListOf(),
-//    var plus_photo: Int = 0
-//)
-
 
 data class NearPersonBean(
     var accid: String = "",

@@ -76,8 +76,6 @@ class UserCenterEvent(var refresh: Boolean)
 class UserDetailViewStateEvent(var success: Boolean)
 
 
-//更新按钮信息及用户关系
-class UserRelationshipEvent()
 
 
 //更新账号信息

@@ -1059,13 +1059,6 @@ interface Api {
     fun addMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
     /**
-     *V2获取广场标题菜单栏目
-     */
-    @FormUrlEncoded
-    @POST("Tags/getTitleMenuListV12${Constants.END_BASE_URL}")
-    fun getTitleMenuList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
-
-    /**
      *V1获取标题列表详情页
      */
     @FormUrlEncoded

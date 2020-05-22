@@ -254,7 +254,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getUserDetailInfo(params)
-            EventBus.getDefault().post(UpdateSquareEvent())
 
         }
 
@@ -1087,19 +1086,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment) {
-                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                        SayHiDialog(
-                            matchBean!!.accid,
-                            matchBean!!.nickname ?: "",
-                            this@MatchDetailActivity
-                        ).show()
-                    } else {
-                        startActivity<MatchSucceedActivity>(
-                            "avator" to matchBean!!.avatar,
-                            "nickname" to matchBean!!.nickname,
-                            "accid" to matchBean!!.accid
-                        )
-                    }
+                    startActivity<MatchSucceedActivity>(
+                        "avator" to matchBean!!.avatar,
+                        "nickname" to matchBean!!.nickname,
+                        "accid" to matchBean!!.accid
+                    )
                 }
 
             }

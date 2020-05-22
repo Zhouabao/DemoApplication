@@ -17,7 +17,6 @@ data class CheckBean(
     var id: Int = -1
 )
 
-data class RelationshipBean(val title: String, val relationships: MutableList<CheckBean>)
 
 
 data class MyTapsBean(

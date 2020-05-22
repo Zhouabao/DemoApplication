@@ -159,13 +159,6 @@ data class CommentBean(
 
 }
 
-data class SquareTitleBean(
-    val title: String,
-    var checked: Boolean,
-    var image: Int = -1,
-    var imageChecked: Int = -1
-)
-
 
 /**
  * 广场兴趣列表

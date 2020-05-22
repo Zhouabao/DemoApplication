@@ -18,11 +18,6 @@ data class GoodsListBean(
 
 )
 
-data class ProductTitleBean(
-    var descr: String = "",
-    var id: Int = 0,
-    var title: String = ""
-)
 
 data class BannerProductBean(
     var descr: String = "",

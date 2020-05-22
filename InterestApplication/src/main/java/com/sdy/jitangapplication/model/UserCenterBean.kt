@@ -34,19 +34,6 @@ data class SettingsBean(
 )
 
 
-//个人中心展示封面
-data class Squarelist(
-    val count: Int? = 0,
-    val list: MutableList<CoverSquare>? = mutableListOf()
-)
-
-//动态封面
-data class CoverSquare(
-    val cover_url: String? = "",
-    val id: Int? = 0,
-    val type: Int? = 0 //1 图 2视频
-)
-
 
 //vip权益描述广告
 data class VipDescr(
@@ -142,19 +129,6 @@ data class ScoreRule(
     var total: Int = 0
 )
 
-data class BaseInfo(
-    val height: Int = 0,
-    val emotion_list: MutableList<String> = mutableListOf(),
-    val emotion: String? = "",
-    val hometown: String? = "",
-    val present_address: String? = "",
-    val personal_job: String? = "",
-    val making_friends: String? = "",
-    val personal_school: String? = "",
-    val personal_drink: String? = "",
-    val personal_smoke: String? = "",
-    val personal_schedule: String? = ""
-)
 
 
 /**
@@ -178,16 +152,6 @@ data class MyPhotoBean(
 }
 
 
-data class ProvinceBean(
-    var city: MutableList<City> = mutableListOf(),
-    var name: String = ""
-) : IPickerViewData {
-    //这个用来显示在PickerView上面的字符串,PickerView会通过getPickerViewText方法获取字符串显示出来。
-    override fun getPickerViewText(): String {
-        return name
-    }
-
-}
 
 data class City(
     var area: MutableList<String> = mutableListOf(),

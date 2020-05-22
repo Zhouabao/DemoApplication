@@ -68,7 +68,6 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
         rightBtn1.text = "完成"
         rightBtn1.isEnabled = false
 
-        labelPurposeBtn.setOnClickListener(this)
         labelIntroduceModel.setOnClickListener(this)
 
 
@@ -127,18 +126,9 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
             btnBack -> {
                 finish()
             }
-            labelPurposeBtn -> {//兴趣意向
-                startActivityForResult<MyIntentionActivity>(
-                    100,
-                    "from" to MyIntentionActivity.FROM_REGISTER
-                )
-            }
             rightBtn1 -> { //保存个人介绍
                 if (from == REGISTER)
-                    mPresenter.saveRegisterInfo(
-                        intention_id = intention?.id ?: null,
-                        aboutme = labelIntroduceContent.text.toString()
-                    )
+                    mPresenter.saveRegisterInfo(aboutme = labelIntroduceContent.text.toString())
                 else {
                     intent.putExtra("content", labelIntroduceContent.text.toString())
                     setResult(Activity.RESULT_OK, intent)
@@ -171,23 +161,6 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
         if (success) {
             startActivity<MainActivity>()
             finish()
-
-//            startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
-//            finish()
-        }
-    }
-
-    private var intention: LabelQualityBean? = null
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 100) {
-                if (data != null && data.getSerializableExtra("intention") != null) {
-                    intention = data.getSerializableExtra("intention") as LabelQualityBean
-                    if (intention != null)
-                        labelPurposeBtn.text = intention!!.title
-                }
-            }
         }
     }
 

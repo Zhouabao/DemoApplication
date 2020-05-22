@@ -6,10 +6,6 @@ package com.sdy.jitangapplication.event
  *    desc   : 请求九宫格数据
  *    version: 1.0
  */
-class BlockDataEvent(val targetAccid: String, val refresh: Boolean)
-
 
 class UpdateBlackEvent
 
-
-class UpdateSquareEvent

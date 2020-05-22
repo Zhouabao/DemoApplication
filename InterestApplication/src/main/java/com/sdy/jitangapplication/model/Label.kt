@@ -131,24 +131,6 @@ data class OtherLabelsBean(
     var my_interest: MutableList<LabelQualityBean> = mutableListOf()
 )
 
-//职业
-data class NewJobBean(
-    var title: String = "",
-    var descr: String = "",
-    var icon: String = "",
-    var id: Int = -1,
-    var level: Int = 0,
-    var parent_id: Int = 0,
-    var path: String = "",
-    var son: MutableList<NewJobBean>? = null,
-    var video_path: String = "",
-    var checked: Boolean = false
-) : Serializable, IPickerViewData {
-    override fun getPickerViewText(): String {
-        return title
-    }
-}
-
 
 data class AddLabelResultBean(
     var is_published: Boolean = false,
