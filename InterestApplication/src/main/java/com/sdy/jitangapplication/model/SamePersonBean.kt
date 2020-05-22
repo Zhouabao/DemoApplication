@@ -1,11 +1,5 @@
 package com.sdy.jitangapplication.model
 
-data class SamePersonListBean(
-    var list: MutableList<SamePersonBean> = mutableListOf(),
-    var people_cnt:Int = 0,
-    var square_cnt:Int = 0
-)
-
 data class SamePersonBean(
     var accid: String = "",
     var age: Int = 0,

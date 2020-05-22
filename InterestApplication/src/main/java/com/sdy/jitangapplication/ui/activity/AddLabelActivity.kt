@@ -216,8 +216,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
     override fun saveMyTagResult(result: Boolean, data: MutableList<TagBean>?) {
         if (result) {
-            //保存兴趣
-            UserManager.saveLabels(data ?: mutableListOf())
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UpdateMyLabelEvent())
             EventBus.getDefault().post(UserCenterEvent(true))

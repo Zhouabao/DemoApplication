@@ -93,46 +93,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
 
-    /**
-     * 开启招呼认证
-     */
-    fun greetApprove() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .greetApprove(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    CommonFunction.toast(t.msg)
-                    mView.onGreetApproveResult(t.code == 200)
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    }
-                }
-            })
-    }
-
-    /**
-     * 开启招呼认证
-     */
-    fun greetSwitch() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .greetSwitch(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    CommonFunction.toast(t.msg)
-                    mView.onGreetSwitchResult(t.code == 200)
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    }
-                }
-            })
-    }
-
 
     /**
      * 获取我的设置

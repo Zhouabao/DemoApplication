@@ -136,9 +136,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.GreetReceivedActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.VipPowerActivity"
             android:screenOrientation="portrait" />
 
@@ -267,9 +264,7 @@
             android:name=".ui.activity.ContactBookActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".ui.activity.MessageHiPastActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.MessageSquareActivity"
             android:screenOrientation="portrait" />

@@ -118,10 +118,6 @@ data class FriendBean(
 )
 
 
-data class SquareRecentlyListBean(
-    var list: MutableList<SquareBean?>?
-)
-
 data class AllCommentBean(
     var hotlist: MutableList<CommentBean?>?,
     var list: MutableList<CommentBean?>?

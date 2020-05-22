@@ -20,13 +20,6 @@ interface Api {
     fun msgList(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<AllMsgCount?>>
 
 
-    /**
-     * 获取调查问卷
-     */
-    @FormUrlEncoded
-    @POST("Survey/getQuestion${Constants.END_BASE_URL}")
-    fun getQuestion(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<InvestigateBean?>>
-
 
     /**
      * 每天首次开屏推荐
@@ -51,12 +44,6 @@ interface Api {
     fun getHelpCenter(): Observable<BaseResp<HelpBean?>>
 
 
-    /**
-     * 回答调查问卷
-     */
-    @FormUrlEncoded
-    @POST("Survey/answer${Constants.END_BASE_URL}")
-    fun answer(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -82,15 +69,6 @@ interface Api {
     @FormUrlEncoded
     @POST("member_info/humanAduit/v1.json${Constants.END_BASE_URL}")
     fun humanAduit(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-
-    /**
-     * 发送验证码
-     */
-    @FormUrlEncoded
-    @POST("Open_Api/SendSms${Constants.END_BASE_URL}")
-    fun getVerifyCode(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
 
     /**
      * 检查验证码是否一致,即登录
@@ -185,14 +163,6 @@ interface Api {
     @FormUrlEncoded
     @POST("Square/squareNewestLists${Constants.END_BASE_URL}")
     fun squareNewestLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
-
-
-    /**
-     * 获取广场好友最近的动态列表
-     */
-    @FormUrlEncoded
-    @POST("square/getLatelySquareInfo${Constants.END_BASE_URL}")
-    fun getLatelySquareInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareRecentlyListBean?>>
 
 
     /**
@@ -315,23 +285,6 @@ interface Api {
     @POST("Index/completeGuide${Constants.END_BASE_URL}")
     fun completeGuide(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-    /**
-     * 匹配首页数据
-     * indexV2
-     */
-    @FormUrlEncoded
-    @POST("Index/lookForPeople${Constants.END_BASE_URL}")
-    fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
-
-
-    /**
-     * 获取所有兴趣
-     *
-     */
-    @FormUrlEncoded
-    @POST("Tags/lookForAllTags${Constants.END_BASE_URL}")
-    fun lookForAllTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelBean>>
-
 
     /**
      * 同城
@@ -366,31 +319,6 @@ interface Api {
     @POST("Index/addIntention${Constants.END_BASE_URL}")
     fun addIntention(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-
-    /**
-     * 兴趣找人
-     *
-     */
-    @FormUrlEncoded
-    @POST("index/lookForPeopleTag${Constants.END_BASE_URL}")
-    fun lookForPeopleTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<FindByTagBean?>>
-
-
-    /**
-     * 单独添加兴趣
-     *
-     */
-    @FormUrlEncoded
-    @POST("Tags/addMyTagsSingle${Constants.END_BASE_URL}")
-    fun addMyTagsSingle(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddSinlgLabelBean?>>
-
-
-    /**
-     * 打招呼还是聊天判断
-     */
-    @FormUrlEncoded
-    @POST("Relationship/greetStateV3${Constants.END_BASE_URL}")
-    fun greetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetBean?>>
 
     /**
      * 匹配详情数据
@@ -479,14 +407,6 @@ interface Api {
 
 
     /**
-     * 获取用户相册
-     */
-    @FormUrlEncoded
-    @POST("member_info/squarePhotosListV2${Constants.END_BASE_URL}")
-    fun squarePhotosList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<BlockListBean?>>
-
-
-    /**
      * 获取用户广场列表
      */
     @FormUrlEncoded
@@ -515,13 +435,6 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/myInfoCandy${Constants.END_BASE_URL}")
     fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
-
-    /**
-     * 系统推荐问题
-     */
-    @FormUrlEncoded
-    @POST("Questions_Circle/promoteQuestion${Constants.END_BASE_URL}")
-    fun promoteQuestion(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 
     /**
@@ -580,19 +493,6 @@ interface Api {
     fun savePersonal(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-    /**
-     * 获取学校列表
-     */
-    @POST("OpenApi/getSchoolList${Constants.END_BASE_URL}")
-    fun getSchoolList(): Observable<BaseResp<MutableList<String>?>>
-
-    /**
-     * 修改个人信息
-     */
-    @FormUrlEncoded
-    @POST("memberInfo/addPhotos${Constants.END_BASE_URL}")
-    fun addPhotos(@FieldMap params: MutableMap<String, Any>, @Field("photos[]") tagList: Array<String?>): Observable<BaseResp<Any?>>
-
 
     /**
      *   保存相册信息
@@ -633,27 +533,6 @@ interface Api {
     fun getSignTemplate(@Field("page") page: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /****************************消息************************************/
-    /**
-     * 无效招呼
-     */
-    @FormUrlEncoded
-    @POST("Tidings/greetAllLists${Constants.END_BASE_URL}")
-    fun greetAllLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
-
-    /**
-     * 给我打招呼的列表
-     */
-    @FormUrlEncoded
-    @POST("tidings/myGreetList${Constants.END_BASE_URL}")
-    fun myGreetList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GreetedListBean>?>>
-
-
-    /**
-     * 删除过时消息
-     */
-    @FormUrlEncoded
-    @POST("Tidings/delTimeoutGreet${Constants.END_BASE_URL}")
-    fun delTimeoutGreet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<OuttimeBean?>>
 
 
     /**
@@ -845,13 +724,6 @@ interface Api {
 
 
     /**
-     * 发起招呼者 判断剩余消息次数
-     */
-    @FormUrlEncoded
-    @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
-    fun checkGreetSendMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CheckGreetSendBean?>>
-
-    /**
      * 发消息请求服务器
      */
     @FormUrlEncoded
@@ -1015,21 +887,6 @@ interface Api {
 
 
     /**
-     * 获取他人的兴趣
-     */
-    @FormUrlEncoded
-    @POST("MemberInfo/getOtherTags${Constants.END_BASE_URL}")
-    fun getOtherTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<OtherLabelsBean?>>
-
-    /**
-     * 获取用户意向的接口
-     */
-    @FormUrlEncoded
-    @POST("Tags/getIntentionList${Constants.END_BASE_URL}")
-    fun getIntentionList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
-
-
-    /**
      * 注册用户完善意向/关于我的信息
      */
     @FormUrlEncoded
@@ -1038,39 +895,12 @@ interface Api {
 
 
     /**
-     * 我的感兴趣的列表
-     */
-    @FormUrlEncoded
-    @POST("Tags/getMyInterestList${Constants.END_BASE_URL}")
-    fun getMyInterestList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
-
-    /**
-     * 我的感兴趣的列表
-     */
-    @FormUrlEncoded
-    @POST("Tags/delMyInterest${Constants.END_BASE_URL}")
-    fun delMyInterest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-    /**
      * 保存我的感兴趣的列表
      */
     @FormUrlEncoded
     @POST("Tags/addMyTagsV12${Constants.END_BASE_URL}")
     fun addMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
-    /**
-     *V1获取标题列表详情页
-     */
-    @FormUrlEncoded
-    @POST("Tags/getTitleInfo${Constants.END_BASE_URL}")
-    fun getTitleInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SamePersonListBean?>>
-
-    /**
-     *V2获取更多标题详情
-     */
-    @FormUrlEncoded
-    @POST("Tags/getTitleListsV12${Constants.END_BASE_URL}")
-    fun getTitleLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TopicBean>?>>
 
     /**
      *聊天举报
@@ -1079,22 +909,13 @@ interface Api {
     @POST("Tidings/chatReport${Constants.END_BASE_URL}")
     fun chatReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-
-    /**
-     *招呼的左右滑动
-     */
-    @FormUrlEncoded
-    @POST("Tidings/likeOrGreetStateV13${Constants.END_BASE_URL}")
-    fun likeOrGreetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-
     //----------------------------商城模块------------------------------
     /**
      * 流水记录
      */
     @FormUrlEncoded
     @POST("Candy/myBillList${Constants.END_BASE_URL}")
-    fun myBillList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BillBean>??>>
+    fun myBillList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BillBean>?>>
 
 
     /**
@@ -1142,16 +963,6 @@ interface Api {
     @POST("Goods/goodsWishList${Constants.END_BASE_URL}")
     fun goodsWishList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<WantFriendBean>?>>
 
-    /**
-     * josn赠送商品给某人
-     * Goods/giveGoods
-     */
-    @FormUrlEncoded
-    @POST("Goods/giveGoods${Constants.END_BASE_URL}")
-    fun giveGoods(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-//    http://ppsns5.com/ppsns/Goods/giveGoods/v1.josn赠送商品给某人
-//http://ppsns5.com/ppsns/Goods/getGiftGoods/v1.json领取赠送商品
-//http://ppsns5.com/ppsns/Goods/backGiftGoods/v1.json退回赠送商品
 
     /**
      * 商品留言列表
@@ -1226,14 +1037,6 @@ interface Api {
 
 
     //--------------------礼物来往记录------------------------------
-    /**
-     * 礼物来往记录
-     * Gift/giftContactList/v1.json
-     */
-    @FormUrlEncoded
-    @POST("Gift/giftContactList${Constants.END_BASE_URL}")
-    fun giftContactList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
     /**
      * 提现
      */

@@ -72,9 +72,6 @@ class RePublishEvent(var republish: Boolean, val context: String)
 class UserCenterEvent(var refresh: Boolean)
 
 
-//更新用户详情状态视图
-class UserDetailViewStateEvent(var success: Boolean)
-
 
 
 

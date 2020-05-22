@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:background="@drawable/gradient_greet_received_bg"
-        tools:context=".ui.activity.GreetReceivedActivity">
+        tools:context=".ui.activity.LikeMeReceivedActivity">
 
     <include layout="@layout/layout_actionbar"/>
 

@@ -12,7 +12,10 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.ApproveBean
+import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -72,28 +75,6 @@ object UserManager {
     }
 
     /**
-     * 保存当前需要弹去完善标签弹窗的次数
-     */
-    fun saveCompleteLabelCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("completeLabelCount", count)
-    }
-
-    fun getCompleteLabelCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("completeLabelCount", -1)
-    }
-
-    /**
-     * 保存滑动次数
-     */
-    fun saveSlideCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("SlideCount", count)
-    }
-
-    fun getSlideCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideCount", -1)
-    }
-
-    /**
      * 我的兴趣最大个数
      */
     fun saveMaxMyLabelCount(count: Int) {
@@ -104,22 +85,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("maxMyLabelCount", -1)
     }
 
-
-    fun isShowCompleteLabelDialog(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("IsShowCompleteLabelDialog", false)
-    }
-
-
-    /**
-     * 保存当前调研弹窗的版本号
-     */
-    fun saveCurrentSurveyVersion() {
-        SPUtils.getInstance(Constants.SPNAME).put("currentVersion", AppUtils.getAppVersionName())
-    }
-
-    fun getCurrentSurveyVersion(): String {
-        return SPUtils.getInstance(Constants.SPNAME).getString("currentVersion")
-    }
 
 
     /**
@@ -133,28 +98,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuidePublish", false)
     }
 
-    /**
-     * 保存滑动多少次弹调研弹窗
-     */
-    fun saveShowSurveyCount(showcard_cnt: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("showcard_cnt", showcard_cnt)
-    }
-
-    fun getShowSurveyCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("showcard_cnt", 0)
-    }
-
-
-    /**
-     * 保存匹配页面用户滑动的次数
-     */
-    fun saveSlideSurveyCount(slideCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("SlideSurveyCount", slideCount)
-    }
-
-    fun getSlideSurveyCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideSurveyCount", 0)
-    }
 
 
     //是否已经强制替换过头像
@@ -193,15 +136,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
     }
 
-
-    //是否提示过引导替换相册
-    fun saveAlertChangeAlbum(isNeedChangeAvator: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeAlbum", isNeedChangeAvator)
-    }
-
-    fun getAlertChangeAlbum(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
-    }
 
 
     //是否提示过用户协议
@@ -274,18 +208,7 @@ object UserManager {
                 saveUserVerify(data.userinfo.isfaced)
             SPUtils.getInstance(Constants.SPNAME)
                 .put("userIntroduce", data.extra_data?.aboutme ?: "")
-            if (!data.extra_data?.mytaglist.isNullOrEmpty()) {
-                saveLabels(data.extra_data?.mytaglist ?: mutableListOf())
-            }
         }
-    }
-
-    fun saveLabels(data: MutableList<TagBean>) {
-//        val savaLabels = mutableSetOf<String>()
-//        for (label in data) {
-//            savaLabels.add(SharedPreferenceUtil.Object2String(label))
-//        }
-//        SPUtils.getInstance(Constants.SPNAME).put("myLabels", savaLabels)
     }
 
     /**
@@ -390,10 +313,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("gender", 0)
     }
 
-    fun getUserIntroduce(): String {
-        return SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce")
-    }
-
 
     /**
      * 判断用户是否是vip
@@ -426,8 +345,6 @@ object UserManager {
      * //最小年龄  limit_age_low
      * //最大年龄  limit_age_high
      * //兴趣id
-     * //是否同城筛选 1否 2是 local_only
-     * //选择了同城 传递城市id city_code
      * //是否筛选认证会员1不用 2需要筛选 audit_only
      * //1男 2女 3不限 gender
      * //toto  这里需要判断是否认证
@@ -442,9 +359,7 @@ object UserManager {
         if (sp.getInt("limit_age_high", -1) != -1) {
             parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
         }
-//        if (sp.getInt("local_only", -1) != -1) {
-//            parmas["local_only"] = sp.getInt("local_only", -1)
-//        }
+
         if (sp.getInt("audit_only", -1) != -1) {
             parmas["audit_only"] = sp.getInt("audit_only", -1)
         }
@@ -454,32 +369,10 @@ object UserManager {
         if (sp.getInt("filter_gender", -1) != -1) {
             parmas["gender"] = sp.getInt("filter_gender", -1)
         }
-        parmas["city_code"] = getCityCode()
 
         return parmas
     }
 
-    /**
-     * 获取本地存放的兴趣
-     */
-    fun getSpLabels(): MutableList<TagBean> {
-        val tempLabels = mutableListOf<TagBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("myLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("myLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as TagBean)
-            }
-        }
-        tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
-        return tempLabels
-    }
-
-    fun getGlobalLabelSquareId(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelSquareId", 0)
-    }
-
-    fun saveGlobalLabelSquareId(id: Int) {
-        return SPUtils.getInstance(Constants.SPNAME).put("globalLabelSquareId", id)
-    }
 
     // 如果已经存在IM用户登录信息，返回LoginInfo，否则返回null即可
     fun loginInfo(): LoginInfo? {
@@ -515,39 +408,24 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
-        SPUtils.getInstance(Constants.SPNAME).remove("userIntroduce")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
-        SPUtils.getInstance(Constants.SPNAME).remove("globalLabelSquareId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
-        SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
         SPUtils.getInstance(Constants.SPNAME).remove("leftSlideCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("highlight_times")
         SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
         SPUtils.getInstance(Constants.SPNAME).remove("hiCount")
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
         SPUtils.getInstance(Constants.SPNAME).remove("likeUnreadCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("myLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("isShowGuidePublish")
-        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuide")
 
-
-        //位置信息
-//        SPUtils.getInstance(Constants.SPNAME).remove("latitude")
-//        SPUtils.getInstance(Constants.SPNAME).remove("longtitude")
-//        SPUtils.getInstance(Constants.SPNAME).remove("province")
-//        SPUtils.getInstance(Constants.SPNAME).remove("city")
-//        SPUtils.getInstance(Constants.SPNAME).remove("district")
-//        SPUtils.getInstance(Constants.SPNAME).remove("citycode")
 
         //筛选信息
         SPUtils.getInstance(Constants.SPNAME).remove("filter_gender")
         SPUtils.getInstance(Constants.SPNAME).remove("filter_square_gender")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
-        SPUtils.getInstance(Constants.SPNAME).remove("local_only")
         SPUtils.getInstance(Constants.SPNAME).remove("online_only")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
@@ -567,7 +445,6 @@ object UserManager {
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
-        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("hasFaceUrl")
@@ -576,12 +453,7 @@ object UserManager {
          * 弹窗缓存信息清空
          */
         SPUtils.getInstance(Constants.SPNAME).remove("isShowHarassment")
-        SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
-        SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
-        SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("maxMyLabelCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
 
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
@@ -599,21 +471,6 @@ object UserManager {
 
 
     /**
-     * 保存提示剩余滑动次数
-     */
-    fun saveHighlightCount(highlight_times: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("highlight_times", highlight_times)
-    }
-
-    /**
-     * 获取提示剩余滑动次数
-     */
-    fun getHighlightCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("highlight_times", 0)
-    }
-
-
-    /**
      * 保存剩余滑动次数
      */
     fun saveLeftSlideCount(slideTimes: Int) {
@@ -625,33 +482,6 @@ object UserManager {
      */
     fun getLeftSlideCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
-    }
-
-
-    /**
-     * 保存剩余招呼次数
-     */
-    fun saveLightingCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("lightingCount", count)
-    }
-
-    /**
-     * 获取剩余招呼次数
-     */
-    fun getLightingCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("lightingCount", 0)
-    }
-
-
-    /**
-     * 是否展示首页的引导使用
-     */
-    fun isShowGuideIndex(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
-    }
-
-    fun saveShowGuideIndex(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
     }
 
     /**
@@ -676,17 +506,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideLike", isShow)
     }
 
-
-    /**
-     * 是否展示引导招呼
-     */
-    fun isShowGuideGreet(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideGreet", false)
-    }
-
-    fun saveShowGuideGreet(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGreet", isShow)
-    }
 
 
     /**
@@ -860,39 +679,7 @@ object UserManager {
         }
         //更新配置
         NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
-
     }
 
-    fun saveNearFilterParams(params: HashMap<String, Int>) {
-        params.forEach {
-            SPUtils.getInstance(Constants.SPNAME).put(it.key, it.value)
-        }
-    }
-
-
-    fun getNearFilterParams(): HashMap<String, Int> {
-        return hashMapOf(
-            "limit_age_low_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
-                "limit_age_low_nearly",
-                18
-            ),
-            "limit_age_high_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
-                "limit_age_high_nearly",
-                35
-            ),
-            "rank_type_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
-                "rank_type_nearly",
-                1
-            ),
-            "gender_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("gender_nearly", 3)
-        )
-    }
-
-    fun clearNearFilterParams() {
-        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low_nearly")
-        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high_nearly")
-        SPUtils.getInstance(Constants.SPNAME).remove("rank_type_nearly")
-        SPUtils.getInstance(Constants.SPNAME).remove("gender_nearly")
-    }
 
 }

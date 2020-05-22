@@ -47,11 +47,13 @@ import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.activity.ContactBookActivity
+import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
+import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
+import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
-import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_message_list.*
@@ -203,17 +205,10 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 icon = R.drawable.icon_message_like
             )
         )
-        allMessageTypeAdapter.addData(
-            MessageListBean(
-                title = "招呼",
-                icon = R.drawable.icon_message_greet
-            )
-        )
-
 
         val friendsView =
             layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
-        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 4)
+        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 3)
         friendsView.messageCenterRv.adapter = allMessageTypeAdapter
         allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
             when (position) {
@@ -231,9 +226,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     } else {
                         startActivity<MessageLikeMeActivity>()
                     }
-                }
-                else -> { //招呼
-                    startActivity<GreetReceivedActivity>()
                 }
             }
             allMessageTypeAdapter.data[position].count = 0
@@ -287,24 +279,15 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
         allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
         allMessageTypeAdapter.data[2].count = data?.liked_unread_cnt ?: 0
-        allMessageTypeAdapter.data[3].count = data?.greet_count ?: 0
         allMessageTypeAdapter.notifyDataSetChanged()
         like_free_show = data?.like_free_show ?: false
         if ((data?.comment_count ?: 0 > 0) || (data?.thumbs_up_count
                 ?: 0) > 0 || (data?.liked_unread_cnt
-                ?: 0) > 0 || (data?.greet_count ?: 0) > 0
+                ?: 0) > 0
         )
             EventBus.getDefault().post(GetNewMsgEvent())
 
-        //如果满足招呼认证提醒，就开启认证提醒
-        if (data?.greet_toast == true && !SPUtils.getInstance(Constants.SPNAME).getBoolean(
-                "isShowHarassment",
-                false
-            )
-        ) {
-            HarassmentDialog(activity!!, HarassmentDialog.CHATEDHI).show()
-            SPUtils.getInstance(Constants.SPNAME).put("isShowHarassment", true)
-        }
+
         msgBean = data
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
         adapter.greetList.clear()

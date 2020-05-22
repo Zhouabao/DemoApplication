@@ -104,10 +104,6 @@ class MyApplication : BaseApplication() {
                     2 -> {
                         CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "", true)
                     }
-                    //3.新的招呼刷新界面
-                    3 -> {
-                        EventBus.getDefault().postSticky(UpdateHiEvent())
-                    }
                     //4人脸认证不通过
                     4 -> {
                         //更改本地的认证状态

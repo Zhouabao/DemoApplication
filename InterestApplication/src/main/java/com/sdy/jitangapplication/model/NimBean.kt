@@ -52,16 +52,6 @@ data class ResidueCountBean(
     var ret_tips_arr: MutableList<SendTipBean> = mutableListOf()
 )
 
-
-/**
- * 判断当前能否发消息
- */
-data class CheckGreetSendBean(
-    val isfriend: Boolean = false, //	是否好友 时无限
-    val islimit: Boolean = true, //	是否限制发送次数  true限制 false不限制
-    val residue_msg_cnt: Int = 0//非好友 当前最新招呼剩余可发消息次数
-)
-
 data class CustomerMsgBean(
     val msg: String = "",
     val accid: String? = "",
@@ -76,7 +66,6 @@ data class CustomerMsgBean(
  * 所有消息的集合
  */
 data class AllMsgCount(
-    val greetcount: Int = 0, //招呼未读
     val likecount: Int = 0,//点赞未读
     val square_count: Int = 0//
 )

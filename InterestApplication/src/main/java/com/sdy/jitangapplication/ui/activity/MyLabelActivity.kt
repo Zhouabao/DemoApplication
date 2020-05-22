@@ -154,7 +154,6 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
 
     override fun delTagResult(result: Boolean, position: Int, data: MutableList<TagBean>?) {
         if (result) {
-            UserManager.saveLabels(data ?: mutableListOf())
             adapter.remove(position)
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UserCenterEvent(true))

@@ -16,12 +16,6 @@ interface SettingsView : BaseView {
 
     fun onHideDistanceResult(success: Boolean)
 
-
-    fun onGreetApproveResult(success: Boolean)
-
-    fun onGreetSwitchResult(success: Boolean)
-
-
     fun onGetVersionResult(versionBean: VersionBean?)
 
 

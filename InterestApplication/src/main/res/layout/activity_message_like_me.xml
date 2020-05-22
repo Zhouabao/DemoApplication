@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:fitsSystemWindows="true"
-        tools:context=".ui.activity.MessageHiPastActivity">
+        tools:context=".ui.activity.MessageLikeMeActivity">
 
     <include layout="@layout/layout_actionbar"/>
 

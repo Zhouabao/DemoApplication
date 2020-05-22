@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
@@ -35,14 +34,12 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import org.greenrobot.eventbus.EventBus
@@ -146,61 +143,11 @@ object CommonFunction {
                                         greet(
                                             target_accid,
                                             view,
-                                            context1,
-                                            needSwipe,
-                                            position,
-                                            targetAvator
+                                            context1
                                         )
-                                    }
-                                    2 -> {//消耗糖果打招呼
-                                        CommonAlertDialog.Builder(context1)
-                                            .setTitle("确认打招呼")
-                                            .setContent("每次打招呼将消耗${t.data!!.greet_amount}点糖果\n若对方24小时未回复将退回糖果")
-                                            .setCancelAble(true)
-                                            .setCancelIconIsVisibility(true)
-                                            .setCancelText("取消")
-                                            .setConfirmText("继续打招呼")
-                                            .setOnConfirmListener(object :
-                                                CommonAlertDialog.OnConfirmListener {
-                                                override fun onClick(dialog: Dialog) {
-                                                    dialog.dismiss()
-                                                    greet(
-                                                        target_accid,
-                                                        view,
-                                                        context1,
-                                                        needSwipe,
-                                                        position,
-                                                        targetAvator
-                                                    )
-
-                                                }
-                                            })
-                                            .setOnCancelListener(object :
-                                                CommonAlertDialog.OnCancelListener {
-                                                override fun onClick(dialog: Dialog) {
-                                                    dialog.dismiss()
-                                                }
-                                            })
-                                            .create()
-                                            .show()
-
-                                    }
-                                    3 -> {//有今日意愿选项打招呼
-                                        HasWantRreetDialog(
-                                            context1,
-                                            target_accid,
-                                            targetAvator,
-                                            needSwipe,
-                                            position,
-                                            t.data!!.nickname,
-                                            t.data!!.greet_amount,
-                                            t.data!!.mycandy_amount,
-                                            t.data!!.goodswish
-                                        ).show()
                                     }
                                 }
                             }
-
                         }
 
                         206 -> {//是好友或者有效招呼
@@ -212,51 +159,6 @@ object CommonFunction {
                                 from = OpenVipDialog.FROM_NEAR_CHAT_GREET,
                                 peopleAmount = t.data!!.people_amount
                             ).show()
-                        }
-                        401 -> {//需要人脸认证(对方有意愿)
-                            CommonAlertDialog.Builder(context1)
-                                .setTitle("对方设置了今日意愿")
-                                .setContent("通过认证后可以与对方获得联系\n一起做他想做的事")
-                                .setCancelIconIsVisibility(true)
-                                .setCancelAble(false)
-                                .setCancelText("取消")
-                                .setConfirmText("立即认证")
-                                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                                    override fun onClick(dialog: Dialog) {
-                                        dialog.dismiss()
-                                    }
-                                })
-                                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                                    override fun onClick(dialog: Dialog) {
-                                        IDVerifyActivity.startActivity(context1)
-                                        dialog.dismiss()
-                                    }
-                                })
-                                .create()
-                                .show()
-                        }
-
-                        402 -> {//需要人脸认证(对方无意愿)
-                            CommonAlertDialog.Builder(context1)
-                                .setTitle("您需要认证后才能打招呼")
-                                .setContent("本平台为真人社交平台，为保证用户真实性\n您先需要进行人脸验证")
-                                .setCancelIconIsVisibility(true)
-                                .setCancelAble(false)
-                                .setCancelText("取消")
-                                .setConfirmText("立即认证")
-                                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                                    override fun onClick(dialog: Dialog) {
-                                        dialog.dismiss()
-                                    }
-                                })
-                                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                                    override fun onClick(dialog: Dialog) {
-                                        IDVerifyActivity.startActivity(context1)
-                                        dialog.dismiss()
-                                    }
-                                })
-                                .create()
-                                .show()
                         }
                         400 -> {//错误信息
                             toast(t.msg)
@@ -276,14 +178,7 @@ object CommonFunction {
     }
 
 
-    fun greet(
-        target_accid: String,
-        view: View?,
-        context1: Context,
-        needSwipe: Boolean,
-        position: Int,
-        targetAvator: String
-    ) {
+    fun greet(target_accid: String, view: View?, context1: Context) {
         val loadingDialog = LoadingDialog(context1)
         val params = UserManager.getBaseParams()
         params["target_accid"] = target_accid
@@ -303,127 +198,12 @@ object CommonFunction {
                 override fun onNext(t: BaseResp<GreetTimesBean?>) {
                     when (t.code) {
                         200 -> {//成功
-                            if (!t.data?.default_msg.isNullOrEmpty()) {
-                                //发送招呼消息
-                                val chatHiAttachment =
-                                    ChatHiAttachment(
-                                        ChatHiAttachment.CHATHI_HI
-                                    )
-                                val config = CustomMessageConfig()
-                                config.enableUnreadCount = false
-                                config.enablePush = false
-                                val message =
-                                    MessageBuilder.createCustomMessage(
-                                        target_accid,
-                                        SessionTypeEnum.P2P,
-                                        "",
-                                        chatHiAttachment,
-                                        config
-                                    )
-                                NIMClient.getService(MsgService::class.java)
-                                    .sendMessage(message, false)
-
-                                //随机发送一条招呼文本消息
-                                val msg =
-                                    MessageBuilder.createTextMessage(
-                                        target_accid,
-                                        SessionTypeEnum.P2P,
-                                        t.data?.default_msg
-                                    )
-                                val params =
-                                    hashMapOf<String, Any>("needCandyImg" to false)
-                                msg.remoteExtension = params
-                                NIMClient.getService(MsgService::class.java)
-                                    .sendMessage(msg, false)
-                                    .setCallback(object :
-                                        RequestCallback<Void> {
-                                        override fun onSuccess(p0: Void?) {
-                                            view?.postDelayed({
-                                                ChatActivity.start(
-                                                    context1,
-                                                    target_accid
-                                                )
-                                            }, 500L)
-                                            if (needSwipe)
-                                                EventBus.getDefault().post(
-                                                    GreetTopEvent(
-                                                        context1,
-                                                        true,
-                                                        target_accid
-                                                    )
-                                                )
-                                            //刷新对方用户信息页面
-                                            if (ActivityUtils.isActivityExistsInStack(
-                                                    MatchDetailActivity::class.java
-                                                )
-                                            )
-                                                EventBus.getDefault().post(
-                                                    GreetDetailSuccessEvent(
-                                                        true
-                                                    )
-                                                )
-                                            UserManager.saveLightingCount(
-                                                UserManager.getLightingCount() - 1
-                                            )
-                                            EventBus.getDefault()
-                                                .post(
-                                                    UpdateHiCountEvent()
-                                                )
-                                        }
-
-                                        override fun onFailed(p0: Int) {
-                                        }
-
-                                        override fun onException(p0: Throwable?) {
-                                        }
-
-                                    })
-                            }
-                        }
-                        201 -> {//次数使用完毕，请充值次数
-                            ChargeVipDialog(
-                                ChargeVipDialog.DOUBLE_HI,
-                                context1,
-                                ChargeVipDialog.PURCHASE_GREET_COUNT
-                            ).show()
-                        }
-                        202 -> { //（该用户当日免费接收次数完毕，请充值会员获取）
-                            GreetLimitlDialog(
-                                context1,
-                                targetAvator
-                            ).show()
-                        }
-                        203 -> { //招呼次数用完,认证获得次数
-                            GreetUseUpDialog(
-                                context1,
-                                GreetUseUpDialog.GREET_USE_UP_VERIFY,
-                                t.data
-                            ).show()
-                        }
-                        204 -> { //次数使用完毕，请充值会员获取次数
-                            GreetUseUpDialog(
-                                context1,
-                                GreetUseUpDialog.GREET_USE_UP_CHARGEVIP,
-                                t.data
-                            ).show()
-                        }
-                        205 -> { //会员次数用尽，明天再来
-                            GreetUseUpDialog(
-                                context1,
-                                GreetUseUpDialog.GREET_USE_UP_TOMORROW
-                            ).show()
                         }
                         206 -> { //是好友/打过招呼的，直接跳转聊天界面
                             ChatActivity.start(
                                 context1,
                                 target_accid
                             )
-                        }
-                        401 -> { // 发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
-                            HarassmentDialog(
-                                context1,
-                                HarassmentDialog.CHATHI
-                            ).show() //开启招呼提示
                         }
                         403 -> { //登录异常
                             UserManager.startToLogin(context1 as Activity)
@@ -587,7 +367,6 @@ object CommonFunction {
             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
 //        ActivityUtils.startActivity(MainActivity::class.java)
 
-        EventBus.getDefault().postSticky(UpdateHiEvent())
         //更新通讯录
         if (ActivityUtils.isActivityExistsInStack(ContactBookActivity::class.java))
             EventBus.getDefault().post(UpdateContactBookEvent())

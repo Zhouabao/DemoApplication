@@ -15,63 +15,12 @@ data class MessageListBean(
     var id: String = ""
 )
 
-/**
- * 给我打招呼的人
- */
-data class HiMessageBean(
-    var count: Int = 0,
-    var content: String = "",
-    var accid: String = "",
-    var avatar: String = "",
-    var nickname: String = "",
-    var distance: String = "",
-    var age: Int = 0,
-    var gender: Int = 1,
-    var out_time: String = "",
-    var msgTime: Long = 0L
-)
 
-
-/**
- * 给我打招呼的人
- */
-data class GreetedListBean(
-    var greet_id: String = "",
-    var accid: String = "",
-    var age: Int = 0,
-    var avatar: String = "",
-    var constellation: String = "",
-    var distance: String = "",
-    var face_auditing_state: Int = 0,
-    var gender: Int = 0,
-    var hb_city: String = "",
-    var intention_icon: String = "",
-    var intention_title: String = "",
-    var isfaced: Int = 0,
-    var isvip: Int = 0,
-    var matching_content: String = "",
-    var matching_icon: String = "",
-    var member_level: Int = 0,
-    var nickname: String = "",
-    var photos: MutableList<String> = mutableListOf(),
-    var sign: String = "",
-    var send_msg: String = "",//该用户发出来的招呼消息
-    var send_msg_normal: String = ""//该用户发出来的招呼消息
-)
-
-
-/**
- * 被删除的超时的accid
- */
-data class OuttimeBean(
-    val list: MutableList<String> = mutableListOf()
-)
 
 /*************消息列表**************/
 data class MessageListBean1(
     var thumbs_up_count: Int = 0,//点赞未读数
     var comment_count: Int = 0,//评论未读数
-    val greet_count: Int = 0,//招呼总数
     val likelist: MutableList<Likelist>? = mutableListOf(),
     val liked_unread_cnt: Int? = 0,//	未读感兴趣总数
     val liked_cnt: Int? = 0,//	感兴趣总数

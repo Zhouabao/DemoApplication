@@ -317,13 +317,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-    private val guideContent by lazy {
-        if (UserManager.getGender() == 1) {
-            "完成认证获取更多曝光"
-        } else {
-            "完成认证获取打招呼权限"
-        }
-    }
+    private val guideContent by lazy { "完成认证获取更多曝光" }
     private val guideVerifyWindow by lazy {
         PopupWindow(activity!!).apply {
             contentView = LayoutInflater.from(activity!!)

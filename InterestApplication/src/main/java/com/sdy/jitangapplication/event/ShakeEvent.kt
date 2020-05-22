@@ -1,17 +1,7 @@
 package com.sdy.jitangapplication.event
 
-import android.content.Context
 import com.sdy.jitangapplication.model.CheckBean
 
-class ShakeEvent(val left: Boolean)
-
-class UpdateHiCountEvent
-
-
-class GreetTopEvent(val context: Context, val success: Boolean, val targetAccid: String)
-
-
-class GetRecommendEvent()
 
 class GreetDetailSuccessEvent(val success: Boolean)
 

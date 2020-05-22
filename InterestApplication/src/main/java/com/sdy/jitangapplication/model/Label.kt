@@ -121,16 +121,6 @@ data class MyLabelBean(
 ) : Serializable
 
 
-/**
- * 他人的兴趣
- */
-data class OtherLabelsBean(
-    var my: MutableList<MyLabelBean> = mutableListOf(),
-    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
-    var other_interest: MutableList<LabelQualityBean> = mutableListOf(),
-    var my_interest: MutableList<LabelQualityBean> = mutableListOf()
-)
-
 
 data class AddLabelResultBean(
     var is_published: Boolean = false,

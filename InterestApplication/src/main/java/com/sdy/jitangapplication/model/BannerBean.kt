@@ -28,21 +28,6 @@ data class ChannelBean(
 }
 
 
-/**
- * 调查bean
- */
-data class InvestigateBean(
-    var create_time: String = "",
-    var id: Int = 0,
-    var input_type: Int = 0,
-    var item: MutableList<ChannelBean> = mutableListOf(),
-    var question_content: String = "",
-    var question_title: String = "",
-    var showcard_cnt: Int = 0,
-    var sort_num: Int = 0,
-    var statistics_id: Int = 0
-)
-
 
 /**
  * 举报对象

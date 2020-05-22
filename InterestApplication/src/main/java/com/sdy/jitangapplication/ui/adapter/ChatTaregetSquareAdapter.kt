@@ -9,7 +9,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Square
-import kotlinx.android.synthetic.main.item_match_detail_thumb.view.*
+import kotlinx.android.synthetic.main.item_chat_hi_label.view.*
 
 
 /**

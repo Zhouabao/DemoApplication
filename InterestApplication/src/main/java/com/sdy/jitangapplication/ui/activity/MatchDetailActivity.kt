@@ -57,7 +57,10 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.HelpWishDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
@@ -490,7 +493,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
         //更新打招呼次数和状态
-        updateLightCount(matchBean!!.lightningcnt ?: 0)
+        updateLightCount()
 
 
         //用户照片
@@ -763,7 +766,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                updateLightCount(-1)
+                updateLightCount()
             }
 
             override fun onAnimationCancel(animation: Animator?) {
@@ -945,12 +948,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 更新本地的招呼次数
      */
-    private fun updateLightCount(lightningcnt: Int) {
-        if (lightningcnt != -1) {
-            UserManager.saveLightingCount(lightningcnt)
-            EventBus.getDefault().postSticky(UpdateHiCountEvent())
-        }
-
+    private fun updateLightCount() {
         //已感兴趣或者是好友不做操作
         //1.是好友
         //2.打过招呼
@@ -984,42 +982,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 detailUserDislikeBtn.visibility = View.VISIBLE
             }
         }
-
-//        if (matchBean!!.isdisliked == 1 || matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-//            detailUserDislikeBtn.visibility = View.INVISIBLE
-//            detailUserLikeBtn.isVisible = false
-//            detailUserGreetBtn.isVisible = true
-//            detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
-//        } else {
-//            detailUserDislikeBtn.visibility = View.VISIBLE
-//            detailUserLikeBtn.isVisible = true
-//            detailUserGreetBtn.isVisible = true
-//        }
-
-        //判断是否为好友 是：显示聊天
-        //              否: 判断是否开启招呼,是否喜欢过
-//        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-//            detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_chat)
-//            detailUserChatBtn.isVisible = true
-//            detailUserGreetBtn.isVisible = false
-//        } else {
-//            detailUserChatBtn.isVisible = false
-//            detailUserGreetBtn.isVisible = true
-//            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1 //喜欢过就不显示“感兴趣”
-//            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
-//                detailUserChatBtn.isVisible = false
-//                detailUserGreetBtn.isVisible = false
-//            } else {//招呼开启,   招呼有效 与 招呼无效
-//                if (matchBean!!.isgreeted) {
-//                    detailUserGreetBtn.isVisible = false
-//                    detailUserChatBtn.isVisible = true
-//                    detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
-//                } else {
-//                    detailUserGreetBtn.isVisible = true
-//                    detailUserChatBtn.isVisible = false
-//                }
-//            }
-//        }
     }
 
 
@@ -1034,18 +996,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUserDetailViewStateEvent(event: UserDetailViewStateEvent) {
-        if (stateview.viewState != MultiStateView.VIEW_STATE_CONTENT) {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGreetDetailSuccessEvent(event: GreetDetailSuccessEvent) {
         if (event.success) {
             matchBean!!.isgreeted = true
-            updateLightCount(UserManager.getLightingCount() - 1)
+            updateLightCount()
         }
     }
 

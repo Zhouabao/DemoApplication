@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -30,83 +30,6 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/moreInfoTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:background="@color/colorDivider"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="打招呼设置"
-                    android:textColor="@color/colorGrayText"
-                    android:textSize="12sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <Switch
-                    android:id="@+id/switchVerifyHi"
-                    android:layout_width="48dp"
-                    android:layout_height="24dp"
-                    android:enabled="false"
-                    android:showText="false"
-                    android:thumb="@drawable/switch_ios_thumb"
-                    android:track="@drawable/selector_switch_ios_track"
-                    app:layout_constraintBottom_toBottomOf="@id/verifyHi"
-                    app:layout_constraintRight_toRightOf="@id/verifyHi"
-                    app:layout_constraintTop_toTopOf="@id/verifyHi" />
-
-                <TextView
-                    android:id="@+id/verifyHi"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:text="认证招呼"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="16sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/verifyHi"
-                    app:layout_constraintRight_toRightOf="@id/verifyHi"
-                    app:layout_constraintTop_toBottomOf="@id/verifyHi" />
-
-
-                <Switch
-                    android:id="@+id/switchOpenHi"
-                    android:layout_width="48dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="15dp"
-                    android:enabled="false"
-                    android:showText="false"
-                    android:thumb="@drawable/switch_ios_thumb"
-                    android:track="@drawable/selector_switch_ios_track"
-                    app:layout_constraintBottom_toBottomOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/openHi" />
-
-                <TextView
-                    android:id="@+id/openHi"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="1dp"
-                    android:gravity="center_vertical"
-                    android:text="接收招呼"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="16sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="@id/switchOpenHi"
-                    app:layout_constraintTop_toBottomOf="@id/verifyHi" />
-
-
-                <TextView
                     android:id="@+id/t3"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
@@ -116,7 +39,8 @@
                     android:text="隐私设置"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"
-                    app:layout_constraintTop_toBottomOf="@id/openHi" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Switch
                     android:id="@+id/switchContacts"
@@ -148,8 +72,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filterContacts" />
 
 
@@ -185,8 +109,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filterDistance" />
 
                 <TextView
@@ -237,8 +161,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/msgNotificate" />
 
 
@@ -261,8 +185,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/helpCenter" />
 
                 <TextView
@@ -297,8 +221,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/aboutUs" />
 
 
@@ -323,8 +247,8 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="@id/openHi"
-                    app:layout_constraintRight_toRightOf="@id/openHi"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/aboutAccount" />
 
                 <TextView

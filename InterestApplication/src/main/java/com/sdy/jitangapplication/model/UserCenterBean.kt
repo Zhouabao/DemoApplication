@@ -151,30 +151,13 @@ data class MyPhotoBean(
     }
 }
 
-
-
-data class City(
-    var area: MutableList<String> = mutableListOf(),
-    var name: String = ""
-)
-
-//范本关于我
-data class ModelAboutBean(
-    val id: Int = 0,
-    val title: String = "",
-    val content: String = ""
-) : Serializable
-
-
 data class LoginHelpBean(
     val title: String = "",
-//    val content: String = ""
     val content: MutableList<String>
 ) : Serializable
 
 data class HelpBean(
     val qntk: String = "",
-//    val content: String = ""
     val list: MutableList<LoginHelpBean>
 ) : Serializable
 

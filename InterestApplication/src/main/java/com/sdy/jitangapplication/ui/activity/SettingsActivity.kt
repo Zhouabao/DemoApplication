@@ -56,10 +56,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         mPresenter.mView = this
         mPresenter.context = this
 
-
-        switchOpenHi.isVisible = false
-        openHi.isVisible = false
-
         blackListBtn.setOnClickListener(this)
         msgNotificate.setOnClickListener(this)
         helpCenter.setOnClickListener(this)
@@ -69,8 +65,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         btnBack.setOnClickListener(this)
         filterContacts.setOnClickListener(this)
         filterDistance.setOnClickListener(this)
-        verifyHi.setOnClickListener(this)
-        openHi.setOnClickListener(this)
+
         aboutAccount.setOnClickListener(this)
         hotT1.text = "设置"
         stateSettings.retryBtn.onClick {
@@ -177,14 +172,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 }
             }
 
-            //开启招呼认证
-            R.id.verifyHi -> {
-                mPresenter.greetApprove()
-            }
-            //是否开启打招呼功能
-            R.id.openHi -> {
-                mPresenter.greetSwitch()
-            }
         }
     }
 
@@ -223,17 +210,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     }
 
 
-    override fun onGreetApproveResult(success: Boolean) {
-        if (success) {
-            switchVerifyHi.isChecked = !switchVerifyHi.isChecked
-        }
-    }
-
-    override fun onGreetSwitchResult(success: Boolean) {
-        if (success) {
-            switchOpenHi.isChecked = !switchOpenHi.isChecked
-        }
-    }
 
     private var settingsBean: SettingsBean? = null
 
@@ -247,8 +223,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT
             switchDistance.isChecked = settingsBean!!.hide_distance
             switchContacts.isChecked = settingsBean!!.hide_book
-            switchVerifyHi.isChecked = settingsBean!!.greet_status
-            switchOpenHi.isChecked = settingsBean!!.greet_switch
         } else {
             stateSettings.viewState = MultiStateView.VIEW_STATE_ERROR
         }

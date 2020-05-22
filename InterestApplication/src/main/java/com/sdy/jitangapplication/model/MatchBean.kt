@@ -37,26 +37,6 @@ data class MatchListBean(
 )
 
 
-data class FindByTagBean(
-    var countdown: Int = 0,
-    var is_full: Boolean = false,
-    var is_human: Boolean = false,
-    var isfaced: Int = 0,
-    var isjoin: Boolean = false,
-    var isvip: Int = 0,
-    var lightningcnt: Int = 0,
-    var tag_icon: String = "",
-    var list: MutableList<MatchBean>?,
-    var motion: Int = 0,
-    var mytags: MutableList<Newtag>? = null,
-    var tag_info: MyLabelBean? = null
-)
-
-data class AddSinlgLabelBean(
-    var tag_list: MutableList<TagBean>,
-    var tag_info: MyLabelBean? = null
-)
-
 /**
  * 匹配用户
  */
@@ -172,10 +152,6 @@ data class Tag(
     var sameLabel: Boolean = false
 ) : Serializable
 
-//九宫格相册
-data class BlockListBean(
-    var list: MutableList<Photos>? //	1 图片 2视频
-)
 
 /**
  * 用户照片
@@ -185,19 +161,6 @@ data class Photos(
     var url: String?
 )
 
-
-/**
- * 获取打招呼次数和好友关系的model
- */
-data class GreetBean(
-    val isfriend: Boolean = false,//是否好友
-    val isgreet: Boolean = false,//是否打过招呼
-    val lightningcnt: Int = -1,//剩余招呼次数
-    var countdown: Int = 0,
-    var free_greet: Boolean = false//true 免费   false 付费冲会员
-
-
-)
 
 
 data class DetailUserInfoBean(

@@ -5,8 +5,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -37,10 +35,8 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.StarEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MessageHiPastActivity
 import com.sdy.jitangapplication.ui.activity.ReportReasonActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -148,7 +144,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 dialog.tip.text = resources.getString(R.string.message_p2p_clear_tips)
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
-                    NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearChattingHistory(account, SessionTypeEnum.P2P)
                     MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
                     dialog.dismiss()
                 }
@@ -161,18 +158,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                     dialog.confirm.onClick {
                         deleteFriends()
                         dialog.dismiss()
-                    }
-                } else {
-                    dialog.title.text = "删除招呼"
-                    dialog.tip.text = "确定删除该招呼?"
-                    dialog.cancel.onClick { dialog.dismiss() }
-                    dialog.confirm.onClick {
-                        removeGreet()
-                        dialog.dismiss()
-
-
-//                        AppManager.instance.finishAllActivity()
-//                        startActivity<MainActivity>()
                     }
                 }
             }
@@ -216,31 +201,31 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         Observer { notify -> friendNoBother.isChecked = notify.isMute }
 
 
-    internal var friendDataChangedObserver: ContactChangedObserver = object : ContactChangedObserver {
-        override fun onAddedOrUpdatedFriends(account: List<String>) {
-            updateUserOperatorView()
-        }
+    internal var friendDataChangedObserver: ContactChangedObserver =
+        object : ContactChangedObserver {
+            override fun onAddedOrUpdatedFriends(account: List<String>) {
+                updateUserOperatorView()
+            }
 
-        override fun onDeletedFriends(account: List<String>) {
-            updateUserOperatorView()
-        }
+            override fun onDeletedFriends(account: List<String>) {
+                updateUserOperatorView()
+            }
 
-        override fun onAddUserToBlackList(account: List<String>) {
-            updateUserOperatorView()
-        }
+            override fun onAddUserToBlackList(account: List<String>) {
+                updateUserOperatorView()
+            }
 
-        override fun onRemoveUserFromBlackList(account: List<String>) {
-            updateUserOperatorView()
+            override fun onRemoveUserFromBlackList(account: List<String>) {
+                updateUserOperatorView()
+            }
         }
-    }
 
     private fun updateUserOperatorView() {
         if (isfriend) {
             friendDelete.visibility = View.VISIBLE
             deleteTv.text = "删除好友"
         } else {
-            friendDelete.visibility = View.VISIBLE
-            deleteTv.text = "删除招呼"
+            friendDelete.visibility = View.GONE
         }
     }
 
@@ -258,7 +243,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             return
         }
 
-        NimUIKit.getUserInfoProvider().getUserInfoAsync(account) { success, result, code -> updateUserInfoView() }
+        NimUIKit.getUserInfoProvider()
+            .getUserInfoAsync(account) { success, result, code -> updateUserInfoView() }
     }
 
     private fun updateUserInfoView() {
@@ -273,7 +259,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 //            setToggleBtn(friendReport, black)
 
             //消息提醒  * @return true表示需要消息提醒；false表示静音
-            friendNoBother.isChecked = !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account)
+            friendNoBother.isChecked =
+                !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account)
         }
     }
 
@@ -302,8 +289,9 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         if (isfriend) {
             friendStar.isChecked = star
             deleteTv.text = "删除好友"
+            friendDelete.visibility = View.VISIBLE
         } else {
-            deleteTv.text = "删除招呼"
+            friendDelete.visibility = View.GONE
         }
 
     }
@@ -359,42 +347,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onError(e: Throwable?) {
                     CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
 
-                }
-            })
-
-    }
-
-
-    /**
-     * 删除招呼
-     */
-    private fun removeGreet() {
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = account ?: ""
-        RetrofitFactory.instance.create(Api::class.java)
-            .removeGreet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    if (t.code == 200) {
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
-                        NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
-//                        SubActivityActivity::class.java.name
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(ChatActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiPastActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageHiPastActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MatchDetailActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MatchDetailActivity::class.java)
-                        EventBus.getDefault().post(UpdateHiEvent())
-                    } else {
-                        CommonFunction.toast(t.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
                 }
             })
 

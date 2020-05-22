@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
@@ -17,8 +16,6 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -43,7 +40,6 @@ class ChangeAvatarRealManDialog(
     companion object {
         const val VERIFY_NEED_VALID_REAL_MAN = 1 //替换为合规的真人照片
         const val VERIFY_NEED_REAL_MAN = 2 //替换真人（非真人）
-        const val VERIFY_NEED_REAL_MAN_GREET = 0 //打招呼滑动时提示替换真人
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,17 +60,7 @@ class ChangeAvatarRealManDialog(
             dismiss()
         }
 
-        continueGreet.clickWithTrigger {
-            if (matchBean != null)
-                CommonFunction.commonGreet(
-                    context1,
-                    matchBean!!.accid,
-                    view1,
-                    targetAvator = matchBean!!.avatar ?: "",
-                    needSwipe = true
-                )
-            dismiss()
-        }
+
 
         if (UserManager.getGender() == 1) {
             standardImg.setImageResource(R.drawable.icon_standard_man_avator)
@@ -90,7 +76,6 @@ class ChangeAvatarRealManDialog(
                     false
                 }
                 close.isVisible = false
-                continueGreet.isVisible = false
                 accountDangerTitle.text = "头像审核未通过"
                 accountDangerContent.text = "非真人头像可能导致匹配率偏低\n请替换后再进行匹配"
                 accountDangerBtn.text = "立即替换"
@@ -102,23 +87,10 @@ class ChangeAvatarRealManDialog(
                     false
                 }
                 close.isVisible = true
-                continueGreet.isVisible = false
                 accountDangerTitle.text = "请替换头像"
                 accountDangerContent.text = "当前头像不符合标准\n请替换头像"
                 accountDangerBtn.text = "立即替换"
 
-            }
-            else -> {
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-                setOnKeyListener { dialogInterface, keyCode, event ->
-                    keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
-                }
-                close.isVisible = false
-                continueGreet.isVisible = true
-                accountDangerTitle.text = "替换真实头像"
-                accountDangerContent.text = "本平台为真人社交平台，非真实头像用户打招呼回复几率偏低，且无法获得首页和广场内容推荐呈现机会"
-                accountDangerBtn.text = "立即替换"
             }
         }
 

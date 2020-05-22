@@ -6,7 +6,7 @@ package com.sdy.jitangapplication.event
  *    desc   :
  *    version: 1.0
  */
-class UpdateLikemeEvent(position: Int)
+class UpdateLikemeEvent()
 
 
 class UpdateLikemeOnePosEvent(var parPos: Int,var  childPos: Int)

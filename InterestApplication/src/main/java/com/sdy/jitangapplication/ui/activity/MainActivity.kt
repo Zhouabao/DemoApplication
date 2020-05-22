@@ -487,10 +487,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
             Log.d(
                 "msgcount", "msgcount = ${msgCount},likecount = ${allMsgCount.likecount}" +
-                        ",greetcount = ${allMsgCount.greetcount},square_count = ${allMsgCount.square_count}"
+                        ",square_count = ${allMsgCount.square_count}"
             )
 
-            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
+            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
         }
     }
 
@@ -701,9 +701,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
                     HumanVerifyDialog(this).apply {
                         type = GotoVerifyDialog.TYPE_CHANGE_ABLUM
-                    }
-                        .show()
-                    UserManager.saveAlertChangeAlbum(true)
+                    }.show()
                 }
             }
         }

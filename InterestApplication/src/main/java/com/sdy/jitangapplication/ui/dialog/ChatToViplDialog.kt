@@ -8,7 +8,7 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import kotlinx.android.synthetic.main.dialog_greet_limit.*
+import kotlinx.android.synthetic.main.dialog_chat_to_vip.*
 
 /**
  *    author : ZFM

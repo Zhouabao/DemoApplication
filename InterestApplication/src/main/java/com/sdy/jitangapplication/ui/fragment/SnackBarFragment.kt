@@ -19,7 +19,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
 import com.sdy.jitangapplication.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_snack_bar.*
@@ -73,7 +72,6 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
             SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS -> {
                 contentView.setCardBackgroundColor(colors[0])
             }
-            GREET_SUCCESS,
             FLASH_SUCCESS,
             CHAT_SUCCESS -> {
                 contentView.setCardBackgroundColor(colors[1])
@@ -114,12 +112,6 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
                     //匹配成功
                 SOMEONE_MATCH_SUCCESS -> {
                     ChatActivity.start(activity!!, msgBean.accid ?: "")
-                }
-
-                //招呼
-                GREET_SUCCESS -> {
-                    if (ActivityUtils.getTopActivity() !is GreetReceivedActivity)
-                        startActivity<GreetReceivedActivity>()
                 }
                 //闪聊
                 FLASH_SUCCESS -> {
