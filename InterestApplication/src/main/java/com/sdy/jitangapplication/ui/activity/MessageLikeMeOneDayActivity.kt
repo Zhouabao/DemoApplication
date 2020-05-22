@@ -153,7 +153,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
             if (statusBean.data?.status == 2) {//匹配成功
                 adapter.data[clickPos].isfriend = 1
                 adapter.notifyItemChanged(clickPos)
-                EventBus.getDefault().post(UpdateLikemeEvent(clickPos))
+                EventBus.getDefault().post(UpdateLikemeEvent())
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
             }
         }
