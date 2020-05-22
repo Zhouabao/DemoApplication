@@ -362,17 +362,6 @@ object CommonFunction {
                                                         true
                                                     )
                                                 )
-                                            //刷新兴趣找人列表
-                                            if (ActivityUtils.isActivityExistsInStack(
-                                                    FindByTagListActivity::class.java
-                                                )
-                                            )
-                                                EventBus.getDefault().post(
-                                                    UpdateFindByTagListEvent(
-                                                        position,
-                                                        target_accid
-                                                    )
-                                                )
                                             UserManager.saveLightingCount(
                                                 UserManager.getLightingCount() - 1
                                             )
@@ -490,6 +479,8 @@ object CommonFunction {
                             ).show()
                         } else if (t.code == 222) {
                             ChatActivity.start(context, target_accid)
+                        } else {
+                            toast(t.msg)
                         }
                     }
 

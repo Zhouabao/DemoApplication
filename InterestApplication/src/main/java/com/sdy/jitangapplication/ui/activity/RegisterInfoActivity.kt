@@ -226,7 +226,7 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
     /**
      * 展示联系方式
      */
-    private var contactWay = 1 //0手机号   1微信  2QQ
+    private var contactWay = 1 //1手机号   2微信  3QQ
     private val contactWays by lazy { mutableListOf("手机号", "微信", "QQ") }
     private val contactWaysIcon by lazy {
         mutableListOf(
@@ -241,7 +241,7 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         val pvOptions = OptionsPickerBuilder(this,
             OnOptionsSelectListener { options1, options2, options3, v ->
                 chooseContactBtn.setImageResource(contactWaysIcon[options1])
-                contactWay = options1
+                contactWay = options1 + 1
                 checkConfirmEnable()
             })
             .setSubmitText("确定")
