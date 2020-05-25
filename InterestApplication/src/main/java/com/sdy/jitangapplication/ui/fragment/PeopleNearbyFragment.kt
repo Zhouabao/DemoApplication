@@ -353,9 +353,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         /**
          * 今日推荐获取结果
          */
-        if (!data.isNullOrEmpty()) {
-            indexRecommends = data
-        }
+        indexRecommends = data ?: mutableListOf()
         mPresenter.nearlyIndex(params, type)
     }
 
