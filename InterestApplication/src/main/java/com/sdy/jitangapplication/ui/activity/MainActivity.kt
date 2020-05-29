@@ -93,10 +93,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
             //0未认证/认证不成功     1认证通过     2认证中
             if (UserManager.isUserVerify() == 0) {
-                if (UserManager.getAccountDanger())
-                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
-                else
-                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
+//                if (UserManager.getAccountDanger())
+//                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
+//                else
+//                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
             } else if (UserManager.isUserVerify() == 2) {
                 onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }

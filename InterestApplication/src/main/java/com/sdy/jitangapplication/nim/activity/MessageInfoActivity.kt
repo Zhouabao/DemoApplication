@@ -54,7 +54,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
     private var account: String? = null
     private var star: Boolean = false//是否是星标好友
-    private var isfriend: Boolean = false//是否是好友
+    private var isfriend: Boolean = true//是否是好友
 
     companion object {
         private const val FLAG_ADD_FRIEND_DIRECTLY = true // 是否直接加为好友开关，false为需要好友申请
@@ -283,7 +283,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onStarEvent(event: StarEvent) {
         star = event.stared
-        isfriend = event.isfriend
         //是好友才显示星标
         flStar.setVisible(isfriend)
         if (isfriend) {

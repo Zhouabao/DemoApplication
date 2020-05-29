@@ -258,18 +258,19 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日缘分
             //是否今日意向
             //资料完善度
-            if (!UserManager.getAlertProtocol()) {
-                PrivacyDialog(activity!!, nearBean, indexRecommends).show()
-            } else if (nearBean?.iscompleteguide != true) {
-                GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
-            } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
-                TodayFateDialog(activity!!, nearBean, indexRecommends).show()
-            } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
-                TodayWantDialog(activity!!, nearBean).show()
-            } else if (nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
-                //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
-                CompleteUserCenterDialog(activity!!).show()
-            }
+            if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()))
+                if (!UserManager.getAlertProtocol()) {
+                    PrivacyDialog(activity!!, nearBean, indexRecommends).show()
+                } else if (nearBean?.iscompleteguide != true) {
+                    GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
+                } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
+                    TodayFateDialog(activity!!, nearBean, indexRecommends).show()
+                } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
+                    TodayWantDialog(activity!!, nearBean).show()
+                } else if (nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+                    //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+                    CompleteUserCenterDialog(activity!!).show()
+                }
 
             if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
                 EventBus.getDefault().post(

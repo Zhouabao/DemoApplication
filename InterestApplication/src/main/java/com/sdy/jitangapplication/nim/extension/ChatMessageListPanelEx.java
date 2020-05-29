@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -157,6 +158,7 @@ public class ChatMessageListPanelEx {
 
     //頭部數據
     private TextView targetUserDetail;
+    private FrameLayout avatorFl;
     private ImageView targetUserAvator;
     private ImageView myAvator;
     private RecyclerView targetSquare;
@@ -1443,7 +1445,7 @@ public class ChatMessageListPanelEx {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NimHeadEvent event) {
         if (headView == null) {
-            headView = initHeadView();
+            headView = initHeadView(event.getShowChatLeftTimes());
             adapter.addHeaderView(headView);
             setHeadData(event.getNimBean());
         }
@@ -1465,9 +1467,17 @@ public class ChatMessageListPanelEx {
     }
 
 
-    private View initHeadView() {
+    private View initHeadView(boolean showLetftCardtimes) {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
         //初始化数据
+        avatorFl = headView.findViewById(com.sdy.jitangapplication.R.id.avatorFl);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) avatorFl.getLayoutParams();
+        if (showLetftCardtimes) {
+            params.setMargins(0, SizeUtils.dp2px(15 + 41), 0, 0);
+        } else {
+            params.setMargins(0, SizeUtils.dp2px(15), 0, 0);
+        }
+
         targetUserDetail = headView.findViewById(com.sdy.jitangapplication.R.id.targetUserDetail);
         targetBothInterest = headView.findViewById(com.sdy.jitangapplication.R.id.targetBothInterest);
         targetUserAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);

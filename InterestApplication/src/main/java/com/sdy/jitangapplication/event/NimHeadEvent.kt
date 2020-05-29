@@ -9,7 +9,7 @@ import com.sdy.jitangapplication.model.NimBean
  *    desc   : 聊天界面的頭佈局數據
  *    version: 1.0
  */
-class NimHeadEvent(val nimBean: NimBean)
+class NimHeadEvent(val nimBean: NimBean, val showChatLeftTimes: Boolean)
 
 
 /**
@@ -22,4 +22,4 @@ class EnablePicEvent(val enable: Boolean)
 /**
  * 星标好友事件
  */
-class StarEvent(var stared: Boolean = false,var isfriend: Boolean = false)
+class StarEvent(var stared: Boolean = false)

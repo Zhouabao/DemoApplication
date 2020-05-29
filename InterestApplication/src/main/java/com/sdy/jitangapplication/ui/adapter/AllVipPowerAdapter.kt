@@ -29,8 +29,20 @@ class AllVipPowerAdapter :
     BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout.fragment_vip_power) {
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
         val itemview = helper.itemView
+
+        val itemParams = itemview.layoutParams as RecyclerView.LayoutParams
+        itemParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(50F)
+        if (data.type == VipPowerBean.TYPE_NORMAL_VIP) {
+            itemParams.leftMargin = SizeUtils.dp2px(25F)
+        } else {
+            itemParams.leftMargin = SizeUtils.dp2px(15F)
+            itemParams.rightMargin = SizeUtils.dp2px(25F)
+        }
+        itemview.layoutParams = itemParams
+
         val params = (itemview.powerUserBg.layoutParams as ConstraintLayout.LayoutParams)
-        params.height = (170 / 325F * (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F))).toInt()
+        params.width = itemParams.width
+        params.height = (170 / 325F * itemParams.width).toInt()
         itemview.powerUserBg.layoutParams = params
 
         when (data.type) {

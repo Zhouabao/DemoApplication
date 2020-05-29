@@ -168,7 +168,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 //            GlideUtil.loadCircleImg(activity!!, event.todayWantBean.icon, todayWantIcon)
         } else {
             todayWantContent.text = "选择意向"
-            todayWantIcon.setImageResource(R.drawable.icon_today_want)
+            todayWantIcon.setImageResource(R.drawable.icon_today_want_heart)
         }
     }
 }

@@ -33,13 +33,13 @@ class VipChargeAdapter() :
             ChargeVipDialog.PURCHASE_PT_VIP,
             ChargeVipDialog.PURCHASE_RENEW_VIP -> {
                 params.width =
-                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(9F) * 2) / 3F).toInt()
+                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(15F) * 2) / 3F).toInt()
                 if (holder.layoutPosition == 0) {
-                    params.leftMargin = SizeUtils.dp2px(17F)
-                    params.rightMargin = SizeUtils.dp2px(9F)
+                    params.leftMargin = SizeUtils.dp2px(0F)
+                    params.rightMargin = SizeUtils.dp2px(15F)
                 } else if (holder.layoutPosition == mData.size - 1) {
-                    params.rightMargin = SizeUtils.dp2px(17F)
-                    params.leftMargin = SizeUtils.dp2px(9F)
+                    params.rightMargin = SizeUtils.dp2px(0F)
+                    params.leftMargin = SizeUtils.dp2px(15F)
                 } else {
                     params.rightMargin = SizeUtils.dp2px(0F)
                     params.leftMargin = SizeUtils.dp2px(0F)
@@ -62,9 +62,6 @@ class VipChargeAdapter() :
             }
         }
         holder.itemView.layoutParams = params
-
-
-
 
         holder.itemView.vipNowPrice.text =
             SpanUtils.with(holder.itemView.vipNowPrice)

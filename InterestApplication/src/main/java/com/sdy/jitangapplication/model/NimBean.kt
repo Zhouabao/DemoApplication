@@ -11,27 +11,19 @@ import java.io.Serializable
 data class NimBean(
     var approve_time: Long = 0L,
     var avatar: String = "",
-    var isapprove: Int = 0,
-    var isblocked: Boolean = false,
     var isfriend: Boolean = false,
-    var isgreet: Boolean = false,//招呼是否有效
-    var isinitiated: Boolean = false,
     var islimit: Boolean = false,
     var normal_chat_times: Int = 0,
     var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
-    var issend: Boolean = false,
-    var issended: Boolean = false,//是否发送过消息  true发送过 false  没有发送过消息
     var matching_content: String = "",
     var matching_icon: String = "",
     var my_gender: Int = 0,
     var my_isfaced: Boolean = false,
-    var my_want_cnt: Boolean = false,
     var square: List<Square> = listOf(),
     var square_cnt: Int = 0,
     var stared: Boolean = false,
     var target_gender: Int = 0,
     var target_isfaced: Boolean = false,
-    var target_want_cnt: Boolean = false,
     var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf(),
     var is_send_msg: Boolean = false,
     var force_isvip: Boolean = false

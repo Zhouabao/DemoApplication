@@ -114,8 +114,7 @@ class MyApplication : BaseApplication() {
                         }
                         //如果账号存在异常，就发送认证不通过弹窗
                         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
-                            EventBus.getDefault()
-                                .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
+                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
                             EventBus.getDefault().postSticky(
                                 ReVerifyEvent(

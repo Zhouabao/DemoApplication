@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +10,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
-import com.sdy.jitangapplication.ui.activity.VideoVerifyActivity
 import com.sdy.jitangapplication.ui.holder.VideoVerifyHolderView
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.dialog_video_verify.*
@@ -55,7 +53,7 @@ class VideoVerifyDialog(val myContext: Context) :
                     ),
                     VideoVerifyBannerBean(
                         "今日聊天机会用完",
-                        "无限聊天机会，再无设限",
+                        "每天增加10次聊天机会",
                         R.drawable.icon_verify_to_chat
                     ),
                     VideoVerifyBannerBean(

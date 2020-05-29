@@ -1,5 +1,4 @@
 package com.sdy.jitangapplication.ui.activity
-
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +8,8 @@ import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.alipay.sdk.app.PayTask
 import com.blankj.utilcode.util.SnackbarUtils
 import com.kotlin.base.data.net.RetrofitFactory
@@ -29,60 +30,13 @@ import com.sdy.jitangapplication.presenter.view.VipPowerView
 import com.sdy.jitangapplication.ui.adapter.AllVipPowerAdapter
 import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-
-/**
- * 会员权益
- */
-
-/**
- * 会员权益
- */
-//class VipPowerActivity : BaseActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_vip_power1)
-//        initView()
-//    }
-//
-//
-//    private val vipPowerFragment by lazy {
-//        VipPowerFragment(
-//            VipPowerFragment.TYPE_VIP
-//        )
-//    }
-//    private val ptVipPowerFragment by lazy {
-//        VipPowerFragment(
-//            VipPowerFragment.TYPE_PT_VIP
-//        )
-//    }
-//    private val mStack by lazy { Stack<Fragment>() }
-//
-//    private fun initView() {
-//        StatusBarUtil.immersive(this)
-//        llTitle.setBackgroundColor(Color.TRANSPARENT)
-////        llTitle.setBackgroundColor(Color.parseColor("#FF1D1F21"))
-//        btnBack.setImageResource(R.drawable.icon_back_white)
-//        divider.isVisible = false
-//        hotT1.setTextColor(resources.getColor(R.color.colorWhite))
-//        hotT1.text = "会员权益"
-//        btnBack.onClick { finish() }
-//
-//
-//        mStack.add(vipPowerFragment)
-//        mStack.add(ptVipPowerFragment)
-//        vpPower.adapter = MainPagerAdapter(supportFragmentManager, mStack)
-//        vpPower.currentItem = 0
-//        vpPower.offscreenPageLimit = 2
-//    }
-//
-//}
-
 
 class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
 
@@ -107,13 +61,13 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
         hotT1.text = "会员权益"
         btnBack.onClick { finish() }
 
-
-        initVp()
         initVp2()
     }
 
     private val adapter by lazy { AllVipPowerAdapter() }
     private fun initVp2() {
+        vpPower.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        LinearSnapHelper().attachToRecyclerView(vpPower)
         vpPower.adapter = adapter
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
@@ -126,32 +80,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
                 }
             }
         }
-    }
 
-    private fun initVp() {
-//        mStack.add(vipPowerFragment)
-//        mStack.add(ptVipPowerFragment)
-//        vpPower.adapter = MainPagerAdapter(supportFragmentManager, mStack)
-//        vpPower.currentItem = 0
-//        vpPower.offscreenPageLimit = 2
-//        vpPower.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-//            override fun onPageScrollStateChanged(state: Int) {
-//
-//            }
-//
-//            override fun onPageScrolled(
-//                position: Int,
-//                positionOffset: Float,
-//                positionOffsetPixels: Int
-//            ) {
-//                EventBus.getDefault()
-//                    .post(UpdateOffsetEvent(abs(positionOffsetPixels) < SizeUtils.dp2px(10F)))
-//            }
-//
-//            override fun onPageSelected(position: Int) {
-//            }
-//
-//        })
     }
 
 
@@ -208,7 +137,8 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
         }
     }
 
-    private val mHandler by lazy { object : Handler() {
+    private val mHandler by lazy {
+        object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     SDK_PAY_FLAG -> {
@@ -248,7 +178,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
     private val PAY_WECHAT = 2//微信支付
     private fun createOrder(position: Int, payment_type: Int) {
         val params = hashMapOf<String, Any>()
-        for (payway in adapter.data[position].paylist?: mutableListOf()) {
+        for (payway in adapter.data[position].paylist ?: mutableListOf()) {
             if (payway.payment_type == payment_type) {
                 params["pay_id"] = payway.id
                 break
@@ -284,6 +214,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
      *     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
      */
     private val SDK_PAY_FLAG = 1
+
     private fun start2Pay(payment_type: Int, data: PayBean) {
         if (payment_type == PAY_WECHAT) {
             //微信支付注册
