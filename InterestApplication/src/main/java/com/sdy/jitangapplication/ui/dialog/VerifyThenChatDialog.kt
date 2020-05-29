@@ -2,12 +2,8 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.text.TextPaint
-import android.text.style.ClickableSpan
 import android.view.Gravity
-import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -64,19 +60,19 @@ class VerifyThenChatDialog(
                 moreInfoTitle.text = "认证后才能发起聊天"
                 SpanUtils.with(t2)
                     .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
-                    .append("\n了解认证用户权益")
-                    .setClickSpan(object : ClickableSpan() {
-                        override fun onClick(widget: View) {
-                            CommonFunction.toast("这里是权益呢~~~")
-                        }
-
-                        override fun updateDrawState(ds: TextPaint) {
-                            super.updateDrawState(ds)
-                            ds.color = Color.parseColor("#6796FA")
-                            ds.isUnderlineText = false
-                        }
-                    })
-                    .setForegroundColor(Color.parseColor("#6796FA"))
+//                    .append("\n了解认证用户权益")
+//                    .setClickSpan(object : ClickableSpan() {
+//                        override fun onClick(widget: View) {
+//                            CommonFunction.toast("这里是权益呢~~~")
+//                        }
+//
+//                        override fun updateDrawState(ds: TextPaint) {
+//                            super.updateDrawState(ds)
+//                            ds.color = Color.parseColor("#6796FA")
+//                            ds.isUnderlineText = false
+//                        }
+//                    })
+//                    .setForegroundColor(Color.parseColor("#6796FA"))
                     .create()
                 verifyBtn.text = "立即认证"
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)

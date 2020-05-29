@@ -41,7 +41,7 @@ import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
-import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
+import com.sdy.jitangapplication.ui.adapter.TodayFateAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
@@ -87,8 +87,12 @@ class TodayFateDialog(
             .create()
         okBtn.onClick {
             guideMarkCl.isVisible = false
-            markLeftCount.text = "还有${data?.list?.size ?: 0}位待选择"
-            markTitle.text = "标记你心仪的女生${(manager.topPosition + 1)}/${data?.list?.size ?: 0}"
+            markLeftCount.text = "还有${data?.list?.size ?: 0}位待你选择"
+            markTitle.text = "${if (UserManager.getGender() == 1) {
+                "她"
+            } else {
+                "他"
+            }}们想认识你"
             UserManager.saveShowGuideMarkLike(true)
         }
 
@@ -137,7 +141,7 @@ class TodayFateDialog(
     /*---------------------卡片参数和方法------------------------------*/
     private val manager by lazy { CardStackLayoutManager(context1, this) }
     //用户适配器
-    private val adapter by lazy { PeopleNearbyAdapter(true) }
+    private val adapter by lazy { TodayFateAdapter() }
 
     private fun initialize() {
         //卡片排列方式
@@ -226,9 +230,9 @@ class TodayFateDialog(
     override fun onCardSwiped(direction: Direction) {
         resetAnimation()
         when (direction) {
-            Direction.Left -> {//todo 左滑不喜欢
+            Direction.Left -> {
             }
-            Direction.Right -> {//todo 右滑喜欢
+            Direction.Right -> {
                 userAvatorAdapter.addData(adapter.data[manager.topPosition - 1].avatar)
                 markLeftCount.isVisible = userAvatorAdapter.data.size < 4
             }
@@ -236,13 +240,13 @@ class TodayFateDialog(
         markSendGiftCl.isVisible = manager.topPosition == adapter.data.size
         if (manager.topPosition == adapter.data.size) {
             markLikeRv.visibility = View.INVISIBLE
-            totalMarkCnt.text = "你标记了${userAvatorAdapter.data.size}位女性"
+            totalMarkCnt.text = "${userAvatorAdapter.data.size}位女生被你选中"
             if (userAvatorAdapter.data.size == 0) {
                 myChooseCnt.text = "没有你喜欢的女生？那明天再来看看吧"
                 sendGiftBtn.text = "回到首页"
             } else {
                 myChooseCnt.text =
-                    "您选择了${userAvatorAdapter.data.size}位女生，每位送出${data?.gift_amount}糖果的礼物并建立好友关系，如果${data?.out_time}小时对方未拆开，将退回糖果"
+                    "向被你选中的女生每人送出${data?.gift_amount}糖果礼物，体验女生主动撩你的感觉。${data?.out_time}小时未拆开将退回糖果"
                 sendGiftBtn.text = "一键送出礼物"
             }
         } else {
@@ -270,12 +274,7 @@ class TodayFateDialog(
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
-        if (!guideMarkCl.isVisible) {
-            markTitle.text = "标记你心仪的女生${manager.topPosition + 1}/${data?.list?.size}"
-        } else {
-            markTitle.text = "标记你心仪的女生"
-        }
-        markLeftCount.text = "还有${(data?.list?.size ?: 0) - (manager.topPosition)}位待选择"
+        markLeftCount.text = "还有${(data?.list?.size ?: 0) - (manager.topPosition)}位待你选择"
     }
 
     override fun onCardRewound() {
@@ -287,6 +286,7 @@ class TodayFateDialog(
      *批量送出礼物
      */
     fun batchGreet() {
+        val loadingDialog = LoadingDialog(context1)
         val ids = mutableListOf<String>()
         for (tdata in adapter.data) {
             for (data in userAvatorAdapter.data) {
@@ -302,16 +302,19 @@ class TodayFateDialog(
             .excute(object : BaseSubscriber<BaseResp<GiftStateBean?>>() {
                 override fun onStart() {
                     super.onStart()
+                    loadingDialog.show()
                 }
 
                 override fun onCompleted() {
                     super.onCompleted()
+                    loadingDialog.dismiss()
                 }
 
                 override fun onNext(t: BaseResp<GiftStateBean?>) {
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
+                            sendGiftBtn.isEnabled = false
                             for (data in ids.withIndex()) {
                                 if (!data.value.isNullOrEmpty()) {
                                     //发送礼物消息
@@ -350,12 +353,17 @@ class TodayFateDialog(
                         419 -> {
                             CommonFunction.toast("糖果余额不足，请充值后重试")
                         }
+                        else -> {
+                            CommonFunction.toast(t.msg)
+                        }
+
 
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
+                    loadingDialog.dismiss()
                 }
             })
 
@@ -370,6 +378,7 @@ class TodayFateDialog(
             //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
             CompleteUserCenterDialog(context1).show()
         }
+        UserManager.showIndexRecommend = true
     }
 
     override fun onLazyClick(v: View) {

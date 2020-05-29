@@ -24,10 +24,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.MatchByWishHelpEvent
-import com.sdy.jitangapplication.model.ChargeWayBeans
-import com.sdy.jitangapplication.model.PaywayBean
-import com.sdy.jitangapplication.model.UnlockBean
-import com.sdy.jitangapplication.model.UnlockCheckBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
@@ -68,7 +65,8 @@ class OpenPtVipDialog(
         setContentView(R.layout.dialog_open_pt_vip)
         initWindow()
         initView()
-        productLists()
+        if (!isPlatniumVip)
+            productLists()
         EventBus.getDefault().register(this)
     }
 
@@ -77,7 +75,7 @@ class OpenPtVipDialog(
         setCanceledOnTouchOutside(true)
         if (from == FROM_CONTACT) {
             openPtvipLogo.setImageResource(R.drawable.icon_vip_pt_contact)
-            openPtVipTitle.text = "查看对方联系方式需要\n成为铂金会员或糖果解锁"
+            openPtVipTitle.text = "查看对方联系方式需要\n成为钻石会员或糖果解锁"
         } else {
             openPtvipLogo.setImageResource(R.drawable.icon_vip_pt_video)
             openPtVipTitle.text = "查看对方的真人视频介绍需要\n成为会员或糖果解锁"
@@ -90,7 +88,7 @@ class OpenPtVipDialog(
         }
 
         openPtVipBtn.clickWithTrigger {
-            context1.startActivity<VipPowerActivity>()
+            context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
         }
 
     }

@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
 
@@ -36,10 +37,15 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             }
             params.bottomMargin = SizeUtils.dp2px(10F)
         } else {
+            //44+ + 20 +x + 15
+//            SizeUtils.dp2px(44 + 50 + 10 + 15 + 50F)
             params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
-            params.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(
-                44 + ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15f * 2 + 12 * 8)) / 9) + 10 + 15 + 50F
-            )
+            params.height =
+                ScreenUtils.getScreenHeight() - SizeUtils.dp2px(44 + 20 + 10 + 15 + 50F)
+            -((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15f * 2) - SizeUtils.dp2px(10 * 12F)) / 9 + SizeUtils.dp2px(
+                12F * 2
+            ))
+            -StatusBarUtil.getStatusBarHeight(mContext)
         }
         itemView.layoutParams = params
 

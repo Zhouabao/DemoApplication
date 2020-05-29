@@ -53,7 +53,7 @@ class VideoVerifyDialog(val myContext: Context) :
                     ),
                     VideoVerifyBannerBean(
                         "今日聊天机会用完",
-                        "每天增加10次聊天机会",
+                        "无限聊天机会，再无设限",
                         R.drawable.icon_verify_to_chat
                     ),
                     VideoVerifyBannerBean(

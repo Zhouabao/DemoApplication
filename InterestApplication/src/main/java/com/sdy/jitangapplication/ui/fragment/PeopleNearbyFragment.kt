@@ -263,7 +263,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean?.iscompleteguide != true) {
                     GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
-                } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
+                } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     TodayFateDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
                     TodayWantDialog(activity!!, nearBean).show()

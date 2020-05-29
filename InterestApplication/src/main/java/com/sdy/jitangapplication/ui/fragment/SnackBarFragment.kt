@@ -101,8 +101,6 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
                     if (ActivityUtils.getTopActivity() !is LikeMeReceivedActivity)
                         startActivity<LikeMeReceivedActivity>()
                 }
-
-
                 //助力
                 HELP_CANDY,
                     //赠送礼物

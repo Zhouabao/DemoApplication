@@ -34,6 +34,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
@@ -55,7 +56,7 @@ import java.util.*
  * 用户头像
  */
 class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView,
-    View.OnClickListener {
+    OnLazyClickListener {
 
     companion object {
         const val REQUEST_CODE_TAKE_PHOTO = 1
@@ -515,7 +516,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.userAvatorTake,
             R.id.userAvator -> {
@@ -541,6 +542,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     override fun onBackPressed() {
 
     }
+
 
 
 }

@@ -1,4 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
+
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
@@ -38,8 +39,9 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
-class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
-
+class VipPowerActivity() :
+    BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
+    val currentPosition: Int by lazy { intent.getIntExtra("type", VipPowerBean.TYPE_NORMAL_VIP) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vip_power1)
@@ -133,7 +135,10 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
                     )
                 )
             }
-
+            if (adapter.data.size > currentPosition)
+                vpPower.postDelayed({
+                    vpPower.scrollToPosition(currentPosition)
+                }, 200L)
         }
     }
 

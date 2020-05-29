@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.model.VipDescr
+import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
@@ -426,8 +427,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
-                        "nickname" to userInfoBean?.userinfo?.nickname,
-                        "outtime" to userInfoBean?.userinfo?.vip_express
+                        "type" to if (userInfoBean?.userinfo?.isplatinum != true) {
+                            VipPowerBean.TYPE_PT_VIP
+                        } else {
+                            VipPowerBean.TYPE_NORMAL_VIP
+                        }
                     )
                 }
             }

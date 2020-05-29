@@ -32,6 +32,7 @@ import java.util.*
  */
 object UserManager {
     var approveBean: ApproveBean? = null
+    var showIndexRecommend: Boolean = false
     //认证和替换的参数
     var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var slide_times = 0
@@ -207,8 +208,6 @@ object UserManager {
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
-            SPUtils.getInstance(Constants.SPNAME)
-                .put("userIntroduce", data.extra_data?.aboutme ?: "")
         }
     }
 
@@ -220,8 +219,7 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty()
+                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0
 //                || getSpLabels().isNullOrEmpty()
                 )
 

@@ -201,6 +201,7 @@ object CommonFunction {
 //                                if (t.data?.isnew_friend == true) {
 //                                    sendMatchFriendMessage(target_accid)
 //                                } else {
+                                Thread.sleep(200L)
                                 ChatActivity.start(context, target_accid)
 //                            }
                             }

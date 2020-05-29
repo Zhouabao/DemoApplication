@@ -13,7 +13,7 @@ class VideoVerifyHolderView : ViewHolder<VideoVerifyBannerBean> {
 
     override fun onBind(itemView: View, data: VideoVerifyBannerBean, position: Int, size: Int) {
         itemView.iv1.setImageResource(data.icon)
-        itemView.tv1.text = data.title
-        itemView.tv2.text = data.content
+        itemView.tv1.text = data.content
+        itemView.tv2.text = data.title
     }
 }
