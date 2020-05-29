@@ -103,6 +103,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
 
 
+//        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
+//            0未认证/认证不成功     1认证通过     2认证中
+//            if (UserManager.isUserVerify() == 0) {
+//                if (UserManager.getAccountDanger())
+//                    onForceFaceEvent(ForceFaceEvent(VerifyForceDialog.FORCE_FAIL_MV))
+//                else
+//                    onForceFaceEvent(ForceFaceEvent(VerifyForceDialog.FORCE_FAIL_AVATAR))
+//            } else if (UserManager.isUserVerify() == 2) {
+//                onForceFaceEvent(ForceFaceEvent(VerifyForceDialog.FORCE_GOING))
+//            }
+//        }
+
+
     }
 
 
@@ -209,7 +222,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                onUpdateSlideCountEvent(UpdateSlideCountEvent(indexFragment.currentPos == 1))
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -361,34 +373,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
 
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
-//        if (vpMain.currentItem == 0) {
-//            if (!UserManager.isUserVip() && event.showCardTimes) {
-//                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-//                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-//                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-//                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-//                    null,
-//                    null,
-//                    null,
-//                    null
-//                )
-//            } else {
-//                tabMatchCount.text = "首页"
-//                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-//                tabMatchCount.setPadding(0)
-//                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-//                    null,
-//                    resources.getDrawable(R.drawable.icon_tab_match_checked),
-//                    null,
-//                    null
-//                )
-//            }
-//        }
     }
 
 
@@ -681,6 +665,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             accountDangerDialog!!.dismiss()
             accountDangerDialog = null
         }
+//        if (verifyForceDialog != null && verifyForceDialog!!.isShowing) {
+//            verifyForceDialog!!.dismiss()
+//            verifyForceDialog = null
+//        }
         if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {//11
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
@@ -731,6 +719,31 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 .removeStickyEvent(EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java))
         }
     }
+
+//    private var verifyForceDialog: VerifyForceDialog? = null
+//    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+//    fun onForceFaceEvent(event: ForceFaceEvent) {
+//
+//        if (accountDangerDialog != null) {
+//            accountDangerDialog!!.dismiss()
+//            accountDangerDialog = null
+//        }
+//        if (verifyForceDialog != null) {
+//            verifyForceDialog!!.dismiss()
+//            verifyForceDialog = null
+//        }
+//
+//        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
+//            verifyForceDialog = VerifyForceDialog(ActivityUtils.getTopActivity())
+//            verifyForceDialog!!.show()
+//            verifyForceDialog!!.changeVerifyStatus(event.type)
+//        }
+//        if (EventBus.getDefault().getStickyEvent(ForceFaceEvent::class.java) != null) {
+//            // 若粘性事件存在，将其删除
+//            EventBus.getDefault()
+//                .removeStickyEvent(EventBus.getDefault().getStickyEvent(ForceFaceEvent::class.java))
+//        }
+//    }
 
 
 }

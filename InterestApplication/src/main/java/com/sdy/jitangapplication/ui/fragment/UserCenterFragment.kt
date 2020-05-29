@@ -254,13 +254,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userName1.text = userInfoBean?.userinfo?.nickname ?: ""
         userSign.text = userInfoBean?.sign ?: ""
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
-        UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
+        UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: false)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
         checkVerify()
         checkVip()
-        for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
-            marqueeVipPower.addView(getMarqueeView(data))
+
 
         if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
@@ -296,7 +295,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     //是否认证
     private fun checkVip() {
         //是否会员
-        if (userInfoBean?.userinfo?.isvip == 1) {
+        if (userInfoBean?.userinfo?.isvip == true || userInfoBean?.userinfo?.isplatinum == true) {
             EventBus.getDefault().post(UpdateSameCityVipEvent())
             userVip.visibility = View.VISIBLE
             isVipPowerBtn.isVisible = true
@@ -305,13 +304,37 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             userVip.visibility = View.GONE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "开通会员"
-
         }
+
+        if (userInfoBean?.userinfo?.isplatinum == true) {
+            for (data in userInfoBean?.platinum_vip_descr ?: mutableListOf<VipDescr>())
+                marqueeVipPower.addView(
+                    getMarqueeView(
+                        data,
+                        userInfoBean?.userinfo?.isplatinum ?: false
+                    )
+                )
+            vipLevelLogo.setImageResource(R.drawable.icon_pt_vip_me)
+            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_pt_vip_quanyi_bg)
+            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_gray_10dp)
+        } else {
+            vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
+            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_vip_quanyi_bg)
+            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_orange_10dp)
+            for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
+                marqueeVipPower.addView(getMarqueeView(data, false))
+        }
+
     }
 
 
-    private fun getMarqueeView(content: VipDescr): View {
+    private fun getMarqueeView(content: VipDescr, isPtVip: Boolean): View {
         val view = layoutInflater.inflate(R.layout.item_marquee_power, null, false)
+        if (isPtVip) {
+            view.powerContent.setTextColor(Color.parseColor("#FF5E6473"))
+        } else {
+            view.powerContent.setTextColor(Color.parseColor("#FF936F3F"))
+        }
         view.powerContent.text = content.title
         return view
     }
@@ -397,7 +420,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //会员权益
             R.id.isVipPowerBtn -> {
-                if (userInfoBean?.userinfo?.isvip != 1) {
+                if (userInfoBean?.userinfo?.isvip != true) {
                     ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
@@ -417,13 +440,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             //我的来访
             R.id.userVisit -> {
                 startActivity<MyVisitActivity>(
-                    "isVip" to (userInfoBean?.userinfo?.isvip == 1),
+                    "isVip" to (userInfoBean?.userinfo?.isvip ?: false),
                     "today" to userInfoBean?.userinfo?.todayvisit,
                     "all" to userInfoBean?.userinfo?.allvisit,
                     "freeShow" to userInfoBean?.free_show
                 )
             }
             //认证中心
+            ////0 未认证且无视频 1 已认证的 2 认证中 3 认证被拒绝 需要更换头像认证
             R.id.userVerify, R.id.verifyState -> {
                 when (userInfoBean?.userinfo?.isfaced) {
                     1 -> {
@@ -433,10 +457,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                         CommonFunction.toast("认证审核中...")
                     }
                     else -> {
-                        IDVerifyActivity.startActivityForResult(
-                            activity!!,
-                            requestCode = REQUEST_ID_VERIFY
-                        )
+//                        IDVerifyActivity.startActivityForResult(
+//                            activity!!,
+//                            requestCode = REQUEST_ID_VERIFY
+//                        )
                     }
 
                 }

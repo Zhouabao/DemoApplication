@@ -57,6 +57,9 @@ object UserManager {
     var keyList: MutableList<String> = mutableListOf()
 
 
+    /**
+     * 是否是异常账号
+     */
     fun saveAccountDanger(danger: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("accountDanger", danger)
     }
@@ -66,6 +69,9 @@ object UserManager {
     }
 
 
+    /**
+     * 是否是账号异常头像不通过
+     */
     fun saveAccountDangerAvatorNotPass(danger: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("AccountDangerAvatorNotPass", danger)
     }
@@ -86,7 +92,6 @@ object UserManager {
     }
 
 
-
     /**
      * 保存当前是否引导发布
      */
@@ -97,7 +102,6 @@ object UserManager {
     fun isShowGuidePublish(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuidePublish", false)
     }
-
 
 
     //是否已经强制替换过头像
@@ -118,7 +122,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isNeedChangeAvator", false)
     }
 
-    //是否需要强制替换头像  1头像不通过强制替换   2真人头像不通过 强制替换
+    //是否需要强制替换头像  7强制替换头像  11真人头像不通过弹窗
     fun saveChangeAvatorType(changeType: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("ChangeAvatorType", changeType)
     }
@@ -135,7 +139,6 @@ object UserManager {
     fun getChangeAvator(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
     }
-
 
 
     //是否提示过用户协议
@@ -200,9 +203,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-            if (data.userinfo.isvip != -1) {
-                saveUserVip(data.userinfo.isvip)
-            }
+            saveUserVip(data.userinfo.isvip)
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
@@ -318,11 +319,11 @@ object UserManager {
      * 判断用户是否是vip
      */
     fun isUserVip(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("isvip", 0) == 1
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isvip1", false)
     }
 
-    fun saveUserVip(vip: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("isvip", vip)
+    fun saveUserVip(vip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isvip1", vip)
     }
 
     /**
@@ -405,7 +406,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("gender")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceOpenVip")
         SPUtils.getInstance(Constants.SPNAME).remove("birth")
-        SPUtils.getInstance(Constants.SPNAME).remove("isvip")
+        SPUtils.getInstance(Constants.SPNAME).remove("isvip1")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
@@ -471,20 +472,6 @@ object UserManager {
 
 
     /**
-     * 保存剩余滑动次数
-     */
-    fun saveLeftSlideCount(slideTimes: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("leftSlideCount", slideTimes)
-    }
-
-    /**
-     * 获取剩余滑动次数
-     */
-    fun getLeftSlideCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
-    }
-
-    /**
      * 是否展示首页的引导使用
      */
     fun isShowGuideCandy(): Boolean {
@@ -506,6 +493,17 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideLike", isShow)
     }
 
+
+    /**
+     * 是否展示引导喜欢我的
+     */
+    fun isShowGuideMarkLike(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideMarkLike", false)
+    }
+
+    fun saveShowGuideMarkLike(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideMarkLike", isShow)
+    }
 
 
     /**
@@ -626,8 +624,6 @@ object UserManager {
             || data.userinfo.nickname.isNullOrEmpty()
             || data.userinfo.birth == 0
             || data.userinfo.gender == 0
-            || data.extra_data?.aboutme.isNullOrEmpty()
-            || data.extra_data?.aboutme?.trim().isNullOrEmpty()
         ) {
             context.startActivity<RegisterInfoActivity>()
             return

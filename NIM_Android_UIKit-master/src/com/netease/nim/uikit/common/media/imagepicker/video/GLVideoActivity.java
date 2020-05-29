@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.netease.nim.uikit.R;
 
 /**
@@ -58,6 +60,7 @@ public class GLVideoActivity extends AppCompatActivity implements GLVideoModel.M
     private void bindData() {
         Uri uri = getIntent().getData();
         long duration = getIntent().getLongExtra(KEY_Duration, 0);
+
         videoModel = new GLVideoModel(uri, duration);
         videoModel.attachVideoView(placeholder.getVideoView());
         videoModel.removeObservers();
@@ -65,6 +68,7 @@ public class GLVideoActivity extends AppCompatActivity implements GLVideoModel.M
         videoModel.fireAttachSurface();
         placeholder.setFullScreenEnabled(false);
         placeholder.bind(videoModel, true);
+
 
         View.OnClickListener playListener = new View.OnClickListener() {
             @Override

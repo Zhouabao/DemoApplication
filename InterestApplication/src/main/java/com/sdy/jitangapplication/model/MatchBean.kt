@@ -46,6 +46,7 @@ data class MatchBean(
     var face_auditing_state: Int = 0,
     var intention_icon: String = "",
     var isvip: Int = 0,    //是否会员 true是 false不是
+    var isplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
     var age: Int? = 0,
@@ -58,6 +59,7 @@ data class MatchBean(
     var member_level: Int? = 0,
     var nickname: String? = null,
     var contact_way: Int = 0,
+    var mv_btn: Boolean = false,
     var photos: MutableList<String>? = null,
     var sign: String? = null,
     var job: String? = null,
@@ -133,13 +135,14 @@ data class GreetTimesBean(
     val default_msg: String = ""
 )
 
-data class GreetCheckBean(
-    var type: Int = -1,//1 免费   2 消耗糖果打招呼   3有今日意愿选项打招呼
-    var greet_amount: Int,
-    var goodswish: GiftBean? = null,
-    var nickname: String,
-    var mycandy_amount: Int,
-    var people_amount: Int
+/**
+ * 糖果解锁验证
+ */
+data class UnlockCheckBean(
+    var isnew_friend: Boolean = false,
+    var isplatinumvip: Boolean = false,
+    var mv_url: String = "",
+    var amount: Int = 0
 )
 
 /**
@@ -160,7 +163,6 @@ data class Photos(
     val square_id: Int = 0,
     var url: String?
 )
-
 
 
 data class DetailUserInfoBean(
@@ -194,6 +196,13 @@ data class UnlockBean(
 )
 
 
+data class SendGiftBean(
+    var amount: Int = 0,
+    var isnew_friend: Boolean = false,
+    var order_id: Int = 0
+)
+
+
 data class NearPersonBean(
     var accid: String = "",
     var age: Int = 0,
@@ -208,11 +217,23 @@ data class NearPersonBean(
     var intention_title: String = "",
     var isfaced: Int = 0,
     var isvip: Boolean = false,
+    var mv_faced: Boolean = false,
+    var mv_btn : Boolean = false,
+    var isplatinumvip: Boolean = false,
+    var isfriend: Boolean = false,
     var member_level: Int = 0,
     var nickname: String = "",
     var online_time: String = "",
     var sign: String = "",
     var want: MutableList<String> = mutableListOf()
+)
+
+data class TodayFateBean(
+    val today_pull: Boolean = false,
+    val gift_amount: Int = 0,
+    val mycandy_amount: Int = 0,
+    val out_time: String = "",
+    val list: MutableList<NearPersonBean> = mutableListOf()
 )
 
 /**
@@ -235,5 +256,5 @@ data class IndexRecommendBean(
  */
 data class BatchGreetBean(
     var accid: String = "",
-    var msg: String = ""
+    var order_id: String = ""
 )

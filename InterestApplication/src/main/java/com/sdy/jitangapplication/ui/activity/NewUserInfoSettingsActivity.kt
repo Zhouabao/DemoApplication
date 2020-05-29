@@ -285,6 +285,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 userScoreVip.isEnabled = true
             }
 
+            //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
+            //verifyNotice.isVisible = data.mv_faced == 3
+            //updateVerifyState(data.mv_faced)
+
             if (data.score_rule != null) {
                 userScore80.tvAddScoreSmile.text =
                     "${data.score_rule.base_total + data.score_rule.base}"
@@ -346,6 +350,15 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 }, 100L)
             }
 
+        }
+    }
+
+     //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
+    private fun updateVerifyState(verifyState:Int) {
+        if (verifyState == 3) {
+            verifyNotice.text = "替换头像照片后自动进入重新审核"
+        } else if (verifyState==2) {
+            verifyNotice.text = "已进入自动审核，请返回"
         }
     }
 

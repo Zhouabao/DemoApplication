@@ -528,7 +528,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:src="@drawable/icon_matchdetail_continue_chat"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="parent"
                     app:layout_constraintRight_toLeftOf="parent"
@@ -549,6 +549,24 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/videoIntroduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="7dp"
+                android:background="@drawable/rectangle_transparent_contact"
+                android:drawableLeft="@drawable/icon_video_introduce"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:text="视频介绍"
+                android:textColor="#ff191919"
+                android:textSize="13sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/contactNumber"
                 android:layout_width="wrap_content"
@@ -622,7 +640,7 @@
             android:layout_marginLeft="72dp"
             android:layout_marginTop="80dp"
             android:layout_marginRight="72dp"
-            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:background="@drawable/shape_rectangle_orange_24dp"
             android:text="取消拉黑"
             android:textColor="#ffffffff"
             android:textSize="16sp"

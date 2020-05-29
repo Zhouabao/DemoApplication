@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.TodayFateBean
 
 /**
  *    author : ZFM
@@ -14,6 +14,6 @@ interface PeopleNearbyView : BaseView {
 
     fun nearlyIndexResult(success: Boolean, mutableList: NearBean?)
 
-    fun onTodayRecommendResult(data: MutableList<IndexRecommendBean>?)
+    fun onTodayRecommendResult(data: TodayFateBean?)
 
 }

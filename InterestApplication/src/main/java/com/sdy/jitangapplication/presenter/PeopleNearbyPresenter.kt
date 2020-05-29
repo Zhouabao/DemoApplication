@@ -7,8 +7,9 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.fragment.PeopleNearbyFragment
@@ -75,8 +76,8 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
     fun todayRecommend() {
         RetrofitFactory.instance.create(Api::class.java)
             .todayRecommend(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
-                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<TodayFateBean?>>() {
+                override fun onNext(t: BaseResp<TodayFateBean?>) {
                     mView.onTodayRecommendResult(t.data)
                 }
 

@@ -1,70 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="300dp"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/rectangle_white_10dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
-    <ImageView
-        android:id="@+id/closeBtn"
+
+    <TextView
+        android:id="@+id/markTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:src="@drawable/icon_close"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:text="标记你心仪的女生"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/moreInfoTitle"
+        android:id="@+id/markLeftCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="今日缘分"
-        android:textColor="#ff191919"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/closeBtn" />
-
-    <TextView
-        android:id="@+id/t2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="快给她们打个招呼吧"
-        android:textColor="#ff888d92"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="右滑卡片选择"
+        android:textColor="#ffc5c6c8"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/markedUserRv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
+        app:layout_constraintTop_toTopOf="@id/markedUserRv" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFate"
+        android:id="@+id/markedUserRv"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:overScrollMode="never"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/markTitle" />
+
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/markLikeRv"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toTopOf="@id/stepOutBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/t2" />
+        app:layout_constraintTop_toBottomOf="@id/markedUserRv" />
+
+
+    <ImageView
+        android:id="@+id/animation_like"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginRight="20dp"
+        android:alpha="0"
+        android:src="@drawable/icon_like_match"
+        app:layout_constraintBottom_toBottomOf="@id/markLikeRv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/markLikeRv" />
+
+    <ImageView
+        android:id="@+id/animation_dislike"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="20dp"
+        android:alpha="0"
+        android:src="@drawable/icon_dislike_match"
+        app:layout_constraintBottom_toBottomOf="@id/markLikeRv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/markLikeRv" />
 
     <TextView
-        android:id="@+id/hiFateBtn"
-        android:layout_width="232dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/selector_confirm_btn_25dp"
+        android:id="@+id/stepOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:gravity="center"
-        android:text="一键送出招呼"
-        android:textColor="#ffffffff"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:text="跳过匹配"
+        android:textColor="#ffc5c6c8"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/markSendGiftCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/markLikeRv"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvFate" />
+        app:layout_constraintTop_toTopOf="@id/markLikeRv">
+
+        <TextView
+            android:id="@+id/totalMarkCnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你标记了9位女性"
+            android:textColor="#ff191919"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/iv1"
+            android:layout_width="wrap_content"
+            android:layout_height="163dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/totalMarkCnt"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="data_today_fate.json"
+            app:lottie_imageAssetsFolder="images_today_fate/" />
+
+        <TextView
+            android:id="@+id/myCandyCnt"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rectangle_orange_white_15dp"
+            android:drawableLeft="@drawable/icon_candy_small"
+            android:drawablePadding="3dp"
+            android:paddingLeft="7dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="3999"
+            android:textColor="#ffff6318"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv1" />
+
+        <TextView
+            android:id="@+id/rechargeCandyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_rectangle_orange_15dp"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:text="充值"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/myCandyCnt"
+            app:layout_constraintRight_toRightOf="@id/myCandyCnt"
+            app:layout_constraintTop_toTopOf="@id/myCandyCnt" />
+
+        <TextView
+            android:id="@+id/myChooseCnt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="您选择了9位女生，每位送出29糖果的礼物并建立好友关系，如果24小时对方未拆开，将退回糖果"
+            android:textColor="#ffb5b7b9"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myCandyCnt" />
+
+        <TextView
+            android:id="@+id/sendGiftBtn"
+            android:layout_width="232dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/shape_rectangle_orange_24dp"
+            android:gravity="center"
+            android:text="一键送出礼物"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myChooseCnt" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/guideMarkCl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorHalfBlack"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_white_10dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_mark_like" />
+
+            <TextView
+                android:id="@+id/guideTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="26dp"
+                android:text="左滑不喜欢，右滑喜欢"
+                android:textColor="#ff191919"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/okBtn"
+                android:layout_width="232dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/shape_rectangle_orange_24dp"
+                android:gravity="center"
+                android:text="好的"
+                android:textColor="#ffffffff"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

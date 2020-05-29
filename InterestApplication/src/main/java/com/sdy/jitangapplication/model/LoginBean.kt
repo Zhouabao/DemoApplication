@@ -39,9 +39,11 @@ data class Userinfo(
     val accid: String = "",
     val allvisit: Int = 0,
     val face_audit_state: Int? = 0,
-    val isvip: Int = -1,
+    val isvip: Boolean = false,
+    val isplatinum: Boolean = false,
     val todayvisit: Int = 0,
     val vip_express: String = "",
+    val platinum_vip_express: String = "",
     var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     var identification: Int = 0,// int（认证分数）
     var percent_complete: Int = 0,// float（百分比例如 80.99）

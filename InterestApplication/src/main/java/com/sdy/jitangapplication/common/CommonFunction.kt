@@ -31,9 +31,12 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.GiftStateBean
+import com.sdy.jitangapplication.model.SendTipBean
+import com.sdy.jitangapplication.model.UnlockCheckBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.*
@@ -56,71 +59,77 @@ import java.text.ParseException
  */
 object CommonFunction {
     /**
-     * 字符串 千位符
-     *
-     * @param num
-     * @return
+     * 验证视频介绍解锁
+     * 400 错误toast
+     * 201 冲会员
+     * 222 （铂金会元/已经解锁视频 返回isnew_friend true是新好友 false 不是新建立 mv_url 视频地址 ）
+     * 200 amount 糖果数 isplatinumvip 是否铂金会员
      */
-    fun num2thousand(num: String): String {
-        var numStr = "";
-        val nf = NumberFormat.getInstance();
-        try {
-            val df = DecimalFormat("#,###");
-            numStr = df.format(nf.parse(num));
-        } catch (e: ParseException) {
-            e.printStackTrace();
-        }
-        return numStr;
+    fun checkUnlockIntroduceVideo(context: Context, target_accid: String, gender: Int) {
+        val loading = LoadingDialog(context)
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkUnlockMv(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
+            .excute(object : BaseSubscriber<BaseResp<UnlockCheckBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
+
+                override fun onNext(t: BaseResp<UnlockCheckBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        222 -> {//铂金会员解锁成功/已经解锁过了 isnew_friend 是否新好友
+//                            if (t.data?.isnew_friend == true) {
+//                                sendMatchFriendMessage(target_accid)
+//                            }
+                            PlayVideoDialog(context, t.data?.mv_url ?: "").show()
+                        }
+                        201 -> {
+                            ChargeVipDialog(ChargeVipDialog.LOOK_VIDEO, context).show()
+                        }
+                        200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+                            OpenPtVipDialog(
+                                context,
+                                OpenPtVipDialog.FROM_VIDEO_INTRODUCE,
+                                t.data?.isplatinumvip == true,
+                                t.data?.amount ?: 0,
+                                target_accid, gender
+                            ).show()
+                        }
+                        else -> {
+                            toast(t.msg)
+                        }
+                    }
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    loading.dismiss()
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loading.dismiss()
+                }
+            })
     }
 
-
-    fun getErrorMsg(context: Context): String {
-        return if (NetworkUtils.isConnected()) {
-            context.getString(R.string.retry_load_error)
-        } else {
-            context.getString(R.string.retry_net_error)
-        }
-    }
-
-
-    fun toast(msg: String) {
-        ToastUtils.setBgColor(Color.parseColor("#80000000"))
-        ToastUtils.setMsgColor(Color.WHITE)
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
-        ToastUtils.showShort(msg)
-    }
 
     /**
-     * 打招呼
-     * code  201  次数使用完毕，请充值次数
-     * code  202  你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
-     * code  203  招呼次数用完,认证获得次数
-     * 204  次数使用完毕，请充值会员获取次数
-     * 205  今日次数使用完毕
-     * 206  是好友/打过招呼的
-     * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
-     * code  400  招呼次数用尽~
+     * 不是会员先弹充值
+     * 不是好友就赠送礼物
+     * 是好友就直接跳聊天界面
+     * 	201 拉起充值会员 206 是好友进聊天 200 拉起礼物列表
      */
-    //    206  是好友或者有效招呼    202  需要充值会员  401  需要人脸认证   普通400 错误信息
-
-    fun commonGreet(
-        context1: Context,
-        target_accid: String,
-        view: View? = null,
-        position: Int = -1,
-        targetAvator: String,
-        needSwipe: Boolean = false
-    ) {
-
-        if (!NetworkUtils.isConnected()) {
-            toast("请连接网络！")
-            return
-        }
-
+    fun checkSendGift(context1: Context, target_accid: String) {
         val loadingDialog = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
-            .checkGreetStateCandy(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
-            .excute(object : BaseSubscriber<BaseResp<GreetCheckBean?>>() {
+            .checkSendCandy(
+                UserManager.getSignParams(
+                    hashMapOf("target_accid" to target_accid)
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<Any?>>() {
                 override fun onStart() {
                     super.onStart()
                     loadingDialog.show()
@@ -131,37 +140,20 @@ object CommonFunction {
                     loadingDialog.dismiss()
                 }
 
-                override fun onNext(t: BaseResp<GreetCheckBean?>) {
+                override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
-                    if (loadingDialog.isShowing)
-                        loadingDialog.dismiss()
                     when (t.code) {
                         200 -> {
-                            if (t.data != null && t.data!!.type != -1) {
-                                when (t.data!!.type!!) {
-                                    1 -> {// 免费
-                                        greet(
-                                            target_accid,
-                                            view,
-                                            context1
-                                        )
-                                    }
-                                }
-                            }
+                            SendGiftBeFriendDialog(target_accid, context1).show()
                         }
-
-                        206 -> {//是好友或者有效招呼
+                        201 -> {//需要充值会员
+                            ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context1).show()
+                        }
+                        206 -> {//已经是好友了
                             ChatActivity.start(context1, target_accid)
                         }
-                        202 -> {//需要充值会员
-                            OpenVipDialog(
-                                context1,
-                                from = OpenVipDialog.FROM_NEAR_CHAT_GREET,
-                                peopleAmount = t.data!!.people_amount
-                            ).show()
-                        }
-                        400 -> {//错误信息
-                            toast(t.msg)
+                        401 -> {//女性未认证
+                            VerifyThenChatDialog(context1).show()
                         }
                     }
                 }
@@ -174,66 +166,14 @@ object CommonFunction {
                     }
                 }
             })
-
     }
-
-
-    fun greet(target_accid: String, view: View?, context1: Context) {
-        val loadingDialog = LoadingDialog(context1)
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GreetTimesBean?>>(null) {
-                override fun onStart() {
-                    super.onStart()
-                    loadingDialog.show()
-                }
-
-                override fun onCompleted() {
-                    super.onCompleted()
-                    loadingDialog.dismiss()
-                }
-
-                override fun onNext(t: BaseResp<GreetTimesBean?>) {
-                    when (t.code) {
-                        200 -> {//成功
-                        }
-                        206 -> { //是好友/打过招呼的，直接跳转聊天界面
-                            ChatActivity.start(
-                                context1,
-                                target_accid
-                            )
-                        }
-                        403 -> { //登录异常
-                            UserManager.startToLogin(context1 as Activity)
-                        }
-                        419 -> {
-                            AlertCandyEnoughDialog(
-                                context1,
-                                AlertCandyEnoughDialog.FROM_SEND_GIFT
-                            ).show()
-                        }
-                        else -> {
-                            toast(t.msg)
-                        }
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    loadingDialog.dismiss()
-                    if (e is BaseException)
-                        TickDialog(context1).show()
-                    else
-                        toast(context1.getString(R.string.service_error))
-
-                }
-            })
-    }
-
 
     /**
      * 验证糖果解锁
+     * 		400 toast错误
+     * 		201 会员充值
+     * 		222 （铂金会员解锁成功/已经解锁过了 isnew_friend 是否新好友）
+     * 		200 amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
      */
     fun checkUnlockContact(context: Context, target_accid: String, gender: Int) {
         if (!UserManager.isUserVip()) {
@@ -242,25 +182,40 @@ object CommonFunction {
             val loading = LoadingDialog(context)
             RetrofitFactory.instance.create(Api::class.java)
                 .checkUnlockContact(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
-                .excute(object : BaseSubscriber<BaseResp<GiftBean?>>() {
+                .excute(object : BaseSubscriber<BaseResp<UnlockCheckBean?>>() {
                     override fun onStart() {
                         super.onStart()
                         loading.show()
                     }
 
-                    override fun onNext(t: BaseResp<GiftBean?>) {
+                    override fun onNext(t: BaseResp<UnlockCheckBean?>) {
                         super.onNext(t)
-                        if (t.code == 200) {
-                            UnlockContactDialog(
-                                context,
-                                target_accid,
-                                t.data!!.amount,
-                                gender
-                            ).show()
-                        } else if (t.code == 222) {
-                            ChatActivity.start(context, target_accid)
-                        } else {
-                            toast(t.msg)
+                        when (t.code) {
+                            201 -> {
+                                ChargeVipDialog(
+                                    ChargeVipDialog.INFINITE_CHAT,
+                                    context
+                                ).show()
+                            }
+                            222 -> {//铂金会员解锁成功/已经解锁过了 isnew_friend 是否新好友
+//                                if (t.data?.isnew_friend == true) {
+//                                    sendMatchFriendMessage(target_accid)
+//                                } else {
+                                ChatActivity.start(context, target_accid)
+//                            }
+                            }
+                            200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+                                OpenPtVipDialog(
+                                    context,
+                                    OpenPtVipDialog.FROM_CONTACT,
+                                    t.data?.isplatinumvip == true,
+                                    t.data?.amount ?: 0,
+                                    target_accid, gender
+                                ).show()
+                            }
+                            else -> {
+                                toast(t.msg)
+                            }
                         }
                     }
 
@@ -275,6 +230,34 @@ object CommonFunction {
                     }
                 })
         }
+    }
+
+
+    private fun sendMatchFriendMessage(target_accid: String) {
+        val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
+        val config = CustomMessageConfig()
+        config.enablePush = false
+        val message = MessageBuilder.createCustomMessage(
+            target_accid,
+            SessionTypeEnum.P2P,
+            "",
+            wishHelpFirendAttachment,
+            config
+        )
+
+        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+            .setCallback(object : RequestCallback<Void?> {
+                override fun onSuccess(param: Void?) {
+                    ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+                }
+
+                override fun onFailed(code: Int) {
+                }
+
+                override fun onException(exception: Throwable) {
+
+                }
+            })
     }
 
 
@@ -325,9 +308,14 @@ object CommonFunction {
      */
     fun sendTips(target_accid: String, retTipsArr: MutableList<SendTipBean>) {
         for (tip in retTipsArr) {
-            val attachment = SendCustomTipAttachment(tip.content, tip.showType, tip.ifSendUserShow)
+            val attachment =
+                SendCustomTipAttachment(tip.content, tip.showType, tip.ifSendUserShow)
             val tip =
-                MessageBuilder.createCustomMessage(target_accid, SessionTypeEnum.P2P, attachment)
+                MessageBuilder.createCustomMessage(
+                    target_accid,
+                    SessionTypeEnum.P2P,
+                    attachment
+                )
             val config = CustomMessageConfig()
             config.enableUnreadCount = false
             config.enablePush = false
@@ -542,4 +530,50 @@ object CommonFunction {
 
     }
 
+    /**
+     * 字符串 千位符
+     *
+     * @param num
+     * @return
+     */
+    fun num2thousand(num: String): String {
+        var numStr = "";
+        val nf = NumberFormat.getInstance();
+        try {
+            val df = DecimalFormat("#,###");
+            numStr = df.format(nf.parse(num));
+        } catch (e: ParseException) {
+            e.printStackTrace();
+        }
+        return numStr;
+    }
+
+
+    fun getErrorMsg(context: Context): String {
+        return if (NetworkUtils.isConnected()) {
+            context.getString(R.string.retry_load_error)
+        } else {
+            context.getString(R.string.retry_net_error)
+        }
+    }
+
+
+    fun toast(msg: String) {
+        ToastUtils.setBgColor(Color.parseColor("#80000000"))
+        ToastUtils.setMsgColor(Color.WHITE)
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+        ToastUtils.showShort(msg)
+    }
+
+
+    fun startToFace(
+        context: Context,
+        type: Int = IDVerifyActivity.TYPE_ACCOUNT_NORMAL,
+        requestCode: Int = -1
+    ) {
+        if (requestCode != -1)
+            IDVerifyActivity.startActivityForResult(context as Activity, type, requestCode)
+        else
+            IDVerifyActivity.startActivity(context, type)
+    }
 }

@@ -17,7 +17,6 @@ import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.ShowNearCountEvent
-import com.sdy.jitangapplication.event.UpdateSlideCountEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
@@ -107,7 +106,6 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
                 if (position == 0) {
                     EventBus.getDefault().post(ShowNearCountEvent())
                 }
-                EventBus.getDefault().post(UpdateSlideCountEvent(position == 1))
                 currentPos = position
             }
         })

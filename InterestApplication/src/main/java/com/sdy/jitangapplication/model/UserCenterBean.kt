@@ -20,6 +20,7 @@ data class UserInfoBean(
     val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证
     val free_show: Boolean = false,//  true（显示）  false(模糊)
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
+    val platinum_vip_descr: MutableList<VipDescr>? = mutableListOf(),//钻石会员权益描述
     val visitlist: MutableList<String>? = mutableListOf()//看过我的头像列表
 )
 
@@ -92,6 +93,7 @@ data class UserInfoSettingBean(
     var constellation: String = "",
     var face_state: Boolean = false,
     var gender: Int = 0,
+    var mv_faced: Int = 0, //新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
     var job: String = "",
     var nickname: String = "",
     var photos: MutableList<String> = mutableListOf(),

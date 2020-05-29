@@ -89,13 +89,12 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.ChangeUserContactActivity"></activity>
+        <activity android:name=".ui.activity.QuickSignActivity" />
+        <activity android:name=".ui.activity.ChangeUserContactActivity" />
         <activity
             android:name=".ui.activity.GetRelationshipActivity"
-            android:windowSoftInputMode="adjustNothing">
-
-        </activity>
-        <activity android:name=".ui.activity.GetMoreMatchActivity"></activity>
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".ui.activity.GetMoreMatchActivity" />
         <activity android:name=".ui.activity.RegisterInfoActivity" />
         <activity android:name=".ui.activity.AddressManagerActivity" />
         <activity android:name=".ui.activity.SomeoneGetGiftActivity" />
@@ -129,22 +128,25 @@
             android:name=".ui.activity.LikeMeReceivedActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.VideoVerifyActivity"
+            android:screenOrientation="portrait" >
+
+        </activity>
+        <activity
             android:name=".ui.activity.MessageLikeMeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MessageLikeMeOneDayActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.VipPowerActivity"
             android:screenOrientation="portrait" />
-
-
+        <activity
+            android:name=".ui.activity.VipPowerActivity1"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.TagDetailCategoryActivity"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".ui.activity.ChooseLabelActivity"
             android:screenOrientation="portrait" />
@@ -169,7 +171,6 @@
         <activity
             android:name=".ui.activity.MyFootPrintActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ChangeAccountActivity"
             android:screenOrientation="portrait" />
@@ -192,14 +193,12 @@
             android:name=".ui.activity.LoginHelpReasonActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
         <activity
             android:name=".ui.activity.ReportReasonActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.NewUserInfoSettingsActivity"
-            android:screenOrientation="portrait" />
-        <!--android:theme="@style/SplashTheme"-->
+            android:screenOrientation="portrait" /> <!-- android:theme="@style/SplashTheme" -->
         <activity
             android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait">
@@ -264,7 +263,6 @@
             android:name=".ui.activity.ContactBookActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".ui.activity.MessageSquareActivity"
             android:screenOrientation="portrait" />
@@ -280,7 +278,6 @@
         <activity
             android:name=".ui.activity.MyCollectionEtcActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:screenOrientation="portrait" />

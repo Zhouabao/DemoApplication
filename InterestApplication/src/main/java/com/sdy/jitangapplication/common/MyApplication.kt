@@ -13,8 +13,6 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.google.gson.Gson
-import com.growingio.android.sdk.collection.Configuration
-import com.growingio.android.sdk.collection.GrowingIO
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
@@ -243,11 +241,11 @@ class MyApplication : BaseApplication() {
             )
             .setAutoCancel(true)
             .setWhen(System.currentTimeMillis())
-            .setSmallIcon(com.sdy.jitangapplication.R.drawable.icon_logo)
+            .setSmallIcon(R.drawable.icon_logo)
             .setLargeIcon(
                 BitmapFactory.decodeResource(
                     resources,
-                    com.sdy.jitangapplication.R.drawable.icon_logo
+                    R.drawable.icon_logo
                 )
             )
             .setContentIntent(pendingIntent)
@@ -276,20 +274,8 @@ class MyApplication : BaseApplication() {
         //数美黑产
         initSM()
 
-        initGrowingIO()
     }
 
-    private fun initGrowingIO() {
-        if (ThreadUtils.isMainThread()) {
-            GrowingIO.startWithConfiguration(
-                this, Configuration()
-                    .trackAllFragments()
-                    .setTestMode(true)
-                    .setDebugMode(true)
-                    .setChannel(ChannelReaderUtil.getChannel(this) ?: "")
-            )
-        }
-    }
 
     private fun initUmeng() {
         if (ThreadUtils.isMainThread()) {

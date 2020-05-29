@@ -15,6 +15,7 @@ import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
@@ -118,7 +119,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                             @Override
                             public void onClick(@NonNull View widget) {
-                                IDVerifyActivity.Companion.startActivity(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
+                                CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
                             }
                         })
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
@@ -250,7 +251,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                                 @Override
                                 public void onClick(@NonNull View widget) {
-                                    IDVerifyActivity.Companion.startActivity(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
+                                    CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
                                 }
                             })
                             .setForegroundColor(Color.parseColor("#FF6796FA"))

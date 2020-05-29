@@ -13,8 +13,8 @@ import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_privacy.*
@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.dialog_privacy.*
 class PrivacyDialog(
     val context1: Context,
     val nearBean: NearBean?,
-    val indexRecommends: MutableList<IndexRecommendBean>
+    val indexRecommends: TodayFateBean?
 ) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,7 +137,7 @@ class PrivacyDialog(
         //资料完善度
         if (nearBean != null && nearBean?.iscompleteguide != true) {
             GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
-        } else if (!indexRecommends.isNullOrEmpty()) {
+        } else if (!indexRecommends?.list.isNullOrEmpty()) {
             TodayFateDialog(context1, nearBean, indexRecommends).show()
         } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
             TodayWantDialog(context1, nearBean).show()

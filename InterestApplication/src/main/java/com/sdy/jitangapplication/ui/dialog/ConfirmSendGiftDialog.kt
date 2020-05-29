@@ -5,10 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.NetworkUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
@@ -22,7 +24,9 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent
 import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.model.SendGiftBean
 import com.sdy.jitangapplication.model.SendGiftOrderBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
@@ -36,7 +40,12 @@ import org.greenrobot.eventbus.EventBus
  *    desc   :确定赠送糖果
  *    version: 1.0
  */
-class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val account: String) :
+class ConfirmSendGiftDialog(
+    var context1: Context,
+    val giftName: GiftBean,
+    val account: String,
+    var fromWantFriend: Boolean = false //是否来自于达成好友赠送礼物
+) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +75,12 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
         }
 
         confirm.onClick {
-            sendGift()
+            if (fromWantFriend) {
+                sendGiftBeFriends()
+            } else {
+                sendGift()
+            }
+            dismiss()
         }
 
     }
@@ -86,7 +100,7 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
                         CommonFunction.toast(t.msg)
                     } else if (t.code == 419) {
                         AlertCandyEnoughDialog(
-                            context,
+                            context1,
                             AlertCandyEnoughDialog.FROM_SEND_GIFT
                         ).show()
                     } else {
@@ -96,6 +110,89 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
             })
 
     }
+
+
+    /**
+     * 赠送礼物
+     * code  201  次数使用完毕，请充值次数
+     * code  419 你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
+     */
+    fun sendGiftBeFriends() {
+        if (!NetworkUtils.isConnected()) {
+            CommonFunction.toast("请连接网络！")
+            return
+        }
+        val loadingDialog = LoadingDialog(context1)
+        RetrofitFactory.instance.create(Api::class.java)
+            .sendCandy(
+                UserManager.getSignParams(
+                    hashMapOf(
+                        "target_accid" to account,
+                        "gift_id" to giftName.id
+                    )
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<SendGiftBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    loadingDialog.dismiss()
+                }
+
+                override fun onNext(t: BaseResp<SendGiftBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        200 -> {
+//                            if (t.data?.isnew_friend == true) {
+//                                //发送匹配消息
+//                                val matchMsgAtt =
+//                                    ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
+//                                val config = CustomMessageConfig()
+//                                config.enableUnreadCount = false
+//                                config.enablePush = false
+//                                val message = MessageBuilder.createCustomMessage(
+//                                    account,
+//                                    SessionTypeEnum.P2P,
+//                                    "",
+//                                    matchMsgAtt,
+//                                    config
+//                                )
+//                                NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+//                            }
+
+
+                            sendGiftMessage(t.data?.order_id ?: 0)
+//                            CommonFunction.toast(t.msg)
+                        }
+                        419 -> {//糖果余额不足
+                            AlertCandyEnoughDialog(
+                                context1,
+                                AlertCandyEnoughDialog.FROM_SEND_GIFT
+                            ).show()
+                        }
+                        201 -> {//需要充值会员
+                            ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context1).show()
+                        }
+                        400 -> {//错误信息
+                            CommonFunction.toast(t.msg)
+                        }
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loadingDialog.dismiss()
+                    if (e is BaseException) {
+                        TickDialog(context1).show()
+                    }
+                }
+            })
+    }
+
 
     private fun sendGiftMessage(orderId: Int) {
         val config = CustomMessageConfig()
@@ -121,6 +218,10 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
                     //关闭礼物弹窗
                     EventBus.getDefault().post(CloseDialogEvent())
 
+                    //如果是从达成好友关系进入，就进入聊天界面
+                    if (fromWantFriend) {
+                        ChatActivity.start(context1, account)
+                    }
                 }
 
                 override fun onFailed(code: Int) {

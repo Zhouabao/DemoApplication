@@ -13,8 +13,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -30,7 +30,7 @@ import org.jetbrains.anko.startActivity
 class GuideSendCandyDialog(
     val myContext: Context,
     val nearBean: NearBean?,
-    val indexRecommends: MutableList<IndexRecommendBean>
+    val indexRecommends: TodayFateBean?
 ) : Dialog(myContext, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,7 @@ class GuideSendCandyDialog(
 
     override fun dismiss() {
         super.dismiss()
-        if (!indexRecommends.isNullOrEmpty()) {
+        if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
             TodayFateDialog(myContext, nearBean, indexRecommends).show()
         } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
             TodayWantDialog(myContext, nearBean).show()

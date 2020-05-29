@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAboutMeView, OnRefreshListener,
     OnLoadMoreListener, OnRefreshLoadMoreListener {
 
-    private var page = 1
+
     private val modelMeAdapter by lazy { ModelLabelIntroduceAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
 
     }
 
-
+    private var page = 1
     override fun onRefresh(refreshLayout: RefreshLayout) {
         modelMeAdapter.data.clear()
         modelRefresh.resetNoMoreData()
@@ -73,9 +73,6 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
         mPresenter.getSignTemplate(page)
     }
 
-
-    override fun getSignTemplateResult(code: Int, result: MutableList<LabelQualityBean>?) {
-    }
 
 
     override fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?) {

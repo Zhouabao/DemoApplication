@@ -226,7 +226,8 @@ data class GiftBean(
     var id: Int = 0,
     var min_amount: Int = 0,
     var title: String = "",
-    var cnt: Int = 0
+    var cnt: Int = 0,
+    var checked: Boolean = false
 ) : Serializable
 
 data class SendGiftOrderBean(

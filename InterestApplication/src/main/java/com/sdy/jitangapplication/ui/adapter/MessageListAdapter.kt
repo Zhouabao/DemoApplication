@@ -1,14 +1,12 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.netease.nim.uikit.business.recent.RecentContactsFragment
-import com.netease.nim.uikit.business.session.module.list.MsgAdapter
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nim.uikit.common.CommonUtil
 import com.netease.nim.uikit.common.util.sys.TimeUtil
@@ -16,7 +14,6 @@ import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.Likelist
 import com.sdy.jitangapplication.model.MessageGiftBean
 import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.utils.UserManager
@@ -30,11 +27,7 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
  */
 class MessageListAdapter :
     BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
-    var greetList: MutableList<Likelist> = mutableListOf()//招呼列表
-    var intentionMatchList: MutableList<String> = mutableListOf()//意向匹配列表
     var session_list_arr: MutableList<MessageGiftBean> = mutableListOf()//最近礼物列表
-    var isapprove: Int = 0  //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
-    var approveTime: Long = 1579104000L  //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
 
     override fun convert(holder: BaseViewHolder, item: RecentContact) {
         holder.addOnClickListener(R.id.menuTop)
@@ -69,7 +62,6 @@ class MessageListAdapter :
             when (item.attachment) {
                 is ChatHiAttachment -> holder.itemView.text.text =
                     when ((item.attachment as ChatHiAttachment).showType) {
-                        ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
                         ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
                         ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
                         ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
@@ -201,18 +193,6 @@ class MessageListAdapter :
             holder.itemView.newCount.text = "${item.unreadCount}"
             holder.itemView.newCount.visibility = View.VISIBLE
         }
-        Log.d(MsgAdapter::class.java.simpleName, greetList.toString())
-        holder.itemView.msgTag.isVisible =
-            greetList.toString().contains(item.contactId) || intentionMatchList.contains(item.contactId)
-        if (greetList.toString().contains(item.contactId)) {
-            holder.itemView.msgTag.setTextColor(mContext.resources.getColor(R.color.colorOrange))
-            holder.itemView.msgTag.setBackgroundResource(R.drawable.shape_rectangle_lightorange_5dp)
-        } else if (intentionMatchList.contains(item.contactId)) {
-            holder.itemView.msgTag.setTextColor(mContext.resources.getColor(R.color.colorBlue))
-            holder.itemView.msgTag.setBackgroundResource(R.drawable.shape_rectangle_blue_5dp)
-        }
-
-
         holder.itemView.msgOnLineState.isVisible =
             NimUIKitImpl.enableOnlineState()
                     && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).isNullOrEmpty()

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"/>
+        android:background="@color/black" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,19 +12,30 @@
 
         <com.netease.nim.uikit.common.media.imagepicker.video.GLVideoView
             android:id="@id/widget_video_view_texture"
-            android:layout_centerInParent="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
 
-        <TextView android:id="@id/widget_video_view_time"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+        <View
+            android:id="@+id/widget_video_view_view1"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="174dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="44dp"
+            android:background="@drawable/shape_oval_orange" />
+
+        <TextView
+            android:id="@id/widget_video_view_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/widget_video_view_texture"
-            android:layout_alignRight="@id/widget_video_view_texture" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -34,47 +46,46 @@
 
     <ImageView
         android:id="@id/widget_video_view_cover"
-        android:layout_gravity="center"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop" />
 
     <View
         android:id="@id/widget_video_view_mask"
-        android:background="@color/color_7f111111"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:background="@color/color_7f111111" />
 
     <ImageView
-        android:src="@drawable/icon_video"
         android:id="@id/widget_video_view_icon"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/icon_video" />
 
     <com.netease.nim.uikit.common.media.imagepicker.view.GLBusyIndicatorView
         android:id="@id/widget_video_view_indicator"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <TextView
         android:id="@id/widget_video_view_full"
-        android:visibility="gone"
-        android:text="全屏"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:textColor="#FFFFFF"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:drawableLeft="@drawable/icon_full"
-        android:drawablePadding="3dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/nim_selector_widget_video_view_full_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:drawableLeft="@drawable/icon_full"
+        android:drawablePadding="3dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="6dp"
+        android:text="全屏"
+        android:textColor="#FFFFFF"
+        android:visibility="gone" />
 
 </merge>

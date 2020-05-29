@@ -1,11 +1,14 @@
 package com.netease.nim.uikit.common.media.imagepicker.video;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.netease.nim.uikit.common.util.sys.TimeUtil;
 
 
 /**
+ *
  */
 
 public class GLVideoPlaceholder extends FrameLayout {
@@ -30,7 +34,7 @@ public class GLVideoPlaceholder extends FrameLayout {
 
     private View pause;
 
-    private View full;
+    private View full, animatorView;
 
     private TextView time;
 
@@ -73,6 +77,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             triggerPlayClicked(v);
         }
     };
+    private AnimatorSet animatorSet;
 
     public GLVideoPlaceholder(Context context) {
         this(context, null);
@@ -106,9 +111,22 @@ public class GLVideoPlaceholder extends FrameLayout {
         pause = findViewById(R.id.widget_video_view_pause);
         indicator = findViewById(R.id.widget_video_view_indicator);
         full = findViewById(R.id.widget_video_view_full);
+        animatorView = findViewById(R.id.widget_video_view_view1);
         time = findViewById(R.id.widget_video_view_time);
         mask = findViewById(R.id.widget_video_view_mask);
         icon.setOnClickListener(onPlayClickedListener);
+
+
+        //组合动画
+        animatorSet = new AnimatorSet();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(animatorView, "scaleX", 1f, 1.4f);
+        scaleX.setRepeatCount(-1);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(animatorView, "scaleY", 1f, 1.4f);
+        scaleY.setRepeatCount(-1);
+        animatorSet.setDuration(1000);
+        animatorSet.setInterpolator(new LinearInterpolator());
+        animatorSet.play(scaleX).with(scaleY);//两个动画同时开始
+
     }
 
     private void triggerPlayClicked(View v) {
@@ -138,10 +156,10 @@ public class GLVideoPlaceholder extends FrameLayout {
 
             setMeasuredDimension(width, height);
             measureChildren(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                            MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
         }
 
-        resize();
+//        resize();
     }
 
     public GLVideoView getVideoView() {
@@ -158,6 +176,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.VISIBLE);
             setCoverVisible(false);
             setFullVisible(false);
+            animated(true);
         } else if (model.isPlayerLoading()) {
             icon.setVisibility(View.GONE);
             indicator.setVisibility(View.VISIBLE);
@@ -165,6 +184,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.GONE);
             setCoverVisible(false);
             setFullVisible(false);
+            animated(false);
         } else if (model.isPlayerPaused()) {
             icon.setVisibility(View.VISIBLE);
             indicator.setVisibility(View.GONE);
@@ -172,6 +192,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.VISIBLE);
             setCoverVisible(!model.isSurfaceAvailable());
             setFullVisible(true);
+            animated(false);
         } else if (model.isPlayerStopped()) {
             icon.setVisibility(View.VISIBLE);
             indicator.setVisibility(View.GONE);
@@ -179,6 +200,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.GONE);
             setCoverVisible(true);
             setFullVisible(true);
+            animated(false);
         } else if (model.isPlayerComplete()) {
             icon.setVisibility(View.VISIBLE);
             indicator.setVisibility(View.GONE);
@@ -186,6 +208,7 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.GONE);
             setCoverVisible(true);
             setFullVisible(true);
+            animated(false);
         } else if (model.isPlayerError()) {
             icon.setVisibility(View.VISIBLE);
             indicator.setVisibility(View.GONE);
@@ -193,16 +216,17 @@ public class GLVideoPlaceholder extends FrameLayout {
             time.setVisibility(View.GONE);
             setCoverVisible(true);
             setFullVisible(true);
+            animated(false);
         }
 
-        time.setText(String.format("%s/%s", TimeUtil.secToTime(model.getCurrent() / 1000),
-                                   TimeUtil.secToTime((int) (model.getDuration() / 1000))));
+//        time.setText(String.format("%s/%s", TimeUtil.secToTime(model.getCurrent() / 1000), TimeUtil.secToTime((int) (model.getDuration() / 1000))));
+        time.setText(String.format("%s", TimeUtil.secToTime(model.getCurrent() / 1000)));
 
         if (force) {
             GlideImageLoader.displayVideo(cover, model.getUri());
         }
 
-        resize();
+//        resize();
     }
 
     private void resize() {
@@ -211,7 +235,7 @@ public class GLVideoPlaceholder extends FrameLayout {
         }
 
         if (model.getVideoWidth() != videoWidth || model.getViewHeight() != videoHeight ||
-            placeholderWidth != getMeasuredWidth() || placeholderWidth != getMeasuredHeight()) {
+                placeholderWidth != getMeasuredWidth() || placeholderWidth != getMeasuredHeight()) {
 
             videoWidth = model.getVideoWidth();
             videoHeight = model.getViewHeight();
@@ -252,6 +276,15 @@ public class GLVideoPlaceholder extends FrameLayout {
 
     private void setFullVisible(boolean visible) {
         full.setVisibility(fullScreenEnabled && visible ? View.VISIBLE : View.GONE);
+    }
+
+
+    private void animated(boolean play) {
+        if (play) {
+            animatorSet.start();
+        } else {
+            animatorSet.cancel();
+        }
     }
 
     private void setCoverVisible(boolean visible) {

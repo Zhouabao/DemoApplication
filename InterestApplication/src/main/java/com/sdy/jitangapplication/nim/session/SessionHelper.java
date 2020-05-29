@@ -260,9 +260,7 @@ public class SessionHelper {
                 @Override
                 public String getDefaultDigest(RecentContact recent) {
                     if (recent.getAttachment() instanceof ChatHiAttachment) {
-                        if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_HI) {
-                            return "『招呼消息』";
-                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
+                        if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
                             return "『匹配消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
                             return "『好友消息』";

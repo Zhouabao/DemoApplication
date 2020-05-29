@@ -15,3 +15,6 @@ class UpdateMyLabelEvent(var tags: MutableList<LabelQuality>? = null)
 //兴趣支付结果
 class PayLabelResultEvent(val success: Boolean)
 
+
+class UpdateOffsetEvent(val show: Boolean)
+

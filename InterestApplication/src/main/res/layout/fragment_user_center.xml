@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="loading">
+    app:msv_viewState="content">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -190,6 +190,7 @@
                             app:layout_constraintTop_toBottomOf="@id/userAvator">
 
                             <ImageView
+                                android:id="@+id/vipLevelLogo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"

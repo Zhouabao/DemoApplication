@@ -40,7 +40,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.model.ApproveBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -272,7 +271,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
 
-        UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
+        //UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
 
 
         //1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
@@ -290,10 +289,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
         msgBean = data
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
-        adapter.greetList.clear()
-        for (accid in data?.effective_greet ?: mutableListOf()) {
-            adapter.greetList.add(accid)
-        }
         headAdapter.data[0] = ass
         headAdapter.notifyItemChanged(0)
         //获取最近联系人列表
@@ -323,7 +318,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass.msg = when (loadedRecent.attachment) {
                     is ChatHiAttachment -> when ((loadedRecent.attachment as ChatHiAttachment).showType) {
-                        ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
                         ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
                         ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
                         ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
@@ -354,16 +348,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         }
 
-        val iterator = result.iterator()
-        while (iterator.hasNext()) {
-            val contact = iterator.next()
-            for (hiBean in msgBean?.no_effective_greet ?: mutableListOf()) {
-                if (contact.contactId == hiBean.accid) {
-                    iterator.remove()
-                    break
-                }
-            }
-        }
         adapter.setNewData(result)
         refreshMessages()
     }

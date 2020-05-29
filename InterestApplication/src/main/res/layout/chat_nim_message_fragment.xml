@@ -96,6 +96,45 @@
             android:visibility="gone" />
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/verifyLl"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:background="#FFFFEFE7"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/leftChatTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:text="还有2次聊天机会，认证后无限制"
+            android:textColor="#ffff6318"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/gotoVerifyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_rectangle_orange_12dp"
+            android:paddingLeft="7dp"
+            android:paddingTop="3dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="3dp"
+            android:text="立即认证"
+            android:textColor="#ffffffff"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
 
     <include
         layout="@layout/chat_nim_message_activity_bottom_layout"

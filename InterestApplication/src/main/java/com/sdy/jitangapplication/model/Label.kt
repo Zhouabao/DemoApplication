@@ -45,6 +45,7 @@ data class LabelQualityBean(
     var icon: String = "",
     var id: Int = 0,
     var title: String = "",
+    var cheked: Boolean = false,
     var isfuse: Boolean = false,
     var outtime: Boolean = false//过期标志
 ) : Serializable, IPickerViewData {
@@ -119,7 +120,6 @@ data class MyLabelBean(
     var isfull: Boolean = false,
     var is_expire: Boolean = false//是否过期  true过期 false未过期
 ) : Serializable
-
 
 
 data class AddLabelResultBean(

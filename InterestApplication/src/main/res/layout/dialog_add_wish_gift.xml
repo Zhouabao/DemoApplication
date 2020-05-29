@@ -50,7 +50,7 @@
         android:layout_width="232dp"
         android:layout_height="40dp"
         android:layout_marginTop="25dp"
-        android:background="@drawable/shape_rectangle_orange_25dp"
+        android:background="@drawable/shape_rectangle_orange_24dp"
         android:gravity="center"
         android:text="添加心愿礼物"
         android:textColor="#ffffffff"

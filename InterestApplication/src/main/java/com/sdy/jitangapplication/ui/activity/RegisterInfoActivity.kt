@@ -1,11 +1,14 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
@@ -19,6 +22,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
@@ -27,6 +31,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_register_info.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,6 +61,8 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         userBirth.setOnClickListener(this)
         nextBtn.setOnClickListener(this)
         chooseContactBtn.setOnClickListener(this)
+        quickSign.setOnClickListener(this)
+        userQuickSignDel.setOnClickListener(this)
 
         userNickName.setFilters(arrayOf<InputFilter>(InputFilter { source, start, end, dest, dstart, dend ->
             if (source.equals(" ") || source.toString().contentEquals("\n")) {
@@ -105,7 +112,7 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         nextBtn.isEnabled = userGender.text.isNotEmpty()
                 && userBirth.text.isNotEmpty()
                 && userNickName.text.isNotEmpty()
-                && userSign.text.isNotEmpty()
+                && (userSign.text.isNotEmpty() || userQuickSign.text.isNotEmpty())
                 && contactWay != -1
                 && contactWayEt.text.isNotEmpty()
     }
@@ -124,6 +131,15 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 KeyboardUtils.hideSoftInput(this)
                 showContactPicker()
             }
+            R.id.quickSign -> {//快速签名
+                startActivityForResult<QuickSignActivity>(100)
+            }
+            R.id.userQuickSignDel -> {//快速签名
+                userQuickSign.text = ""
+                userQuickSign.isVisible = false
+                userQuickSignDel.isVisible = false
+                checkConfirmEnable()
+            }
             R.id.nextBtn -> {//下一步
                 if (!alertGender) {
                     CommonAlertDialog.Builder(this)
@@ -133,7 +149,12 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                         .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                             override fun onClick(dialog: Dialog) {
                                 params["nickname"] = userNickName.text.trim().toString()
-                                params["sign"] = userSign.text.trim().toString()
+                                if (chooseSign != null) {
+                                    params["sign_id"] = chooseSign!!.id
+                                    params["sign"] = chooseSign!!.content
+                                } else {
+                                    params["sign"] = userSign.text.trim().toString()
+                                }
                                 params["contact_way"] = contactWay
                                 params["contact_way_content"] = contactWayEt.text.trim().toString()
                                 mPresenter.setProfileCandy(1, params)
@@ -153,6 +174,12 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 } else {
                     params["nickname"] = userNickName.text.trim().toString()
                     params["sign"] = userSign.text.trim().toString()
+                    if (chooseSign != null) {
+                        params["sign_id"] = chooseSign!!.id
+                        params["sign"] = chooseSign!!.content
+                    } else {
+                        params["sign"] = userSign.text.trim().toString()
+                    }
                     params["contact_way"] = contactWay
                     params["contact_way_content"] = contactWayEt.text.trim().toString()
                     mPresenter.setProfileCandy(1, params)
@@ -257,6 +284,29 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         pvOptions.setPicker(contactWays)
         pvOptions.setSelectOptions(1)
         pvOptions.show()
+    }
+
+
+    private var chooseSign: LabelQualityBean? = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+//                    LabelQualityBean
+                    if (data?.getSerializableExtra("quickSign") != null) {
+                        chooseSign = data?.getSerializableExtra("quickSign") as LabelQualityBean
+//                        userSign.setText(data?.getStringExtra("quickSign"))
+//                        userSign.setSelection(userSign.text.length)
+                        userSign.isEnabled = false
+                        userQuickSign.isVisible = true
+                        userQuickSignDel.isVisible = true
+                        userQuickSign.text = chooseSign?.content
+                        checkConfirmEnable()
+                    }
+                }
+            }
+        }
     }
 
     override fun onUploadUserInfoResult(

@@ -108,7 +108,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
         fun startActivityForResult(
             context1: Activity,
-            face_source_type: Int = 0,
             type: Int = TYPE_ACCOUNT_NORMAL, requestCode: Int
         ) {
 
@@ -124,7 +123,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         override fun onClick(dialog: Dialog) {
                             dialog.dismiss()
                             context1.startActivityForResult<IDVerifyActivity>(
-                                requestCode, "face_source_type" to face_source_type,
+                                requestCode,
                                 "type" to type
                             )
                         }

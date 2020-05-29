@@ -1064,12 +1064,12 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void EnablePicEvent(EnablePicEvent event) {
         //是好友就不禁用,如果不是好友就禁用
-        disable = !event.getEnable();
-        for (int i = 0; i < adapter.getCount(); i++) {
-            if (i != adapter.getCount() - 1)
-                ((ChatBaseAction) adapter.getItem(i)).setEnable(event.getEnable());
-        }
-        adapter.notifyDataSetChanged();
+//        disable = !event.getEnable();
+//        for (int i = 0; i < adapter.getCount(); i++) {
+//            if (i != adapter.getCount() - 1)
+//                ((ChatBaseAction) adapter.getItem(i)).setEnable(event.getEnable());
+//        }
+//        adapter.notifyDataSetChanged();
     }
 
 }

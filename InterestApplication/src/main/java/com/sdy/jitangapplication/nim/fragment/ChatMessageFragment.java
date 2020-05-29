@@ -58,14 +58,12 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.common.OnLazyClickListener;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateContactBookEvent;
-import com.sdy.jitangapplication.event.UpdateHiEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
-import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.model.SendTipBean;
@@ -79,16 +77,20 @@ import com.sdy.jitangapplication.nim.session.ChatContactAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
+import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
+import com.sdy.jitangapplication.ui.dialog.VideoVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,8 +127,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
 
     private View rootView;
-    private TextView btnMakeFriends;
-    private LinearLayout messageActivityBottomLayout;
+    private TextView btnMakeFriends, leftChatTimes, gotoVerifyBtn;
+    private LinearLayout messageActivityBottomLayout, verifyLl;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -140,7 +142,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.chat_nim_message_fragment, container, false);
         btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
+        leftChatTimes = rootView.findViewById(R.id.leftChatTimes);
+        gotoVerifyBtn = rootView.findViewById(R.id.gotoVerifyBtn);
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
+        verifyLl = rootView.findViewById(R.id.verifyLl);
 
         //发送消息成为好友
         btnMakeFriends.setOnClickListener(view -> {
@@ -167,7 +172,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 //隐藏倒计时控件
                                 btnMakeFriends.setVisibility(View.GONE);
                                 //发送通知，可以发所有类型的消息
-                                EventBus.getDefault().post(new EnablePicEvent(true));
                                 EventBus.getDefault().post(new UpdateContactBookEvent());
                                 CommonFunction.INSTANCE.toast(objectBaseResp.getMsg());
                                 NIMClient.getService(FriendService.class).addFriend(new AddFriendData(sessionId, VerifyType.DIRECT_ADD));
@@ -185,7 +189,19 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         });
 
+        //去认证
+        gotoVerifyBtn.setOnClickListener(new OnLazyClickListener() {
 
+            @Override
+            public void onClick(@Nullable View v) {
+
+            }
+
+            @Override
+            public void onLazyClick(@NotNull View v) {
+                CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+            }
+        });
         return rootView;
     }
 
@@ -345,7 +361,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     };
 
     private void onMessageIncoming(List<IMMessage> messages) {
-
         Log.d("message", messages.get(0).toString());
         try {
             if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
@@ -396,7 +411,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 && ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(sessionId)).getGenderEnum() == GenderEnum.FEMALE) {
             showConfirmSendDialog(message);
         } else {
-            if (sendAlready3Msgs())
+            if (canSendMsg())
                 if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
                     sendMsgS(message, false);
                     return true;
@@ -417,17 +432,19 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         return false;
     }
 
-    private Boolean sendAlready3Msgs() {
+    private Boolean canSendMsg() {
         //发起方并且次数为0 禁止发送
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
-            if (!sendTip) {
-                inputPanel.collapse(true);
-                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天", SendCustomTipAttachment.CUSTOME_TIP_NORMAL, true);
-                sendTip = true;
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+            if (nimBean.getIslimit()) {
+                new VideoVerifyDialog(getActivity()).show();
+                return false;
+            } else {
+                return true;
             }
-            return false;
-        } else
+        } else {
             return true;
+        }
+
     }
 
     // 被对方拉入黑名单后，发消息失败的交互处理
@@ -630,16 +647,25 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     /**
      * 设置消息体制内的数据
+     * verifyLl
      */
     private void setTargetInfoData() {
-        UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
-        leftGreetCount = nimBean.getResidue_msg_cnt();
+//        UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
+        //显示提示认证的悬浮
+        if (UserManager.INSTANCE.getGender() == 2 && !nimBean.getMy_isfaced()) {
+            verifyLl.setVisibility(View.VISIBLE);
+            if (nimBean.getResidue_msg_cnt() == nimBean.getNormal_chat_times()) {
+                leftChatTimes.setText("未认证每天仅能和" + nimBean.getNormal_chat_times() + "个用户聊天");
+            } else {
+                leftChatTimes.setText("还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，认证后无限制");
+            }
+        } else {
+            verifyLl.setVisibility(View.INVISIBLE);
+        }
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
             //隐藏倒计时控件
             btnMakeFriends.setVisibility(View.GONE);
             messageActivityBottomLayout.setVisibility(View.VISIBLE);
-            //发送通知，可以发所有类型的消息
-            EventBus.getDefault().post(new EnablePicEvent(true));
         } else {
             messageActivityBottomLayout.setVisibility(View.VISIBLE);
             if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
@@ -648,17 +674,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 btnMakeFriends.setVisibility(View.VISIBLE);
             }
         }
-        if (!nimBean.getIsfriend())
-            EventBus.getDefault().post(new UpdateHiEvent());
+//        if (!nimBean.getIsfriend())
+//            EventBus.getDefault().post(new UpdateHiEvent());
         EventBus.getDefault().post(new NimHeadEvent(nimBean));
         EventBus.getDefault().postSticky(new StarEvent(nimBean.getStared(), nimBean.getIsfriend()));
-        EventBus.getDefault().postSticky(new EnablePicEvent(nimBean.getIsfriend()));
         messageListPanel.refreshMessageList();
-        inputPanel.checkIsSendMsg();
+//        inputPanel.checkIsSendMsg();
     }
-
-    private int leftGreetCount = 0;
-    private boolean sendTip = false;
 
 
     private void sendMsgRequest(IMMessage content, String target_accid) {
@@ -698,8 +720,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity()).show();
                             }
 
-                            leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
-
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
                             if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
@@ -723,7 +743,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     .create()
                                     .show();
                         } else if (nimBeanBaseResp.getCode() == 410) {
-                            sendAlready3Msgs();
+                            canSendMsg();
                         } else if (nimBeanBaseResp.getCode() == 411) {//糖果余额不足
                             new AlertCandyEnoughDialog(getActivity(), AlertCandyEnoughDialog.Companion.getFROM_SEND_GIFT()).show();
                         } else {
@@ -819,7 +839,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 .setCancelIconIsVisibility(true)
                 .setOnConfirmListener(dialog -> {
                     dialog.dismiss();
-                    if (sendAlready3Msgs())
+                    if (canSendMsg())
                         if (sessionId.equals(Constants.ASSISTANT_ACCID))
                             sendMsgS(message, false);
                         else {

@@ -56,22 +56,7 @@
                 app:layout_constraintLeft_toRightOf="@id/msgIcon"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-                android:id="@+id/msgTag"
-                android:paddingBottom="1dp"
-                android:paddingTop="1dp"
-                android:paddingRight="6dp"
-                android:paddingLeft="6dp"
-                android:text="招呼"
-                android:textColor="@color/colorOrange"
-                android:textSize="11sp"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/shape_rectangle_lightorange_5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/msgTitle"
-                app:layout_constraintLeft_toRightOf="@id/msgTitle"
-                app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+
 
         <TextView
                 android:id="@+id/latelyTime"

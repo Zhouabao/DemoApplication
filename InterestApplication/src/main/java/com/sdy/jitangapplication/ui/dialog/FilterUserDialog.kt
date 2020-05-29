@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
-import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
@@ -68,7 +67,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
 //        switchSameCity.isVisible = UserManager.isUserVip()
-        btnGoVip.isVisible = !UserManager.isUserVip()
+//        btnGoVip.isVisible = !UserManager.isUserVip()
 //        switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
 //        btnGoVip.isVisible = false
 //        switchSameCity.isVisible = true
@@ -98,7 +97,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
                 CommonFunction.toast("认证正在审核中，请耐心等待哦~")
             } else {
-                IDVerifyActivity.startActivity(context1)
+                CommonFunction.startToFace(context1)
             }
         }
         seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {

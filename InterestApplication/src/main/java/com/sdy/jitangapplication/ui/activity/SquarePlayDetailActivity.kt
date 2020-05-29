@@ -204,8 +204,13 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             } else {
                 squareBean!!.like_cnt
             }}"
-        detailPlayUserVipIv.isVisible = squareBean.isvip == 1
+        detailPlayUserVipIv.isVisible = squareBean.isvip == 1 ||squareBean.isplatinumvip
 
+        if (squareBean!!.isplatinumvip) {
+            detailPlayUserVipIv.setImageResource(R.drawable.icon_pt_vip)
+        } else {
+            detailPlayUserVipIv.setImageResource(R.drawable.icon_vip)
+        }
     }
 
 

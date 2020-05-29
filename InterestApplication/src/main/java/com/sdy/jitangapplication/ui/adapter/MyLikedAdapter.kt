@@ -50,13 +50,7 @@ class MyLikedAdapter : BaseQuickAdapter<MyLikedBean, BaseViewHolder>(R.layout.it
             )
 
         holder.itemView.likedHi.clickWithTrigger {
-            CommonFunction.commonGreet(
-                mContext,
-                item.accid,
-                holder.itemView.likedHi,
-                holder.layoutPosition,
-                item.avatar
-            )
+            CommonFunction.checkSendGift(mContext, item.accid)
         }
     }
 

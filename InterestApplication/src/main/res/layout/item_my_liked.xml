@@ -109,7 +109,7 @@
         android:paddingTop="4dp"
         android:paddingRight="10dp"
         android:paddingBottom="4dp"
-        android:text="打招呼"
+        android:text="私聊"
         android:textColor="#ffffffff"
 
         android:textSize="14sp"

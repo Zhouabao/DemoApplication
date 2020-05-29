@@ -29,8 +29,8 @@ import com.sdy.jitangapplication.event.UpdateSameCityVipEvent
 import com.sdy.jitangapplication.event.UpdateShowTopAlert
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.CheckBean
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
@@ -60,7 +60,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     private var page = 1
     private var isLoadingMore = false
     private val params by lazy {
-        hashMapOf<String, Any>(
+        hashMapOf(
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_name" to UserManager.getCity(),
@@ -262,7 +262,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 PrivacyDialog(activity!!, nearBean, indexRecommends).show()
             } else if (nearBean?.iscompleteguide != true) {
                 GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
-            } else if (!indexRecommends.isNullOrEmpty()) {
+            } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
                 TodayFateDialog(activity!!, nearBean, indexRecommends).show()
             } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
                 TodayWantDialog(activity!!, nearBean).show()
@@ -299,13 +299,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //头像等级
             ranking_level = nearBean!!.ranking_level
             //保存 VIP信息
-            UserManager.saveUserVip(
-                if (nearBean.isvip) {
-                    1
-                } else {
-                    0
-                }
-            )
+            UserManager.saveUserVip(nearBean.isvip)
             onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //保存认证信息
             UserManager.saveUserVerify(nearBean.isfaced)
@@ -321,14 +315,16 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
                     changeAvatorBtn.text = "立即替换"
                     changeAvatorCloseBtn.isVisible = false
-                } else if (!nearBean.is_full) {
-                    (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
-                        SizeUtils.dp2px(41F)
-                    lieAvatorLl.isVisible = true
-                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
-                    changeAvatorBtn.text = "立即完善"
-                    changeAvatorCloseBtn.isVisible = true
-                } else {
+                }
+//                else if (!nearBean.is_full) {
+//                    (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
+//                        SizeUtils.dp2px(41F)
+//                    lieAvatorLl.isVisible = true
+//                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
+//                    changeAvatorBtn.text = "立即完善"
+//                    changeAvatorCloseBtn.isVisible = true
+//                }
+                else {
                     lieAvatorLl.isVisible = false
                 }
                 firstLoad = false
@@ -348,12 +344,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     }
 
-    private var indexRecommends: MutableList<IndexRecommendBean> = mutableListOf()
-    override fun onTodayRecommendResult(data: MutableList<IndexRecommendBean>?) {
+    private var indexRecommends: TodayFateBean? = null
+    override fun onTodayRecommendResult(data: TodayFateBean?) {
         /**
          * 今日推荐获取结果
          */
-        indexRecommends = data ?: mutableListOf()
+        indexRecommends = data
         mPresenter.nearlyIndex(params, type)
     }
 

@@ -253,12 +253,12 @@
                             android:drawableRight="@drawable/icon_more_right"
                             android:drawablePadding="10dp"
                             android:gravity="center_vertical"
+                            android:text="点击变更或隐藏"
                             android:textColor="@color/colorBlack"
                             android:textSize="15sp"
                             app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
                             app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/dash3"
-                            android:text="点击变更或隐藏" />
+                            app:layout_constraintTop_toBottomOf="@id/dash3" />
 
                         <View
                             android:layout_width="0dp"
@@ -383,11 +383,11 @@
                     layout="@layout/layout_add_score"
                     android:layout_width="wrap_content"
                     android:layout_height="22dp"
-                    android:visibility="gone"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="90dp"
-                    android:src="@drawable/icon_eighty_unclick" />
+                    android:src="@drawable/icon_eighty_unclick"
+                    android:visibility="gone" />
 
 
                 <ImageView
@@ -415,21 +415,21 @@
                     android:text="0%"
                     android:textColor="@color/colorOrange"
                     android:textSize="12sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="78dp"
-                android:background="@drawable/icon_arrow_notify_down"
-                android:gravity="center"
-                android:text="再传两张生活照吧"
-                android:textColor="@color/colorWhite"
+                android:id="@+id/verifyNotice"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="#FFFFEFE7"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="替换头像照片后自动进入重新审核"
+                android:textColor="#ffff6318"
                 android:textSize="12sp"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
 
         </FrameLayout>

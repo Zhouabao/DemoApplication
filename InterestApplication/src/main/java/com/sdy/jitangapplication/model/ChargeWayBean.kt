@@ -8,12 +8,32 @@ package com.sdy.jitangapplication.model
  */
 
 data class ChargeWayBeans(
-    val icon_list: MutableList<VipDescr>? = mutableListOf(),
     val greet_icon_list: MutableList<VipDescr>? = mutableListOf(),
     val greet_list: MutableList<ChargeWayBean>? = mutableListOf(),//招呼次数购买
+    val icon_list: MutableList<VipDescr>? = mutableListOf(),
     val list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
-    val paylist: MutableList<PaywayBean>? = mutableListOf()
+    val pt_icon_list: MutableList<VipDescr>? = mutableListOf(),
+    val pt_list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
+    val paylist: MutableList<PaywayBean>? = mutableListOf(),
+    val isvip: Boolean = false,
+    val vip_express: String = "",
+    val isplatinum: Boolean = false,
+    val platinum_vip_express: String = ""
 )
+
+data class VipPowerBean(
+    val list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
+    val icon_list: MutableList<VipDescr>? = mutableListOf(),
+    val isvip: Boolean = false,
+    val vip_express: String = "",
+    val paylist: MutableList<PaywayBean>? = mutableListOf(),
+    var type: Int = TYPE_NORMAL_VIP
+) {
+    companion object {
+        const val TYPE_NORMAL_VIP = 0
+        const val TYPE_PT_VIP = 1
+    }
+}
 
 
 data class ChargeWayBean(

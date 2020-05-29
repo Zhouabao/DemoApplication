@@ -20,21 +20,20 @@ interface Api {
     fun msgList(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<AllMsgCount?>>
 
 
-
     /**
      * 每天首次开屏推荐
      */
     @FormUrlEncoded
-    @POST("Index/todayRecommend${Constants.END_BASE_URL}")
-    fun todayRecommend(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<IndexRecommendBean>?>>
+    @POST("Home/todayRecommend${Constants.END_BASE_URL}")
+    fun todayRecommend(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<TodayFateBean?>>
 
 
     /**
-     * 批量打招呼
+     * 批量送礼物成为好友
      */
     @FormUrlEncoded
-    @POST("Relationship/batchGreetCandy${Constants.END_BASE_URL}")
-    fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<BatchGreetBean>?>>
+    @POST("Home/batchSendCandy${Constants.END_BASE_URL}")
+    fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<GiftStateBean?>>
 
 
     /**
@@ -42,8 +41,6 @@ interface Api {
      */
     @POST("OpenApi/getHelpCenter${Constants.END_BASE_URL}")
     fun getHelpCenter(): Observable<BaseResp<HelpBean?>>
-
-
 
 
     /**
@@ -264,7 +261,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Candy/checkUnlockContact${Constants.END_BASE_URL}")
-    fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBean?>>
+    fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockCheckBean?>>
+
+    /**
+     * 验证解锁视频介绍
+     */
+    @FormUrlEncoded
+    @POST("Candy/checkUnlockMv${Constants.END_BASE_URL}")
+    fun checkUnlockMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockCheckBean?>>
 
 
     /**
@@ -273,6 +277,14 @@ interface Api {
     @FormUrlEncoded
     @POST("Candy/unlockContact${Constants.END_BASE_URL}")
     fun unlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockBean?>>
+
+
+    /**
+     * 解锁联系方式
+     */
+    @FormUrlEncoded
+    @POST("Candy/unlockMv${Constants.END_BASE_URL}")
+    fun unlockMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockCheckBean?>>
 
 
     /**********************匹配**************************/
@@ -353,11 +365,20 @@ interface Api {
 
 
     /**
-     * 打招呼验证是否能打
+     * 验证是否送礼物
+     * Home/checkSendCandy
      */
     @FormUrlEncoded
-    @POST("Relationship/checkGreetStateCandy${Constants.END_BASE_URL}")
-    fun checkGreetStateCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetCheckBean?>>
+    @POST("Home/checkSendCandy${Constants.END_BASE_URL}")
+    fun checkSendCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 赠送礼物达成好友关系
+     */
+    @FormUrlEncoded
+    @POST("Home/SendCandy${Constants.END_BASE_URL}")
+    fun sendCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SendGiftBean?>>
 
 
     /**
@@ -433,7 +454,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("MemberInfo/myInfoCandy${Constants.END_BASE_URL}")
+    @POST("MemberInfo/myInfoCandyV21${Constants.END_BASE_URL}")
     fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
 
@@ -493,7 +514,6 @@ interface Api {
     fun savePersonal(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
     /**
      *   保存相册信息
      */
@@ -539,7 +559,7 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensusCandy${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensusCandyV21${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
@@ -719,7 +739,7 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfoCandy${Constants.END_BASE_URL}")
+    @POST("MemberInfo/getTargetInfoCandyV21${Constants.END_BASE_URL}")
     fun getTargetInfoCandy(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 

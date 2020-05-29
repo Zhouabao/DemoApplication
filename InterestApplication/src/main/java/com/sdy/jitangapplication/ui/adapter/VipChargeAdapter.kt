@@ -29,6 +29,8 @@ class VipChargeAdapter() :
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         when (purchaseType) {
+            ChargeVipDialog.PURCHASE_RENEW_PT_VIP,
+            ChargeVipDialog.PURCHASE_PT_VIP,
             ChargeVipDialog.PURCHASE_RENEW_VIP -> {
                 params.width =
                     ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(9F) * 2) / 3F).toInt()
@@ -43,6 +45,7 @@ class VipChargeAdapter() :
                     params.leftMargin = SizeUtils.dp2px(0F)
                 }
             }
+
             else -> {
                 params.width =
                     ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
@@ -116,8 +119,8 @@ class VipChargeAdapter() :
                     holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_charge_checked_bg)
                     holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
                     holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
-                    holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.originalPrice.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
+                    holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipSaleType.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipDiscount.setBackgroundResource(R.drawable.shape_vip_charge_discount_checked_bg)
                 }
@@ -130,6 +133,18 @@ class VipChargeAdapter() :
                     holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipSaleType.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipDiscount.setBackgroundResource(R.drawable.shape_greet_charge_discount_checked_bg)
+                }
+
+                ChargeVipDialog.PURCHASE_RENEW_PT_VIP,
+                ChargeVipDialog.PURCHASE_PT_VIP -> {
+                    holder.itemView.vipSaleType.setBackgroundResource(R.drawable.shape_pt_vip_charge_bg)
+                    holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_pt_vip_renew_charge_checked_bg)
+                    holder.itemView.vipLong.setTextColor(Color.parseColor("#FFD4D7DF"))
+                    holder.itemView.vipNowPrice.setTextColor(Color.parseColor("#FFD4D7DF"))
+                    holder.itemView.originalPrice.setTextColor(Color.parseColor("#FFD4D7DF"))
+                    holder.itemView.vipSaleType.setTextColor(Color.parseColor("#FF2D3033"))
+                    holder.itemView.vipDiscount.setTextColor(Color.parseColor("#FF2D3033"))
+                    holder.itemView.vipDiscount.setBackgroundResource(R.drawable.shape_pt_vip_charge_discount_checked_bg)
                 }
                 else -> {
                     holder.itemView.vipSaleType.setBackgroundResource(R.drawable.shape_vip_charge_renew_bg)
@@ -150,6 +165,17 @@ class VipChargeAdapter() :
                 ChargeVipDialog.PURCHASE_RENEW_VIP -> {
                     holder.itemView.vipSaleType.visibility = View.INVISIBLE
                     holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_renew_charge_normal_bg)
+                    holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+                    holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+                    holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+                    holder.itemView.originalPrice.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+                    holder.itemView.vipDiscount.background = null
+                }
+
+                ChargeVipDialog.PURCHASE_RENEW_PT_VIP,
+                ChargeVipDialog.PURCHASE_PT_VIP -> {
+                    holder.itemView.vipSaleType.visibility = View.INVISIBLE
+                    holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_pt_vip_renew_charge_normal_bg)
                     holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))

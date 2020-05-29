@@ -173,8 +173,6 @@ public class NimSDKOptionConfig {
                 switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
                     case 1:
                         return "『匹配消息』";
-                    case 2:
-                        return "『招呼消息』";
                     case 3:
                         return "『好友消息』";
                     case 4:

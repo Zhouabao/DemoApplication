@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import kotlinx.android.synthetic.main.dialog_human_verify.*
 import org.jetbrains.anko.startActivity
@@ -39,7 +39,7 @@ class HumanVerifyDialog(val context1: Context) :
     fun initView() {
         verifyBtn.onClick {
             if (type == HUMAN_VERIFY)
-                IDVerifyActivity.startActivity(context1)
+                CommonFunction.startToFace(context1)
             else
                 if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
                     context.startActivity<NewUserInfoSettingsActivity>()

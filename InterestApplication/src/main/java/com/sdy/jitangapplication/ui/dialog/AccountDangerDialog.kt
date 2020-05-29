@@ -16,6 +16,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -62,7 +63,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    IDVerifyActivity.startActivity(context1)
+                    CommonFunction.startToFace(context1)
                 }
             }
             VERIFY_NEED_ACCOUNT_DANGER -> {
@@ -76,7 +77,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    IDVerifyActivity.startActivity(context1,IDVerifyActivity.TYPE_ACCOUNT_DANGER)
+                    CommonFunction.startToFace(context1,IDVerifyActivity.TYPE_ACCOUNT_DANGER)
                 }
             }
             VERIFY_ING -> {

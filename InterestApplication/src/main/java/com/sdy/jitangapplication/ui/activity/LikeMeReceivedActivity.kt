@@ -29,7 +29,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
-import com.sdy.jitangapplication.event.UpdateSlideCountEvent
 import com.sdy.jitangapplication.model.NewLikeMeBean
 import com.sdy.jitangapplication.model.PositiveLikeBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -370,22 +369,12 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 mPresenter.bindMemberHandle(adapter.data[manager.topPosition - 1].accid)
             }
             else -> {//右滑喜欢
-                //保存剩余滑动次数
-                if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
-                    if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {
-                        UserManager.saveLeftSlideCount(UserManager.getLeftSlideCount().minus(1))
-                        EventBus.getDefault().post(UpdateSlideCountEvent())
-                    }
-                    mPresenter.addLike(
-                        adapter.data[manager.topPosition - 1].accid,
-                        adapter.data[manager.topPosition - 1].tag_id,
-                        2
-                    )
-                    manager.setSwipeableMethod(SwipeableMethod.None)
-                } else {
-                    greetRv.postDelayed({ greetRv.rewind() }, 100)
-                    greetRv.isEnabled = false
-                }
+                mPresenter.addLike(
+                    adapter.data[manager.topPosition - 1].accid,
+                    adapter.data[manager.topPosition - 1].tag_id,
+                    2
+                )
+                manager.setSwipeableMethod(SwipeableMethod.None)
             }
         }
 

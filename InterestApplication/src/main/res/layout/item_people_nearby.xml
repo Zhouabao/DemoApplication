@@ -67,6 +67,15 @@
         app:layout_constraintLeft_toLeftOf="@id/userChatBtn"
         app:layout_constraintTop_toBottomOf="@id/userChatBtn" />
 
+    <ImageView
+        android:id="@+id/userIntroduceVideoBtn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/icon_video_heart_beat"
+        app:layout_constraintLeft_toLeftOf="@id/userChatBtn"
+        app:layout_constraintTop_toBottomOf="@id/userContactBtn" />
+
     <LinearLayout
         android:id="@+id/userIntention"
         android:layout_width="wrap_content"

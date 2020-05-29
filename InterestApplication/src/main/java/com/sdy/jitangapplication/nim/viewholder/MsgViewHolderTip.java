@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.blankj.utilcode.util.SpanUtils;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
@@ -45,7 +46,7 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         String text = "未知通知提醒";
-            Map<String, Object> content = message.getRemoteExtension();
+        Map<String, Object> content = message.getRemoteExtension();
 //        Map<String, Object> content = message.getLocalExtension();
         if (content != null && !content.isEmpty()) {
             text = (String) content.get("content");
@@ -68,7 +69,7 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
                                     Intent intent = new Intent(context, MyCandyActivity.class);
                                     context.startActivity(intent);
                                 } else if (type == 2) {
-                                    IDVerifyActivity.Companion.startActivity(context,IDVerifyActivity.TYPE_ACCOUNT_NORMAL);
+                                    CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL,-1);
                                 } else if (type == 3) {
                                     Intent intent = new Intent(context, CandyMallActivity.class);
                                     context.startActivity(intent);

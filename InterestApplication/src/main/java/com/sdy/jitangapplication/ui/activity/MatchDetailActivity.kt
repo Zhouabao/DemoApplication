@@ -150,6 +150,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         contactNumber.layoutParams = contactNumberparams1
 
 
+        val contactNumberparams2 = (videoIntroduce.layoutParams as FrameLayout.LayoutParams)
+        contactNumberparams2.topMargin =
+            contactNumberparams1.topMargin - SizeUtils.dp2px(38F) - SizeUtils.dp2px(15F)
+        videoIntroduce.layoutParams = contactNumberparams2
+
+
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
@@ -164,6 +170,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         btnBack2.setOnClickListener(this)
         notifyAddTagBtn.setOnClickListener(this)
         contactNumber.setOnClickListener(this)
+        videoIntroduce.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
@@ -436,6 +443,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
         }
 
+        videoIntroduce.isVisible = matchBean!!.mv_btn
+
         if (matchBean!!.intention_title.isNullOrEmpty()) {
             detailUserIntention1.isVisible = false
         } else {
@@ -485,10 +494,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             isVisible = !(matchBean!!.sign.isNullOrBlank())
         }
 
-        detailUserVip.visibility = if (matchBean!!.isvip == 1) {
+        detailUserVip.visibility = if (matchBean!!.isvip == 1 || matchBean!!.isplatinumvip) {
             View.VISIBLE
         } else {
             View.GONE
+        }
+        if (matchBean!!.isplatinumvip) {
+            detailUserVip.setImageResource(R.drawable.icon_pt_vip)
+        } else {
+            detailUserVip.setImageResource(R.drawable.icon_vip)
         }
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
@@ -854,22 +868,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {
                 if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        this,
-                        matchBean!!.accid,
-                        detailUserChatBtn,
-                        targetAvator = matchBean!!.avatar ?: "", needSwipe = true
-                    )
+                    CommonFunction.checkSendGift(this, matchBean!!.accid)
             }
 
             R.id.detailUserGreetBtn -> {
                 if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        this,
-                        matchBean!!.accid,
-                        detailUserGreetBtn,
-                        targetAvator = matchBean!!.avatar ?: "", needSwipe = true
-                    )
+                    CommonFunction.checkSendGift(this, matchBean!!.accid)
             }
 
             R.id.backBtn1, R.id.btnBack2,
@@ -898,6 +902,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
             R.id.contactNumber -> {//获取联系方式
                 CommonFunction.checkUnlockContact(
+                    this,
+                    matchBean!!.accid,
+                    matchBean!!.gender ?: 1
+                )
+            }
+            R.id.videoIntroduce -> {//获取认证视频
+                CommonFunction.checkUnlockIntroduceVideo(
                     this,
                     matchBean!!.accid,
                     matchBean!!.gender ?: 1
@@ -962,17 +973,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserGreetBtn.isVisible = false
             detailUserLikeBtn.isVisible = false
             detailUserDislikeBtn.visibility = View.INVISIBLE
-        } else {//不是好友,判断打过招呼没
-            if (matchBean!!.isgreeted) { //打过招呼
-                detailUserChatBtn.isVisible = true
-                detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
-                detailUserGreetBtn.isVisible = false
-            } else {//没打过招呼
-                detailUserGreetBtn.isVisible = matchBean!!.greet_switch
-                detailUserChatBtn.isVisible = false
-                if (matchBean!!.isliked == 1 || matchBean!!.isdisliked == 1)
-                    detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
+        } else {//不是好友,判断打请求过私聊没
+            if (matchBean!!.isgreeted) {
+                detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
+            } else {
+                detailUserGreetBtn.imageAssetsFolder = "images_greet_match_detail"
+                detailUserGreetBtn.setAnimation("data_greet_match_detail.json")
             }
+            detailUserChatBtn.isVisible = false
             //喜欢或者不喜欢都关闭喜欢按钮
             if (matchBean!!.isliked == 1 || matchBean!!.isdisliked == 1) {
                 detailUserLikeBtn.isVisible = false

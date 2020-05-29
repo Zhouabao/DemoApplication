@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -105,10 +106,12 @@ public class GlideUtil {
     }
 
     public static void loadCircleImg(Context context, boolean circle, Object url, ImageView targetImg) {
+        MultiTransformation multiTransformation = new MultiTransformation(new CircleCrop());
+
         Glide.with(context)
                 .load(url)
-                .circleCrop()
                 .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .transform(multiTransformation)
                 .into(targetImg);
     }
 

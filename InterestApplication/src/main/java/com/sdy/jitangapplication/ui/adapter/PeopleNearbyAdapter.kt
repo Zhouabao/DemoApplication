@@ -23,16 +23,24 @@ import kotlinx.android.synthetic.main.item_people_nearby.view.*
  *    desc   :
  *    version: 1.0
  */
-class PeopleNearbyAdapter :
+class PeopleNearbyAdapter(var fromCard: Boolean = false) :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
         val params = itemView.layoutParams as RecyclerView.LayoutParams
-        params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
-        params.height = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
-        if (helper.layoutPosition == 0)
-            params.topMargin = SizeUtils.dp2px(15F)
-        params.bottomMargin = SizeUtils.dp2px(10F)
+        if (!fromCard) {
+            params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+            params.height = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+            if (helper.layoutPosition == 0) {
+                params.topMargin = SizeUtils.dp2px(15F)
+            }
+            params.bottomMargin = SizeUtils.dp2px(10F)
+        } else {
+            params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+            params.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(
+                44 + ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15f * 2 + 12 * 8)) / 9) + 10 + 15 + 50F
+            )
+        }
         itemView.layoutParams = params
 
         GlideUtil.loadRoundImgCenterCrop(
@@ -48,7 +56,14 @@ class PeopleNearbyAdapter :
             .append(" ${item.age}岁")
             .create()
         itemView.userVerify.isVisible = item.isfaced == 1
-        itemView.userVip.isVisible = item.isvip
+        itemView.userIntroduceVideoBtn.isVisible = item.mv_btn
+
+        itemView.userVip.isVisible = item.isvip || item.isplatinumvip
+        if (item.isplatinumvip) {
+            itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
+        } else {
+            itemView.userVip.setImageResource(R.drawable.icon_vip)
+        }
         if (item.intention_title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false
         } else {
@@ -64,37 +79,6 @@ class PeopleNearbyAdapter :
                 ""
             }}"
 
-
-        //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
-        when (item.contact_way) {
-            1 -> {
-                itemView.userContactBtn.isVisible = true
-                itemView.userContactBtn.setImageResource(R.drawable.icon_phone_heartbeat)
-            }
-            2 -> {
-                itemView.userContactBtn.isVisible = true
-                itemView.userContactBtn.setImageResource(R.drawable.icon_wechat_heartbeat)
-            }
-            3 -> {
-                itemView.userContactBtn.isVisible = true
-                itemView.userContactBtn.setImageResource(R.drawable.icon_qq_heartbeat)
-            }
-            else -> {
-                itemView.userContactBtn.isVisible = false
-            }
-        }
-
-
-        //获取联系方式
-        itemView.userContactBtn.clickWithTrigger {
-            CommonFunction.checkUnlockContact(mContext, item.accid, item.gender)
-        }
-
-        itemView.clickWithTrigger {
-            MatchDetailActivity.start(mContext, item.accid)
-        }
-
-
         if (!item.want.isNullOrEmpty()) {
             itemView.userRelationshipRv.isVisible = true
             itemView.userRelationshipRv.layoutManager =
@@ -109,25 +93,46 @@ class PeopleNearbyAdapter :
             itemView.userRelationshipRv.isVisible = false
         }
 
+        if (!fromCard) {
+            //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
+            when (item.contact_way) {
+                1 -> {
+                    itemView.userContactBtn.isVisible = true
+                    itemView.userContactBtn.setImageResource(R.drawable.icon_phone_heartbeat)
+                }
+                2 -> {
+                    itemView.userContactBtn.isVisible = true
+                    itemView.userContactBtn.setImageResource(R.drawable.icon_wechat_heartbeat)
+                }
+                3 -> {
+                    itemView.userContactBtn.isVisible = true
+                    itemView.userContactBtn.setImageResource(R.drawable.icon_qq_heartbeat)
+                }
+                else -> {
+                    itemView.userContactBtn.isVisible = false
+                }
+            }
 
-        //打招呼
-        //1.男性打招呼 首先判断是不是会员 不是会员拉起付费弹窗
-        //                                是的话就判断女性有没有添加意向  添加了意向就弹起助力和糖果弹窗
-        //                                                               未添加就弹起糖果赠送弹窗
-        //
-        //2.女性打招呼 不管男方有无意愿，都判断认证开关，如果开关开启就判断女性有没有认证 认证了就直接送出招呼
-        //                                                                            未认证就弹起认证弹窗
-        itemView.userChatBtn.clickWithTrigger {
-            CommonFunction.commonGreet(
-                mContext,
-                item.accid,
-                itemView.userChatBtn,
-                helper.layoutPosition,
-                item.avatar,
-                false
-            )
+            //获取联系方式
+            itemView.userContactBtn.clickWithTrigger {
+                CommonFunction.checkUnlockContact(mContext, item.accid, item.gender)
+            }
+
+            //用户视频介绍
+            itemView.userIntroduceVideoBtn.clickWithTrigger {
+                CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
+            }
+
+            itemView.clickWithTrigger {
+                MatchDetailActivity.start(mContext, item.accid)
+            }
+
+            itemView.userChatBtn.clickWithTrigger {
+                CommonFunction.checkSendGift(mContext, item.accid)
+            }
+        } else {
+            itemView.userChatBtn.isVisible = false
+            itemView.userContactBtn.isVisible = false
         }
-
-
     }
 }

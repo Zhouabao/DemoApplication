@@ -11,8 +11,5 @@ import com.sdy.jitangapplication.model.LabelQualityBean
  */
 interface ModelAboutMeView : BaseView {
 
-    fun getSignTemplateResult(code: Int, result: MutableList<LabelQualityBean>?)
-
-
     fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?)
 }

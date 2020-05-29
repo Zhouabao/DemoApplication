@@ -56,7 +56,7 @@
 
             <TextView
                     android:id="@+id/addLabelBtn"
-                    android:background="@drawable/shape_rectangle_orange_25dp"
+                    android:background="@drawable/shape_rectangle_orange_24dp"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:layout_height="46dp"

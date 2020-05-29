@@ -21,23 +21,18 @@ data class MessageListBean(
 data class MessageListBean1(
     var thumbs_up_count: Int = 0,//点赞未读数
     var comment_count: Int = 0,//评论未读数
-    val likelist: MutableList<Likelist>? = mutableListOf(),
     val liked_unread_cnt: Int? = 0,//	未读感兴趣总数
     val liked_cnt: Int? = 0,//	感兴趣总数
     val like_free_show: Boolean,//	是否展示
-    val greet_toast: Boolean = false, //是否弹起开启招呼认证弹窗
     var my_like_times: Int = 0,
     var my_percent_complete: Int = 0,
-    var effective_greet: MutableList<Likelist> = mutableListOf(),
-    var no_effective_greet: MutableList<Likelist> = mutableListOf(),
     var normal_percent_complete: Int = 0,
     var total_like_times: Int = 0,
     var approve_time: Long,
     var isapprove: Int,//0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
     var session_list_arr: MutableList<MessageGiftBean> = mutableListOf()
-
-
 )
+
 
 data class MessageGiftBean(
     var mid: String = "",
