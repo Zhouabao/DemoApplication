@@ -7,5 +7,6 @@
     <item name="widget_video_view_icon" type="id"/>
     <item name="widget_video_view_indicator" type="id"/>
     <item name="widget_video_view_full" type="id"/>
+    <item name="widget_video_view_view1" type="id"/>
     <item name="widget_video_view_mask" type="id"/>
 </resources>
