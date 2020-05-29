@@ -42,6 +42,7 @@
                 android:id="@+id/lieAvatorLl"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
+                android:visibility="gone"
                 android:background="#1AFF6318"
                 android:orientation="horizontal">
 

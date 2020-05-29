@@ -132,6 +132,10 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 showContactPicker()
             }
             R.id.quickSign -> {//快速签名
+                if (params["gender"] == null) {
+                    CommonFunction.toast("请先选择性别")
+                    return
+                }
                 startActivityForResult<QuickSignActivity>(
                     100,
                     "gender" to if (params["gender"] != null) {
@@ -239,6 +243,16 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         //条件选择器
         val pvOptions = OptionsPickerBuilder(this,
             OnOptionsSelectListener { options1, options2, options3, v ->
+                //选过性别并且和之前的不一样，就删除
+                if (params["gender"]!= null && params["gender"] != options1 + 1) {
+                    chooseSign = null
+//                        userSign.setText(data?.getStringExtra("quickSign"))
+//                        userSign.setSelection(userSign.text.length)
+                    userSign.isEnabled = true
+                    userQuickSign.isVisible = false
+                    userQuickSignDel.isVisible = false
+                    userQuickSign.text = ""
+                }
                 userGender.text = genders[options1]
                 params["gender"] = options1 + 1
                 checkConfirmEnable()

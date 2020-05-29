@@ -307,6 +307,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         }
 
         if (userInfoBean?.userinfo?.isplatinum == true) {
+            userVip.setImageResource(R.drawable.icon_pt_vip)
             for (data in userInfoBean?.platinum_vip_descr ?: mutableListOf<VipDescr>())
                 marqueeVipPower.addView(
                     getMarqueeView(
@@ -318,6 +319,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_pt_vip_quanyi_bg)
             vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_gray_10dp)
         } else {
+            userVip.setImageResource(R.drawable.icon_vip)
             vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
             isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_vip_quanyi_bg)
             vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_orange_10dp)
@@ -457,6 +459,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                         CommonFunction.toast("认证审核中...")
                     }
                     else -> {
+                        CommonFunction.startToFace(
+                            activity!!, IDVerifyActivity.TYPE_ACCOUNT_NORMAL,
+                            REQUEST_ID_VERIFY
+                        )
 //                        IDVerifyActivity.startActivityForResult(
 //                            activity!!,
 //                            requestCode = REQUEST_ID_VERIFY

@@ -70,9 +70,9 @@ class VipChargeAdapter() :
                 .setBold()
                 .append(
                     "${if (item.type == 1) {
-                        BigDecimal(item.original_price).setScale(0)
+                        BigDecimal(item.original_price).setScale(0,BigDecimal.ROUND_HALF_UP)
                     } else {
-                        BigDecimal(item.discount_price).setScale(0)
+                        BigDecimal(item.discount_price).setScale(0,BigDecimal.ROUND_HALF_UP)
                     }}"
                 )
                 .setFontSize(28, true)
