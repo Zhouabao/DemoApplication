@@ -520,12 +520,13 @@ object CommonFunction {
         }
         if (
             ActivityUtils.getTopActivity() !is RegisterInfoActivity
-            && ActivityUtils.getTopActivity() !is RegisterInfoActivity
+            && ActivityUtils.getTopActivity() !is GetRelationshipActivity
             && ActivityUtils.getTopActivity() !is VerifyCodeActivity
         ) {
             EventBus.getDefault().postSticky(RefreshEvent(true))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
             EventBus.getDefault().post(CloseDialogEvent())
+            EventBus.getDefault().post(RefreshTodayFateEvent())
         }
 
 

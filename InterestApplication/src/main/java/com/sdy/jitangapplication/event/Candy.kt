@@ -48,6 +48,14 @@ class RefreshMyCandyEvent(val candyCount: Int)
 
 
 /**
+ * 更新我的糖果之类的数据
+ */
+class RefreshTodayFateEvent()
+
+
+
+
+/**
  * 设置我的糖果
  */
 class SetMyCandyEvent(val candyCount: Int)

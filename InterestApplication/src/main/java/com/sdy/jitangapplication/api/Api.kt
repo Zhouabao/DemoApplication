@@ -37,6 +37,14 @@ interface Api {
 
 
     /**
+     * 获取我的糖果
+     */
+    @FormUrlEncoded
+    @POST("Candy/getMyCandy${Constants.END_BASE_URL}")
+    fun getMyCandy(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<GiftStateBean?>>
+
+
+    /**
      * 获取调查问卷
      */
     @POST("OpenApi/getHelpCenter${Constants.END_BASE_URL}")

@@ -253,6 +253,7 @@ data class SomeOneGetGiftBean(
 
 data class GiftStateBean(
     var amount: Int = 0,
+    var account_candy: Int = 0,
     var icon: String = "",
     var state: Int = 0,
     var title: String = ""

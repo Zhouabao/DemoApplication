@@ -36,6 +36,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.RefreshTodayFateEvent
 import com.sdy.jitangapplication.model.GiftStateBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.NearPersonBean
@@ -46,6 +47,9 @@ import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.dialog_today_fate.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *    author : ZFM
@@ -70,6 +74,7 @@ class TodayFateDialog(
 
 
     private fun initView() {
+
         guideMarkCl.isVisible = !UserManager.isShowGuideMarkLike()
         setCancelable(false)
         setCanceledOnTouchOutside(false)
@@ -288,10 +293,11 @@ class TodayFateDialog(
     fun batchGreet() {
         val loadingDialog = LoadingDialog(context1)
         val ids = mutableListOf<String>()
-        for (tdata in adapter.data) {
-            for (data in userAvatorAdapter.data) {
+        for (data in userAvatorAdapter.data) {
+            for (tdata in adapter.data) {
                 if (tdata.avatar == data) {
                     ids.add(tdata.accid)
+                    break
                 }
             }
         }
@@ -352,6 +358,10 @@ class TodayFateDialog(
                         }
                         419 -> {
                             CommonFunction.toast("糖果余额不足，请充值后重试")
+                            AlertCandyEnoughDialog(
+                                context1,
+                                AlertCandyEnoughDialog.FROM_SEND_GIFT
+                            ).show()
                         }
                         else -> {
                             CommonFunction.toast(t.msg)
@@ -364,6 +374,26 @@ class TodayFateDialog(
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     loadingDialog.dismiss()
+                }
+            })
+
+    }
+
+
+    /**
+     *获取我的糖果
+     */
+    fun getMyCandy() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getMyCandy(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<GiftStateBean?>>() {
+                override fun onNext(t: BaseResp<GiftStateBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        200 -> {
+                            myCandyCnt.text = "${t.data?.account_candy ?: 0}"
+                        }
+                    }
                 }
             })
 
@@ -400,4 +430,22 @@ class TodayFateDialog(
 
     }
 
+
+    //    candyCount
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshMyCandyEvent(event: RefreshTodayFateEvent) {
+        getMyCandy()
+    }
+
+
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+
+    }
 }
