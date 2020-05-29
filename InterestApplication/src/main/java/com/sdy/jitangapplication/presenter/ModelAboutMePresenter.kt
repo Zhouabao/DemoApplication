@@ -9,6 +9,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.view.ModelAboutMeView
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -20,9 +21,9 @@ class ModelAboutMePresenter : BasePresenter<ModelAboutMeView>() {
     /**
      * 获取关于我的模板示例
      */
-    fun getSignTemplate(page: Int) {
+    fun getSignTemplate(page: Int, gender: Int = UserManager.getGender()) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getSignTemplate(page)
+            .getSignTemplate(page, gender)
             .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
                     if (t.code == 200) {

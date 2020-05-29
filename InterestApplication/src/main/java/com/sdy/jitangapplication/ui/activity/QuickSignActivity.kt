@@ -23,12 +23,13 @@ class QuickSignActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAboutMe
     OnLazyClickListener {
     private var page = 1
     private val adapter by lazy { QuickSignAdapter() }
+    private val gender by lazy { intent.getIntExtra("gender", 1) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quick_sign)
         initView()
-        mPresenter.getSignTemplate(page)
+        mPresenter.getSignTemplate(page,gender)
     }
 
     private fun initView() {

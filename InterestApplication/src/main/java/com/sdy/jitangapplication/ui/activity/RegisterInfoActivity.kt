@@ -132,7 +132,14 @@ class RegisterInfoActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                 showContactPicker()
             }
             R.id.quickSign -> {//快速签名
-                startActivityForResult<QuickSignActivity>(100)
+                startActivityForResult<QuickSignActivity>(
+                    100,
+                    "gender" to if (params["gender"] != null) {
+                        params["gender"]
+                    } else {
+                        3
+                    }
+                )
             }
             R.id.userQuickSignDel -> {//快速签名
                 userQuickSign.text = ""

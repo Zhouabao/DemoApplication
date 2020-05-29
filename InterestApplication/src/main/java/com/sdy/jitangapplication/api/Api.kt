@@ -550,7 +550,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/getSignTemplate${Constants.END_BASE_URL}")
-    fun getSignTemplate(@Field("page") page: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+    fun getSignTemplate(@Field("page") page: Int,@Field("gender") gender: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /****************************消息************************************/
 
