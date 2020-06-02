@@ -87,7 +87,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     }
 
     override fun loadData() {
-        showOpenVipCl()
 
 
         EventBus.getDefault().register(this)
@@ -137,8 +136,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     }
 
-    private fun showOpenVipCl() {
-        if (!UserManager.isUserVip() && type == TYPE_SAMECITY) {
+    private fun showOpenVipCl(isvip: Boolean) {
+        if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
             openVipCl.isVisible = true
             t2.text = if (UserManager.getGender() == 1) {
                 "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
@@ -258,6 +257,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日缘分
             //是否今日意向
             //资料完善度
+            showOpenVipCl(nearBean?.isvip ?: false)
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()))
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
@@ -375,7 +375,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
         if (type == TYPE_SAMECITY)
-            showOpenVipCl()
+            showOpenVipCl(true)
     }
 
 
