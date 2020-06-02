@@ -13,6 +13,13 @@ interface Api {
     /****************登录板块**********************/
 
     /**
+     * 获取登录配置开关信息
+     */
+    @POST("OpenApi/getRegisterProcessType${Constants.END_BASE_URL}")
+    fun getRegisterProcessType(): Observable<BaseResp<RegisterFileBean?>>
+
+
+    /**
      * 获取消息总的个数汇总数据
      */
     @FormUrlEncoded
@@ -110,7 +117,7 @@ interface Api {
      * 验证照片是否合规
      */
     @FormUrlEncoded
-    @POST("MemberInfo/checkAvatar${Constants.END_BASE_URL}")
+    @POST("MemberInfo/checkAvatarV22${Constants.END_BASE_URL}")
     fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
@@ -772,6 +779,14 @@ interface Api {
     @FormUrlEncoded
     @POST("pay_order/productLists${Constants.END_BASE_URL}")
     fun productLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
+
+
+    /**
+     * 门槛支付列表
+     */
+    @FormUrlEncoded
+    @POST("OpenApi/getThreshold${Constants.END_BASE_URL}")
+    fun getThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 
     /**

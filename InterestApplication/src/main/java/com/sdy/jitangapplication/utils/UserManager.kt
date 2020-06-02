@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.utils
 
 import android.app.Activity
 import android.content.Context
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.ishumei.smantifraud.SmAntiFraud
@@ -12,10 +11,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.ApproveBean
-import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.MoreMatchBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -31,13 +27,9 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    var registerFileBean: RegisterFileBean? = null
     var approveBean: ApproveBean? = null
     var showIndexRecommend: Boolean = false
-    //认证和替换的参数
-    var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
-    var slide_times = 0
-    var perfect_times = 0 //滑动x次数跳【完善相册】
-    var replace_times = 0 //滑动x次数跳【替换头像】
 
     //每次进入APP弹完善个人资料弹窗
     var showCompleteUserCenterDialog: Boolean = false
@@ -170,19 +162,6 @@ object UserManager {
         mediaBeans.clear()
         keyList = mutableListOf()
         cancelUpload = false
-    }
-
-    /**
-     * 清除认证数据
-     */
-    fun cleanVerifyData() {
-        motion = -1
-        replace_times = 0
-        perfect_times = 0
-        slide_times = 0
-//        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
-//        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
-//        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
     }
 
 
@@ -402,7 +381,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("nickname")
         SPUtils.getInstance(Constants.SPNAME).remove("avatar")
         SPUtils.getInstance(Constants.SPNAME).remove("gender")
-        SPUtils.getInstance(Constants.SPNAME).remove("isForceOpenVip")
         SPUtils.getInstance(Constants.SPNAME).remove("birth")
         SPUtils.getInstance(Constants.SPNAME).remove("isvip1")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
@@ -441,7 +419,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideVerify")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         SPUtils.getInstance(Constants.SPNAME).remove("notice")
-        cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
@@ -538,17 +515,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGiftProtocol", isShow)
     }
 
-    /**
-     * 是否展示赠送礼物规则提醒
-     */
-    fun isForceOpenVip(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isForceOpenVip", false)
-    }
-
-    fun saveForceOpenVip(isForceOpenVip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isForceOpenVip", isForceOpenVip)
-    }
-
 
     /**
      * 是否展示赠送礼物规则提醒
@@ -606,7 +572,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
         SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
         SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
-        saveForceOpenVip(data?.extra_data?.force_vip ?: false)
         if (!(data?.userinfo?.avatar.isNullOrEmpty() || (data?.userinfo?.avatar ?: "").contains(
                 Constants.DEFAULT_AVATAR
             ))
@@ -616,45 +581,99 @@ object UserManager {
         //初始化消息提醒配置
         initNotificationConfig()
 
+//    var supplement: Int = 0,//补充资料 1 前置 2后置 3 关闭
+//    var threshold: Boolean = false,//门槛开关 开启true 关闭false
+//    var tourists: Boolean = false//	游客模式 开启true 关闭false
+
 
         //昵称 生日 性别 头像 个签
         if (data?.userinfo == null
             || data.userinfo.nickname.isNullOrEmpty()
             || data.userinfo.birth == 0
             || data.userinfo.gender == 0
+            || data.userinfo.avatar.isNullOrEmpty()
+            || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)
         ) {
             context.startActivity<RegisterInfoActivity>()
             return
-        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {//头像未选择
-            context.startActivity<UserAvatorActivity>()
-            return
-        } else if (data.extra_data?.want_steps != true) {
+        } else if (registerFileBean?.supplement == 1) { //补充资料前移未走过
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
-            context.startActivity<GetMoreMatchActivity>(
-                "moreMatch" to MoreMatchBean(
-                    data.extra_data?.city_name ?: "",
-                    data.extra_data?.gender_str ?: "",
-                    data?.extra_data?.people_amount ?: 0
-                ),
-                "force_vip" to data.extra_data?.force_vip
-            )
-            return
-        } else if (data.extra_data?.force_vip) {
-            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+            if (data.extra_data?.want_steps != true)//没有走完补充资料，就先走补充资料
+                context.startActivity<GetMoreMatchActivity>(
+                    "moreMatch" to MoreMatchBean(
+                        data.extra_data?.city_name ?: "",
+                        data.extra_data?.gender_str ?: "",
+                        data?.extra_data?.people_amount ?: 0
+                    )
+                )
+            else if (registerFileBean?.threshold == true && !data.userinfo.isvip) {//走完补充资料,判断是否开启门槛，开启门槛并且不是会员就支付门槛
+                OpenVipDialog(
+                    context,
+                    MoreMatchBean(
+                        data?.extra_data?.city_name ?: "",
+                        data?.extra_data?.gender_str ?: "",
+                        data?.extra_data?.people_amount ?: 0
+                    ),
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                ).show()
+            } else {
+                //跳到主页
+                //保存个人信息
+                SPUtils.getInstance(Constants.SPNAME)
+                    .put("people_amount", data?.extra_data?.people_amount ?: 0)
+                saveUserInfo(data)
+//            AppManager.instance.finishAllActivity()
+                context.startActivity<MainActivity>()
 
+            }
+            return
+        } else if (registerFileBean?.supplement == 2 && data.extra_data?.want_steps != true) {//补充资料后移并且没有走过
+            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+            if (!data.userinfo.isvip) {//没有支付过门槛就跳门槛支付
+//                context.startActivity<ForeverVipActivity>(
+//                    "people_amount" to (data?.extra_data?.people_amount ?: 0),
+//                    "city_name" to (data.extra_data?.city_name ?: ""),
+//                    "gender_str" to (data.extra_data?.gender_str ?: "")
+//                )
+                OpenVipDialog(
+                    context,
+                    MoreMatchBean(
+                        data?.extra_data?.city_name ?: "",
+                        data?.extra_data?.gender_str ?: "",
+                        data?.extra_data?.people_amount ?: 0
+                    ),
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                ).show()
+            } else {//支付过门槛就跳更多关系
+                context.startActivity<GetRelationshipActivity>(
+                    "moreMatch" to MoreMatchBean(
+                        data.extra_data?.city_name ?: "",
+                        data.extra_data?.gender_str ?: "",
+                        data?.extra_data?.people_amount ?: 0
+                    )
+                )
+            }
+        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true && !data.userinfo.isvip) { //补充资料不开启
+            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+//            context.startActivity<ForeverVipActivity>(
+//                "people_amount" to (data?.extra_data?.people_amount ?: 0),
+//                "city_name" to (data.extra_data?.city_name ?: ""),
+//                "gender_str" to (data.extra_data?.gender_str ?: "")
+//            )
             OpenVipDialog(
-                ActivityUtils.getTopActivity(), MoreMatchBean(
-                    data.extra_data?.city_name ?: "",
-                    data.extra_data?.gender_str ?: "",
+                context,
+                MoreMatchBean(
+                    data?.extra_data?.city_name ?: "",
+                    data?.extra_data?.gender_str ?: "",
                     data?.extra_data?.people_amount ?: 0
                 ),
-                force_vip = isForceOpenVip()
+                OpenVipDialog.FROM_REGISTER_OPEN_VIP
             ).show()
         } else {
             //跳到主页
             //保存个人信息
             SPUtils.getInstance(Constants.SPNAME)
-                .put("people_amount", data?.extra_data?.people_amount)
+                .put("people_amount", data?.extra_data?.people_amount ?: 0)
             saveUserInfo(data)
 //            AppManager.instance.finishAllActivity()
             context.startActivity<MainActivity>()

@@ -27,6 +27,7 @@ data class ExtraBean(
     val people_amount: Int = 0,
     val gender_str: String = "",
     var force_vip: Boolean = false,
+    var threshold_state: Boolean = false,
     val want_steps: Boolean = false
 )
 

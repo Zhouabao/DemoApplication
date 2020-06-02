@@ -89,6 +89,8 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.ForeverVipActivity"></activity>
+        <activity android:name=".ui.activity.FemalePowerActivity" />
         <activity android:name=".ui.activity.QuickSignActivity" />
         <activity android:name=".ui.activity.ChangeUserContactActivity" />
         <activity
@@ -129,9 +131,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.VideoVerifyActivity"
-            android:screenOrientation="portrait" >
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MessageLikeMeActivity"
             android:screenOrientation="portrait" />

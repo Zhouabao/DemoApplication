@@ -123,8 +123,7 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
         when (v.id) {
             R.id.nextStep -> {
                 startActivity<GetRelationshipActivity>(
-                    "moreMatch" to intent.getSerializableExtra("moreMatch") as MoreMatchBean?,
-                    "force_vip" to intent.getBooleanArrayExtra("force_vip")
+                    "moreMatch" to intent.getSerializableExtra("moreMatch") as MoreMatchBean?
                 )
                 finish()
             }

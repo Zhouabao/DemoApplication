@@ -129,15 +129,24 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
     override fun onAddWant(b: Boolean, data: MoreMatchBean?) {
         if (b) {
-            if (data?.isvip != true) {
+            if (UserManager.registerFileBean?.supplement == 2) {
+                startActivity<MainActivity>()
+
+//                finish()
+            } else {
                 OpenVipDialog(
                     this,
                     data,
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP,
-                    force_vip = UserManager.isForceOpenVip()
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
                 ).show()
-//                finish()
-            } else startActivity<MainActivity>()
+
+//                startActivity<ForeverVipActivity>(
+//                    "people_amount" to data?.people_amount,
+//                    "city_name" to data?.city_name,
+//                    "gender_str" to data?.gender_str
+//                )
+            }
+
         }
     }
 

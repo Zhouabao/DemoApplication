@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.FemalePowerActivity">
+
+
+    <ImageView
+        android:id="@+id/powerBg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_female_power_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include layout="@layout/layout_actionbar" />
+
+    <TextView
+        android:id="@+id/powerContact"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawableTop="@drawable/icon_female_contact_no"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="联系方式"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/powerVerify"
+        app:layout_constraintTop_toBottomOf="@id/powerBg" />
+
+    <TextView
+        android:id="@+id/powerVerify"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawableTop="@drawable/icon_female_verify_no"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="真人认证"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/powerContact"
+        app:layout_constraintRight_toLeftOf="@id/powerVideo"
+        app:layout_constraintTop_toBottomOf="@id/powerBg" />
+
+    <TextView
+        android:id="@+id/powerVideo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawableTop="@drawable/icon_female_video_no"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="视频介绍"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/powerVerify"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/powerBg" />
+</androidx.constraintlayout.widget.ConstraintLayout>

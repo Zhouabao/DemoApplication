@@ -500,7 +500,12 @@ object CommonFunction {
             || ActivityUtils.getTopActivity() is GetRelationshipActivity
             || ActivityUtils.getTopActivity() is VerifyCodeActivity
         ) {//注册界面支付会员进入首页
-            context.startActivity<MainActivity>()
+            if (UserManager.registerFileBean?.supplement == 2) {
+                context.startActivity<GetRelationshipActivity>()
+                EventBus.getDefault().post(CloseDialogEvent())
+            } else {
+                context.startActivity<MainActivity>()
+            }
         } else if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) { //糖果充值更新糖果
             EventBus.getDefault().post(RefreshCandyMallDetailEvent())
         } else if (ActivityUtils.getTopActivity() is CandyMallActivity) { //糖果商城充值
@@ -565,6 +570,14 @@ object CommonFunction {
         ToastUtils.setMsgColor(Color.WHITE)
         ToastUtils.setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showShort(msg)
+    }
+
+
+    fun longToast(msg: String) {
+        ToastUtils.setBgColor(Color.parseColor("#80000000"))
+        ToastUtils.setMsgColor(Color.WHITE)
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+        ToastUtils.showLong(msg)
     }
 
 

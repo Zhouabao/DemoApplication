@@ -38,13 +38,59 @@
             app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/userAvatarCl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t2">
+
+            <ImageView
+                android:id="@+id/userAvatorTake"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_gray_bg"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_camera_white"
+                app:layout_constraintBottom_toBottomOf="@id/userAvator"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/userAvator" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userAvator"
+                android:layout_width="115dp"
+                android:layout_height="115dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rectangle_white_10dp"
+                android:src="@drawable/icon_default_avator"
+                android:visibility="invisible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/userAvatorTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:src="@drawable/icon_bg_transparent_avator_bg"
+                app:layout_constraintBottom_toBottomOf="@id/userAvator"
+                app:layout_constraintLeft_toLeftOf="@id/userAvator"
+                app:layout_constraintRight_toRightOf="@id/userAvator" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t2">
+            app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
 
             <TextView
                 android:id="@+id/t3"
@@ -296,6 +342,52 @@
             app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userSign" />
+        <RelativeLayout
+            android:id="@+id/avatorNotifyLl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_rectangle_with_shadow"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/icon_logo" />
+
+                <TextView
+                    android:id="@+id/avatorNotify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:text="果然盛世美颜，就它吧"
+                    android:textColor="@color/colorOrange" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_triangle" />
+
+        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

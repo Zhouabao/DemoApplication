@@ -359,7 +359,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else if (canSendMsg()) {
             //男性,非会员 弹充值界面
             if (nimBean.getForce_isvip()) {
-                new OpenVipDialog(getActivity(), null, OpenVipDialog.FROM_P2P_CHAT, -1, false).show();
+                new OpenVipDialog(getActivity(), null, OpenVipDialog.FROM_P2P_CHAT, -1).show();
             } else {
 //                        if (message.getMsgType() == MsgTypeEnum.text) {
                 sendMsgRequest(message, sessionId);
@@ -370,6 +370,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         }
 
         return false;
+
     }
 
     private Boolean canSendMsg() {
