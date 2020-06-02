@@ -288,7 +288,7 @@ class OpenPtVipDialog(
      */
     fun productLists() {
         RetrofitFactory.instance.create(Api::class.java)
-            .productLists(UserManager.getSignParams())
+            .getThreshold(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.code == 200) {

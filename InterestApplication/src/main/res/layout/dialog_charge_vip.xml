@@ -70,26 +70,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/completeInfoBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/rectangle_cover_bg_20"
-            android:drawableLeft="@drawable/icon_edit_white"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:paddingLeft="9dp"
-            android:paddingTop="3dp"
-            android:paddingRight="9dp"
-            android:paddingBottom="3dp"
-            android:text="完善资料"
-            android:textColor="#ffffffff"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintRight_toRightOf="@id/purchaseBg"
-            app:layout_constraintTop_toTopOf="@id/purchaseBg" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vipChargeCl"
@@ -270,5 +251,5 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical"
-        android:visibility="gone" />
+        android:visibility="visible" />
 </FrameLayout>

@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import android.graphics.Color
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -35,8 +36,12 @@ class AllVipPowerAdapter :
         if (data.type == VipPowerBean.TYPE_NORMAL_VIP) {
             itemParams.leftMargin = SizeUtils.dp2px(25F)
         } else {
-            itemParams.leftMargin = SizeUtils.dp2px(15F)
-            itemParams.rightMargin = SizeUtils.dp2px(25F)
+            if (mData.size == 1) {
+                itemParams.leftMargin = SizeUtils.dp2px(25F)
+            } else {
+                itemParams.leftMargin = SizeUtils.dp2px(15F)
+                itemParams.rightMargin = SizeUtils.dp2px(25F)
+            }
         }
         itemview.layoutParams = itemParams
 
@@ -131,6 +136,12 @@ class AllVipPowerAdapter :
 
             vipChargeAdapter.setNewData(data.list)
             vipPowerAdapter.setNewData(data.icon_list)
+
+            itemview.vipChargeRv.isVisible = false
+            itemview.zhiPayBtn.isVisible = false
+            itemview.wechatPayBtn.isVisible = false
+
+
         } else {
             if (data!!.isvip)
                 itemview.vipOutTime.text = "${data!!.vip_express}到期"
@@ -139,14 +150,19 @@ class AllVipPowerAdapter :
 
             vipChargeAdapter.setNewData(data.list)
             vipPowerAdapter.setNewData(data.icon_list)
-        }
-        for (payway in data!!.paylist ?: mutableListOf()) {
-            if (payway.payment_type == 1) {
-                itemview.zhiPayBtn.visibility = View.VISIBLE
-            } else if (payway.payment_type == 2) {
-                itemview.wechatPayBtn.visibility = View.VISIBLE
+            for (payway in data!!.paylist ?: mutableListOf()) {
+                if (payway.payment_type == 1) {
+                    itemview.zhiPayBtn.visibility = View.VISIBLE
+                } else if (payway.payment_type == 2) {
+                    itemview.wechatPayBtn.visibility = View.VISIBLE
+                }
             }
+
+            itemview.vipChargeRv.isVisible = true
+            itemview.zhiPayBtn.isVisible = true
+            itemview.wechatPayBtn.isVisible = true
         }
+
         helper.addOnClickListener(R.id.zhiPayBtn)
         helper.addOnClickListener(R.id.wechatPayBtn)
 

@@ -785,7 +785,7 @@ interface Api {
      * 门槛支付列表
      */
     @FormUrlEncoded
-    @POST("OpenApi/getThreshold${Constants.END_BASE_URL}")
+    @POST("PayOrder/getThreshold${Constants.END_BASE_URL}")
     fun getThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 

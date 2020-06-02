@@ -190,7 +190,6 @@ class ChargeVipDialog(
                 for (child in 0 until bannerIndicator.childCount)
                     (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
 
-                completeInfoBtn.isVisible = position == INFINITE_SLIDE
             }
         })
         for (banner in banners.withIndex()) {
@@ -204,13 +203,6 @@ class ChargeVipDialog(
 
 
     private fun initView() {
-        //完善资料
-        completeInfoBtn.onClick {
-            if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
-                context1.startActivity<NewUserInfoSettingsActivity>()
-            dismiss()
-        }
-
         //支付宝支付
         zhiPayBtn.clickWithTrigger {
             createOrder(PAY_ALI)
