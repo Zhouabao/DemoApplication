@@ -23,6 +23,7 @@ import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
+import com.sdy.jitangapplication.ui.dialog.TopCardDialog
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -47,7 +48,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 
     private val fragments by lazy { Stack<Fragment>() }
     private val titles by lazy { arrayOf("推荐", "附近") }
-//    private val matchFragment by lazy { MatchFragment() }
+    //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
     //    private val findByTagFragment by lazy { FindByTagFragment() }
     private val sameCityFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_SAMECITY) }
@@ -78,8 +79,14 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         todayWantCl.clickWithTrigger {
             todayWantDialog.show()
         }
-    }
 
+        //置顶卡片
+        topCardBtn.clickWithTrigger {
+            TopCardDialog(activity!!).show()
+//            TouristDialog(activity!!).show()
+        }
+
+    }
 
     private fun initFragments() {
 
@@ -157,8 +164,6 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
     }
-
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

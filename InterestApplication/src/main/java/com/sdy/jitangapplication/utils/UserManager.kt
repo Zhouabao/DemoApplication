@@ -653,7 +653,7 @@ object UserManager {
                     )
                 )
             }
-        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true &&data.extra_data?.isvip!=true) { //补充资料不开启
+        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true && data.extra_data?.isvip != true) { //补充资料不开启
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
 //            context.startActivity<ForeverVipActivity>(
 //                "people_amount" to (data?.extra_data?.people_amount ?: 0),
