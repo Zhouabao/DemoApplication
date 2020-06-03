@@ -183,7 +183,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-            saveUserVip(data.userinfo.isvip)
+            saveUserVip(data.extra_data?.isvip ?: false)
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
@@ -606,7 +606,7 @@ object UserManager {
                         data?.extra_data?.people_amount ?: 0
                     )
                 )
-            else if (registerFileBean?.threshold == true && !data.userinfo.isvip) {//走完补充资料,判断是否开启门槛，开启门槛并且不是会员就支付门槛
+            else if (registerFileBean?.threshold == true && !data.extra_data?.isvip) {//走完补充资料,判断是否开启门槛，开启门槛并且不是会员就支付门槛
                 OpenVipDialog(
                     context,
                     MoreMatchBean(
@@ -629,7 +629,7 @@ object UserManager {
             return
         } else if (registerFileBean?.supplement == 2 && data.extra_data?.want_steps != true) {//补充资料后移并且没有走过
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
-            if (!data.userinfo.isvip) {//没有支付过门槛就跳门槛支付
+            if (data.extra_data?.isvip != true) {//没有支付过门槛就跳门槛支付
 //                context.startActivity<ForeverVipActivity>(
 //                    "people_amount" to (data?.extra_data?.people_amount ?: 0),
 //                    "city_name" to (data.extra_data?.city_name ?: ""),
@@ -653,7 +653,7 @@ object UserManager {
                     )
                 )
             }
-        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true && !data.userinfo.isvip) { //补充资料不开启
+        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true &&data.extra_data?.isvip!=true) { //补充资料不开启
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
 //            context.startActivity<ForeverVipActivity>(
 //                "people_amount" to (data?.extra_data?.people_amount ?: 0),

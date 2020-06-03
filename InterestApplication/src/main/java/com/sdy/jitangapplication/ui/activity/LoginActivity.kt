@@ -111,8 +111,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
         if (data != null) {
             //todo 切换配置
-            data!!.threshold = false
-            data!!.supplement = 1
+//            data!!.threshold = false
+//            data!!.supplement = 1
             UserManager.registerFileBean = data
         }
 
