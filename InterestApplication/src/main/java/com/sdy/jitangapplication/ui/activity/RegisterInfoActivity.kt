@@ -624,22 +624,13 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
             SPUtils.getInstance(Constants.SPNAME).put("gender", params["gender"] as Int)
 //            startActivity<RegisterInfoActivity>()
-            if (UserManager.registerFileBean?.supplement == 1) { //补充资料前移未走过
-                //补充资料开启 并且没走到want_steps
-                //判断是常规还是后移
-                //常规(前移)就先跳转补充资料再判断是否要弹VIP
-                //后移就先判断是否跳转VIP再弹补充资料
 
-                startActivity<GetMoreMatchActivity>(
-                    "moreMatch" to moreMatchBean)
+            if (UserManager.registerFileBean?.supplement == 1) { //补充资料前移未走过
+                startActivity<GetMoreMatchActivity>("moreMatch" to moreMatchBean)
+                return
                 return
             } else if (UserManager.registerFileBean?.supplement == 2) {//补充资料后移并且没有走过
-                if (!UserManager.isUserVip()) {//没有支付过门槛就跳门槛支付
-//                    startActivity<ForeverVipActivity>(
-//                        "people_amount" to (moreMatchBean?.people_amount ?: 0),
-//                        "city_name" to (moreMatchBean?.city_name ?: ""),
-//                        "gender_str" to (moreMatchBean?.gender_str ?: "")
-//                    )
+                if (moreMatchBean?.isvip != true) {//没有支付过门槛就跳门槛支付
                     OpenVipDialog(
                         this,
                         moreMatchBean,
@@ -654,18 +645,22 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                         )
                     )
                 }
-            } else if (UserManager.registerFileBean?.supplement == 3 && UserManager.registerFileBean?.threshold == true && !UserManager.isUserVip()) { //补充资料不开启
-//                startActivity<ForeverVipActivity>(
-//                    "people_amount" to (moreMatchBean?.people_amount ?: 0),
-//                    "city_name" to (moreMatchBean?.city_name ?: ""),
-//                    "gender_str" to (moreMatchBean?.gender_str ?: "")
-//                )
+            } else if (UserManager.registerFileBean?.supplement == 3 && UserManager.registerFileBean?.threshold == true && moreMatchBean?.isvip != true) { //补充资料不开启
                 OpenVipDialog(
                     this,
                     moreMatchBean,
                     OpenVipDialog.FROM_REGISTER_OPEN_VIP
                 ).show()
 
+            } else {
+                //跳到主页
+                //保存个人信息
+                SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
+                SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
+                SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
+                SPUtils.getInstance(Constants.SPNAME).put("gender", moreMatchBean?.gender ?: 0)
+                SPUtils.getInstance(Constants.SPNAME).put("people_amount", moreMatchBean?.people_amount ?: 0)
+                startActivity<MainActivity>()
             }
         } else {
             CommonFunction.toast(msg ?: "")

@@ -353,11 +353,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
     }
 
-     //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
-    private fun updateVerifyState(verifyState:Int) {
+    //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
+    private fun updateVerifyState(verifyState: Int) {
         if (verifyState == 3) {
             verifyNotice.text = "替换头像照片后自动进入重新审核"
-        } else if (verifyState==2) {
+        } else if (verifyState == 2) {
             verifyNotice.text = "已进入自动审核，请返回"
         }
     }
@@ -381,10 +381,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             override fun onAnimationEnd(animation: Animator?) {
                 if (intent.getBooleanExtra("showGuide", false)
-                    && !data?.answer_list.isNullOrEmpty()
+                    && !data?.answer_list.isNullOrEmpty() && !isFinishing
                 ) {
                     RemindUpdateUserInfoDialog(
-                        this@NewUserInfoSettingsActivity,
+                        ActivityUtils.getTopActivity(),
                         data?.answer_list ?: mutableListOf()
                     ).show()
                     intent.removeExtra("showGuide")
