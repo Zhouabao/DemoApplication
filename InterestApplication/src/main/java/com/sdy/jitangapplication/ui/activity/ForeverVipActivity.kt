@@ -74,7 +74,7 @@ class ForeverVipActivity : BaseActivity() {
                 .append("在${city_name}共有")
                 .setFontSize(16, true)
                 .create()
-            standardPeople.text = "${peopleAmount}个糖宝"
+            standardPeople.text = "${peopleAmount}个糖宝女孩"
             moreInfoText.isVisible = true
             standardPeople.dance()
 

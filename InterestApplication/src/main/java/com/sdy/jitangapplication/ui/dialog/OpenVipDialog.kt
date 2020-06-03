@@ -120,7 +120,7 @@ class OpenVipDialog(
                         .append("在${moreMatch?.city_name}共有")
                         .setFontSize(16, true)
                         .create()
-                    standardPeople.text = "${moreMatch?.people_amount}个糖宝"
+                    standardPeople.text = "${moreMatch?.people_amount}个糖宝女孩"
                     moreInfoText.isVisible = true
                     standardPeople.dance()
                 } else {
