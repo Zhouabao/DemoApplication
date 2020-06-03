@@ -8,7 +8,6 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.NearBean
-import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -82,7 +81,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-
+                    mView.onTodayRecommendResult(null)
                 }
 
             })

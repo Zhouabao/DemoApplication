@@ -350,8 +350,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         /**
          * 今日推荐获取结果
          */
-        indexRecommends = data
-        mPresenter.nearlyIndex(params, type)
+        if (data != null) {
+            indexRecommends = data
+            mPresenter.nearlyIndex(params, type)
+        } else {
+            statePeopleNearby.viewState = MultiStateView.VIEW_STATE_ERROR
+        }
     }
 
 
