@@ -18,6 +18,7 @@ data class UserInfoBean(
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
     val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证
+    val threshold_btn: Boolean = false,//门槛是否开启
     val free_show: Boolean = false,//  true（显示）  false(模糊)
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
     val platinum_vip_descr: MutableList<VipDescr>? = mutableListOf(),//钻石会员权益描述

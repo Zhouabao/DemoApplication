@@ -469,7 +469,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("MemberInfo/myInfoCandyV21${Constants.END_BASE_URL}")
+    @POST("MemberInfo/myInfoCandyV201${Constants.END_BASE_URL}")
     fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
 

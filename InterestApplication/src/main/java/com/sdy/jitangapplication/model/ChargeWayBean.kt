@@ -18,6 +18,7 @@ data class ChargeWayBeans(
     val isvip: Boolean = false,
     val vip_express: String = "",
     val isplatinum: Boolean = false,
+    val threshold_btn: Boolean = false,
     val platinum_vip_express: String = ""
 )
 

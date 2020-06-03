@@ -295,20 +295,48 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
     //是否认证
     private fun checkVip() {
-        //是否会员
-        if (userInfoBean?.userinfo?.isvip == true || userInfoBean?.userinfo?.isplatinum == true) {
-            EventBus.getDefault().post(UpdateSameCityVipEvent())
-            userVip.visibility = View.VISIBLE
-            isVipPowerBtn.isVisible = true
-            isVipPowerBtn.text = "会员权益"
+        //有门槛 普通会员  升级钻石会员(灰色)
+        //有门槛 钻石会员  会员权益(灰色)
+        //无门槛 会员 会员权益(灰色)
+        //无门槛 非会员 开通会员(灰色)
+        //有门槛 非会员 开通会员(黄色)
+        userVip.isVisible =
+            (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == true)
+                    || (userInfoBean?.threshold_btn == false && userInfoBean?.userinfo?.isplatinum == true)
+
+        if (userInfoBean?.threshold_btn == true) {
+            if (userInfoBean?.userinfo?.isvip == false) {
+                isVipPowerBtn.text = "开通会员"
+            } else if (userInfoBean?.userinfo?.isvip == true && userInfoBean?.userinfo?.isplatinum == false) {
+                EventBus.getDefault().post(UpdateSameCityVipEvent())
+                isVipPowerBtn.text = "升级钻石会员"
+                userVip.setImageResource(R.drawable.icon_vip)
+            } else {
+                EventBus.getDefault().post(UpdateSameCityVipEvent())
+                isVipPowerBtn.text = "会员权益"
+                userVip.setImageResource(R.drawable.icon_pt_vip)
+            }
         } else {
-            userVip.visibility = View.GONE
-            isVipPowerBtn.isVisible = true
-            isVipPowerBtn.text = "开通会员"
+            if (userInfoBean?.userinfo?.isplatinum == false) {
+                isVipPowerBtn.text = "开通会员"
+                userVip.setImageResource(R.drawable.icon_vip)
+            } else {
+                EventBus.getDefault().post(UpdateSameCityVipEvent())
+                isVipPowerBtn.text = "会员权益"
+                userVip.setImageResource(R.drawable.icon_pt_vip)
+
+            }
         }
 
-        if (userInfoBean?.userinfo?.isplatinum == true) {
-            userVip.setImageResource(R.drawable.icon_pt_vip)
+        if (userInfoBean?.userinfo?.isvip == false && userInfoBean?.threshold_btn == true) {
+            vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
+            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_vip_quanyi_bg)
+            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_orange_10dp)
+            for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
+                marqueeVipPower.addView(getMarqueeView(data, false))
+
+        } else {
+
             for (data in userInfoBean?.platinum_vip_descr ?: mutableListOf<VipDescr>())
                 marqueeVipPower.addView(
                     getMarqueeView(
@@ -319,13 +347,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             vipLevelLogo.setImageResource(R.drawable.icon_pt_vip_me)
             isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_pt_vip_quanyi_bg)
             vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_gray_10dp)
-        } else {
-            userVip.setImageResource(R.drawable.icon_vip)
-            vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
-            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_vip_quanyi_bg)
-            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_orange_10dp)
-            for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
-                marqueeVipPower.addView(getMarqueeView(data, false))
         }
 
     }
@@ -423,14 +444,19 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //会员权益
             R.id.isVipPowerBtn -> {
-                if (userInfoBean?.userinfo?.isvip != true) {
+                //有门槛 普通会员  升级钻石会员(灰色)
+                //有门槛 钻石会员  会员权益(灰色)
+                //无门槛 会员 会员权益(灰色)
+                //无门槛 非会员 开通会员(灰色)
+                //有门槛 非会员 开通会员(黄色)
+                if (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == false) {
                     ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
-                        "type" to if (userInfoBean?.userinfo?.isplatinum != true) {
-                            VipPowerBean.TYPE_PT_VIP
-                        } else {
+                        "type" to if (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == false) {
                             VipPowerBean.TYPE_NORMAL_VIP
+                        } else {
+                            VipPowerBean.TYPE_PT_VIP
                         }
                     )
                 }

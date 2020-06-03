@@ -354,7 +354,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
             sendMsgS(message, false);
             return true;
-        } else if (!nimBean.is_send_msg() && nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2) {
+        } else if (nimBean != null && !nimBean.is_send_msg() && nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2) {
             showConfirmSendDialog(message);
         } else if (canSendMsg()) {
             //男性,非会员 弹充值界面

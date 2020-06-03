@@ -88,6 +88,7 @@ class VipPowerActivity() :
 
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         if (data != null) {
+            adapter.threshold_btn = data?.threshold_btn?:false
             if (!data.list.isNullOrEmpty()) {
                 //判断是否有选中推荐的，没有的话就默认选中第一个价格。
                 var ispromote = false

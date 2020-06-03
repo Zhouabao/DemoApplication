@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_vip_power.view.*
  */
 class AllVipPowerAdapter :
     BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout.fragment_vip_power) {
+    var threshold_btn: Boolean = false //门槛开关
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
         val itemview = helper.itemView
 
@@ -113,7 +114,11 @@ class AllVipPowerAdapter :
         itemview.vipPowerRv.layoutManager = manager
         itemview.vipPowerRv.adapter = vipPowerAdapter
 
-
+        //有门槛 普通会员  升级钻石会员(灰色)
+        //有门槛 钻石会员  会员权益(灰色)
+        //无门槛 会员 会员权益(灰色)
+        //无门槛 非会员 开通会员(灰色)
+        //有门槛 非会员 开通会员(黄色)
         if (data.type == VipPowerBean.TYPE_NORMAL_VIP) {
             if (data!!.isvip)
                 itemview.vipOutTime.text = "${data!!.vip_express}到期"
@@ -133,15 +138,13 @@ class AllVipPowerAdapter :
                     data.list[0].is_promote = true
                 }
             }
-
             vipChargeAdapter.setNewData(data.list)
             vipPowerAdapter.setNewData(data.icon_list)
-
-            itemview.vipChargeRv.isVisible = false
-            itemview.zhiPayBtn.isVisible = false
-            itemview.wechatPayBtn.isVisible = false
-
-
+            if (threshold_btn && data!!.isvip) {
+                itemview.vipChargeRv.isVisible = false
+                itemview.zhiPayBtn.isVisible = false
+                itemview.wechatPayBtn.isVisible = false
+            }
         } else {
             if (data!!.isvip)
                 itemview.vipOutTime.text = "${data!!.vip_express}到期"
@@ -161,6 +164,16 @@ class AllVipPowerAdapter :
             itemview.vipChargeRv.isVisible = true
             itemview.zhiPayBtn.isVisible = true
             itemview.wechatPayBtn.isVisible = true
+            itemview.zhiPayPrice.text = if (data!!.isvip) {
+                "立即续费"
+            } else {
+                "支付宝支付"
+            }
+            itemview.wechatPayPrice.text = if (data!!.isvip) {
+                "立即续费"
+            } else {
+                "微信支付"
+            }
         }
 
         helper.addOnClickListener(R.id.zhiPayBtn)
