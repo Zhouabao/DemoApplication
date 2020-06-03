@@ -1,5 +1,8 @@
 package com.sdy.jitangapplication.ui.fragment
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -7,10 +10,14 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.PopupWindow
+import android.view.animation.LinearInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +35,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
-import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
@@ -45,7 +51,6 @@ import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
 import kotlinx.android.synthetic.main.item_marquee_power.view.*
-import kotlinx.android.synthetic.main.popupwindow_user_center_guide_verify.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -336,7 +341,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 marqueeVipPower.addView(getMarqueeView(data, false))
 
         } else {
-
             for (data in userInfoBean?.platinum_vip_descr ?: mutableListOf<VipDescr>())
                 marqueeVipPower.addView(
                     getMarqueeView(
@@ -365,37 +369,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
 
     private val guideContent by lazy { "完成认证获取更多曝光" }
-    private val guideVerifyWindow by lazy {
-        PopupWindow(activity!!).apply {
-            contentView = LayoutInflater.from(activity!!)
-                .inflate(R.layout.popupwindow_user_center_guide_verify, null, false)
-            width = ViewGroup.LayoutParams.WRAP_CONTENT
-            height = ViewGroup.LayoutParams.WRAP_CONTENT
-//            val params = contentView.iconGuideVerify.layoutParams as LinearLayout.LayoutParams
-//            params.width = SizeUtils.dp2px(245F)
-//            params.height = SizeUtils.dp2px(46F)
-//            contentView.iconGuideVerify.layoutParams = params
-            contentView.iconGuideVerify.text = guideContent
-            contentView.iconGuideVerify.clickWithTrigger {
-                UserManager.saveShowGuideVerify(true)
-                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
-                dismiss()
-            }
-            contentView.okBtn.clickWithTrigger {
-                UserManager.saveShowGuideVerify(true)
-                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
-                dismiss()
-            }
-            setBackgroundDrawable(null)
-            animationStyle = R.style.MyDialogLeftBottomAnimation
-            isFocusable = true
-            isOutsideTouchable = true
-        }
-    }
-
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
-//        guideVerifyWindow.showAsDropDown(userVerify, 0, 0, Gravity.NO_GRAVITY)
 
         if (userinfo != null) {
             userInfoBean = userinfo
@@ -506,6 +481,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             R.id.candyCl -> {
                 startActivity<MyCandyActivity>()
             }
+            //我的糖果
+            R.id.guideVerifyWindow -> {
+                guideVerifyWindow.isVisible = false
+                UserManager.saveShowGuideVerify(true)
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
+            }
         }
     }
 
@@ -537,36 +518,82 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         Log.d("onpause", "onpause=====")
     }
 
+    private var show = false
     override fun onGlobalLayout() {
-//        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {
         val width = userVerify.left
         if (width > 0) {
-            if (userInfoBean?.userinfo?.isfaced != 1) {
+            if (userInfoBean?.userinfo?.isfaced != 1 && !show) {
+                (guideVerifyWindow.layoutParams as ConstraintLayout.LayoutParams).leftMargin =
+                    width + SizeUtils.dp2px(14F) - SizeUtils.dp2px(162F / 12 * guideContent.length)
+                guideVerifyWindow.isVisible = true
+                showAnimation()
+                show = true
 
-                guideVerifyWindow.showAtLocation(
-                    userVerify,
-                    Gravity.TOP and Gravity.LEFT,
-                    width + SizeUtils.dp2px(14F) - SizeUtils.dp2px(162F / 12 * guideContent.length),
-                    SizeUtils.dp2px(-20F)
-                )
-                multiStateView.postDelayed({
-                    try {
-                        if (guideVerifyWindow.isShowing) {
-                            guideVerifyWindow.dismiss()
-                            UserManager.saveShowGuideVerify(true)
-                            userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        }
-                    } catch (e: Exception) {
-                    }
-                }, 3000L)
             } else {
                 userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         }
-        Log.d("onGlobalLayout", "width = $width")
-//        }
-
     }
 
+
+    fun showAnimation() {
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 300L
+        animatorSet.playTogether(
+            ObjectAnimator.ofFloat(guideVerifyWindow, "scaleX", 0.45f, 1F),
+            ObjectAnimator.ofFloat(guideVerifyWindow, "scaleY", 0.45f, 1F),
+            ObjectAnimator.ofFloat(guideVerifyWindow, "alpha", 0F, 1F)
+        )
+        animatorSet.start()
+
+        val trans = ObjectAnimator.ofFloat(
+            guideVerifyWindow,
+            "translationY",
+            SizeUtils.dp2px(-5F).toFloat(),
+            SizeUtils.dp2px(0F).toFloat(),
+            SizeUtils.dp2px(-5F).toFloat()
+        )
+        trans.duration = 750
+        trans.repeatCount = 4
+        trans.interpolator = LinearInterpolator()
+        trans.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                guideVerifyWindow.isVisible = false
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                trans.start()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        guideVerifyWindow.clearAnimation()
+    }
 
 }

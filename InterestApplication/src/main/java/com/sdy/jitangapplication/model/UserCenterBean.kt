@@ -36,7 +36,6 @@ data class SettingsBean(
 )
 
 
-
 //vip权益描述广告
 data class VipDescr(
     val rule: String? = "",
@@ -133,7 +132,6 @@ data class ScoreRule(
 )
 
 
-
 /**
  * 照片墙
  */
@@ -170,6 +168,9 @@ data class MoreMatchBean(
     var gender_str: String = "",
     var people_amount: Int = 0,
     var avatar: String = "",
+    var nickname: String = "",
+    var gender: Int = 0,
+    var birth: Int = 0,
     var force_vip: Boolean = false,
     var isvip: Boolean = false
 ) : Serializable

@@ -30,7 +30,7 @@ import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.PaywayBean
-import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -120,7 +120,7 @@ class OpenVipDialog(
                         .append("在${moreMatch?.city_name}共有")
                         .setFontSize(16, true)
                         .create()
-                    standardPeople.text = "${moreMatch?.people_amount}个糖宝"
+                    standardPeople.text = "${moreMatch?.people_amount}个糖宝女孩"
                     moreInfoText.isVisible = true
                     standardPeople.dance()
                 } else {
@@ -208,20 +208,16 @@ class OpenVipDialog(
                 }
             } else {
                 context1.startActivity<MainActivity>()
-                dismiss()
             }
         }
 
 
-
         //取消支付
         refuseBtn.onClick {
-            if (context1 is GetRelationshipActivity)
+            if (context1 !is MainActivity && context1 !is ChatActivity)
                 context1.startActivity<MainActivity>()
             else
                 dismiss()
-//            dismiss()
-
         }
     }
 
