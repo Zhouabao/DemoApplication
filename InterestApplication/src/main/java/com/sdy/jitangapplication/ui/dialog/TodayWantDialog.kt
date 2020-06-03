@@ -120,9 +120,9 @@ class TodayWantDialog(
         val params = hashMapOf<String, Any>()
         if (reset) {
             params["id"] = 0
-        } else {
+        } else if (adapter.data.size > checkPosi) {
             params["id"] = adapter.data[checkPosi].id
-        }
+        } else return
         RetrofitFactory.instance.create(Api::class.java)
             .addIntention(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>() {
