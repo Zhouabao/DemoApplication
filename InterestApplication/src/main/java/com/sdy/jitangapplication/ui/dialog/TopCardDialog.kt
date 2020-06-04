@@ -30,6 +30,7 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         tobePtVipBtn.clickWithTrigger {
             context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
         }
+        dismiss()
     }
 
     private fun initWindow() {

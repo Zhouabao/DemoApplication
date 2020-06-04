@@ -141,10 +141,12 @@ class OpenVipDialog(
                 if (UserManager?.registerFileBean?.threshold == true) {
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
+                    payExplain.isVisible = true
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false
                     openVipBtn.text = "立即加入"
+                    payExplain.isVisible = false
                 }
             }
             FROM_P2P_CHAT -> {

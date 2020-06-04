@@ -180,6 +180,7 @@ data class NearBean(
     var today_find: CheckBean? = null,
     var iscompleteguide: Boolean = false,
     var isvip: Boolean = false,    //是否会员 true是 false不是
+    var isplatinum: Boolean = false,    //是否会员 true是 false不是
     var isfaced: Int = 0,   //0未认证/认证不成功     1认证通过     2认证中
     var is_full: Boolean = false,//兴趣是否完整
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管

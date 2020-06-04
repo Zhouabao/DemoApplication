@@ -32,5 +32,9 @@ class UpdateShowTopAlert()
 class UpdateTodayWantEvent(val todayWantBean: CheckBean?)
 
 
+//置顶卡片
+class TopCardEvent(val showTop: Boolean)
+
+
 
 

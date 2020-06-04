@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
@@ -17,6 +18,7 @@ import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.ShowNearCountEvent
+import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
@@ -24,6 +26,7 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.ui.dialog.TopCardDialog
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -174,6 +177,20 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         } else {
             todayWantContent.text = "选择意向"
             todayWantIcon.setImageResource(R.drawable.icon_today_want_heart)
+        }
+    }
+
+
+    /**
+     * @param event showTop用户是否是钻石会员
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: TopCardEvent) {
+//        在用户为黄金会员（有门槛）或普通用户时（无门槛）
+        if ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false) {
+            topCardBtn.isVisible = !event.showTop
+        } else {
+            topCardBtn.isVisible = false
         }
     }
 }

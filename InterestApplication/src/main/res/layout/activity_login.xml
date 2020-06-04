@@ -18,25 +18,14 @@
 
     <ImageView
         android:id="@+id/v1"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="176dp"
+        app:layout_constraintRight_toRightOf="parent"
         android:src="@drawable/icon_logo_login"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:text="积糖"
-        android:textColor="#ffffffff"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/v1"
-        app:layout_constraintLeft_toRightOf="@id/v1"
-        app:layout_constraintTop_toTopOf="@id/v1" />
 
 
     <TextView
@@ -44,10 +33,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="遇见你就是最好的礼物"
-        android:textColor="@color/colorWhite"
+        android:text="轻奢礼物社交"
+        android:textColor="#ffffffff"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/v1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v1" />
 
     <ImageView

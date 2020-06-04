@@ -301,6 +301,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             ranking_level = nearBean!!.ranking_level
             //保存 VIP信息
             UserManager.saveUserVip(nearBean.isvip)
+            EventBus.getDefault().post(nearBean.isplatinum)
             onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //保存认证信息
             UserManager.saveUserVerify(nearBean.isfaced)

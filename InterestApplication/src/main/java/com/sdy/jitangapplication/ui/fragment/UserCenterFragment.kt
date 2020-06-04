@@ -270,8 +270,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
 
-        EventBus.getDefault()
-            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
     }
 
 
@@ -591,9 +591,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         })
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
+        super.onDestroyView()
         guideVerifyWindow.clearAnimation()
     }
-
 }
