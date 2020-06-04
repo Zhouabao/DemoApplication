@@ -562,7 +562,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                guideVerifyWindow.isVisible = false
+                if (guideVerifyWindow != null)
+                    guideVerifyWindow.isVisible = false
             }
 
             override fun onAnimationCancel(animation: Animator?) {
