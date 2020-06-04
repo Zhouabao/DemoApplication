@@ -37,10 +37,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshTodayFateEvent
-import com.sdy.jitangapplication.model.GiftStateBean
-import com.sdy.jitangapplication.model.NearBean
-import com.sdy.jitangapplication.model.NearPersonBean
-import com.sdy.jitangapplication.model.TodayFateBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.ui.adapter.TodayFateAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
@@ -305,7 +302,7 @@ class TodayFateDialog(
         params["batch_accid"] = Gson().toJson(ids)
         RetrofitFactory.instance.create(Api::class.java)
             .batchGreet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GiftStateBean?>>() {
+            .excute(object : BaseSubscriber<BaseResp<BatchSendGiftBean?>>() {
                 override fun onStart() {
                     super.onStart()
                     loadingDialog.show()
@@ -316,44 +313,42 @@ class TodayFateDialog(
                     loadingDialog.dismiss()
                 }
 
-                override fun onNext(t: BaseResp<GiftStateBean?>) {
+                override fun onNext(t: BaseResp<BatchSendGiftBean?>) {
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
                             sendGiftBtn.isEnabled = false
-                            for (data in ids.withIndex()) {
-                                if (!data.value.isNullOrEmpty()) {
-                                    //发送礼物消息
-                                    val config1 = CustomMessageConfig()
-                                    config1.enableUnreadCount = true
-                                    config1.enablePush = false
-                                    val giftAtt = SendGiftAttachment(
-                                        0,
-                                        SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL
-                                    )
-                                    val giftMsg = MessageBuilder.createCustomMessage(
-                                        data.value,
-                                        SessionTypeEnum.P2P, "",
-                                        giftAtt,
-                                        config1
-                                    )
-                                    NIMClient.getService(MsgService::class.java)
-                                        .sendMessage(giftMsg, false)
-                                        .setCallback(object : RequestCallback<Void?> {
-                                            override fun onSuccess(param: Void?) {
-                                                if (data.index == ids.size - 1) {
-                                                    iv1.playAnimation()
-                                                }
+                            for (data in (t.data?.order_ids ?: mutableListOf()).withIndex()) {
+                                //发送礼物消息
+                                val config1 = CustomMessageConfig()
+                                config1.enableUnreadCount = true
+                                config1.enablePush = false
+                                val giftAtt = SendGiftAttachment(
+                                    data.value.order_id,
+                                    SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL
+                                )
+                                val giftMsg = MessageBuilder.createCustomMessage(
+                                    data.value.accid,
+                                    SessionTypeEnum.P2P, "",
+                                    giftAtt,
+                                    config1
+                                )
+                                NIMClient.getService(MsgService::class.java)
+                                    .sendMessage(giftMsg, false)
+                                    .setCallback(object : RequestCallback<Void?> {
+                                        override fun onSuccess(param: Void?) {
+                                            if (data.index == (t.data?.order_ids ?: mutableListOf()).size - 1) {
+                                                iv1.playAnimation()
                                             }
+                                        }
 
-                                            override fun onFailed(code: Int) {
-                                            }
+                                        override fun onFailed(code: Int) {
+                                        }
 
-                                            override fun onException(exception: Throwable) {
+                                        override fun onException(exception: Throwable) {
 
-                                            }
-                                        })
-                                }
+                                        }
+                                    })
                             }
                         }
                         419 -> {

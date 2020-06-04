@@ -187,7 +187,6 @@ data class BillBean(
 )
 
 
-
 /**
  * 拉起提现bean
  */
@@ -250,6 +249,14 @@ data class SomeOneGetGiftBean(
     var list: MutableList<GiftBean> = mutableListOf(),
     var nickname: String = ""
 )
+
+data class BatchSendGiftBean(
+    var amount: Int = 0,
+    var order_ids: MutableList<OrderIdsBean> = mutableListOf()
+)
+
+data class OrderIdsBean(val order_id: Int, val accid: String)
+
 
 data class GiftStateBean(
     var amount: Int = 0,
