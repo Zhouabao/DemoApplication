@@ -40,7 +40,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Home/batchSendCandy${Constants.END_BASE_URL}")
-    fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<GiftStateBean?>>
+    fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<BatchSendGiftBean?>>
 
 
     /**
