@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.event.UpdateAccountEvent
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
+import com.sdy.jitangapplication.ui.activity.VerifyCodeActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI.COMMAND_SENDAUTH
@@ -93,9 +94,9 @@ class WXEntryActivity : WXCallbackActivity() {
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
-        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code)
+        val params = hashMapOf<String, Any>("type" to VerifyCodeActivity.TYPE_LOGIN_WECHAT, "wxcode" to code)
         RetrofitFactory.instance.create(Api::class.java)
-            .loginOWithWechat(UserManager.getSignParams(params))
+            .loginOrAlloc(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
                 override fun onStart() {
                     loading.show()
@@ -103,7 +104,7 @@ class WXEntryActivity : WXCallbackActivity() {
 
                 override fun onNext(t: com.kotlin.base.data.protocol.BaseResp<LoginBean?>) {
                     if (t.code == 202) { //首次微信登录
-                        startActivity<PhoneActivity>("wxcode" to code, "type" to "3")
+                        startActivity<PhoneActivity>("wxcode" to code, "type" to "${VerifyCodeActivity.TYPE_LOGIN_WECHAT}")
                         finish()
                     } else if (t.code == 200) {//已经微信登录过
                         data = t.data

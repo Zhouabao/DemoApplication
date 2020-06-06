@@ -29,6 +29,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/touristCount"
         android:layout_width="256dp"
         android:layout_height="44dp"
         android:layout_gravity="center"

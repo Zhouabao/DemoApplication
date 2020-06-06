@@ -29,6 +29,7 @@ import com.sdy.jitangapplication.model.RecommendSquareBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -143,24 +144,30 @@ class RecommendSquareAdapter :
         )
         //点赞
         helper.itemView.clickZanViewImg.onClick {
-            if (item.accid != UserManager.getAccid()) {
-                clickZan(
-                    helper.itemView.clickZanViewImg,
-                    helper.itemView.clickZanViewAni,
-                    helper.itemView.squareLike,
-                    helper.layoutPosition - headerLayoutCount
-                )
-            }
+            if (UserManager.touristMode) {
+                TouristDialog(mContext).show()
+            } else
+                if (item.accid != UserManager.getAccid()) {
+                    clickZan(
+                        helper.itemView.clickZanViewImg,
+                        helper.itemView.clickZanViewAni,
+                        helper.itemView.squareLike,
+                        helper.layoutPosition - headerLayoutCount
+                    )
+                }
         }
         helper.itemView.clickZanViewAni.onClick {
-            if (item.accid != UserManager.getAccid()) {
-                clickZan(
-                    helper.itemView.clickZanViewImg,
-                    helper.itemView.clickZanViewAni,
-                    helper.itemView.squareLike,
-                    helper.layoutPosition - headerLayoutCount
-                )
-            }
+            if (UserManager.touristMode) {
+                TouristDialog(mContext).show()
+            } else
+                if (item.accid != UserManager.getAccid()) {
+                    clickZan(
+                        helper.itemView.clickZanViewImg,
+                        helper.itemView.clickZanViewAni,
+                        helper.itemView.squareLike,
+                        helper.layoutPosition - headerLayoutCount
+                    )
+                }
         }
 //        helper.itemView.squareLike.onClick {
 //            if (item.accid != UserManager.getAccid()) {
@@ -175,35 +182,42 @@ class RecommendSquareAdapter :
 
         //点击跳转
         helper.itemView.clickWithTrigger {
-            if (item.type == 2)  //视频
-                SquarePlayDetailActivity.startActivity(
-                    mContext as Activity,
-                    id = item.id,
-                    fromRecommend = true
-                )
-            else {//文本.语音.图片
-                if (item.type == 1) {
-                    if (item.accid != UserManager.getAccid() && !item.isliked)
-                        clickZan(
-                            helper.itemView.clickZanViewImg,
-                            helper.itemView.clickZanViewAni,
-                            helper.itemView.squareLike,
-                            helper.layoutPosition - headerLayoutCount
-                        )
-                }
-                SquareCommentDetailActivity.start(
-                    mContext,
-                    squareId = item.id,
-                    position = helper.layoutPosition - headerLayoutCount
-                )
+            if (UserManager.touristMode) {
+                TouristDialog(mContext).show()
+            } else {
+                if (item.type == 2)  //视频
+                    SquarePlayDetailActivity.startActivity(
+                        mContext as Activity,
+                        id = item.id,
+                        fromRecommend = true
+                    )
+                else {//文本.语音.图片
+                    if (item.type == 1) {
+                        if (item.accid != UserManager.getAccid() && !item.isliked)
+                            clickZan(
+                                helper.itemView.clickZanViewImg,
+                                helper.itemView.clickZanViewAni,
+                                helper.itemView.squareLike,
+                                helper.layoutPosition - headerLayoutCount
+                            )
+                    }
+                    SquareCommentDetailActivity.start(
+                        mContext,
+                        squareId = item.id,
+                        position = helper.layoutPosition - headerLayoutCount
+                    )
 
+                }
             }
 
 
         }
 
         helper.itemView.squareAvator.clickWithTrigger {
-            MatchDetailActivity.start(mContext, item.accid)
+            if (UserManager.touristMode) {
+                TouristDialog(mContext).show()
+            } else
+                MatchDetailActivity.start(mContext, item.accid)
         }
     }
 

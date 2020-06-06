@@ -29,7 +29,7 @@ import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.presenter.VipPowerPresenter
 import com.sdy.jitangapplication.presenter.view.VipPowerView
 import com.sdy.jitangapplication.ui.adapter.AllVipPowerAdapter
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog

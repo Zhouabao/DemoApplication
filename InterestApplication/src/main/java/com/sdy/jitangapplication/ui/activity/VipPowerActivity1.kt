@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import java.util.*
 

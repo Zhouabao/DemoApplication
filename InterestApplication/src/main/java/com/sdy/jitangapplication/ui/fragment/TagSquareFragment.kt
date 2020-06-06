@@ -22,6 +22,8 @@ import com.sdy.jitangapplication.presenter.TagSquarePresenter
 import com.sdy.jitangapplication.presenter.view.TagSquareView
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.ui.adapter.TagSquareAdapter
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_tag_square.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_tag_top.view.*
@@ -33,7 +35,8 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 兴趣广场
  */
-class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSquareView, OnRefreshListener {
+class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSquareView,
+    OnRefreshListener {
 
 
     override fun loadData() {
@@ -43,7 +46,8 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
     private val filterPopupWindow by lazy {
         PopupWindow(activity!!).apply {
             contentView =
-                LayoutInflater.from(activity!!).inflate(R.layout.popupwindow_square_filter_tag_top, null, false)
+                LayoutInflater.from(activity!!)
+                    .inflate(R.layout.popupwindow_square_filter_tag_top, null, false)
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
             setBackgroundDrawable(null)
@@ -82,7 +86,11 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
     val layoutManager by lazy { LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false) }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_tag_square, container, false)
     }
 
@@ -109,37 +117,45 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
         adapter.bindToRecyclerView(rvTagSquare)
 
         adapter.setOnItemClickListener { _, view, position ->
-            if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
-                startActivity<TagDetailCategoryActivity>(
-                    "id" to adapter.data[position].id,
-                    "type" to TagDetailCategoryActivity.TYPE_TAG
-                )
+            if (UserManager.touristMode) {
+                TouristDialog(activity!!).show()
+            } else
+                if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
+                    startActivity<TagDetailCategoryActivity>(
+                        "id" to adapter.data[position].id,
+                        "type" to TagDetailCategoryActivity.TYPE_TAG
+                    )
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.btnTagMore -> {
-                    topPosition = position
-                    filterPopupWindow.showAsDropDown(view, 0, SizeUtils.dp2px(-15F))
-                    filterPopupWindow.contentView.tagTop.text = if (adapter.data[position].place_type == 1) {
-                        "取消置顶"
-                    } else {
-                        "置于顶部"
+            if (UserManager.touristMode) {
+                TouristDialog(activity!!).show()
+            } else
+                when (view.id) {
+                    R.id.btnTagMore -> {
+                        topPosition = position
+                        filterPopupWindow.showAsDropDown(view, 0, SizeUtils.dp2px(-15F))
+                        filterPopupWindow.contentView.tagTop.text =
+                            if (adapter.data[position].place_type == 1) {
+                                "取消置顶"
+                            } else {
+                                "置于顶部"
+                            }
+                        filterPopupWindow.contentView.tagBottom.text =
+                            if (adapter.data[position].place_type == 2) {
+                                "取消置底"
+                            } else {
+                                "置于底部"
+                            }
                     }
-                    filterPopupWindow.contentView.tagBottom.text = if (adapter.data[position].place_type == 2) {
-                        "取消置底"
-                    } else {
-                        "置于底部"
+                    R.id.rvTagSquareImg -> {
+                        if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
+                            startActivity<TagDetailCategoryActivity>(
+                                "id" to adapter.data[position].id,
+                                "type" to TagDetailCategoryActivity.TYPE_TAG
+                            )
                     }
                 }
-                R.id.rvTagSquareImg -> {
-                    if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
-                        startActivity<TagDetailCategoryActivity>(
-                            "id" to adapter.data[position].id,
-                            "type" to TagDetailCategoryActivity.TYPE_TAG
-                        )
-                }
-            }
         }
 
         mPresenter.getSquareList()

@@ -46,7 +46,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 推荐列表
  */
-class PeopleRecommendFragment(var type: Int = PeopleNearbyFragment.TYPE_RECOMMEND)  :
+class PeopleRecommendFragment(var type: Int = PeopleNearbyFragment.TYPE_RECOMMEND) :
     BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), PeopleNearbyView,
     OnRefreshListener, OnLoadMoreListener {
     companion object {
@@ -130,7 +130,10 @@ class PeopleRecommendFragment(var type: Int = PeopleNearbyFragment.TYPE_RECOMMEN
 
         updateFilterParams()
 
-        mPresenter.todayRecommend()
+        if (!UserManager.touristMode)
+            mPresenter.todayRecommend()
+        else
+            mPresenter.nearlyIndex(params,type)
 
     }
 

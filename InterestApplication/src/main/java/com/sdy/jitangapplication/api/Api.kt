@@ -84,18 +84,11 @@ interface Api {
 
     /**
      * 检查验证码是否一致,即登录
+     * type 是	登陆方式 1,短信 2,QQ 3,微信 4闪验
      */
     @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
-    fun loginOrAlloc(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean>>
-
-
-    /**
-     * 检查验证码是否一致,即登录
-     */
-    @FormUrlEncoded
-    @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
-    fun loginOWithWechat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean?>>
+    fun loginOrAlloc(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean?>>
 
 
     /**
@@ -143,6 +136,13 @@ interface Api {
      *
      */
     @FormUrlEncoded
+    @POST("Threshold/squareTagList${Constants.END_BASE_URL}")
+    fun thresholdSquareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
+    /**
+     * 广场获取兴趣
+     *
+     */
+    @FormUrlEncoded
     @POST("Square/squareTagList${Constants.END_BASE_URL}")
     fun squareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
 
@@ -163,12 +163,35 @@ interface Api {
     fun squareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
     /**
+     * 推荐广场
+     * Threshold/squareEliteList/v1.json   推荐
+     *
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareEliteList${Constants.END_BASE_URL}")
+    fun thresholdSquareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
+
+    /**
      * 兴趣广场详情列表
      */
     @FormUrlEncoded
     @POST("Square/squareTagInfo${Constants.END_BASE_URL}")
     fun squareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
 
+    /**
+     * 兴趣广场详情列表
+     * Threshold/squareNearly
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareTagInfo${Constants.END_BASE_URL}")
+    fun thresholdSquareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
+
+    /**
+     * 游客获取最新列表
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareList${Constants.END_BASE_URL}")
+    fun thresholdSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
     /**
      * 获取最新广场列表
      */
@@ -329,6 +352,14 @@ interface Api {
     @FormUrlEncoded
     @POST("Home/recommendIndex${Constants.END_BASE_URL}")
     fun recommendIndex(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
+
+
+    /**
+     * 游客模式首页数据
+     */
+    @FormUrlEncoded
+    @POST("Threshold/index${Constants.END_BASE_URL}")
+    fun thresholdIndex(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
 
 
     /**
@@ -565,7 +596,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/getSignTemplate${Constants.END_BASE_URL}")
-    fun getSignTemplate(@Field("page") page: Int,@Field("gender") gender: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+    fun getSignTemplate(@Field("page") page: Int, @Field("gender") gender: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /****************************消息************************************/
 

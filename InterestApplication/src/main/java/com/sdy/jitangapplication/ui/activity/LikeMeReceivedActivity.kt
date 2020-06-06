@@ -37,7 +37,7 @@ import com.sdy.jitangapplication.presenter.LikeMeReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.LikeMeReceivedView
 import com.sdy.jitangapplication.ui.adapter.LikeMeUserAdapter
 import com.sdy.jitangapplication.ui.dialog.GuideLikeDialog
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_like_me_received.*

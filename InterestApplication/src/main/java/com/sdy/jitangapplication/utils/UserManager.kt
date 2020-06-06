@@ -31,6 +31,8 @@ object UserManager {
     var approveBean: ApproveBean? = null
     var showIndexRecommend: Boolean = false
 
+    var touristMode: Boolean = false//是否是处于游客模式
+
     //每次进入APP弹完善个人资料弹窗
     var showCompleteUserCenterDialog: Boolean = false
 
@@ -169,6 +171,7 @@ object UserManager {
      * 跳至登录界面
      */
     fun startToLogin(activity: Activity) {
+        touristMode = false
         AppManager.instance.finishAllActivity()
         activity.startActivity<LoginActivity>()
         clearLoginData()
@@ -566,6 +569,12 @@ object UserManager {
 
 
     fun startToPersonalInfoActivity(context: Context, nothing: LoginInfo?, data: LoginBean?) {
+        if (LoginActivity.weakrefrece != null && LoginActivity.weakrefrece!!.get() != null) {
+            (LoginActivity.weakrefrece!!.get() as LoginActivity).finish()
+        }
+
+        touristMode = false//登录成功清空游客模式
+
         SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
         SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
 

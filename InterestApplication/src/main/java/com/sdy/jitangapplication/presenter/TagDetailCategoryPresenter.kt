@@ -9,7 +9,6 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.TagSquareListBean
 import com.sdy.jitangapplication.presenter.view.TagDetailCategoryView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -22,29 +21,58 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
      * 获取推荐广场列表
      */
     fun squareTagInfo(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .squareTagInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<TagSquareListBean?>>(mView) {
-                override fun onStart() {
+        if (UserManager.touristMode) {
+            RetrofitFactory.instance.create(Api::class.java)
+                .thresholdSquareTagInfo(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<TagSquareListBean?>>(mView) {
+                    override fun onStart() {
 
-                }
+                    }
 
-                override fun onNext(t: BaseResp<TagSquareListBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200)
-                        mView.onGetSquareRecommendResult(t.data, true)
-                    else
-                        mView.onGetSquareRecommendResult(t.data, false)
+                    override fun onNext(t: BaseResp<TagSquareListBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            mView.onGetSquareRecommendResult(t.data, true)
+                        } else {
+                            mView.onGetSquareRecommendResult(t.data, false)
+                        }
 
-                }
+                    }
 
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onGetSquareRecommendResult(null, false)
-                }
-            })
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onGetSquareRecommendResult(null, false)
+                        }
+                    }
+                })
+        } else
+            RetrofitFactory.instance.create(Api::class.java)
+                .squareTagInfo(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<TagSquareListBean?>>(mView) {
+                    override fun onStart() {
+
+                    }
+
+                    override fun onNext(t: BaseResp<TagSquareListBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            mView.onGetSquareRecommendResult(t.data, true)
+                        } else {
+                            mView.onGetSquareRecommendResult(t.data, false)
+                        }
+
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onGetSquareRecommendResult(null, false)
+                        }
+                    }
+                })
     }
 
 

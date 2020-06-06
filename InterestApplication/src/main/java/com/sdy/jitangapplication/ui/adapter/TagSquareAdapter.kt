@@ -9,6 +9,8 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.SquareTagBean
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_layout_tag_square.view.*
 import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
@@ -30,11 +32,14 @@ class TagSquareAdapter :
             helper.itemView.onTouchEvent(event)
         }
         adapter.setOnItemClickListener { _, view, position ->
-            if (!isActivityExistsInStack(TagDetailCategoryActivity::class.java))
-                mContext.startActivity<TagDetailCategoryActivity>(
-                    "id" to item.id,
-                    "type" to TagDetailCategoryActivity.TYPE_TAG
-                )
+            if (UserManager.touristMode) {
+                TouristDialog(mContext).show()
+            } else
+                if (!isActivityExistsInStack(TagDetailCategoryActivity::class.java))
+                    mContext.startActivity<TagDetailCategoryActivity>(
+                        "id" to item.id,
+                        "type" to TagDetailCategoryActivity.TYPE_TAG
+                    )
 
         }
 

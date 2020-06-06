@@ -38,8 +38,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         )
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<LoginBean>>(mView) {
-                override fun onNext(t: BaseResp<LoginBean>) {
+            .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
+                override fun onNext(t: BaseResp<LoginBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)

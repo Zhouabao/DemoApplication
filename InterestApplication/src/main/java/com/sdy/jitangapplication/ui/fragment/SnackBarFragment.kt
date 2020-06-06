@@ -20,7 +20,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_snack_bar.*
 import org.jetbrains.anko.support.v4.startActivity
 

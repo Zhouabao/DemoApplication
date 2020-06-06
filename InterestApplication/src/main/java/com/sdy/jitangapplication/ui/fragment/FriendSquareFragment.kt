@@ -31,6 +31,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
@@ -162,14 +163,18 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         })
 
         adapter.setOnItemClickListener { _, view, position ->
-            view.isEnabled = false
-            resetAudio()
-            SquareCommentDetailActivity.start(
-                activity!!,
-                adapter.data[position],
-                position = position
-            )
-            view.postDelayed({ view.isEnabled = true }, 1000L)
+            if (UserManager.touristMode) {
+                TouristDialog(activity!!).show()
+            } else {
+                view.isEnabled = false
+                resetAudio()
+                SquareCommentDetailActivity.start(
+                    activity!!,
+                    adapter.data[position],
+                    position = position
+                )
+                view.postDelayed({ view.isEnabled = true }, 1000L)
+            }
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->

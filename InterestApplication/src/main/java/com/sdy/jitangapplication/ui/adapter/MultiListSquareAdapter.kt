@@ -34,10 +34,7 @@ import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.activity.*
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.ui.dialog.TranspondDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -177,19 +174,28 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                SquareCommentDetailActivity.start(
-                    mContext!!,
-                    data[holder.layoutPosition - headerLayoutCount],
-                    position = holder.layoutPosition - headerLayoutCount
-                )
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    SquareCommentDetailActivity.start(
+                        mContext!!,
+                        data[holder.layoutPosition - headerLayoutCount],
+                        position = holder.layoutPosition - headerLayoutCount
+                    )
             }
             //更多弹窗
             holder.itemView.squareMoreBtn1.onClick {
-                showMoreDialog(holder.layoutPosition - headerLayoutCount)
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    showMoreDialog(holder.layoutPosition - headerLayoutCount)
             }
             //点击转发
             holder.itemView.squareZhuanfaBtn1.clickWithTrigger {
-                showTranspondDialog(item)
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    showTranspondDialog(item)
             }
 
             //进入聊天界面
@@ -197,7 +203,10 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                CommonFunction.checkSendGift(mContext, item.accid)
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    CommonFunction.checkSendGift(mContext, item.accid)
 
             }
 
@@ -211,20 +220,26 @@ class MultiListSquareAdapter(
 //                )
 //            }
             holder.itemView.squareDianzanAni.onClick {
-                clickZan(
-                    holder.itemView.squareDianzanAni,
-                    holder.itemView.squareDianzanImg,
-                    holder.itemView.squareDianzanBtn1,
-                    holder.layoutPosition - headerLayoutCount
-                )
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    clickZan(
+                        holder.itemView.squareDianzanAni,
+                        holder.itemView.squareDianzanImg,
+                        holder.itemView.squareDianzanBtn1,
+                        holder.layoutPosition - headerLayoutCount
+                    )
             }
             holder.itemView.squareDianzanImg.onClick {
-                clickZan(
-                    holder.itemView.squareDianzanAni,
-                    holder.itemView.squareDianzanImg,
-                    holder.itemView.squareDianzanBtn1,
-                    holder.layoutPosition - headerLayoutCount
-                )
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    clickZan(
+                        holder.itemView.squareDianzanAni,
+                        holder.itemView.squareDianzanImg,
+                        holder.itemView.squareDianzanBtn1,
+                        holder.layoutPosition - headerLayoutCount
+                    )
             }
 
 
@@ -238,23 +253,32 @@ class MultiListSquareAdapter(
             adapter.addData(item.title_list ?: mutableListOf())
             holder.itemView.squareTitleRv.adapter = adapter
             adapter.setOnItemClickListener { _, view, position ->
-                mContext.startActivity<TagDetailCategoryActivity>(
-                    "id" to adapter.data[position].id,
-                    "type" to TagDetailCategoryActivity.TYPE_TOPIC
-                )
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    mContext.startActivity<TagDetailCategoryActivity>(
+                        "id" to adapter.data[position].id,
+                        "type" to TagDetailCategoryActivity.TYPE_TOPIC
+                    )
             }
 
             holder.itemView.squareTagName.onClick {
-                mContext.startActivity<TagDetailCategoryActivity>(
-                    "id" to item.tag_id,
-                    "type" to TagDetailCategoryActivity.TYPE_TAG
-                )
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    mContext.startActivity<TagDetailCategoryActivity>(
+                        "id" to item.tag_id,
+                        "type" to TagDetailCategoryActivity.TYPE_TAG
+                    )
             }
 
             holder.itemView.squareUserIv1.onClick {
-                if (!(UserManager.getAccid() == item.accid || !chat)) {
-                    MatchDetailActivity.start(mContext, item.accid)
-                }
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else
+                    if (!(UserManager.getAccid() == item.accid || !chat)) {
+                        MatchDetailActivity.start(mContext, item.accid)
+                    }
             }
 
             when (holder.itemViewType) {
@@ -273,20 +297,24 @@ class MultiListSquareAdapter(
                         //滑动动画
                         holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
                         adapter.setOnItemClickListener { adapter, view, position ->
-                            if (data[holder.layoutPosition - headerLayoutCount].isliked != 1)
-                                clickZan(
-                                    holder.itemView.squareDianzanAni,
-                                    holder.itemView.squareDianzanImg,
-                                    holder.itemView.squareDianzanBtn1,
-                                    holder.layoutPosition - headerLayoutCount
+                            if (UserManager.touristMode) {
+                                TouristDialog(mContext).show()
+                            } else {
+                                if (data[holder.layoutPosition - headerLayoutCount].isliked != 1)
+                                    clickZan(
+                                        holder.itemView.squareDianzanAni,
+                                        holder.itemView.squareDianzanImg,
+                                        holder.itemView.squareDianzanBtn1,
+                                        holder.layoutPosition - headerLayoutCount
+                                    )
+                                if (resetAudioListener != null) {
+                                    resetAudioListener!!.resetAudioState()
+                                }
+                                mContext.startActivity<SquarePlayListDetailActivity>(
+                                    "item" to data[holder.layoutPosition - headerLayoutCount],
+                                    "picPosition" to position
                                 )
-                            if (resetAudioListener != null) {
-                                resetAudioListener!!.resetAudioState()
                             }
-                            mContext.startActivity<SquarePlayListDetailActivity>(
-                                "item" to data[holder.layoutPosition - headerLayoutCount],
-                                "picPosition" to position
-                            )
                         }
                     } else {
                         holder.itemView.squareUserPics1.visibility = View.GONE
@@ -308,17 +336,22 @@ class MultiListSquareAdapter(
                     }
                     holder.itemView.squareUserVideo.thumbImageView = imageview
                     holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
-                        if (holder.itemView.squareUserVideo.isInPlayingState) {
-                            SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
-                            holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
-                            SquarePlayDetailActivity.startActivity(
-                                mContext as Activity,
-                                holder.itemView.squareUserVideo,
-                                item,
-                                holder.layoutPosition,
-                                type
-                            )
-                        }
+                        if (UserManager.touristMode) {
+                            TouristDialog(mContext).show()
+                        } else
+                            if (holder.itemView.squareUserVideo.isInPlayingState) {
+                                SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
+                                holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(
+                                    holder.itemView.squareUserVideo
+                                )
+                                SquarePlayDetailActivity.startActivity(
+                                    mContext as Activity,
+                                    holder.itemView.squareUserVideo,
+                                    item,
+                                    holder.layoutPosition,
+                                    type
+                                )
+                            }
                     }
                     holder.itemView.squareUserVideo.playTag = TAG
                     holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
@@ -412,10 +445,13 @@ class MultiListSquareAdapter(
                         if (resetAudioListener != null) {
                             resetAudioListener!!.resetAudioState()
                         }
-                        mContext.startActivity<SquarePlayListDetailActivity>(
-                            "item" to item,
-                            "from" to "squareFragment"
-                        )
+                        if (UserManager.touristMode) {
+                            TouristDialog(mContext).show()
+                        } else
+                            mContext.startActivity<SquarePlayListDetailActivity>(
+                                "item" to item,
+                                "from" to "squareFragment"
+                            )
                     }
                 }
             }

@@ -26,45 +26,63 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
      * 获取首页附近的人
      */
     fun nearlyIndex(params: HashMap<String, Any>, type: Int) {
+        //游客模式则提醒登录
+        if (UserManager.touristMode) {
+            RetrofitFactory.instance.create(Api::class.java)
+                .thresholdIndex(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                    override fun onNext(t: BaseResp<NearBean?>) {
+                        super.onNext(t)
+                        mView.nearlyIndexResult(t.code == 200, t.data)
+                    }
 
-        when (type) {
-            PeopleNearbyFragment.TYPE_RECOMMEND -> {
-                RetrofitFactory.instance.create(Api::class.java)
-                    .recommendIndex(UserManager.getSignParams(params))
-                    .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
-                        override fun onNext(t: BaseResp<NearBean?>) {
-                            super.onNext(t)
-                            mView.nearlyIndexResult(t.code == 200, t.data)
-                        }
+                    override fun onError(e: Throwable?) {
+                        super.onError(e)
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else
+                            mView.nearlyIndexResult(false, null)
+                    }
+                })
+        } else
+            when (type) {
+                PeopleNearbyFragment.TYPE_RECOMMEND -> {
+                    RetrofitFactory.instance.create(Api::class.java)
+                        .recommendIndex(UserManager.getSignParams(params))
+                        .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                            override fun onNext(t: BaseResp<NearBean?>) {
+                                super.onNext(t)
+                                mView.nearlyIndexResult(t.code == 200, t.data)
+                            }
 
-                        override fun onError(e: Throwable?) {
-                            super.onError(e)
-                            if (e is BaseException) {
-                                TickDialog(context).show()
-                            } else
-                                mView.nearlyIndexResult(false, null)
-                        }
-                    })
+                            override fun onError(e: Throwable?) {
+                                super.onError(e)
+                                if (e is BaseException) {
+                                    TickDialog(context).show()
+                                } else
+                                    mView.nearlyIndexResult(false, null)
+                            }
+                        })
+                }
+                PeopleNearbyFragment.TYPE_SAMECITY -> {
+                    RetrofitFactory.instance.create(Api::class.java)
+                        .theSameCity(UserManager.getSignParams(params))
+                        .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                            override fun onNext(t: BaseResp<NearBean?>) {
+                                super.onNext(t)
+                                mView.nearlyIndexResult(t.code == 200, t.data)
+                            }
+
+                            override fun onError(e: Throwable?) {
+                                super.onError(e)
+                                if (e is BaseException) {
+                                    TickDialog(context).show()
+                                } else
+                                    mView.nearlyIndexResult(false, null)
+                            }
+                        })
+                }
             }
-            PeopleNearbyFragment.TYPE_SAMECITY -> {
-                RetrofitFactory.instance.create(Api::class.java)
-                    .theSameCity(UserManager.getSignParams(params))
-                    .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
-                        override fun onNext(t: BaseResp<NearBean?>) {
-                            super.onNext(t)
-                            mView.nearlyIndexResult(t.code == 200, t.data)
-                        }
-
-                        override fun onError(e: Throwable?) {
-                            super.onError(e)
-                            if (e is BaseException) {
-                                TickDialog(context).show()
-                            } else
-                                mView.nearlyIndexResult(false, null)
-                        }
-                    })
-            }
-        }
 
     }
 

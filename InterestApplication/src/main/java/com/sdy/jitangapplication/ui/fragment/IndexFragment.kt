@@ -26,6 +26,7 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.ui.dialog.TopCardDialog
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
@@ -45,8 +46,6 @@ import java.util.*
  * 首页fragment
  */
 class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
-
-    var currentPos = 0
 
 
     private val fragments by lazy { Stack<Fragment>() }
@@ -75,12 +74,18 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         initFragments()
 
         filterBtn.clickWithTrigger {
-            FilterUserDialog(activity!!).show()
+            if (UserManager.touristMode)
+                TouristDialog(activity!!).show()
+            else
+                FilterUserDialog(activity!!).show()
         }
 
         //选择今日意向
         todayWantCl.clickWithTrigger {
-            todayWantDialog.show()
+            if (UserManager.touristMode)
+                TouristDialog(activity!!).show()
+            else
+                todayWantDialog.show()
         }
 
         //置顶卡片
@@ -97,7 +102,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         fragments.add(recommendFragment)
         fragments.add(sameCityFragment)
 
-        vpIndex.setScrollable(true)
+        vpIndex.setScrollable(!UserManager.touristMode)
         vpIndex.offscreenPageLimit = 2
         vpIndex.adapter = MainPagerAdapter(activity!!.supportFragmentManager, fragments)
         vpIndex.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -113,10 +118,14 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == 0) {
-                    EventBus.getDefault().post(ShowNearCountEvent())
+                if (position == 1 && UserManager.touristMode) {
+                    TouristDialog(activity!!).show()
+                    vpIndex.currentItem = 0
+                } else {
+                    if (position == 0) {
+                        EventBus.getDefault().post(ShowNearCountEvent())
+                    }
                 }
-                currentPos = position
             }
         })
 
@@ -140,8 +149,12 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
                 simplePagerTitleView.selectedColor = Color.parseColor("#FF6318")
                 simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
                 simplePagerTitleView.onClick {
-                    vpIndex.currentItem = index
-                    currentPos = index
+                    if (UserManager.touristMode && index == 1) {//游客模式不能查看附近的人
+                        TouristDialog(activity!!).show()
+                        vpIndex.currentItem = 0
+                    } else {
+                        vpIndex.currentItem = index
+                    }
                 }
                 return simplePagerTitleView
             }

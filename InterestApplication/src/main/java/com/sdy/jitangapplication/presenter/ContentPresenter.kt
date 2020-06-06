@@ -30,21 +30,21 @@ class ContentPresenter : BasePresenter<ContentView>() {
      * 获取广场列表
      */
     fun checkBlock() {
+
         RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
-                    if (!loadingDialog.isShowing)
-                        loadingDialog.show()
+                    if (!loadingDialog.isShowing) loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
-                    if (t.code == 200)
+                    if (t.code == 200) {
                         mView.onCheckBlockResult(true)
-                    else if (t.code == 403) {
+                    } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
                         CommonFunction.toast(t.msg)
@@ -113,7 +113,13 @@ class ContentPresenter : BasePresenter<ContentView>() {
      * 文件名格式：ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      * type 1图片 2视频 3音频
      */
-    fun uploadFile(totalCount: Int, currentCount: Int, filePath: String, imagePath: String, type: Int) {
+    fun uploadFile(
+        totalCount: Int,
+        currentCount: Int,
+        filePath: String,
+        imagePath: String,
+        type: Int
+    ) {
         val file = File(filePath)
         if (!file.exists()) {
             Log.d("OkHttp", "文件不存在")

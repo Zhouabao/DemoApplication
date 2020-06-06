@@ -24,6 +24,8 @@ class MainPresenter : BasePresenter<MainView>() {
      * 更新条件筛选
      */
     fun msgList() {
+        if (UserManager.touristMode)
+            return
         RetrofitFactory.instance.create(Api::class.java)
             .msgList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
@@ -45,7 +47,7 @@ class MainPresenter : BasePresenter<MainView>() {
     /**
      * 启动统计
      */
-    fun startupRecord(token: String, accid: String, province_name: String?, city_name: String?) {
+    fun startupRecord(province_name: String?, city_name: String?) {
         val params = UserManager.getBaseParams()
         params["province_name"] = province_name ?: ""
         params["city_name"] = city_name ?: ""
@@ -63,8 +65,6 @@ class MainPresenter : BasePresenter<MainView>() {
 
 
     }
-
-
 
 
 }

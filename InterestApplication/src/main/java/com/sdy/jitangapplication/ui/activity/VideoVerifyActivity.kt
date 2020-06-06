@@ -50,7 +50,7 @@ import com.sdy.jitangapplication.presenter.view.VideoVerifyView
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyThenChatDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_video_verify.*
 import kotlinx.android.synthetic.main.dialog_verify_then_chat.*

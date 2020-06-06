@@ -38,8 +38,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     companion object {
         const val TYPE_LOGIN_PHONE = 1 //手机登录
-        const val TYPE_LOGIN_WECHAT = 3//微信登录
         const val TYPE_LOGIN_OFF = 2//注销
+        const val TYPE_LOGIN_WECHAT = 3//微信登录
+        const val TYPE_LOGIN_SY = 4//闪验登录
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

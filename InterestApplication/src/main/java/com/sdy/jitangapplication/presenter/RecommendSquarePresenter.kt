@@ -22,29 +22,60 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
      * 获取推荐广场列表
      */
     fun squareEliteList(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .squareEliteList(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
-                override fun onStart() {
+        if (UserManager.touristMode) {
+            RetrofitFactory.instance.create(Api::class.java)
+                .thresholdSquareEliteList(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
+                    override fun onStart() {
 
-                }
+                    }
 
-                override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200)
-                        mView.onGetSquareRecommendResult(t.data, true)
-                    else
-                        mView.onGetSquareRecommendResult(t.data, false)
+                    override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            mView.onGetSquareRecommendResult(t.data, true)
+                        } else {
+                            mView.onGetSquareRecommendResult(t.data, false)
+                        }
 
-                }
+                    }
 
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onGetSquareRecommendResult(null, false)
-                }
-            })
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onGetSquareRecommendResult(null, false)
+                        }
+                    }
+                })
+        } else {
+            RetrofitFactory.instance.create(Api::class.java)
+                .squareEliteList(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
+                    override fun onStart() {
+
+                    }
+
+                    override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            mView.onGetSquareRecommendResult(t.data, true)
+                        } else {
+                            mView.onGetSquareRecommendResult(t.data, false)
+                        }
+
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onGetSquareRecommendResult(null, false)
+                        }
+                    }
+                })
+        }
+
     }
 
 
@@ -67,12 +98,12 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
                     if (t.code == 200)
-                        mView.onCheckBlockResult(banner,true)
+                        mView.onCheckBlockResult(banner, true)
                     else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
                         CommonFunction.toast(t.msg)
-                        mView.onCheckBlockResult(banner,false)
+                        mView.onCheckBlockResult(banner, false)
                     }
                 }
 
@@ -83,7 +114,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                         TickDialog(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                        mView.onCheckBlockResult(banner,false)
+                        mView.onCheckBlockResult(banner, false)
                     }
                 }
             })

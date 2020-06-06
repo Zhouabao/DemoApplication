@@ -25,7 +25,7 @@ import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_forever_vip.*

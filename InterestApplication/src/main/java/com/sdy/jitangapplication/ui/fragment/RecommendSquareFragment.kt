@@ -29,7 +29,9 @@ import com.sdy.jitangapplication.presenter.view.RecommendSquareView
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.ui.holder.BannerHolderView
+import com.sdy.jitangapplication.utils.UserManager
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -116,21 +118,28 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             .setIndicatorHeight(SizeUtils.dp2px(6f))
             .setOnPageClickListener {
                 //广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
-                if (banner[it].adv_type == 2) {
-                    val intent = Intent()
-                    intent.action = "android.intent.action.VIEW"
-                    intent.data = Uri.parse(banner[it].link_url)//此处填链接
-                    startActivity(intent)
-                } else if (banner[it].adv_type == 3) {
-                    startActivity<ProtocolActivity>(
-                        "type" to ProtocolActivity.TYPE_OTHER,
-                        "url" to banner[it].link_url
-                    )
-                } else if (banner[it].adv_type == 4) {//4发布+话题
-                    mPresenter.checkBlock(banner[it])
-                } else if (banner[it].adv_type == 5) {//5发布+兴趣
-                    mPresenter.checkBlock(banner[it])
+
+
+                if (UserManager.touristMode) {
+                    TouristDialog(activity!!).show()
+                } else {
+                    if (banner[it].adv_type == 2) {
+                        val intent = Intent()
+                        intent.action = "android.intent.action.VIEW"
+                        intent.data = Uri.parse(banner[it].link_url)//此处填链接
+                        startActivity(intent)
+                    } else if (banner[it].adv_type == 3) {
+                        startActivity<ProtocolActivity>(
+                            "type" to ProtocolActivity.TYPE_OTHER,
+                            "url" to banner[it].link_url
+                        )
+                    } else if (banner[it].adv_type == 4) {//4发布+话题
+                        mPresenter.checkBlock(banner[it])
+                    } else if (banner[it].adv_type == 5) {//5发布+兴趣
+                        mPresenter.checkBlock(banner[it])
+                    }
                 }
+
             }
             .setIndicatorSliderGap(SizeUtils.dp2px(5F))
             .create(mutableListOf())

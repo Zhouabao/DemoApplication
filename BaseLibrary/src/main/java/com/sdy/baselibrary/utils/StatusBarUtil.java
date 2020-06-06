@@ -1,4 +1,4 @@
-package com.sdy.jitangapplication.utils;
+package com.sdy.baselibrary.utils;
 
 import android.app.Activity;
 import android.content.Context;

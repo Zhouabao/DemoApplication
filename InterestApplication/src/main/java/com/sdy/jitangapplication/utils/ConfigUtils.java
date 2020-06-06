@@ -94,8 +94,8 @@ public class ConfigUtils {
                 .setLogBtnWidth(298)
 
                 //授权页隐私栏：
-                .setAppPrivacyOne(" 积糖用户协议 ", BaseConstant.SERVER_ADDRESS+"protocol/userProtocol"+ Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
-                .setAppPrivacyTwo(" 积糖隐私协议 ",  BaseConstant.SERVER_ADDRESS+"protocol/privacyProtocol"+ Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
+                .setAppPrivacyOne(" 积糖用户协议 ", BaseConstant.SERVER_ADDRESS + "protocol/userProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
+                .setAppPrivacyTwo(" 积糖隐私协议 ", BaseConstant.SERVER_ADDRESS + "protocol/privacyProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
                 .setAppPrivacyColor(Color.parseColor("#ffffff"), Color.parseColor("#FF6796FA"))    //	设置隐私条款名称颜色(基础文字颜色，协议文字颜色)
                 .setPrivacyText("登录注册代表你已同意", "和", " 以及 ", "、", "")
                 .setPrivacyOffsetBottomY(10)//设置隐私条款相对于屏幕下边缘y偏
@@ -115,13 +115,14 @@ public class ConfigUtils {
                 .setShanYanSloganHidden(true)
                 .setShanYanSloganTextColor(Color.parseColor("#ffffff"))
 
-               // .addCustomView(numberLayout, false, false, null)
+                // .addCustomView(numberLayout, false, false, null)
 
                 .setLoadingView(view_dialog)
                 // 添加自定义控件:
                 .addCustomView(relativeLayout, false, false, null)
                 //标题栏下划线，可以不写
                 .build();
+
         return uiConfig;
 
     }
@@ -129,13 +130,22 @@ public class ConfigUtils {
     private static void otherLogin(final Context context, RelativeLayout relativeLayout) {
         LinearLayout weixin = relativeLayout.findViewById(R.id.shanyan_dmeo_weixin);
         LinearLayout phone = relativeLayout.findViewById(R.id.shanyan_dmeo_phone);
-        weixin.setOnClickListener(v -> CommonFunction.INSTANCE.wechatLogin(context, WXEntryActivity.WECHAT_LOGIN));
+        weixin.setOnClickListener(v -> {
+            phone.setEnabled(false);
+            CommonFunction.INSTANCE.wechatLogin(context, WXEntryActivity.WECHAT_LOGIN);
+            phone.postDelayed(() -> {
+                phone.setEnabled(true);
+            }, 1000L);
+        });
         phone.setOnClickListener(v -> {
+            weixin.setEnabled(false);
             Intent intent = new Intent(context, PhoneActivity.class);
             intent.putExtra("type", "1");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-
+            weixin.postDelayed(() -> {
+                weixin.setEnabled(true);
+            }, 1000L);
         });
 
     }

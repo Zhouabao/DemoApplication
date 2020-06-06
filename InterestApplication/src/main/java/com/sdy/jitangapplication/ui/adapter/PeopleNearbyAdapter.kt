@@ -14,7 +14,9 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
+import com.sdy.baselibrary.utils.StatusBarUtil
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
 
@@ -121,20 +123,32 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
 
             //获取联系方式
             itemView.userContactBtn.clickWithTrigger {
-                CommonFunction.checkUnlockContact(mContext, item.accid, item.gender)
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    CommonFunction.checkUnlockContact(mContext, item.accid, item.gender)
             }
 
             //用户视频介绍
             itemView.userIntroduceVideoBtn.clickWithTrigger {
-                CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
             }
 
             itemView.clickWithTrigger {
-                MatchDetailActivity.start(mContext, item.accid)
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    MatchDetailActivity.start(mContext, item.accid)
             }
 
             itemView.userChatBtn.clickWithTrigger {
-                CommonFunction.checkSendGift(mContext, item.accid)
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    CommonFunction.checkSendGift(mContext, item.accid)
             }
         } else {
             itemView.userChatBtn.isVisible = false

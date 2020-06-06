@@ -36,10 +36,7 @@ import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.ChangeAvatarRealManDialog
-import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
-import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
@@ -77,12 +74,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initView()
 
         //启动时间统计
-        mPresenter.startupRecord(
-            UserManager.getToken(),
-            UserManager.getAccid(),
-            UserManager.getProvince(),
-            UserManager.getCity()
-        )
+        if (!UserManager.touristMode)
+            mPresenter.startupRecord(
+                UserManager.getProvince(),
+                UserManager.getCity()
+            )
 
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
@@ -173,7 +169,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             object : CustomClickListener() {
                 override fun onSingleClick(view: View) {
                     try {
-                        contentFragment.mPresenter.checkBlock()
+                        //游客模式则提醒登录
+                        if (UserManager.touristMode) {
+                            TouristDialog(this@MainActivity).show()
+                        } else
+                            contentFragment.mPresenter.checkBlock()
                     } catch (e: Exception) {
 
                     }
@@ -205,11 +205,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == 3) {
+                if (UserManager.touristMode && position != 0 && position != 1) {
+                    TouristDialog(this@MainActivity).show()
+
+                } else {
+                    if (position == 3) {
 //                    CancelPopEvent
-                    EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                    }
+                    switchTab(position)
                 }
-                switchTab(position)
             }
         })
 
@@ -286,7 +291,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     })
                     trans.start()
                     publishGuideIv.onClick {
-                        startActivity<PublishActivity>()
+                        if (UserManager.touristMode)
+                            TouristDialog(this).show()
+                        else
+                            startActivity<PublishActivity>()
                     }
                 } else {
                     publishGuideIv.isVisible = false
@@ -388,10 +396,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 vpMain.currentItem = 1
             }
             R.id.tabMessage -> {
-                vpMain.currentItem = 2
+                if (UserManager.touristMode) {
+                    TouristDialog(this).show()
+                } else
+                    vpMain.currentItem = 2
             }
             R.id.tabMe -> {
-                vpMain.currentItem = 3
+                if (UserManager.touristMode) {
+                    TouristDialog(this).show()
+                } else
+                    vpMain.currentItem = 3
             }
         }
     }
@@ -513,8 +527,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-
-
     /**
      * 消息接收观察者
      */
@@ -541,8 +553,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
     }
-
-
 
 
     private var showNear = false

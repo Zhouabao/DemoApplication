@@ -24,10 +24,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
-import com.sdy.jitangapplication.event.UpdateSameCityVipEvent
-import com.sdy.jitangapplication.event.UpdateShowTopAlert
-import com.sdy.jitangapplication.event.UpdateTodayWantEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CheckBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
@@ -131,8 +128,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         })
 
         updateFilterParams()
-
-        mPresenter.todayRecommend()
+        if (!UserManager.touristMode)
+            mPresenter.todayRecommend()
+        else
+            mPresenter.nearlyIndex(params,type)
 
     }
 
@@ -301,7 +300,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             ranking_level = nearBean!!.ranking_level
             //保存 VIP信息
             UserManager.saveUserVip(nearBean.isvip)
-            EventBus.getDefault().post(nearBean.isplatinum)
+            EventBus.getDefault().post(TopCardEvent(nearBean.isplatinum))
             onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //保存认证信息
             UserManager.saveUserVerify(nearBean.isfaced)
