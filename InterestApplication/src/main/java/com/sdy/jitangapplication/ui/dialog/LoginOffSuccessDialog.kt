@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.dialog
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -30,9 +31,7 @@ class LoginOffSuccessDialog(val context1: Context) : Dialog(context1, R.style.My
     private fun initView() {
         loginOffSuccessBtn.onClick {
             dismiss()
-            UserManager.clearLoginData()
-            ActivityUtils.finishAllActivities()
-            context1.startActivity<LoginActivity>()
+            UserManager.startToLogin(context1 as Activity)
         }
     }
 

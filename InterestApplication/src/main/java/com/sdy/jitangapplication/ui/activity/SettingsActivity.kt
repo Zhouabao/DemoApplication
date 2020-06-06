@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
@@ -121,10 +120,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                     })
                     .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                         override fun onClick(dialog: Dialog) {
-                            UserManager.clearLoginData()
                             NIMClient.getService(AuthService::class.java).logout()
-                            AppManager.instance.finishAllActivity()
-                            startActivity<LoginActivity>()
+                            UserManager.startToLogin(this@SettingsActivity)
                         }
 
                     })

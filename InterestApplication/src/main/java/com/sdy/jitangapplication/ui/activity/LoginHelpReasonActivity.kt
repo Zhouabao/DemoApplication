@@ -31,6 +31,7 @@ import com.sdy.jitangapplication.presenter.view.LoginHelpResonView
 import com.sdy.jitangapplication.ui.adapter.ReportPicAdapter
 import com.sdy.jitangapplication.ui.adapter.ReportResonAdapter
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_login_help_reason.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -205,8 +206,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     override fun onGetUserActionResult(b: Boolean, msg: String?) {
         CommonFunction.toast("$msg")
         if (b) {
-            AppManager.instance.finishAllActivity()
-            startActivity<LoginActivity>()
+            UserManager.startToLogin(this)
         }
     }
 

@@ -79,6 +79,11 @@ object Constants {
     const val TEST = false
 
 
+    //闪验
+    const val SY_APP_ID="Rr9a0DYd"
+    const val SY_APP_KEY="0jsXDyqa"
+
+
     //小米
     // AppID 2882303761518151078
     //AppKey  5591815169078

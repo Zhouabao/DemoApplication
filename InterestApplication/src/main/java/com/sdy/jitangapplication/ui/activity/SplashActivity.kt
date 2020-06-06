@@ -12,6 +12,7 @@ import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
+import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -170,10 +171,16 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun start2login() {
-        handler.postDelayed({
+        //闪验SDK预取号
+        OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
             startActivity<LoginActivity>()
             finish()
-        }, 1000)
+        }
+
+//        handler.postDelayed({
+//            startActivity<LoginActivity>()
+//            finish()
+//        }, 1000)
     }
 
 
@@ -189,9 +196,8 @@ class SplashActivity : BaseActivity() {
 //            Manifest.permission.READ_CONTACTS,
 //            Manifest.permission.RECORD_AUDIO,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-//            ,
-//            Manifest.permission.READ_PHONE_STATE
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE
         )
         ActivityCompat.requestPermissions(this, permissions, 100)
     }
@@ -202,6 +208,8 @@ class SplashActivity : BaseActivity() {
         grantResults: IntArray
     ) {
         if (requestCode == 100) {
+
+
             if (grantResults.isNotEmpty()) {
                 for (i in 0 until grantResults.size) {
                     if (grantResults[i] == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23) {

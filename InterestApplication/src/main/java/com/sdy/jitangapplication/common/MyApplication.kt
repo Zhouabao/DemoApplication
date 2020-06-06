@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
+import com.chuanglan.shanyan_sdk.OneKeyLoginManager
+import com.chuanglan.shanyan_sdk.listener.InitListener
 import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
@@ -114,7 +116,8 @@ class MyApplication : BaseApplication() {
                         }
                         //如果账号存在异常，就发送认证不通过弹窗
                         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
-                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
+                            EventBus.getDefault()
+                                .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
                             EventBus.getDefault().postSticky(
                                 ReVerifyEvent(
@@ -273,6 +276,16 @@ class MyApplication : BaseApplication() {
         //数美黑产
         initSM()
 
+        //闪验
+        initSy()
+
+    }
+
+    private fun initSy() {
+        //code为1022:成功；其他：失败
+        OneKeyLoginManager.getInstance().init(applicationContext, Constants.SY_APP_ID) { p0, p1 ->
+            Log.d("Chuanglan", "code=$p0,result=$p1")
+        }
     }
 
 

@@ -1,26 +1,52 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.app.Application
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.chuanglan.shanyan_sdk.OneKeyLoginManager
+import com.chuanglan.shanyan_sdk.view.CmccLoginActivity
+import com.chuanglan.shanyan_sdk.view.ShanYanOneKeyActivity
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
-import com.sdy.jitangapplication.utils.StatusBarUtil
+import com.sdy.jitangapplication.utils.AbScreenUtils
+import com.sdy.jitangapplication.utils.ConfigUtils
+import com.sdy.jitangapplication.utils.ForebackUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 
+
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
+
+    private val listener by lazy {
+        object : ForebackUtils.Listener {
+            override fun onApplicationEnterForeground(activity: Activity?) {
+                if (activity is LoginActivity || activity is ShanYanOneKeyActivity || activity is CmccLoginActivity) {
+                    AbScreenUtils.hideBottomUIMenu(activity)
+                }
+            }
+
+            override fun onApplicationEnterBackground(activity: Activity?) {
+                if (activity is LoginActivity || activity is ShanYanOneKeyActivity || activity is CmccLoginActivity)
+                    AbScreenUtils.hideBottomUIMenu(activity)
+            }
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -35,9 +61,14 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         mPresenter = LoginPresenter()
         mPresenter.context = this
         mPresenter.mView = this
+        setSwipeBackEnable(false)
 
+        ForebackUtils.init(application.applicationContext as Application)
+        ForebackUtils.registerListener(listener)
+        ForebackUtils.unregisterListener(listener)
+        AbScreenUtils.hideBottomUIMenu(this)
 
-        StatusBarUtil.immersive(this)
+//        StatusBarUtil.immersive(this)
 
         userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
         privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
@@ -60,13 +91,17 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
 
         //手机登录
-        phoneLoginBtn.clickWithTrigger {
+        touristBtn.clickWithTrigger {
             startActivity<PhoneActivity>()
         }
 
         //微信登录
-        wechatLoginBtn.clickWithTrigger {
-            CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
+        onekeyLoginBtn.clickWithTrigger {
+            OneKeyLoginManager.getInstance().setAuthThemeConfig(
+                ConfigUtils.getCJSConfig(applicationContext)
+            )
+            openLoginActivity()
+            // CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
         }
 
         //隐私协议
@@ -77,6 +112,75 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         userAgreement.clickWithTrigger {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
+
+        //游客
+        touristBtn.clickWithTrigger {
+            startActivity<MainActivity>()
+        }
+
+
+    }
+
+    private var isOpenAuth = false
+    private fun openLoginActivity() {
+        //拉起授权页方法
+        OneKeyLoginManager.getInstance().openLoginAuth(false,
+            //getOpenLoginAuthStatus
+            { code, result ->
+                when (code) {
+                    1000 -> {
+                        isOpenAuth = true
+                        val animation =
+                            AnimationUtils.loadAnimation(this, R.anim.shanyan_dmeo_fade_out_anim)
+                        loginCl.startAnimation(animation)
+                        loginCl.isVisible = false
+                        //拉起授权页成功
+                        //拉起授权页成功
+                        Log.e(
+                            "VVV",
+                            "拉起授权页成功： _code==$code   _result==$result"
+                        )
+                    }
+                    else -> {
+                        //拉起授权页失败
+                        //拉起授权页失败
+                        Log.e(
+                            "VVV",
+                            "拉起授权页失败： _code==$code   _result==$result"
+                        )
+                    }
+
+                }
+
+            },
+            //OneKeyLoginListener
+            { code, result ->
+                when (code) {
+                    1011 -> {//点击返回，用户取消免密登录
+                        val animation = AnimationUtils.loadAnimation(
+                            this,
+                            R.anim.shanyan_demo_fade_in_anim
+                        )
+                        loginCl.startAnimation(animation)
+                        loginCl.isVisible = true
+
+                        isOpenAuth = false
+
+                    }
+                    1000 -> {//一键登录成功，解析result，可得到网络请求参数
+                        Log.e("VVV", "用户点击登录获取token成功： _code==$code   _result==$result")
+
+                    }
+                    else -> {
+                        Log.e("VVV", "用户点击登录获取token失败： _code==$code   _result==$result")
+                    }
+                }
+                //todo 跳转结果页面
+                OneKeyLoginManager.getInstance().finishAuthActivity()
+                OneKeyLoginManager.getInstance().removeAllListener()
+            })
+
+
     }
 
 
@@ -99,6 +203,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         super.onResume()
         if (!videoPreview.isPlaying)
             videoPreview.start()
+        AbScreenUtils.hideBottomUIMenu(this)
 //        videoPreview.resume()
     }
 
@@ -106,6 +211,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         super.onDestroy()
         UMShareAPI.get(this).release()
         videoPreview.stopPlayback()
+        ForebackUtils.unregisterListener(listener)
+
     }
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
@@ -117,4 +224,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         }
 
     }
+
+
 }
