@@ -138,6 +138,32 @@ interface Api {
     @FormUrlEncoded
     @POST("Threshold/squareTagList${Constants.END_BASE_URL}")
     fun thresholdSquareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
+
+    /**
+     * 推荐广场
+     * Threshold/squareEliteList/v1.json   推荐
+     *
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareEliteList${Constants.END_BASE_URL}")
+    fun thresholdSquareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
+
+
+    /**
+     * 兴趣广场详情列表
+     * Threshold/squareNearly
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareTagInfo${Constants.END_BASE_URL}")
+    fun thresholdSquareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
+
+    /**
+     * 游客获取最新列表
+     */
+    @FormUrlEncoded
+    @POST("Threshold/squareList${Constants.END_BASE_URL}")
+    fun thresholdSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+
     /**
      * 广场获取兴趣
      *
@@ -162,14 +188,6 @@ interface Api {
     @POST("Square/squareEliteList${Constants.END_BASE_URL}")
     fun squareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
-    /**
-     * 推荐广场
-     * Threshold/squareEliteList/v1.json   推荐
-     *
-     */
-    @FormUrlEncoded
-    @POST("Threshold/squareEliteList${Constants.END_BASE_URL}")
-    fun thresholdSquareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
     /**
      * 兴趣广场详情列表
@@ -178,20 +196,6 @@ interface Api {
     @POST("Square/squareTagInfo${Constants.END_BASE_URL}")
     fun squareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
 
-    /**
-     * 兴趣广场详情列表
-     * Threshold/squareNearly
-     */
-    @FormUrlEncoded
-    @POST("Threshold/squareTagInfo${Constants.END_BASE_URL}")
-    fun thresholdSquareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
-
-    /**
-     * 游客获取最新列表
-     */
-    @FormUrlEncoded
-    @POST("Threshold/squareList${Constants.END_BASE_URL}")
-    fun thresholdSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
     /**
      * 获取最新广场列表
      */
