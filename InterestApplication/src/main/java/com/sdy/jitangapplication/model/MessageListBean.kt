@@ -19,7 +19,7 @@ data class MessageListBean(
 /*************消息列表**************/
 data class MessageListBean1(
     var square_count: Int = 0,//评论未读数
-    var chatup_list_lasttime: Int = 0,//评论未读数
+    var chatup_list_lasttime: String = "",
     var session_list_arr: MutableList<MessageGiftBean> = mutableListOf(),
     var chatup_list: MutableList<AccostBean> = mutableListOf()
 )

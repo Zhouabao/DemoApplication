@@ -36,6 +36,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
@@ -180,21 +181,21 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     /**
      * 消息汇总中心
      */
-    private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
+    private val accostAdapter by lazy { MessageCenterAllAdapter() }
 
     private fun initMessageAllHeader(): View {
-        val friendsView =
+        val accostView =
             layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
-        friendsView.messageCenterRv.layoutManager =
+        accostView.messageCenterRv.layoutManager =
             LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        friendsView.messageCenterRv.adapter = allMessageTypeAdapter
-//        allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
-//            ChatActivity.start(activity!!, adapter.data[position].contactId)
-//        }
-        friendsView.contentView.onClick {
+        accostView.messageCenterRv.adapter = accostAdapter
+        accostAdapter.setOnItemClickListener { _, _, position ->
+            ChatActivity.start(activity!!, accostAdapter.data[position].accid)
+        }
+        accostView.moreChatUpBtn.clickWithTrigger {
             startActivity<AccostListActivity>()
         }
-        return friendsView
+        return accostView
     }
 
 
@@ -247,10 +248,12 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         headAdapter.data[1].time = TimeUtil.getTimeShowString(System.currentTimeMillis(), true)
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
 
-        allMessageTypeAdapter.addData(data?.chatup_list ?: mutableListOf<AccostBean>())
+        accostAdapter.addData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf<AccostBean>()).size > 0) {
             adapter.addHeaderView(initMessageAllHeader(), 0)
+            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf<AccostBean>()).size > 4
         }
+//        moreChatUpBtn
 
         //获取最近联系人列表
         mPresenter.getRecentContacts()

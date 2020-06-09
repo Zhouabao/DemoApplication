@@ -37,7 +37,7 @@
 依据最新法律法规、监管政策等要求及业务实际情况，更新了《积糖用户协议》及《隐私政策》，特此向您提示：\n\n请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。点击同意即代表您已经阅读并同意《积糖用户协议》及《隐私政策》，如果您不同意，将可能影响使用积糖产品和服务。\n\n
 我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。"
             android:textColor="#ff333333"
-            android:lineSpacingMultiplier="1.4"
+            android:lineSpacingMultiplier="1.2"
             android:textSize="14sp"
             android:linksClickable="true"
             android:textColorLink="@color/colorOrange"
