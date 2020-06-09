@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -40,12 +39,14 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
+import com.sdy.jitangapplication.ui.activity.AccostListActivity
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
@@ -126,7 +127,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         messageListRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
-        adapter.addHeaderView(initMessageAllHeader(), 0)
         adapter.addHeaderView(initAssistHeadsView(), 1)
         adapter.setHeaderAndEmpty(true)
 
@@ -177,60 +177,26 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     }
 
-
     /**
      * 消息汇总中心
      */
     private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
 
     private fun initMessageAllHeader(): View {
-        allMessageTypeAdapter.addData(
-            MessageListBean(
-                title = "点赞",
-                icon = R.drawable.icon_message_thumbs_up
-            )
-        )
-        allMessageTypeAdapter.addData(
-            MessageListBean(
-                title = "评论",
-                icon = R.drawable.icon_message_comment
-            )
-        )
-//        allMessageTypeAdapter.addData(
-//            MessageListBean(
-//                title = "喜欢我",
-//                icon = R.drawable.icon_message_like
-//            )
-//        )
-
         val friendsView =
             layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
-        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 3)
+        friendsView.messageCenterRv.layoutManager =
+            LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         friendsView.messageCenterRv.adapter = allMessageTypeAdapter
-        allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
-            when (position) {
-                0 -> { //点赞
-                    startActivity<MessageSquareActivity>("type" to 1)
-
-                }
-                1 -> { //评论
-                    startActivity<MessageSquareActivity>("type" to 2)
-
-                }
-//                2 -> { //喜欢我
-//                    if (like_free_show) {
-//                        startActivity<LikeMeReceivedActivity>()
-//                    } else {
-//                        startActivity<MessageLikeMeActivity>()
-//                    }
-//                }
-            }
-            allMessageTypeAdapter.data[position].count = 0
-            allMessageTypeAdapter.notifyItemChanged(position)
-
+//        allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
+//            ChatActivity.start(activity!!, adapter.data[position].contactId)
+//        }
+        friendsView.contentView.onClick {
+            startActivity<AccostListActivity>()
         }
         return friendsView
     }
+
 
     /**
      * 创建小助手布局
@@ -244,7 +210,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
         //初始化第一个项目
-        headAdapter.addData(MessageListBean())
+        headAdapter.addData(ass)
+        headAdapter.addData(square)
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {//官方助手
@@ -255,6 +222,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     headAdapter.data[0].count = 0
                     headAdapter.notifyItemChanged(0)
                 }
+                1 -> {
+                    startActivity<MessageSquareActivity>()
+                }
             }
         }
         return headView
@@ -264,31 +234,24 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     /**
      * 获取消息中心的顶部数据
      */
-    private var msgBean: MessageListBean1? = null
-    private var like_free_show: Boolean = false
-
     override fun onMessageCensusResult(data: MessageListBean1?) {
-
-        //UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
-
-
-        //1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
-        allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
-        allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
-        allMessageTypeAdapter.data[2].count = data?.liked_unread_cnt ?: 0
-        allMessageTypeAdapter.notifyDataSetChanged()
-        like_free_show = data?.like_free_show ?: false
-        if ((data?.comment_count ?: 0 > 0) || (data?.thumbs_up_count
-                ?: 0) > 0 || (data?.liked_unread_cnt
-                ?: 0) > 0
-        )
+        if (data?.square_count ?: 0 > 0)
             EventBus.getDefault().post(GetNewMsgEvent())
-
-
-        msgBean = data
+        headAdapter.data[1].msg =
+            if ((data?.square_count ?: 0) > 0) {
+                "有新的广场消息"
+            } else {
+                "暂时没有广场消息哦"
+            }
+        headAdapter.data[1].count = (data?.square_count ?: 0)
+        headAdapter.data[1].time = TimeUtil.getTimeShowString(System.currentTimeMillis(), true)
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
-        headAdapter.data[0] = ass
-        headAdapter.notifyItemChanged(0)
+
+        allMessageTypeAdapter.addData(data?.chatup_list ?: mutableListOf<AccostBean>())
+        if ((data?.chatup_list ?: mutableListOf<AccostBean>()).size > 0) {
+            adapter.addHeaderView(initMessageAllHeader(), 0)
+        }
+
         //获取最近联系人列表
         mPresenter.getRecentContacts()
     }
@@ -306,6 +269,15 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             0,
             "",
             R.drawable.icon_default_avator_logo
+        )
+    }
+    private val square by lazy {
+        MessageListBean(
+            "广场消息",
+            "暂时没有广场消息哦",
+            0,
+            "",
+            R.drawable.icon_message_square
         )
     }
 

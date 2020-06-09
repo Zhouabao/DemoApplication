@@ -390,7 +390,6 @@ interface Api {
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
-
     /**
      * 验证是否送礼物
      * Home/checkSendCandy
@@ -593,7 +592,7 @@ interface Api {
      * 广场消息列表
      */
     @FormUrlEncoded
-    @POST("tidings/squareListsV3${Constants.END_BASE_URL}")
+    @POST("tidings/squareListsV2${Constants.END_BASE_URL}")
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
 
     /**
@@ -601,7 +600,7 @@ interface Api {
      * （type  1点赞   2评论）
      */
     @FormUrlEncoded
-    @POST("Tidings/markSquareReadV3${Constants.END_BASE_URL}")
+    @POST("Tidings/markSquareRead${Constants.END_BASE_URL}")
     fun markSquareRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
@@ -1083,6 +1082,22 @@ interface Api {
     @FormUrlEncoded
     @POST("Gift/getGiftList${Constants.END_BASE_URL}")
     fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
+
+    /**
+     * 获取搭讪列表
+     * Tidings/chatupList
+     */
+    @FormUrlEncoded
+    @POST("Tidings/chatupList${Constants.END_BASE_URL}")
+    fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<AccostBean>?>>
+
+    /**
+     * 获取礼物列表
+     * Gift/getGreetGiftList
+     */
+    @FormUrlEncoded
+    @POST("Gift/getGreetGiftList${Constants.END_BASE_URL}")
+    fun getGreetGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
 
     /**
      * 获取礼物列表

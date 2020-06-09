@@ -41,8 +41,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
-            "pagesize" to Constants.PAGESIZE,
-            "type" to intent.getIntExtra("type", 1)
+            "pagesize" to Constants.PAGESIZE
         )
     }
     private val adapter by lazy { MessageSquareAdapter() }

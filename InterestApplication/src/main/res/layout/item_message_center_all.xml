@@ -1,51 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:background="@color/colorWhite"
-        android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="15dp"
+    android:background="@color/colorWhite">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/accostUserIv"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:src="@drawable/default_avator_image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-            android:id="@+id/messageAllIcon"
-            android:src="@drawable/icon_message_thumbs_up"
-            android:layout_width="74dp"
-            android:layout_height="74dp"
-            android:scaleType="center"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/accostGiftIv"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="43dp"
+        android:src="@drawable/icon_gift"
+        app:layout_constraintLeft_toLeftOf="@id/accostUserIv"
+        app:layout_constraintRight_toRightOf="@id/accostUserIv"
+        app:layout_constraintTop_toTopOf="@id/accostUserIv" />
 
-    <TextView
-            android:id="@+id/messageAllCount"
-            android:text="9999"
-            android:textColor="#ffffffff"
-            android:textSize="12sp"
-            android:background="@drawable/rectangle_unread_msg_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:minHeight="16dp"
-            android:gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_marginLeft="45dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-            android:id="@+id/messageAlType"
-            android:text="点赞"
-            android:textColor="#FF2D2F30"
-            android:textSize="15sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
-            app:layout_constraintLeft_toLeftOf="@id/messageAllIcon"
-            app:layout_constraintRight_toRightOf="@id/messageAllIcon"
-            app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

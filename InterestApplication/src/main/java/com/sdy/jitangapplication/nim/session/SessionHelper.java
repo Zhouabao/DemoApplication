@@ -40,6 +40,7 @@ import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
@@ -50,6 +51,7 @@ import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderAccostGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContact;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendCustomTip;
@@ -291,6 +293,7 @@ public class SessionHelper {
     //自定义消息界面
     private static void registerViewHolders() {
 //        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
+        NimUIKit.registerMsgItemViewHolder(AccostGiftAttachment.class, MsgViewHolderAccostGift.class);
         NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
         NimUIKit.registerMsgItemViewHolder(WishHelpAttachment.class, MsgViewHolderWishHelp.class);
         NimUIKit.registerMsgItemViewHolder(SendCustomTipAttachment.class, MsgViewHolderSendCustomTip.class);

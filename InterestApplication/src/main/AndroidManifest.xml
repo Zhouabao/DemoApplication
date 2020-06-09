@@ -8,12 +8,11 @@
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
-
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -95,7 +94,8 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.ForeverVipActivity"></activity>
+        <activity android:name=".ui.activity.AccostListActivity"></activity>
+        <activity android:name=".ui.activity.ForeverVipActivity" />
         <activity android:name=".ui.activity.FemalePowerActivity" />
         <activity android:name=".ui.activity.QuickSignActivity" />
         <activity android:name=".ui.activity.ChangeUserContactActivity" />
@@ -370,8 +370,6 @@
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-
-
         <activity
             android:name="com.chuanglan.shanyan_sdk.view.CmccLoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -384,6 +382,7 @@
             android:launchMode="singleTop"
             android:targetActivity="com.chuanglan.shanyan_sdk.view.CmccLoginActivity"
             android:theme="@style/dialogStyle" />
+
         <activity
             android:name="com.chuanglan.shanyan_sdk.view.ShanYanOneKeyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

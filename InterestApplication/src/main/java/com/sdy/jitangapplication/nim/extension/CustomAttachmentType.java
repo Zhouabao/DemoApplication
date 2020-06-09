@@ -11,6 +11,7 @@ public interface CustomAttachmentType {
     int SendTip = 3; //发送tip消息
     int WishHelp = 4; //心愿助力
     int ChatContact = 5;//联系方式
+    int AccostGift = 6;//搭讪礼物
 
 
     //没有用到

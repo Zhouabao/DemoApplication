@@ -38,6 +38,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshTodayFateEvent
 import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.ui.adapter.AccostGiftAdapter
 import com.sdy.jitangapplication.ui.adapter.TodayFateAdapter
@@ -93,9 +94,9 @@ class TodayFateDialog(
             accostGiftAdapter.notifyDataSetChanged()
         }
 
-        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),0,title = "礼物1"))
-        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),1,title = "礼物2"))
-        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),2,title = "礼物3"))
+        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 0, title = "礼物1"))
+        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 1, title = "礼物2"))
+        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 2, title = "礼物3"))
 
 
 
@@ -351,9 +352,12 @@ class TodayFateDialog(
                                 val config1 = CustomMessageConfig()
                                 config1.enableUnreadCount = true
                                 config1.enablePush = false
-                                val giftAtt = SendGiftAttachment(
+                                //todo 礼物的信息没有填写
+                                val giftAtt = AccostGiftAttachment(
                                     data.value.order_id,
-                                    SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL
+                                    SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
+                                    UserManager.getAvator(),
+                                    "出来玩儿啊"
                                 )
                                 val giftMsg = MessageBuilder.createCustomMessage(
                                     data.value.accid,

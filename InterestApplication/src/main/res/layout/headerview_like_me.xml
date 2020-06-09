@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="我的会话"
+        android:textColor="#ff888d92"
+        android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="10dp"
-            android:id="@+id/headRv"
-            android:layout_marginLeft="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/headRv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

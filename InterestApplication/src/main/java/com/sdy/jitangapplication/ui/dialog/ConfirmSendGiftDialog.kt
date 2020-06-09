@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.SendGiftBean
 import com.sdy.jitangapplication.model.SendGiftOrderBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
@@ -147,26 +148,7 @@ class ConfirmSendGiftDialog(
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
-//                            if (t.data?.isnew_friend == true) {
-//                                //发送匹配消息
-//                                val matchMsgAtt =
-//                                    ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
-//                                val config = CustomMessageConfig()
-//                                config.enableUnreadCount = false
-//                                config.enablePush = false
-//                                val message = MessageBuilder.createCustomMessage(
-//                                    account,
-//                                    SessionTypeEnum.P2P,
-//                                    "",
-//                                    matchMsgAtt,
-//                                    config
-//                                )
-//                                NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-//                            }
-
-
-                            sendGiftMessage(t.data?.order_id ?: 0)
-//                            CommonFunction.toast(t.msg)
+                            sendAccostGiftMessage(t.data?.order_id ?: 0)
                         }
                         419 -> {//糖果余额不足
                             AlertCandyEnoughDialog(
@@ -222,6 +204,46 @@ class ConfirmSendGiftDialog(
                     if (fromWantFriend) {
                         ChatActivity.start(context1, account)
                     }
+                }
+
+                override fun onFailed(code: Int) {
+                    dismiss()
+                }
+
+                override fun onException(exception: Throwable) {
+
+                }
+            })
+    }
+
+    private fun sendAccostGiftMessage(orderId: Int) {
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = true
+        config.enablePush = false
+        val shareSquareAttachment =
+            AccostGiftAttachment(
+                orderId,
+                SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
+                giftName.icon,
+                giftName.title
+            )
+        val message = MessageBuilder.createCustomMessage(
+            account,
+            SessionTypeEnum.P2P,
+            "",
+            shareSquareAttachment,
+            config
+        )
+        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+            .setCallback(object :
+                RequestCallback<Void?> {
+                override fun onSuccess(param: Void?) {
+                    //更新消息列表
+                    EventBus.getDefault().post(UpdateSendGiftEvent(message))
+                    //关闭自己的弹窗
+                    dismiss()
+                    //关闭礼物弹窗
+                    EventBus.getDefault().post(CloseDialogEvent())
                 }
 
                 override fun onFailed(code: Int) {

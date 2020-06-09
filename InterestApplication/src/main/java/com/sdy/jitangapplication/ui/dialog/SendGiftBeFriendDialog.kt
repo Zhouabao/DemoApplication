@@ -39,7 +39,7 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
         setContentView(R.layout.dialog_send_gift_be_friend)
         initWindow()
         initView()
-        getGiftList()
+        getGreetGiftList()
 
     }
 
@@ -95,9 +95,9 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
     }
 
     private var myCandyCount = 0
-    fun getGiftList() {
+    fun getGreetGiftList() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getGiftList(UserManager.getSignParams())
+            .getGreetGiftList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<GiftBeans?>>(null) {
                 override fun onNext(t: BaseResp<GiftBeans?>) {
                     super.onNext(t)
