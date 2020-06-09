@@ -19,7 +19,6 @@ import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.ui.fragment.MyCommentFragment
-import com.sdy.jitangapplication.ui.fragment.MyLikedFragment
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_foot_print.*
@@ -57,7 +56,7 @@ class MyFootPrintActivity : BaseActivity() {
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("点赞", "评论", "收藏", "喜欢")
+    private val titles = arrayOf("点赞", "评论", "收藏")
 
     private fun initIndicator() {
         tabMyFootprint.setBackgroundColor(Color.WHITE)
@@ -106,9 +105,9 @@ class MyFootPrintActivity : BaseActivity() {
         mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_LIKE))   //我的点赞
         mStack.add(MyCommentFragment())   //我的评论
         mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_COLLECT))//我的收藏
-        mStack.add(MyLikedFragment())//我喜欢的
+//        mStack.add(MyLikedFragment())//我喜欢的
         vpMyFootPrint.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
-        vpMyFootPrint.offscreenPageLimit = 4
+        vpMyFootPrint.offscreenPageLimit = 3
         initIndicator()
         vpMyFootPrint.currentItem = 0
     }

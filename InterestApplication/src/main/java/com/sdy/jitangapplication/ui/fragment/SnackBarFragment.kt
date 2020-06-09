@@ -10,19 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ui.fragment.BaseFragment
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
-import com.sdy.baselibrary.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_snack_bar.*
-import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 顶级通知fragment
@@ -97,10 +94,10 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
         contentView.clickWithTrigger {
             when (msgBean.type) {
                 //喜欢了你
-                SOMEONE_LIKE_YOU -> {
-                    if (ActivityUtils.getTopActivity() !is LikeMeReceivedActivity)
-                        startActivity<LikeMeReceivedActivity>()
-                }
+//                SOMEONE_LIKE_YOU -> {
+//                    if (ActivityUtils.getTopActivity() !is LikeMeReceivedActivity)
+//                        startActivity<LikeMeReceivedActivity>()
+//                }
                 //助力
                 HELP_CANDY,
                     //赠送礼物

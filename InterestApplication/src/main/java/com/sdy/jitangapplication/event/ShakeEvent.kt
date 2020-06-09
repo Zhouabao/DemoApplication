@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.event
 import com.sdy.jitangapplication.model.CheckBean
 
 
-class GreetDetailSuccessEvent(val success: Boolean)
 
 class MatchByWishHelpEvent(val isFirend: Boolean, val target_accid: String = "")
 

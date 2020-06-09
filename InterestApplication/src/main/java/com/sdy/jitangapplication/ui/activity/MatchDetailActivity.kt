@@ -10,11 +10,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -27,47 +25,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.friend.FriendService
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.MatchByWishHelpEvent
+import com.sdy.jitangapplication.event.NotifyEvent
+import com.sdy.jitangapplication.event.UpdateBlackEvent
+import com.sdy.jitangapplication.event.UpdateMyCandyAmountEvent
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HelpWishDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
-import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
-import kotlinx.android.synthetic.main.empty_gift.view.emptyTip
 import kotlinx.android.synthetic.main.empty_layout_block.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.footer_tag_quality.view.*
@@ -82,7 +70,7 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    OnLazyClickListener, ModuleProxy, ViewTreeObserver.OnGlobalLayoutListener {
+    OnLazyClickListener,  ViewTreeObserver.OnGlobalLayoutListener {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -158,10 +146,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
-        detailUserLikeBtn.setOnClickListener(this)
-        detailUserDislikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
-        detailUserGreetBtn.setOnClickListener(this)
         guidelWishHelp.setOnClickListener(this)
         giftAll.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
@@ -506,9 +491,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
-        //更新打招呼次数和状态
-        updateLightCount()
-
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter
@@ -692,107 +674,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    override fun onGetLikeResult(
-        success: Boolean,
-        statusBean: BaseResp<StatusBean?>?,
-        islike: Boolean
-    ) {
-
-        if (islike) {
-            if (statusBean != null)
-                if (statusBean.code == 200) {
-                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
-                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
-                    }
-                    if (statusBean.data?.residue == 0) {
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-                    } else {
-                        EventBus.getDefault().post(RefreshEvent(true))
-                        if (statusBean.data?.status == 1) {  //喜欢成功
-                            matchBean!!.isliked = 1
-                            showGreetAnimatioon()
-//                            updateLightCount(-1)
-                        } else if (statusBean.data?.status == 2) {//匹配成功
-                            //如果是来自喜欢我的界面， 就刷新
-                            if (intent.getIntExtra("parPos", -1) != -1) {
-                                EventBus.getDefault().post(
-                                    UpdateLikemeOnePosEvent(
-                                        intent.getIntExtra("parPos", -1),
-                                        intent.getIntExtra("childPos", -1)
-                                    )
-                                )
-                            }
-                            //喜欢过
-                            matchBean!!.isfriend = 1
-                            showGreetAnimatioon()
-//                            updateLightCount(-1)
-                            sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
-                        }
-                    }
-                } else if (statusBean.code == 201) {
-                    if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
-                        RightSlideOutdDialog(
-                            this,
-                            matchBean!!.my_like_times,
-                            matchBean!!.total_like_times
-                        ).show()
-                    else
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-                }
-        } else {
-            if (statusBean != null)
-                if (statusBean.code == 200) {
-                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
-                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
-                    }
-
-                    if (statusBean.data != null) {
-                        EventBus.getDefault().post(RefreshEvent(true))
-                        finish()
-                    } else {
-                        CommonFunction.toast(statusBean.msg)
-                    }
-                }
-        }
-    }
-
-    private fun showGreetAnimatioon() {
-        detailUserGreetBtn.playAnimation()
-        val translateDislike = ObjectAnimator.ofFloat(
-            detailUserDislikeBtn,
-            "translationX",
-            SizeUtils.dp2px(-150F).toFloat()
-        )
-        translateDislike.duration = 250L
-        translateDislike.interpolator = LinearInterpolator()
-        translateDislike.start()
-
-        val translateLike = ObjectAnimator.ofFloat(
-            detailUserLikeBtn,
-            "translationX",
-            SizeUtils.dp2px(150F).toFloat()
-        )
-        translateLike.duration = 250L
-        translateLike.interpolator = LinearInterpolator()
-        translateLike.start()
-        detailUserGreetBtn.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                updateLightCount()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
-    }
-
-
     override fun onRemoveBlockResult(success: Boolean) {
         if (success) {
             NIMClient.getService(FriendService::class.java).removeFromBlackList(matchBean!!.accid)
@@ -856,22 +737,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
             }
-            R.id.detailUserDislikeBtn -> {//不感兴趣
-                mPresenter.dislikeUser(params)
-            }
-            R.id.detailUserLikeBtn -> {//感兴趣
-                mPresenter.likeUser(params)
-            }
+
             //这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
             //1.首先判断是否有次数，
             // 若有 就打招呼
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {
-                if (matchBean != null)
-                    CommonFunction.checkSendGift(this, matchBean!!.accid)
-            }
-
-            R.id.detailUserGreetBtn -> {
                 if (matchBean != null)
                     CommonFunction.checkSendGift(this, matchBean!!.accid)
             }
@@ -956,42 +827,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    /**
-     * 更新本地的招呼次数
-     */
-    private fun updateLightCount() {
-        //已感兴趣或者是好友不做操作
-        //1.是好友
-        //2.打过招呼
-        //3.喜欢过
-        //4.不喜欢
-        //5.normal状态
-
-        if (matchBean!!.isfriend == 1) {//是好友
-            detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_chat)
-            detailUserChatBtn.isVisible = true
-            detailUserGreetBtn.isVisible = false
-            detailUserLikeBtn.isVisible = false
-            detailUserDislikeBtn.visibility = View.INVISIBLE
-        } else {//不是好友,判断打请求过私聊没
-            if (matchBean!!.isgreeted) {
-                detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
-            } else {
-                detailUserGreetBtn.imageAssetsFolder = "images_greet_match_detail"
-                detailUserGreetBtn.setAnimation("data_greet_match_detail.json")
-            }
-            detailUserChatBtn.isVisible = false
-            //喜欢或者不喜欢都关闭喜欢按钮
-            if (matchBean!!.isliked == 1 || matchBean!!.isdisliked == 1) {
-                detailUserLikeBtn.isVisible = false
-                detailUserDislikeBtn.visibility = View.INVISIBLE
-            } else {
-                detailUserLikeBtn.isVisible = true
-                detailUserDislikeBtn.visibility = View.VISIBLE
-            }
-        }
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1004,18 +839,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onGreetDetailSuccessEvent(event: GreetDetailSuccessEvent) {
-        if (event.success) {
-            matchBean!!.isgreeted = true
-            updateLightCount()
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMatchByWishHelpEvent(event: MatchByWishHelpEvent) {
         if (event.isFirend) {
             matchBean!!.isfriend = 1
-            showGreetAnimatioon()
         }
     }
 
@@ -1025,62 +851,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         matchBean!!.mycandy_amount = matchBean!!.mycandy_amount - event.reduceAmout
     }
 
-
-    /*--------------------------消息代理------------------------*/
-    private fun sendChatHiMessage(type: Int) {
-        Log.d("OkHttp", matchBean?.accid ?: "")
-        val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(type)
-        val config = CustomMessageConfig()
-        config.enablePush = false
-        val message = MessageBuilder.createCustomMessage(
-            matchBean?.accid,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            config
-        )
-        container.proxy.sendMessage(message)
-    }
-
-    override fun sendMessage(msg: IMMessage): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                if (msg.attachment is ChatHiAttachment) {
-                    startActivity<MatchSucceedActivity>(
-                        "avator" to matchBean!!.avatar,
-                        "nickname" to matchBean!!.nickname,
-                        "accid" to matchBean!!.accid
-                    )
-                }
-
-            }
-
-            override fun onFailed(code: Int) {
-            }
-
-            override fun onException(exception: Throwable) {
-            }
-        })
-        return true
-    }
-
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
-    }
 
     var clTop = 0
     override fun onGlobalLayout() {

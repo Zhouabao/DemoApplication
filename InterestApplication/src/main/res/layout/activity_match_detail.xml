@@ -485,69 +485,15 @@
                     android:src="@drawable/icon_more_black" />
             </RelativeLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/icon_detail_bg1"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/detailUserChatBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/icon_matchdetail_continue_chat" />
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/detailUserGreetBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="73dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginBottom="5dp"
-                    android:scaleType="centerInside"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
-                    app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"
-                    app:lottie_autoPlay="false"
-                    app:lottie_fileName="data_greet_match_detail.json"
-                    app:lottie_imageAssetsFolder="images_greet_match_detail/" />
-
-                <ImageView
-                    android:id="@+id/detailUserDislikeBtn"
-                    android:layout_width="73dp"
-                    android:layout_height="73dp"
-                    android:layout_marginBottom="5dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/icon_dislike_shadow"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn" />
-
-                <ImageView
-                    android:id="@+id/detailUserChatBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/icon_matchdetail_continue_chat"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="parent"
-                    app:layout_constraintRight_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn" />
-
-                <ImageView
-                    android:id="@+id/detailUserLikeBtn"
-                    android:layout_width="73dp"
-                    android:layout_height="73dp"
-                    android:layout_marginBottom="5dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/icon_like_shadow"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/videoIntroduce"
@@ -567,6 +513,7 @@
                 android:textColor="#ff191919"
                 android:textSize="13sp"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/contactNumber"
                 android:layout_width="wrap_content"

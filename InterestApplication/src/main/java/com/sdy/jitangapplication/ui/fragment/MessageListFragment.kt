@@ -47,8 +47,6 @@ import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
-import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
-import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
 import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
@@ -198,12 +196,12 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 icon = R.drawable.icon_message_comment
             )
         )
-        allMessageTypeAdapter.addData(
-            MessageListBean(
-                title = "喜欢我",
-                icon = R.drawable.icon_message_like
-            )
-        )
+//        allMessageTypeAdapter.addData(
+//            MessageListBean(
+//                title = "喜欢我",
+//                icon = R.drawable.icon_message_like
+//            )
+//        )
 
         val friendsView =
             layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
@@ -219,13 +217,13 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     startActivity<MessageSquareActivity>("type" to 2)
 
                 }
-                2 -> { //喜欢我
-                    if (like_free_show) {
-                        startActivity<LikeMeReceivedActivity>()
-                    } else {
-                        startActivity<MessageLikeMeActivity>()
-                    }
-                }
+//                2 -> { //喜欢我
+//                    if (like_free_show) {
+//                        startActivity<LikeMeReceivedActivity>()
+//                    } else {
+//                        startActivity<MessageLikeMeActivity>()
+//                    }
+//                }
             }
             allMessageTypeAdapter.data[position].count = 0
             allMessageTypeAdapter.notifyItemChanged(position)

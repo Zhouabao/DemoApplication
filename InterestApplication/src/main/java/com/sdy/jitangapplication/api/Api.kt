@@ -390,29 +390,6 @@ interface Api {
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
-    /**
-     * 不喜欢、左滑
-     */
-    @FormUrlEncoded
-    @POST("relationship/dontLike${Constants.END_BASE_URL}")
-    fun dontLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
-
-
-    /**
-     * 喜欢、右滑
-     */
-    @FormUrlEncoded
-    @POST("relationship/addLike${Constants.END_BASE_URL}")
-    fun addLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
-
-
-    /**
-     * 打招呼、上滑
-     */
-    @FormUrlEncoded
-    @POST("Relationship/greetCandy${Constants.END_BASE_URL}")
-    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
-
 
     /**
      * 验证是否送礼物
@@ -634,52 +611,6 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/delSquareMsg${Constants.END_BASE_URL}")
     fun delSquareMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-    /**
-     * 喜欢我的列表（所有日期的）
-     */
-    @FormUrlEncoded
-    @POST("relationship/likeLists${Constants.END_BASE_URL}")
-    fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeMeListBean?>>
-
-
-    /**
-     * 我喜欢过的
-     */
-    @FormUrlEncoded
-    @POST("Tidings/myLikedList${Constants.END_BASE_URL}")
-    fun myLikedLis(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<MyLikedBean>?>>
-
-
-    /**
-     * 喜欢我的有效列表
-     */
-    @FormUrlEncoded
-    @POST("Relationship/likeListsV2${Constants.END_BASE_URL}")
-    fun likeListsV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NewLikeMeBean?>>
-
-
-    /**
-     * 右滑喜欢
-     */
-    @FormUrlEncoded
-    @POST("Relationship/bindMemberHandle${Constants.END_BASE_URL}")
-    fun bindMemberHandle(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-
-    /**
-     * 标记喜欢列表为已读
-     */
-    @FormUrlEncoded
-    @POST("Tidings/markLikeRead${Constants.END_BASE_URL}")
-    fun markLikeRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-    /**
-     * 喜欢我的列表（某一天的）
-     */
-    @FormUrlEncoded
-    @POST("relationship/likeListsCategory${Constants.END_BASE_URL}")
-    fun likeListsCategory(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LikeMeOneDayBean>?>>
 
     /**
      * 获取通讯录
