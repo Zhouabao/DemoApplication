@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:overScrollMode="never"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/markTitle" />
@@ -93,7 +93,7 @@
         android:id="@+id/markSendGiftCl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/markLikeRv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -111,22 +111,23 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/iv1"
-            android:layout_width="wrap_content"
-            android:layout_height="163dp"
-            android:layout_marginTop="25dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/accostGiftRv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:minHeight="131dp"
+            android:layout_marginLeft="25dp"
+            android:overScrollMode="never"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/totalMarkCnt"
-            app:lottie_autoPlay="false"
-            app:lottie_fileName="data_today_fate.json"
-            app:lottie_imageAssetsFolder="images_today_fate/" />
+            app:layout_constraintTop_toBottomOf="@id/totalMarkCnt" />
 
         <TextView
             android:id="@+id/myCandyCnt"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:background="@drawable/shape_rectangle_orange_white_15dp"
             android:drawableLeft="@drawable/icon_candy_small"
             android:drawablePadding="3dp"
@@ -138,7 +139,7 @@
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv1" />
+            app:layout_constraintTop_toBottomOf="@id/accostGiftRv" />
 
         <TextView
             android:id="@+id/rechargeCandyBtn"

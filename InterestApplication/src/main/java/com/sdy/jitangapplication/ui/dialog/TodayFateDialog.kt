@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.animation.Animator
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -15,6 +14,7 @@ import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
@@ -39,6 +39,7 @@ import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshTodayFateEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
+import com.sdy.jitangapplication.ui.adapter.AccostGiftAdapter
 import com.sdy.jitangapplication.ui.adapter.TodayFateAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.utils.UserManager
@@ -70,7 +71,34 @@ class TodayFateDialog(
     }
 
 
+    private var checkGiftPos = -1
+    private val accostGiftAdapter by lazy { AccostGiftAdapter() }
     private fun initView() {
+        //待赠送的礼物
+        accostGiftRv.layoutManager = GridLayoutManager(context1, 3)
+        accostGiftRv.adapter = accostGiftAdapter
+        accostGiftAdapter.setNewData(data?.gift_list)
+
+        accostGiftAdapter.setOnItemClickListener { _, view, position ->
+            for (data in accostGiftAdapter.data) {
+                if (data == accostGiftAdapter.data[position]) {
+                    data.checked = !data.checked
+                    if (data.checked) {
+                        checkGiftPos = position
+                    }
+                } else {
+                    data.checked = false
+                }
+            }
+            accostGiftAdapter.notifyDataSetChanged()
+        }
+
+        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),0,title = "礼物1"))
+        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),1,title = "礼物2"))
+        accostGiftAdapter.addData(GiftBean(100,1,UserManager.getAvator(),2,title = "礼物3"))
+
+
+
 
         guideMarkCl.isVisible = !UserManager.isShowGuideMarkLike()
         setCancelable(false)
@@ -108,22 +136,22 @@ class TodayFateDialog(
         markedUserRv.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
         markedUserRv.adapter = userAvatorAdapter
 
-        iv1.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                dismiss()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
+//        iv1.addAnimatorListener(object : Animator.AnimatorListener {
+//            override fun onAnimationRepeat(animation: Animator?) {
+//
+//            }
+//
+//            override fun onAnimationEnd(animation: Animator?) {
+//                dismiss()
+//            }
+//
+//            override fun onAnimationCancel(animation: Animator?) {
+//            }
+//
+//            override fun onAnimationStart(animation: Animator?) {
+//            }
+//
+//        })
 
         initialize()
     }
@@ -337,8 +365,10 @@ class TodayFateDialog(
                                     .sendMessage(giftMsg, false)
                                     .setCallback(object : RequestCallback<Void?> {
                                         override fun onSuccess(param: Void?) {
-                                            if (data.index == (t.data?.order_ids ?: mutableListOf()).size - 1) {
-                                                iv1.playAnimation()
+                                            if (data.index == (t.data?.order_ids
+                                                    ?: mutableListOf()).size - 1
+                                            ) {
+//                                                iv1.playAnimation()
                                             }
                                         }
 

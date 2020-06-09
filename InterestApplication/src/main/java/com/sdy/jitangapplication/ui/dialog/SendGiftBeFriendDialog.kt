@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.GiftBeans
-import com.sdy.jitangapplication.ui.adapter.SendGiftAdapter
+import com.sdy.jitangapplication.ui.adapter.AccostGiftAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_send_gift_be_friend.*
 import org.greenrobot.eventbus.EventBus
@@ -44,11 +44,11 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
     }
 
     private var checkGiftPos = -1
-    private val giftAdapter by lazy { SendGiftAdapter() }
+    private val giftAdapter by lazy { AccostGiftAdapter() }
     private fun initView() {
         candyCount.typeface = Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf")
 
-        giftRv.layoutManager = GridLayoutManager(context, 4)
+        giftRv.layoutManager = GridLayoutManager(context, 3)
         giftRv.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, view, position ->
             for (data in giftAdapter.data) {

@@ -234,7 +234,8 @@ data class TodayFateBean(
     val gift_amount: Int = 0,
     val mycandy_amount: Int = 0,
     val out_time: String = "",
-    val list: MutableList<NearPersonBean> = mutableListOf()
+    val list: MutableList<NearPersonBean> = mutableListOf(),
+    var gift_list: MutableList<GiftBean> = mutableListOf()
 )
 
 /**
