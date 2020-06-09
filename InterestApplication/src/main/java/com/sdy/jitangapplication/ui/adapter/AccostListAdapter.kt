@@ -8,7 +8,6 @@ import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.AccostBean
-import com.sdy.jitangapplication.model.MessageGiftBean
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
