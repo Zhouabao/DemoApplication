@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="false"
     tools:context=".ui.activity.FemalePowerActivity">
 
 
@@ -12,12 +13,27 @@
         android:id="@+id/powerBg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/icon_female_power_bg"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/layout_actionbar" />
+    <View
+        android:id="@+id/viewStatus"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:background="#FFFFDCC1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        layout="@layout/layout_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/viewStatus" />
 
     <TextView
         android:id="@+id/powerContact"
@@ -63,4 +79,15 @@
         app:layout_constraintLeft_toRightOf="@id/powerVerify"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/powerBg" />
+
+    <ImageView
+        android:id="@+id/allPowerIv"
+        android:layout_width="345dp"
+        android:layout_height="279dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_female_power"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/powerContact" />
 </androidx.constraintlayout.widget.ConstraintLayout>

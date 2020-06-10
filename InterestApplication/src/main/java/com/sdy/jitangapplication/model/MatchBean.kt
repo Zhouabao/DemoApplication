@@ -59,7 +59,7 @@ data class MatchBean(
     var member_level: Int? = 0,
     var nickname: String? = null,
     var contact_way: Int = 0,
-    var mv_btn: Boolean = false,
+    var mv_btn: Boolean = false, //是否有视频
     var photos: MutableList<String>? = null,
     var sign: String? = null,
     var job: String? = null,

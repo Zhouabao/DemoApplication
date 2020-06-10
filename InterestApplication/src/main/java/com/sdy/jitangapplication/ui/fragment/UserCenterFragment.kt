@@ -118,6 +118,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
         verifyState.setOnClickListener(this)
+        femalePowerLl.setOnClickListener(this)
         candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
 
         tabMySquareAndTag.viewTreeObserver.addOnGlobalLayoutListener {
@@ -144,6 +145,21 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             if (tabMySquareAndTagHeight > 0)
                 userName1.isVisible = abs(p1) >= tabMySquareAndTagHeight
         })
+
+        if (UserManager.getGender() == 1) {
+            femalePowerLl.isVisible = false
+            userSign.visibility = View.VISIBLE
+
+            userVerify.isVisible = true
+            verifyState.isVisible = true
+
+        } else {
+            femalePowerLl.isVisible = true
+            userSign.visibility = View.INVISIBLE
+
+            userVerify.isVisible = false
+            verifyState.isVisible = false
+        }
 
         initFragment()
     }
@@ -265,13 +281,38 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         checkVerify()
         checkVip()
+        setUserPower()
+
 
 
         if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
 
-        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault()
+            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
+    }
+
+
+    /**
+     * 设置女性用户的权益栏位
+     */
+    private fun setUserPower() {
+        if (userInfoBean?.userinfo?.mv_faced == 1) {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_open_small)
+        } else {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_no_small)
+        }
+        if (userInfoBean?.userinfo?.isfaced == 1) {
+            userVerifyIv.setImageResource(R.drawable.icon_female_verify_open_small)
+        } else {
+            userVerifyIv.setImageResource(R.drawable.icon_female_verify_no_small)
+        }
+        if (userInfoBean?.userinfo?.contact_way == 0) {
+            contactWayIv.setImageResource(R.drawable.icon_female_contact_no_small)
+        } else {
+            contactWayIv.setImageResource(R.drawable.icon_female_contact_open_small)
+        }
     }
 
 
@@ -481,6 +522,15 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             R.id.candyCl -> {
                 startActivity<MyCandyActivity>()
             }
+            //女性权益页面
+            R.id.femalePowerLl -> {
+                startActivity<FemalePowerActivity>(
+                    "contact" to userInfoBean?.userinfo?.contact_way,
+                    "verify" to userInfoBean?.userinfo?.isfaced,
+                    "video" to userInfoBean?.userinfo?.mv_faced,
+                    "url" to userInfoBean?.power_url
+                )
+            }
             //我的糖果
             R.id.guideVerifyWindow -> {
                 guideVerifyWindow.isVisible = false
@@ -597,3 +647,4 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         guideVerifyWindow.clearAnimation()
     }
 }
+

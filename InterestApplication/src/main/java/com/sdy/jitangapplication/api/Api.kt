@@ -719,7 +719,7 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfoCandyV21${Constants.END_BASE_URL}")
+    @POST("MemberInfo/getTargetInfoCandyEnd${Constants.END_BASE_URL}")
     fun getTargetInfoCandy(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 

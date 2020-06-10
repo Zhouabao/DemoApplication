@@ -87,8 +87,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         //判断手机是否载有手机卡
         if (PhoneUtils.isSimCardReady()) {
             onekeyLoginBtn.isVisible = true
-            phoneLoginBtn.isVisible = false
-            wechatLoginBtn.isVisible = false
+            phoneLoginBtn.visibility = View.INVISIBLE
+            wechatLoginBtn.visibility = View.INVISIBLE
         } else {
             onekeyLoginBtn.isVisible = false
             phoneLoginBtn.isVisible = true

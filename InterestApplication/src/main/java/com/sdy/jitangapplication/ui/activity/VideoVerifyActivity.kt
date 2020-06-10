@@ -39,6 +39,7 @@ import com.netease.nim.uikit.common.media.model.GLImage
 import com.netease.nim.uikit.common.util.media.ImageUtil
 import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.baselibrary.utils.RandomUtils
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -50,7 +51,6 @@ import com.sdy.jitangapplication.presenter.view.VideoVerifyView
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyThenChatDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
-import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_video_verify.*
 import kotlinx.android.synthetic.main.dialog_verify_then_chat.*
@@ -97,25 +97,22 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 return
             }
 
-            if (!UserManager.isHasFaceUrl()) {
-                val confirmDialog = VerifyThenChatDialog(
-                    context1,
-                    VerifyThenChatDialog.FROM_VERIFY_MUST_KNOW
-                )
-                confirmDialog.show()
-                confirmDialog.verifyBtn.clickWithTrigger {
-                    if (requestCode != -1) {
-                        (context1 as Activity).startActivityForResult<VideoVerifyActivity>(
-                            requestCode, "type" to type
-                        )
-                    } else {
-                        context1.startActivity<VideoVerifyActivity>("type" to type)
-                    }
-                    confirmDialog.dismiss()
+            val confirmDialog = VerifyThenChatDialog(
+                context1,
+                VerifyThenChatDialog.FROM_VERIFY_MUST_KNOW
+            )
+            confirmDialog.show()
+            confirmDialog.verifyBtn.clickWithTrigger {
+                if (requestCode != -1) {
+                    (context1 as Activity).startActivityForResult<VideoVerifyActivity>(
+                        requestCode, "type" to type
+                    )
+                } else {
+                    context1.startActivity<VideoVerifyActivity>("type" to type)
                 }
-            } else {
-                context1.startActivity<NewUserInfoSettingsActivity>("showToast" to true)
+                confirmDialog.dismiss()
             }
+
         }
 
 

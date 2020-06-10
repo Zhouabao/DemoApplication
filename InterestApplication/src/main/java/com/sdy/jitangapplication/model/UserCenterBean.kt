@@ -15,6 +15,7 @@ data class UserInfoBean(
     val label_quality: MutableList<LabelQuality> = mutableListOf(),//展示的兴趣
     val userinfo: Userinfo? = null,
     val sign: String? = "",
+    val power_url: String = "",
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
     val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证

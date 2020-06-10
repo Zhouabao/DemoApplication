@@ -134,11 +134,58 @@
                             android:maxLines="1"
                             android:textColor="#ff888d92"
                             android:textSize="12sp"
+                            android:visibility="invisible"
                             app:layout_constraintBottom_toBottomOf="@id/userAvator"
                             app:layout_constraintLeft_toLeftOf="@id/userName"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/userName"
                             tools:text="不要给失败找理由，要为成功找方向" />
+
+                        <LinearLayout
+                            android:id="@+id/femalePowerLl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_rectangle_gray_white_13dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:visibility="invisible"
+                            android:paddingRight="2dp"
+                            app:layout_constraintBottom_toBottomOf="@id/userSign"
+                            app:layout_constraintLeft_toLeftOf="@id/userName"
+                            app:layout_constraintTop_toTopOf="@id/userSign">
+
+                            <TextView
+                                android:id="@+id/femalePowerBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/icon_more_right_gray"
+                                android:text="个人权益"
+                                android:layout_gravity="center"
+                                android:textColor="#ff191919"
+                                android:textSize="12sp" />
+
+                            <ImageView
+                                android:id="@+id/contactWayIv"
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:layout_marginLeft="15dp"
+                                android:src="@drawable/icon_female_contact_no" />
+
+                            <ImageView
+                                android:id="@+id/videoIntroduceIv"
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:layout_marginLeft="4dp"
+                                android:src="@drawable/icon_female_video_no" />
+
+                            <ImageView
+                                android:id="@+id/userVerifyIv"
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:layout_marginLeft="4dp"
+                                android:src="@drawable/icon_female_verify_no" />
+                        </LinearLayout>
 
                         <ImageView
                             android:id="@+id/userVip"

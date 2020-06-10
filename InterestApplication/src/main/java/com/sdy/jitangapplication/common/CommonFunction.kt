@@ -591,4 +591,15 @@ object CommonFunction {
         else
             IDVerifyActivity.startActivity(context, type)
     }
+
+    /**
+     * 录制视频介绍
+     */
+    fun startToVideoIntroduce(
+        context: Context,
+        type: Int = VideoVerifyActivity.TYPE_ACCOUNT_NORMAL,
+        requestCode: Int = -1
+    ) {
+        VideoVerifyActivity.start(context, type, requestCode)
+    }
 }

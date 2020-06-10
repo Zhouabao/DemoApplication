@@ -47,6 +47,8 @@ data class Userinfo(
     val vip_express: String = "",
     val platinum_vip_express: String = "",
     var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+    var contact_way: Int = 0,//  联系方式  0  没有 1 电话 2微信 3 qq
+    var mv_faced: Int = 0,//      0 没有视频/拒绝   1视频通过  2视频审核中
     var identification: Int = 0,// int（认证分数）
     var percent_complete: Int = 0,// float（百分比例如 80.99）
     var intention: LabelQualityBean? = null, //意向
