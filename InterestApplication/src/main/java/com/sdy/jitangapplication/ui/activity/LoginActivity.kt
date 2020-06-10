@@ -5,9 +5,11 @@ import android.app.Application
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.NetworkUtils
+import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
@@ -17,6 +19,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.CommonFunction.wechatLogin
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.LoginBean
@@ -27,6 +30,7 @@ import com.sdy.jitangapplication.utils.AbScreenUtils
 import com.sdy.jitangapplication.utils.ConfigUtils
 import com.sdy.jitangapplication.utils.ForebackUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
@@ -80,6 +84,17 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         AbScreenUtils.hideBottomUIMenu(this)
 
         loginCl.isVisible = !isOpenAuth
+        //判断手机是否载有手机卡
+        if (PhoneUtils.isSimCardReady()) {
+            onekeyLoginBtn.isVisible = true
+            phoneLoginBtn.isVisible = false
+            wechatLoginBtn.isVisible = false
+        } else {
+            onekeyLoginBtn.isVisible = false
+            phoneLoginBtn.isVisible = true
+            wechatLoginBtn.isVisible = true
+        }
+
 
 //        StatusBarUtil.immersive(this)
 
@@ -134,6 +149,15 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
                 onekeyLoginBtn.isEnabled = true
             }, 1000L)
 
+        }
+
+        //电话号码登录
+        phoneLoginBtn.clickWithTrigger {
+            startActivity<PhoneActivity>("type" to "1")
+        }
+        //微信登录
+        wechatLoginBtn.clickWithTrigger {
+            wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
         }
 
 
@@ -248,7 +272,10 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 //            data!!.threshold = false
 //            data!!.supplement = 1
             UserManager.registerFileBean = data
-            touristBtn.isVisible = data?.tourists == true
+            if (data?.tourists) {
+                touristBtn.visibility = View.VISIBLE
+            } else
+                touristBtn.visibility = View.INVISIBLE
         }
 
     }
