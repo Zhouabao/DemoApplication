@@ -71,6 +71,7 @@ import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
+import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
@@ -643,7 +644,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (nimBeanBaseResp.getData().getGet_help_amount() > 0) {
                                 new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity()).show();
                             }
-
+                            //搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
+                            if (nimBeanBaseResp.getData().getRid_data() != null) {
+                                new ReceiveAccostGiftDialog(getActivity(), nimBeanBaseResp.getData().getRid_data()).show();
+                            }
 //                            if (content.getMsgType() == MsgTypeEnum.text)
                             sendMsgS(content, false);
                             if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
@@ -651,6 +655,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     sendTipMessage(bean.getContent(), bean.getShowType(), bean.getIfSendUserShow());
 
                             nimBean.set_send_msg(true);
+
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")

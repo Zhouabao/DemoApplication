@@ -5,7 +5,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.model.GiftBean
+import kotlinx.android.synthetic.main.dialog_receive_accost_gift.*
 
 /**
  *    author : ZFM
@@ -13,7 +17,7 @@ import com.sdy.jitangapplication.R
  *    desc   :
  *    version: 1.0
  */
-class ReceiveAccostGiftDialog(val context1: Context) :
+class ReceiveAccostGiftDialog(val context1: Context, val giftBean: GiftBean) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +27,12 @@ class ReceiveAccostGiftDialog(val context1: Context) :
     }
 
     private fun initView() {
+        GlideUtil.loadImg(context1, giftBean.icon, accostGiftIv)
+        accostGiftName.text = giftBean.title
 
-
+        contentView.clickWithTrigger {
+            dismiss()
+        }
     }
 
 
@@ -39,6 +47,7 @@ class ReceiveAccostGiftDialog(val context1: Context) :
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(true)
+        setCancelable(true)
     }
 
 
