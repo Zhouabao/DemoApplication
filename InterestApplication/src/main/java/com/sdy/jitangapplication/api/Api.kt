@@ -727,7 +727,7 @@ interface Api {
      * 发消息请求服务器
      */
     @FormUrlEncoded
-    @POST("Tidings/sendMsg${Constants.END_BASE_URL}")
+    @POST("Tidings/sendMsgV21${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
 
     /**

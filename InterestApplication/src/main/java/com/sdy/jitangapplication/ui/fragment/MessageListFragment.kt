@@ -20,8 +20,6 @@ import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
 import com.netease.nim.uikit.api.model.user.UserInfoObserver
 import com.netease.nim.uikit.business.recent.RecentContactsFragment
 import com.netease.nim.uikit.common.CommonUtil
-import com.netease.nim.uikit.common.ui.drop.DropCover
-import com.netease.nim.uikit.common.ui.drop.DropManager
 import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.NIMClient
@@ -73,13 +71,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     override fun loadData() {
         initView()
         registerObservers(true)
-        registerDropCompletedListener(true)
         registerOnlineStateChangeListener(true)
         mPresenter.messageCensus(params)
     }
-
-    private var cached: MutableMap<String, RecentContact> =
-        mutableMapOf() // 暂缓刷上列表的数据（未读数红点拖拽动画运行时用）
 
     private val params by lazy {
         hashMapOf(
@@ -128,6 +122,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         messageListRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
+        adapter.addHeaderView(initMessageAllHeader(), 0)
         adapter.addHeaderView(initAssistHeadsView(), 1)
         adapter.setHeaderAndEmpty(true)
 
@@ -235,6 +230,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     /**
      * 获取消息中心的顶部数据
      */
+    private var accostIds = mutableListOf<String>()
+
     override fun onMessageCensusResult(data: MessageListBean1?) {
         if (data?.square_count ?: 0 > 0)
             EventBus.getDefault().post(GetNewMsgEvent())
@@ -248,20 +245,15 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         headAdapter.data[1].time = TimeUtil.getTimeShowString(System.currentTimeMillis(), true)
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
 
-        accostAdapter.addData(data?.chatup_list ?: mutableListOf<AccostBean>())
-        if ((data?.chatup_list ?: mutableListOf<AccostBean>()).size > 0) {
-            adapter.addHeaderView(initMessageAllHeader(), 0)
-            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf<AccostBean>()).size > 4
+        accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
+        if ((data?.chatup_list ?: mutableListOf()).size > 0) {
+            adapter.headerLayout.moreChatUpBtn.isVisible =
+                (data?.chatup_list ?: mutableListOf()).size > 4
         }
 //        moreChatUpBtn
-
+        accostIds = data?.chatup_rid_list ?: mutableListOf()
         //获取最近联系人列表
         mPresenter.getRecentContacts()
-    }
-
-
-    //离线获取@了我的
-    override fun updateOfflineContactAited(recentAited: MutableList<RecentContact>) {
     }
 
     //官方助手
@@ -287,6 +279,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
         setViewState(BaseActivity.CONTENT)
+
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass.msg = when (loadedRecent.attachment) {
@@ -321,6 +314,16 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         }
 
+        val iterator = result.iterator()
+        while (iterator.hasNext()) {
+            val contact = iterator.next()
+            for (accid in accostIds) {
+                if (contact.contactId == accid) {
+                    iterator.remove()
+                    break
+                }
+            }
+        }
         adapter.setNewData(result)
         refreshMessages()
     }
@@ -390,8 +393,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         }
     }
 
-    // 暂存消息，当RecentContact 监听回来时使用，结束后清掉
-    private val cacheMessages = HashMap<String, MutableSet<IMMessage>>()
 
     internal var friendDataChangedObserver: ContactChangedObserver =
         object : ContactChangedObserver {
@@ -428,29 +429,11 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                         NIMClient.getService(MsgService::class.java).deleteChattingHistory(message)
                     }
                 }
-//                for (imMessage in imMessages) {
-//                    if (!TeamMemberAitHelper.isAitMessage(imMessage)) {
-//                        continue
-//                    }
-//                    var cacheMessageSet: MutableSet<IMMessage>? = cacheMessages[imMessage.sessionId]
-//                    if (cacheMessageSet == null) {
-//                        cacheMessageSet = HashSet()
-//                        cacheMessages[imMessage.sessionId] = cacheMessageSet
-//                    }
-//                    cacheMessageSet.add(imMessage)
-//                }
             }
         }
 
     internal var messageObserver: Observer<MutableList<RecentContact>> =
         Observer { recentContacts ->
-            if (!DropManager.getInstance().isTouchable) {
-                // 正在拖拽红点，缓存数据
-                for (r in recentContacts) {
-                    cached[r.contactId] = r
-                }
-                return@Observer
-            }
             onRecentContactChanged()
         }
 
@@ -472,35 +455,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private var onlineStateChangeObserver: OnlineStateChangeObserver =
         OnlineStateChangeObserver { adapter.notifyDataSetChanged() }
 
-    private fun registerDropCompletedListener(register: Boolean) {
-        if (register) {
-            DropManager.getInstance().addDropCompletedListener(dropCompletedListener)
-        } else {
-            DropManager.getInstance().removeDropCompletedListener(dropCompletedListener)
-        }
-    }
-
-    private var dropCompletedListener: DropCover.IDropCompletedListener =
-        DropCover.IDropCompletedListener { id, explosive ->
-            if (cached != null && !cached.isEmpty()) {
-                // 红点爆裂，已经要清除未读，不需要再刷cached
-                if (explosive) {
-                    if (id is RecentContact) {
-                        cached.remove(id.contactId)
-
-                    } else if (id is String && id.contentEquals("0")) {
-                        cached.clear()
-                    }
-                }
-                // 刷cached
-                if (!cached.isEmpty()) {
-                    val recentContacts = ArrayList<RecentContact>(cached.size)
-                    recentContacts.addAll(cached.values)
-                    cached.clear()
-                    onRecentContactChanged()
-                }
-            }
-        }
 
     internal var statusObserver: Observer<IMMessage> =
         Observer { message ->
@@ -517,10 +471,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         Observer { recentContact ->
             if (recentContact != null) {
                 for (item in adapter.data) {
-                    if (TextUtils.equals(
-                            item.getContactId(),
-                            recentContact.contactId
-                        ) && item.getSessionType() == recentContact.sessionType
+                    if (TextUtils.equals(item.getContactId(), recentContact.contactId)
+                        && item.getSessionType() == recentContact.sessionType
                     ) {
                         adapter.data.remove(item)
                         refreshMessages()
@@ -557,7 +509,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     override fun onDestroy() {
         super.onDestroy()
         registerObservers(false)
-        registerDropCompletedListener(false)
         registerOnlineStateChangeListener(false)
         EventBus.getDefault().unregister(this)
     }

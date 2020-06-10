@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.model.AccostBean
 
 /**
@@ -10,5 +11,12 @@ import com.sdy.jitangapplication.model.AccostBean
  *    version: 1.0
  */
 interface AccostListView : BaseView {
+
     fun onChatupListResult(data: MutableList<AccostBean>?)
+
+    fun onGetRecentContactResults(
+        result: MutableList<RecentContact>,
+        data: MutableList<AccostBean>
+    )
+
 }

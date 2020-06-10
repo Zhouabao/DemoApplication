@@ -1,163 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        app:canRightSwipe="false"
-        app:contentView="@id/content"
-        app:fraction="0.1"
-        app:rightMenuView="@id/right">
+<com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    app:canRightSwipe="false"
+    app:contentView="@id/content"
+    app:fraction="0.1"
+    app:rightMenuView="@id/right">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:background="@color/colorWhite"
-            android:layout_height="wrap_content">
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite">
 
         <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/msgIcon"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/icon_default_avator"
-                app:civ_border_color="@color/colorDivider"
-                app:civ_border_width="1dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/msgIcon"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_default_avator"
+            app:civ_border_color="@color/colorDivider"
+            app:civ_border_width="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
-                android:id="@+id/msgOnLineState"
-                android:layout_width="11dp"
-                android:layout_height="11dp"
-                android:visibility="gone"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="37dp"
-                android:background="@drawable/shape_rectangle_green_online"
-                app:layout_constraintBottom_toBottomOf="@id/msgIcon"
-                app:layout_constraintRight_toRightOf="@id/msgIcon"/>
+            android:id="@+id/msgOnLineState"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/shape_rectangle_green_online"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/msgIcon"
+            app:layout_constraintRight_toRightOf="@id/msgIcon" />
 
         <TextView
-                android:id="@+id/msgTitle"
-                android:layout_marginLeft="10dp"
-                android:text="发现"
-                android:textColor="#FF191919"
-                android:textSize="16sp"
-                android:layout_marginRight="6dp"
-                android:layout_marginTop="15dp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/msgIcon"
-                app:layout_constraintTop_toTopOf="parent"/>
-
+            android:id="@+id/msgTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="6dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="发现"
+            android:textColor="#FF191919"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/msgIcon"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-                android:id="@+id/latelyTime"
-                android:text="2分钟前"
-                android:textColor="#FFC5C6C8"
-                android:textSize="12sp"
-                android:layout_marginRight="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+            android:id="@+id/latelyTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="2分钟前"
+            android:textColor="#FFC5C6C8"
+            android:textSize="12sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/msgTitle" />
 
         <TextView
-                android:id="@+id/msgNew"
-                android:text="新消息"
-                android:textColor="#fffd4417"
-                android:textSize="13sp"
-                android:visibility="visible"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintBottom_toBottomOf="@id/text"
-                app:layout_constraintLeft_toRightOf="@id/msgIcon"
-                app:layout_constraintRight_toLeftOf="@id/text"
-                app:layout_constraintTop_toTopOf="@id/text"/>
+            android:id="@+id/msgNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="新消息"
+            android:textColor="#fffd4417"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/text"
+            app:layout_constraintLeft_toRightOf="@id/msgIcon"
+            app:layout_constraintRight_toLeftOf="@id/text"
+            app:layout_constraintTop_toTopOf="@id/text" />
 
         <TextView
-                android:id="@+id/text"
-                android:layout_marginTop="6dp"
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:layout_marginLeft="10dp"
-                android:text="有消息未开启"
-                android:textColor="#FFC5C6C8"
-                android:textSize="14sp"
-                android:layout_marginRight="30dp"
-                app:layout_constraintLeft_toRightOf="@id/msgNew"
-                app:layout_constraintRight_toLeftOf="@id/newCount"
-                app:layout_constraintTop_toBottomOf="@id/msgTitle"
-                />
+            android:id="@+id/text"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="30dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="有消息未开启"
+            android:textColor="#FFC5C6C8"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/msgNew"
+            app:layout_constraintRight_toLeftOf="@id/newCount"
+            app:layout_constraintTop_toBottomOf="@id/msgTitle" />
 
         <TextView
-                android:id="@+id/newCount"
-                android:text="2"
-                android:textColor="@color/colorWhite"
-                android:textSize="12sp"
-                android:layout_marginRight="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="1dp"
-                android:paddingBottom="1dp"
-                android:textStyle="bold"
-                android:background="@drawable/orange_bg_rectangle"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/text"/>
+            android:id="@+id/newCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/orange_bg_rectangle"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="1dp"
+            android:text="2"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text" />
 
 
         <View
-                android:id="@+id/msgDivider"
-                android:layout_marginTop="15dp"
-                android:background="@color/colorDivider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/msgTitle"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text"/>
+            android:id="@+id/msgDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-            android:id="@+id/right"
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:orientation="horizontal">
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
-                android:id="@+id/menuTop"
-                android:layout_gravity="center"
-                android:layout_width="50dp"
-                android:scaleType="centerInside"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/icon_top_msg"
-                />
+            android:id="@+id/menuTop"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_top_msg" />
 
         <ImageView
-                android:id="@+id/menuDetele"
-                android:layout_gravity="center"
-                android:layout_width="50dp"
-                android:scaleType="centerInside"
-                android:layout_height="50dp"
-                android:src="@drawable/icon_delete_msg"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                />
+            android:id="@+id/menuDetele"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_delete_msg" />
     </LinearLayout>
 </com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout>

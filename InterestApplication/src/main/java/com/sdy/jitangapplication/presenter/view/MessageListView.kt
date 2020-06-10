@@ -13,7 +13,5 @@ import com.sdy.jitangapplication.model.MessageListBean1
 interface MessageListView : BaseView {
     fun onMessageCensusResult(data: MessageListBean1?)
 
-    fun updateOfflineContactAited(recentAited: MutableList<RecentContact>)
-
     fun onGetRecentContactResults(result: MutableList<RecentContact>)
 }

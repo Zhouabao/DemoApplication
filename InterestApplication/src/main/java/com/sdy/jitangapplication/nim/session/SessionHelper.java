@@ -279,6 +279,8 @@ public class SessionHelper {
                         return "『礼物』";
                     } else if (recent.getAttachment() instanceof WishHelpAttachment) {
                         return "『助力』";
+                    } else if (recent.getAttachment() instanceof AccostGiftAttachment) {
+                        return "『搭讪』";
                     } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
                         return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
                     }

@@ -1,14 +1,15 @@
 package com.sdy.jitangapplication.nim.viewholder;
 
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
-import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 
 /**
  * author : ZFM
@@ -20,6 +21,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
 
     private TextView giftTitle; //礼物的名字
     private RelativeLayout giftStatusBg;//礼物背景状态
+    private ImageView giftImg;//L礼物icon
     private AccostGiftAttachment attachment;
 
 
@@ -37,6 +39,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
         //初始化数据
         giftTitle = findViewById(R.id.giftTitle);
         giftStatusBg = findViewById(R.id.giftStatusBg);
+        giftImg = findViewById(R.id.giftImg);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
         int giftReceiveStatus = attachment.getGiftStatus();
         if (isReceivedMessage()) {
             if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
-                giftTitle.setText("礼物名字");
+                giftTitle.setText(attachment.getGiftName());
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_white_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
                 giftTitle.setText("礼物已开启");
@@ -57,7 +60,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
 
         } else {
             if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
-                giftTitle.setText("礼物名字");
+                giftTitle.setText(attachment.getGiftName());
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_white_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
                 giftTitle.setText("礼物已开启");
@@ -66,8 +69,8 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
                 giftTitle.setText("超时已退回");
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
             }
-
         }
+        GlideUtil.loadImg(context, attachment.getGiftIcon(), giftImg);
     }
 
     @Override
@@ -99,12 +102,12 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
 
     @Override
     protected void onItemClick() {
-        contentContainer.setEnabled(false);
-
-        new ReceiveAccostGiftDialog(context).show();
+//        contentContainer.setEnabled(false);
+//
+//        new ReceiveAccostGiftDialog(context).show();
 
 //        attachment = (AccostGiftAttachment) message.getAttachment();
 //        CommonFunction.INSTANCE.openGiftLetter(isReceivedMessage(), attachment.getGiftStatus(), attachment.getId(), context, message.getSessionId());
-        contentContainer.postDelayed(() -> contentContainer.setEnabled(true), 2000L);
+//        contentContainer.postDelayed(() -> contentContainer.setEnabled(true), 2000L);
     }
 }

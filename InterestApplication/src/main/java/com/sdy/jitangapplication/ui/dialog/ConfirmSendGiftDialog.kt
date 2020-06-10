@@ -148,6 +148,7 @@ class ConfirmSendGiftDialog(
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
+                            CommonFunction.toast(t.msg)
                             sendAccostGiftMessage(t.data?.order_id ?: 0)
                         }
                         419 -> {//糖果余额不足
@@ -220,10 +221,10 @@ class ConfirmSendGiftDialog(
         val config = CustomMessageConfig()
         config.enableUnreadCount = true
         config.enablePush = false
-        val shareSquareAttachment =
+        val accostGiftAttachment =
             AccostGiftAttachment(
                 orderId,
-                SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
+                AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
                 giftName.icon,
                 giftName.title
             )
@@ -231,12 +232,11 @@ class ConfirmSendGiftDialog(
             account,
             SessionTypeEnum.P2P,
             "",
-            shareSquareAttachment,
+            accostGiftAttachment,
             config
         )
         NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-            .setCallback(object :
-                RequestCallback<Void?> {
+            .setCallback(object : RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
                     //更新消息列表
                     EventBus.getDefault().post(UpdateSendGiftEvent(message))

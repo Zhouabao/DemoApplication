@@ -80,6 +80,7 @@ import com.sdy.jitangapplication.event.RefreshCandyMessageEvent;
 import com.sdy.jitangapplication.model.ChatGiftStateBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
@@ -1525,6 +1526,10 @@ public class ChatMessageListPanelEx {
                     refreshViewHolderByIndex(i);
                 } else if (message.getAttachment() instanceof WishHelpAttachment && ((WishHelpAttachment) message.getAttachment()).getOrderId() == stateBean.getId()) {
                     ((WishHelpAttachment) message.getAttachment()).setWishHelpStatus(stateBean.getState());
+                    items.set(i, message);
+                    refreshViewHolderByIndex(i);
+                } else if (message.getAttachment() instanceof AccostGiftAttachment && ((AccostGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
+                    ((AccostGiftAttachment) message.getAttachment()).setGiftStatus(stateBean.getState());
                     items.set(i, message);
                     refreshViewHolderByIndex(i);
                 }

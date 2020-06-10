@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.netease.nim.uikit.impl.NimUIKitImpl
@@ -39,6 +41,16 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
             )
 
 
+        if (item.unreadCnt > 0) {
+            SpanUtils.with(holder.itemView.text)
+                .append("[礼物]")
+                .setForegroundColor(Color.parseColor("#FFFD4417"))
+                .append("搭讪礼物待领取")
+                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                .create()
+        } else {
+            holder.itemView.text.text = "[礼物]搭讪礼物待领取"
+        }
     }
 
 }

@@ -52,14 +52,8 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
         giftRv.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, view, position ->
             for (data in giftAdapter.data) {
-                if (data == giftAdapter.data[position]) {
-                    data.checked = !data.checked
-                    if (data.checked) {
-                        checkGiftPos = position
-                    }
-                } else {
-                    data.checked = false
-                }
+                data.checked = data == giftAdapter.data[position]
+                checkGiftPos = position
             }
             giftAdapter.notifyDataSetChanged()
         }
@@ -104,6 +98,10 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
                     if (t.code == 200) {
                         myCandyCount = t.data?.candy_amount ?: 0
                         candyCount.text = "${t.data?.candy_amount}"
+                        if ((t.data?.list ?: mutableListOf()).size > 0) {
+                            t.data?.list!![0].checked = true
+                            checkGiftPos = 0
+                        }
                         giftAdapter.addData(t.data?.list ?: mutableListOf())
                     }
                 }

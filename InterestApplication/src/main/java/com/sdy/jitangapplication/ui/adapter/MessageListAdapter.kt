@@ -130,14 +130,16 @@ class MessageListAdapter :
                             when (data.state) {
                                 WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
                                     if (item.fromAccount == UserManager.getAccid()) {
-                                        holder.itemView.text.text = "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                                        holder.itemView.text.text =
+                                            "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
                                     } else {
-                                        holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
-                                            .append("[助力]")
-                                            .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                            .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
-                                            .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                            .create()
+                                        holder.itemView.text.text =
+                                            SpanUtils.with(holder.itemView.text)
+                                                .append("[助力]")
+                                                .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                                .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
+                                                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                                .create()
                                     }
                                 }
                                 WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN -> {
@@ -157,7 +159,8 @@ class MessageListAdapter :
                         when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
                             WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
                                 if (item.fromAccount == UserManager.getAccid()) {
-                                    holder.itemView.text.text = "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                                    holder.itemView.text.text =
+                                        "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
                                 } else {
                                     holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
                                         .append("[助力]")
@@ -178,7 +181,62 @@ class MessageListAdapter :
                         }
                     }
                 }
-
+                is AccostGiftAttachment -> {
+                    var hasList = false
+                    for (data in session_list_arr) {
+                        if ((item.attachment as AccostGiftAttachment).id == data.id) {
+                            when (data.state) {
+                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
+                                    if (item.fromAccount == UserManager.getAccid()) {
+                                        holder.itemView.text.text =
+                                            "[搭讪]搭讪礼物待领取"
+                                    } else {
+                                        holder.itemView.text.text =
+                                            SpanUtils.with(holder.itemView.text)
+                                                .append("[搭讪]")
+                                                .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                                .append("搭讪礼物待领取")
+                                                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                                .create()
+                                    }
+                                }
+                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
+                                    holder.itemView.text.text = "[搭讪]搭讪礼物已领取"
+                                }
+                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
+                                    holder.itemView.text.text = "[搭讪]搭讪礼物已退回"
+                                }
+                            }
+                            hasList = true
+                            break
+                        }
+                    }
+                    if (!hasList) {
+                        when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
+                            AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
+                                if (item.fromAccount == UserManager.getAccid()) {
+                                    holder.itemView.text.text =
+                                        "[搭讪]搭讪礼物待领取"
+                                } else {
+                                    holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
+                                        .append("[搭讪]")
+                                        .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                        .append("搭讪礼物待领取")
+                                        .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                        .create()
+                                }
+                            }
+                            AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
+                                holder.itemView.text.text =
+                                    "[搭讪]搭讪礼物已领取"
+                            }
+                            AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
+                                holder.itemView.text.text =
+                                    "[搭讪]搭讪礼物已退回"
+                            }
+                        }
+                    }
+                }
 
                 is SendCustomTipAttachment -> holder.itemView.text.text =
                     (item.attachment as SendCustomTipAttachment).content

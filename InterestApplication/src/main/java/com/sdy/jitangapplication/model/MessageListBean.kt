@@ -21,6 +21,7 @@ data class MessageListBean1(
     var square_count: Int = 0,//评论未读数
     var chatup_list_lasttime: String = "",
     var session_list_arr: MutableList<MessageGiftBean> = mutableListOf(),
+    var chatup_rid_list: MutableList<String> = mutableListOf(), //要剔除的id
     var chatup_list: MutableList<AccostBean> = mutableListOf()
 )
 
@@ -76,6 +77,8 @@ data class AccostBean(
     var avatar: String = "",
     var icon: String = "",
     var gender: Int = 0,
+    var unreadCnt: Int = 0,
+    var time: Long = 0L,
     var nickname: String = ""
 )
 
