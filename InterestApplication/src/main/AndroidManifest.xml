@@ -148,9 +148,6 @@
             android:name=".ui.activity.VipPowerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.VipPowerActivity1"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.TagDetailCategoryActivity"
             android:screenOrientation="portrait" />
         <activity
