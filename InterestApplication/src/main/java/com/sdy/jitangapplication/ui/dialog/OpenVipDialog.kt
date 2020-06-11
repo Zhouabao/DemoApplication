@@ -123,6 +123,7 @@ class OpenVipDialog(
                     standardPeople.text = "${moreMatch?.people_amount}个糖宝女孩"
                     moreInfoText.isVisible = true
                     standardPeople.dance()
+
                 } else {
                     SpanUtils.with(moreInfoTitle)
                         .append("在${moreMatch?.city_name}找到符合标准的")
@@ -135,10 +136,10 @@ class OpenVipDialog(
                         .create()
                     moreInfoText.isVisible = false
                     standardPeople.dance()
-                    refuseBtn.isVisible = true
                 }
 
-                if (UserManager?.registerFileBean?.threshold == true) {
+                //男性并且付费门槛开启
+                if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
                     payExplain.isVisible = true
@@ -148,6 +149,7 @@ class OpenVipDialog(
                     openVipBtn.text = "立即加入"
                     payExplain.isVisible = false
                 }
+
             }
             FROM_P2P_CHAT -> {
                 openVipBtn.text = if (UserManager.getGender() == 1) {

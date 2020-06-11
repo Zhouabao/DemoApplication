@@ -42,6 +42,7 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
         vpRelationship.adapter = getRelationshipVpAdapter
         vpRelationship.isUserInputEnabled = false
+        vpRelationship.offscreenPageLimit = 4
 
         nextStep.setOnClickListener(this)
 
