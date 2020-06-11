@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
+import kotlinx.android.synthetic.main.dialog_video_introduce_before.*
 
 /**
  *    author : ZFM
@@ -22,7 +24,9 @@ class VideoIntroduceBeforeDialog(val context1: Context) : Dialog(context1, R.sty
     }
 
     private fun initView() {
+        videoPlay.clickWithTrigger {
 
+        }
 
     }
 
@@ -32,8 +36,8 @@ class VideoIntroduceBeforeDialog(val context1: Context) : Dialog(context1, R.sty
         val params = window?.attributes
         // 设置窗口背景透明度
 //        params?.alpha = 0.5f
-        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.height = WindowManager.LayoutParams.MATCH_PARENT
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)

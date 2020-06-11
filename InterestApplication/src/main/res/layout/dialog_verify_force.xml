@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:gravity="center"
-        android:text="视频认证"
+        android:text="视频介绍"
         android:textColor="#ff333333"
         android:textSize="18sp"
         android:textStyle="bold"

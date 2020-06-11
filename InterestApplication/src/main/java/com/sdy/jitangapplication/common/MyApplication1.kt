@@ -186,7 +186,7 @@ class MyApplication1 : BaseApplication() {
                             ).show()
                         } else {
                             EventBus.getDefault()
-                                .postSticky(ForceFaceEvent(VerifyForceDialog.FORCE_SUCCESS_MV))
+                                .postSticky(ForceFaceEvent(VerifyForceDialog.VIDEO_INTRODUCE_SUCCESS_MV))
                         }
                     }
 
@@ -203,7 +203,7 @@ class MyApplication1 : BaseApplication() {
                     //const FORCE_FAIL_MV = 96;      //  视频认证失败----去替换视频(强制)
                     95, 96 -> {
                         EventBus.getDefault()
-                            .postSticky(ForceFaceEvent(VerifyForceDialog.FORCE_SUCCESS_MV))
+                            .postSticky(ForceFaceEvent(VerifyForceDialog.VIDEO_INTRODUCE_SUCCESS_MV))
                     }
                     //const SUCCESS_FORCE = 10;       // 强制认证（没有视频的）
                     //const SUCCESS_FORCE_FACE = 101; // 强制认证（有视频换头像的）

@@ -597,9 +597,8 @@ object CommonFunction {
      */
     fun startToVideoIntroduce(
         context: Context,
-        type: Int = VideoVerifyActivity.TYPE_ACCOUNT_NORMAL,
         requestCode: Int = -1
     ) {
-        VideoVerifyActivity.start(context, type, requestCode)
+        VideoVerifyActivity.start(context, requestCode)
     }
 }

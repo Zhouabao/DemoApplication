@@ -1,72 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="300dp"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/rectangle_white_15dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTransparent">
 
-    <ImageView
-        android:id="@+id/videoCover"
-        android:layout_width="110dp"
-        android:layout_height="146dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/videoPlay"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/icon_play_transparent"
-        app:layout_constraintBottom_toBottomOf="@id/videoCover"
-        app:layout_constraintLeft_toLeftOf="@id/videoCover"
-        app:layout_constraintRight_toRightOf="@id/videoCover"
-        app:layout_constraintTop_toTopOf="@id/videoCover" />
-
-    <TextView
-        android:id="@+id/videoTitle"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="视频介绍须知"
-        android:textColor="#ff191919"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoCover" />
+        android:layout_gravity="center"
+        android:background="@drawable/rectangle_white_15dp">
 
-    <TextView
-        android:id="@+id/videoTip"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="24dp"
-        android:gravity="center"
-        android:lineSpacingMultiplier="1.2"
-        android:text="视频将与你的头像做校对，视频介绍通过将对会员用户公开，点击录制键进行亮眼的视频介绍吧"
-        android:textColor="#ffb5b7b9"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoTitle" />
+        <ImageView
+            android:id="@+id/videoCover"
+            android:layout_width="110dp"
+            android:layout_height="146dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="252dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/shape_rectangle_orange_24dp"
-        android:gravity="center"
-        android:text="好的"
-        android:textColor="#ffffffff"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoTip" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/videoPlay"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_play_transparent"
+            app:layout_constraintBottom_toBottomOf="@id/videoCover"
+            app:layout_constraintLeft_toLeftOf="@id/videoCover"
+            app:layout_constraintRight_toRightOf="@id/videoCover"
+            app:layout_constraintTop_toTopOf="@id/videoCover" />
+
+        <TextView
+            android:id="@+id/videoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="视频介绍须知"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoCover" />
+
+        <TextView
+            android:id="@+id/videoTip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="24dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="视频将与你的头像做校对，视频介绍通过将对会员用户公开，点击录制键进行亮眼的视频介绍吧"
+            android:textColor="#ffb5b7b9"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoTitle" />
+
+        <TextView
+            android:id="@+id/verifyBtn"
+            android:layout_width="252dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/shape_rectangle_orange_24dp"
+            android:gravity="center"
+            android:text="好的"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoTip" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/videoStandardFl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorHalfBlack"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/closeBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="54dp"
+            android:src="@drawable/icon_close_publish" />
+
+        <VideoView
+            android:id="@+id/videoStandard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_play_transparent" />
+
+
+    </FrameLayout>
+
+
+</FrameLayout>

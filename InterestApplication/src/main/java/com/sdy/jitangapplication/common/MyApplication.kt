@@ -13,7 +13,6 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-import com.chuanglan.shanyan_sdk.listener.InitListener
 import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
@@ -44,6 +43,8 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
+import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -175,6 +176,15 @@ class MyApplication : BaseApplication() {
                         }
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
+                    }
+
+                    //视频介绍审核通过
+                    91 -> {
+                        VerifyNormalResultDialog(ActivityUtils.getTopActivity(),VerifyNormalResultDialog.VERIFY_NORMAL_PASS).show()
+                    }
+                    //视频介绍审核不通过
+                    93 -> {
+                        VerifyNormalResultDialog(ActivityUtils.getTopActivity(),VerifyNormalResultDialog.VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO).show()
                     }
                     //10头像未通过审核去进行人脸认证
                     10, 101 -> {

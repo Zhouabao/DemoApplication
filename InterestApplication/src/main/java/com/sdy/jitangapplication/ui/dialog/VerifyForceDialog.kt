@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.dialog
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_verify_force.*
 
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.dialog_verify_force.*
  *    desc   :强制认证弹窗
  *    version: 1.0
  */
-class VerifyForceDialog(val context1: Context, var status: Int = FORCE_SUCCESS_MV) :
+class VerifyForceDialog(val context1: Context, var status: Int = VIDEO_INTRODUCE_SUCCESS_MV) :
     Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,22 +35,12 @@ class VerifyForceDialog(val context1: Context, var status: Int = FORCE_SUCCESS_M
         changeVerifyStatus(status)
     }
 
-    //    const SUCCESS_FORCE = 10;       // 强制认证（没有视频的）
-//const SUCCESS_FORCE_FACE = 101; // 强制认证（有视频换头像的）
-
-
-    //const FORCE_SUCCESS_MV = 94;   // 视频认证通过(强制)
-//const FORCE_FAIL_AVATAR = 95;  // 视频认证失败--去替换头像(强制)
-//const FORCE_FAIL_MV = 96;      //  视频认证失败----去替换视频(强制)
+    //const SUCCESS_MV = 91;   // 视频通过
+    //const FAIL_MV = 93;         // 视频拒绝
     companion object {
-        const val FORCE_FACE_VIDEO = 10
-        const val FORCE_FACE_CHANGE_AVATAR = 101
-
-
-        const val FORCE_SUCCESS_MV = 94
-        const val FORCE_FAIL_AVATAR = 95
-        const val FORCE_FAIL_MV = 96
-        const val FORCE_GOING = 1//认证中
+        const val VIDEO_INTRODUCE_SUCCESS_MV = 91
+        const val VIDEO_INTRODUCE_FAIL_MV = 93
+        const val VIDEO_INTRODUCE_GOING = 1//认证中
 
     }
 
@@ -56,40 +48,40 @@ class VerifyForceDialog(val context1: Context, var status: Int = FORCE_SUCCESS_M
     fun changeVerifyStatus(status: Int) {
         GlideUtil.loadCircleImg(context1, UserManager.getAvator(), userAvatar)
         when (status) {
-            FORCE_SUCCESS_MV -> {
+            VIDEO_INTRODUCE_SUCCESS_MV -> {
                 verifyIngAni.isVisible = false
                 verifyIngAni.cancelAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_oval_green_verify_pass)
                 verifyStateLogo.setImageResource(R.drawable.icon_checked_relation)
                 continueBtn.text = "继续使用"
                 verifyState.text = "审核通过"
-                verifyTip.text="您已通过视频审核\n已开启私聊权限"
+                verifyTip.text = "您已通过视频审核\n已开启私聊权限"
+
+                continueBtn.clickWithTrigger {
+                    dismiss()
+                }
             }
-            FORCE_FAIL_AVATAR -> {
-                verifyIngAni.isVisible = false
-                verifyIngAni.cancelAnimation()
-                verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_fail)
-                verifyStateLogo.setImageResource(R.drawable.icon_delete)
-                continueBtn.text = "替换头像"
-                verifyState.text = "审核失败"
-                verifyTip.text="视频审核未通过\n您可以替换真人头像重试"
-            }
-            FORCE_FAIL_MV -> {
+            VIDEO_INTRODUCE_FAIL_MV -> {
                 verifyIngAni.isVisible = false
                 verifyIngAni.cancelAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_fail)
                 verifyStateLogo.setImageResource(R.drawable.icon_delete)
                 continueBtn.text = "重新认证"
                 verifyState.text = "审核失败"
-                verifyTip.text="视频审核未通过\n您可以重新视频认证"
+                verifyTip.text = "视频审核未通过\n您可以重新视频认证"
             }
-            FORCE_GOING -> {
+            VIDEO_INTRODUCE_GOING -> {
                 verifyIngAni.isVisible = true
                 verifyIngAni.playAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_ing)
                 verifyStateLogo.setImageResource(R.drawable.icon_wait_time)
-                verifyState.text = "视频审核中"
-                verifyTip.text="视频正在审核中\n开启通知将在第一时间通知您"
+                verifyState.text = "视频正在审核中"
+                verifyTip.text = "视频正在审核中\n开启通知将在第一时间通知您"
+                continueBtn.text = "好的"
+                continueBtn.clickWithTrigger {
+                    (context1 as Activity).finish()
+                    dismiss()
+                }
             }
 
         }
@@ -99,8 +91,8 @@ class VerifyForceDialog(val context1: Context, var status: Int = FORCE_SUCCESS_M
         val window = this.window
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.height = WindowManager.LayoutParams.MATCH_PARENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
         window?.attributes = params
         setCancelable(false)

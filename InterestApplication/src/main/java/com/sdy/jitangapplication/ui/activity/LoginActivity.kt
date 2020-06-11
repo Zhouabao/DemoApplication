@@ -85,7 +85,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
         loginCl.isVisible = !isOpenAuth
         //闪验预取号code为1022即为成功
-        if (syCode != 1022) {
+        if (syCode == 1022) {
             onekeyLoginBtn.isVisible = true
             phoneLoginBtn.visibility = View.INVISIBLE
             wechatLoginBtn.visibility = View.INVISIBLE

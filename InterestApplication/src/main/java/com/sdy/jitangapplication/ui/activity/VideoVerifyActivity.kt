@@ -16,11 +16,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
-import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
 import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
 import android.util.Log
-import android.view.MotionEvent
-import android.view.OrientationEventListener
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -34,9 +31,6 @@ import com.netease.nim.uikit.common.media.imagepicker.camera.CameraPreview
 import com.netease.nim.uikit.common.media.imagepicker.camera.CameraUtils
 import com.netease.nim.uikit.common.media.imagepicker.camera.ConfirmationDialog
 import com.netease.nim.uikit.common.media.imagepicker.camera.ErrorDialog
-import com.netease.nim.uikit.common.media.imagepicker.ui.ImagePreviewRetakeActivity
-import com.netease.nim.uikit.common.media.model.GLImage
-import com.netease.nim.uikit.common.util.media.ImageUtil
 import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
@@ -48,6 +42,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
+import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyThenChatDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -58,10 +53,7 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
 import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 import kotlin.math.abs
 
 
@@ -88,10 +80,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         const val REQUEST_VIDEO_PERMISSIONS = 1
         const val PERMISSIONS_FRAGMENT_DIALOG = "permission_dialog"
 
-
-        const val TYPE_ACCOUNT_DANGER = 1 //账户异常发起
-        const val TYPE_ACCOUNT_NORMAL = 2  //用户主动发起
-        fun start(context1: Context, type: Int = TYPE_ACCOUNT_NORMAL, requestCode: Int = -1) {
+        fun start(context1: Context, requestCode: Int = -1) {
             if (Build.VERSION.SDK_INT < 21) {
                 ToastHelper.showToast(context1, "当前系统版本暂不支持视频拍摄功能")
                 return
@@ -104,40 +93,14 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             confirmDialog.show()
             confirmDialog.verifyBtn.clickWithTrigger {
                 if (requestCode != -1) {
-                    (context1 as Activity).startActivityForResult<VideoVerifyActivity>(
-                        requestCode, "type" to type
-                    )
+                    (context1 as Activity).startActivityForResult<VideoVerifyActivity>(requestCode)
                 } else {
-                    context1.startActivity<VideoVerifyActivity>("type" to type)
+                    context1.startActivity<VideoVerifyActivity>()
                 }
                 confirmDialog.dismiss()
             }
 
         }
-
-
-        fun startActivityForResult(
-            context1: Activity,
-            type: Int = IDVerifyActivity.TYPE_ACCOUNT_NORMAL, requestCode: Int = -1
-        ) {
-
-            if (!UserManager.isHasFaceUrl()) {
-                val verifyThenChatDialog = VerifyThenChatDialog(
-                    context1,
-                    VerifyThenChatDialog.FROM_VERIFY_MUST_KNOW
-                )
-                verifyThenChatDialog.show()
-                verifyThenChatDialog.verifyBtn.clickWithTrigger {
-                    context1.startActivityForResult<VideoVerifyActivity>(
-                        requestCode, "type" to type
-                    )
-                    verifyThenChatDialog.dismiss()
-                }
-            } else {
-                context1.startActivity<NewUserInfoSettingsActivity>("showToast" to true)
-            }
-        }
-
     }
 
     private lateinit var mainHandler: Handler
@@ -150,19 +113,11 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     private var isRecording = false
     private var isCameraFront = true //当前是否是前置摄像头
     private var currentTime = 0
-    private lateinit var mOrientationListener: OrientationEventListener
     private var pictureSavePath = ""
     private var videoSavePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        getWindow().setFlags(
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN
-//        )
-//        透明导航栏
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         setContentView(R.layout.activity_video_verify)
         initView()
 
@@ -287,48 +242,6 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     }
 
 
-    private fun takePicture() {
-        // get an image from the camera
-        mCamera?.takePicture(null, null, mPicture)
-    }
-
-    private val mPicture by lazy {
-        object : Camera.PictureCallback {
-            override fun onPictureTaken(data: ByteArray?, camera: Camera?) {
-                val now = TimeUtil.getNow_millisecond()
-                val pictureFile =
-                    CameraUtils.getOutputMediaFile(MEDIA_TYPE_IMAGE, now.toString())
-                if (pictureFile == null) {
-                    Log.d(TAG, "Error creating media file, check storage permissions")
-                    return
-                }
-                try {
-                    val fos = FileOutputStream(pictureFile)
-                    fos.write(data)
-                    fos.close()
-                    pictureSavePath = pictureFile.getAbsolutePath()
-                    val pictureName = pictureFile.getName()
-                    val options = ImageUtil.getOptions(pictureSavePath)
-                    val image = GLImage.Builder.newBuilder().setWidth(options.outWidth).setHeight(
-                        options.outHeight
-                    )
-                        .setMimeType(options.outMimeType)
-                        .setPath(pictureSavePath)
-                        .setName(pictureName)
-                        .setSize(pictureFile.length())
-                        .setAddTime(now).build()
-                    //todo
-                    ImagePreviewRetakeActivity.start(this@VideoVerifyActivity, image)
-                } catch (e: FileNotFoundException) {
-                    Log.d(TAG, "File not found: " + e.message)
-                } catch (e: IOException) {
-                    Log.d(TAG, "Error accessing file: " + e.message)
-                }
-            }
-
-        }
-    }
-
     private fun switchCamera() {
         mCamera!!.stopPreview()
         releaseCamera()
@@ -387,37 +300,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     }
 
-    fun setupTouchListener() {
-        longPressRunnable = LongPressRunnable()
-        captureButton.setOnTouchListener { v, event ->
-            when (event.getAction()) {
-                MotionEvent.ACTION_DOWN -> {
-                    isAction = true
-                    isRecording = false
-                    mainHandler.postDelayed(longPressRunnable, 500) //同时延长500启动长按后处理的逻辑Runnable
-                }
-                MotionEvent.ACTION_MOVE -> {
-                }
-                MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_CANCEL -> {
-                    if (isAction) {
-                        isAction = false
-                        handleActionUpByState()
-                    }
-                }
-
-            }
-            true
-        }
-    }
 
     private fun handleActionUpByState() {
         mainHandler.removeCallbacks(longPressRunnable) //移除长按逻辑的Runnable
         //根据当前状态处理
         if (isRecording) {
             stopMediaRecorder()
-        } else {
-            takePicture()
         }
     }
 
@@ -431,9 +319,9 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         // Step 2: Set sources
         mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
         mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
-        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
         setupProfile()
+//        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         // Step 4: Set output file
         val now = TimeUtil.getNow_millisecond()
         videoSavePath =
@@ -480,24 +368,15 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mainHandler.removeCallbacks(progressRunnable)
         stopButtonAnimation()
         mProgressView.reset()
-        Log.i(TAG, "stopMediaRecorder currentTime:" + currentTime)
-        //todo
         if (currentTime <= RECORD_MIN_TIME) {
             CommonFunction.toast("录制时间不可小于5S")
         } else {
-
-//            Constants.RESULT_CODE_CONFIRM_VIDEO
             startActivityForResult<VideoVerifyConfirmActivity>(
                 VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
                 "ratio" to RATIO,
                 "path" to videoSavePath,
                 "duration" to currentTime * 1000L
             )
-//            GLVideoConfirmActivity.start(
-//                this,
-//                Uri.fromFile(File(videoSavePath)),
-//                currentTime * 1000L
-//            )
         }
     }
 
@@ -669,45 +548,14 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
     }
 
-    //todo 这里判断是否是强制认证
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RESULT_CODE_CONFIRM_VIDEO) {
             if (resultCode == Activity.RESULT_OK) {
                 uploadProfile(videoSavePath)
-//                val yixinVideo =
-//                    GLImage.Builder.newBuilder().setAddTime(TimeUtil.getNow_millisecond())
-//                        .setDuration(
-//                            currentTime * 1000L
-//                        ).setSize(File(videoSavePath).length()).setHeight(videoHeight).setWidth(
-//                            videoWidth
-//                        ).setMimeType("video/mp4")
-//                        .setPath(videoSavePath).build()
-//                val selectedVideos = ArrayList<GLImage>(1)
-//                selectedVideos.add(yixinVideo)
-//                val intent = Intent()
-//                intent.putExtra(EXTRA_RESULT_ITEMS, selectedVideos)
-//                setResult(RESULT_OK, intent)
-//                finish()
             } else {
                 File(videoSavePath).delete()
-            }
-        } else if (requestCode == RESULT_CODE_CONFIRM_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val GLImages =
-                    data?.getSerializableExtra(RESULT_EXTRA_CONFIRM_IMAGES) as (ArrayList<GLImage>)
-                val intent = Intent()
-                intent.putExtra(EXTRA_RESULT_ITEMS, GLImages)
-                setResult(RESULT_OK, intent)
-                finish()
-            } else {
-                File(pictureSavePath).delete()
             }
         }
     }
@@ -751,8 +599,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     override fun onUpdateFaceInfo(code: Int) {
         when (code) {
             200 -> {
-                CommonFunction.toast("视频提交成功")
-                finish()
+                VerifyForceDialog(this, VerifyForceDialog.VIDEO_INTRODUCE_GOING).show()
             }
         }
 
