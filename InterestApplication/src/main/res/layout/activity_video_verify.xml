@@ -3,22 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/colorWhite"
     android:clipChildren="false">
+
 
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         layout="@layout/layout_actionbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -26,20 +28,21 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="28dp"
         android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/rectangle_white_20alpha_10dp"
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_preview"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llTitle">
+        app:layout_constraintRight_toRightOf="parent">
 
         <TextView
-            android:id="@+id/t1"
+            android:id="@+id/recordTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你可以说"
+            android:text="说点什么吧"
             android:textColor="#ffffffff"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -51,9 +54,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_switch_one"
-            app:layout_constraintBottom_toBottomOf="@id/t1"
+            app:layout_constraintBottom_toBottomOf="@id/recordTitle"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/t1" />
+            app:layout_constraintTop_toTopOf="@id/recordTitle" />
 
         <TextView
             android:id="@+id/recordContent"
@@ -61,26 +64,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:lineSpacingMultiplier="1.2"
-            android:text="“在未知的宇宙有秘密任务，这个秘密就是让我认识你”"
+            android:text="向大家介绍介绍你自己吧"
             android:textColor="#ffffffff"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t1" />
+            app:layout_constraintTop_toBottomOf="@id/recordTitle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recordCl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp"
         android:clipChildren="false"
         android:paddingLeft="38dp"
         android:paddingRight="38dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/camera_preview">
 
         <TextView
             android:id="@+id/cameraTip"
@@ -148,11 +152,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:format="%s"
             android:text="00:00"
-            android:textColor="@color/white"
+            android:textColor="#FF191919"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:format="%s"
             app:layout_constraintLeft_toRightOf="@id/view1"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rl" />

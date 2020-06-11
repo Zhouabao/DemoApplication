@@ -14,7 +14,7 @@ object Constants {
     const val REPORTUSER = "report/"//舉報用户
     const val CANDYPRODUCT = "candyproduct/"//舉報用户
     const val FEEDBACK = "feedback/"//问题反馈
-    const val VIDEOFACE = "video_face/"//认证视频
+    const val VIDEOFACE = "verifyVideo/"//认证视频
     const val DEFAULT_AVATAR = "/meta/default_avatar.jpg"//默认图
     const val DEFAULT_EMPTY_AVATAR = "/ppsns_default_avatar.png"//默认头像
 

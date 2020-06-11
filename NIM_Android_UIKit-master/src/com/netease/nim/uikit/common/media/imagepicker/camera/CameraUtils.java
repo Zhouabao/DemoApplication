@@ -106,7 +106,8 @@ public class CameraUtils {
         }
     }
 
-    private static float DEFAULT_IMAGE_SIZE = 1920 * 1080;
+    private static float DEFAULT_IMAGE_SIZE = 640 * 480;
+//    private static float DEFAULT_IMAGE_SIZE = 1920 * 1080;
     public static Size choosePictureSize(List<Camera.Size> choices) {
         float diff = Float.MAX_VALUE;
         Size chosenSize = null;

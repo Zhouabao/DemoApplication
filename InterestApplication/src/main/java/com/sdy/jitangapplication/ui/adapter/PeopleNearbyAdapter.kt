@@ -9,13 +9,13 @@ import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
-import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
@@ -149,6 +149,10 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
                     TouristDialog(mContext).show()
                 else
                     CommonFunction.checkSendGift(mContext, item.accid)
+            }
+
+            itemView.userIntroduceVideoBtn.clickWithTrigger {
+                CommonFunction.startToVideoIntroduce(mContext)
             }
         } else {
             itemView.userChatBtn.isVisible = false

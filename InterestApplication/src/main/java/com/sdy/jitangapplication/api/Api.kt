@@ -289,6 +289,20 @@ interface Api {
     @POST("square/announceV13${Constants.END_BASE_URL}")
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
+    /**
+     * 上传视频介绍
+     */
+    @FormUrlEncoded
+    @POST("Home/uploadMv${Constants.END_BASE_URL}")
+    fun uploadMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 视频认证模板
+     */
+    @FormUrlEncoded
+    @POST("Home/getMvNormalCopy${Constants.END_BASE_URL}")
+    fun getMvNormalCopy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
+
 
     /**
      * 通知添加特质

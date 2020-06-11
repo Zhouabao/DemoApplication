@@ -9,8 +9,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.PhoneUtils
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.chuanglan.shanyan_sdk.view.CmccLoginActivity
@@ -20,7 +18,6 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.CommonFunction.wechatLogin
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
@@ -40,6 +37,9 @@ import java.lang.ref.WeakReference
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
+
+    private val syCode by lazy { intent.getIntExtra("syCode", 0) }
+
     companion object {
         public var weakrefrece: WeakReference<LoginActivity>? = null
     }
@@ -84,8 +84,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         AbScreenUtils.hideBottomUIMenu(this)
 
         loginCl.isVisible = !isOpenAuth
-        //判断手机是否载有手机卡
-        if (PhoneUtils.isSimCardReady()) {
+        //闪验预取号code为1022即为成功
+        if (syCode != 1022) {
             onekeyLoginBtn.isVisible = true
             phoneLoginBtn.visibility = View.INVISIBLE
             wechatLoginBtn.visibility = View.INVISIBLE
@@ -102,10 +102,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
 
         //判断是否有登录
-        //移除老用户的兴趣
-        if (!SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNullOrEmpty())
-            SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
-
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息
                 startActivity<MainActivity>()
@@ -177,7 +173,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
                         loginCl.startAnimation(animation)
                         loginCl.isVisible = false
                         //拉起授权页成功
-                        //拉起授权页成功
                         Log.e(
                             "VVV",
                             "拉起授权页成功： _code==$code   _result==$result"
@@ -185,7 +180,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
                     }
                     else -> {
                         //拉起授权页失败
-                        //拉起授权页失败
+                        startActivity<PhoneActivity>("type" to "1")
                         Log.e(
                             "VVV",
                             "拉起授权页失败： _code==$code   _result==$result"

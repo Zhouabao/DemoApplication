@@ -180,11 +180,15 @@ data class SquareBannerBean(
     var title: String = "",
     var icon: String = ""
 )
+
 data class VideoVerifyBannerBean(
     var content: String = "",
     var title: String = "",
-    var icon: Int =0
+    var icon: Int = 0,
+    var id: Int = 0
 )
+
+data class CopyMvBean(var list: MutableList<VideoVerifyBannerBean> = mutableListOf())
 
 data class RecommendSquareBean(
     var accid: String = "",

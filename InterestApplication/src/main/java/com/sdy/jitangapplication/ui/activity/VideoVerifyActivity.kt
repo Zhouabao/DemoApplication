@@ -12,7 +12,6 @@ import android.graphics.ImageFormat
 import android.hardware.Camera
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -24,8 +23,10 @@ import android.view.MotionEvent
 import android.view.OrientationEventListener
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.utils.NetWorkUtils
 import com.netease.nim.uikit.common.ToastHelper
@@ -34,7 +35,6 @@ import com.netease.nim.uikit.common.media.imagepicker.camera.CameraUtils
 import com.netease.nim.uikit.common.media.imagepicker.camera.ConfirmationDialog
 import com.netease.nim.uikit.common.media.imagepicker.camera.ErrorDialog
 import com.netease.nim.uikit.common.media.imagepicker.ui.ImagePreviewRetakeActivity
-import com.netease.nim.uikit.common.media.imagepicker.video.GLVideoConfirmActivity
 import com.netease.nim.uikit.common.media.model.GLImage
 import com.netease.nim.uikit.common.util.media.ImageUtil
 import com.netease.nim.uikit.common.util.sys.TimeUtil
@@ -45,17 +45,15 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.ForceFaceEvent
+import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
-import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyThenChatDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_video_verify.*
 import kotlinx.android.synthetic.main.dialog_verify_then_chat.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
@@ -64,6 +62,7 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import kotlin.math.abs
 
 
 /**
@@ -72,6 +71,7 @@ import java.util.*
 class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerifyView,
     OnLazyClickListener {
     companion object {
+        val RATIO = 500 / 375F //拍摄比例
         val TAG = VideoVerifyActivity::class.java.simpleName
         val VIDEO_PERMISSIONS =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
@@ -153,8 +153,6 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     private lateinit var mOrientationListener: OrientationEventListener
     private var pictureSavePath = ""
     private var videoSavePath = ""
-    private var videoWidth = 0
-    private var videoHeight = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,6 +165,8 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         setContentView(R.layout.activity_video_verify)
         initView()
+
+        mPresenter.getMvNormalCopy()
     }
 
     private fun initView() {
@@ -177,6 +177,11 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         StatusBarUtil.immersive(this)
         mainHandler = Handler()
 
+        val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
+        params.width = ScreenUtils.getScreenWidth()
+        params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
+        camera_preview.layoutParams = params
+
 //        setupTouchListener()
         btnBack.setOnClickListener(this)
         switchRecordContentBtn.setOnClickListener(this)
@@ -184,7 +189,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         longPressRunnable = LongPressRunnable()
 
         llTitle.setBackgroundResource(R.color.colorTransparent)
-        hotT1.text = "头像审核"
+        hotT1.text = "视频介绍"
         hotT1.textColor = Color.WHITE
         btnBack.setImageResource(R.drawable.icon_back_white)
     }
@@ -206,6 +211,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
         // Create our Preview view and set it as the content of our activity.
         mPreview = CameraPreview(this)
+        //设置界面的大小
+        mPreview?.holder?.setFixedSize(
+            (RATIO * ScreenUtils.getScreenWidth()).toInt(),
+            ScreenUtils.getScreenWidth()
+        )
+
         camera_preview.addView(mPreview)
     }
 
@@ -219,23 +230,55 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             finish()
         }
         // get Camera parameters
-        val params = mCamera!!.getParameters()
-        val focusModes = params.getSupportedFocusModes()
+        val params = mCamera!!.parameters
+        val focusModes = params.supportedFocusModes
         if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
             // Autofocus mode is supported
             // set the focus mode
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
         }
-        val choosePictureSize = CameraUtils.choosePictureSize(params.getSupportedPictureSizes())
-        params.setPictureSize(choosePictureSize.getWidth(), choosePictureSize.getHeight())
-        params.setPictureFormat(ImageFormat.JPEG)
+        val choosePictureSize = CameraUtils.choosePictureSize(params.supportedPictureSizes)
+        params.setPictureSize(choosePictureSize.width, choosePictureSize.getHeight())
+//        params.setPreviewSize(choosePictureSize.width, choosePictureSize.getHeight())
+        params.pictureFormat = ImageFormat.JPEG
         params.setRotation(CameraUtils.getPictureRotation(this, cameraId))
         val displayOrientation = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, false)
         mCamera?.setDisplayOrientation(displayOrientation)
         // set Camera parameters
-        mCamera?.setParameters(params)
+        mCamera?.parameters = params
         mPreview?.setCamera(mCamera, isCameraFront)
     }
+
+    fun getOptionalSize(sizes: MutableList<Camera.Size>): Camera.Size {
+        var tolerance = 0.1
+        var tagetRatio = 500 / 375F
+        var optionSize: Camera.Size? = null
+        var minDiff = Double.MAX_VALUE
+        val targetHeight = ScreenUtils.getScreenWidth()
+        for (size in sizes) {
+            val ratio = size.width / size.height * 1f
+            if (abs(ratio - tagetRatio) > tolerance) {
+                continue
+            }
+            if (abs(size.height - targetHeight) < minDiff) {
+                optionSize = size
+                minDiff = abs(size.height - targetHeight).toDouble()
+            }
+        }
+
+        if (optionSize == null) {
+            minDiff = Double.MIN_VALUE
+            for (size in sizes) {
+                if (abs(size.height - targetHeight) < minDiff) {
+                    optionSize = size
+                    minDiff = abs(size.height - targetHeight).toDouble()
+                }
+            }
+        }
+        return optionSize!!
+
+    }
+
 
     override fun onPause() {
         super.onPause()
@@ -269,9 +312,11 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                     val image = GLImage.Builder.newBuilder().setWidth(options.outWidth).setHeight(
                         options.outHeight
                     )
-                        .setMimeType(options.outMimeType).setPath(pictureSavePath).setName(
-                            pictureName
-                        ).setSize(pictureFile.length()).setAddTime(now).build()
+                        .setMimeType(options.outMimeType)
+                        .setPath(pictureSavePath)
+                        .setName(pictureName)
+                        .setSize(pictureFile.length())
+                        .setAddTime(now).build()
                     //todo
                     ImagePreviewRetakeActivity.start(this@VideoVerifyActivity, image)
                 } catch (e: FileNotFoundException) {
@@ -293,53 +338,53 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     }
 
     private fun setupProfile() {
-        if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P)) {
-            val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P)
-            mMediaRecorder?.setProfile(profile)
-            // default 12 * 1000 * 1000
-            mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            //                mMediaRecorder.setOutputFormat(profile.fileFormat)
-            //                mMediaRecorder.setVideoFrameRate(profile.videoFrameRate)
-            //                mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight)
-            //                mMediaRecorder.setVideoEncodingBitRate((int) (1.5 * 1000 * 1000))
-            //                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.HEVC)
-            //                mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate)
-            //                mMediaRecorder.setAudioChannels(profile.audioChannels)
-            //                mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate)
-            //                mMediaRecorder.setAudioEncoder(profile.audioCodec)
-            videoWidth = profile.videoFrameWidth
-            videoHeight = profile.videoFrameHeight
-        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
-            val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P)
-            mMediaRecorder?.setProfile(profile)
-            mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            videoWidth = profile.videoFrameWidth
-            videoHeight = profile.videoFrameHeight
-        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_QVGA)) {
-            val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA)
-            mMediaRecorder?.setProfile(profile)
-            mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            videoWidth = profile.videoFrameWidth
-            videoHeight = profile.videoFrameHeight
-        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_CIF)) {
-            val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_CIF)
-            mMediaRecorder?.setProfile(profile)
-            mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            videoWidth = profile.videoFrameWidth
-            videoHeight = profile.videoFrameHeight
-        } else {
-            videoWidth = 960
-            videoHeight = 540
-            mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-            mMediaRecorder?.setVideoFrameRate(30)
-            mMediaRecorder?.setVideoSize(videoWidth, videoHeight)
-            mMediaRecorder?.setVideoEncodingBitRate((1.5 * 1000 * 1000).toInt())
-            mMediaRecorder?.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT)
-            mMediaRecorder?.setAudioEncodingBitRate(96000)
-            mMediaRecorder?.setAudioChannels(1)
-            mMediaRecorder?.setAudioSamplingRate(48000)
-            mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+        when {
+            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P) -> {
+                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P)
+                mMediaRecorder?.setProfile(profile)
+                // default 12 * 1000 * 1000
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
+            }
+            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P) -> {
+                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P)
+                mMediaRecorder?.setProfile(profile)
+                // default 12 * 1000 * 1000
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
+            }
+            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P) -> {
+                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P)
+                mMediaRecorder?.setProfile(profile)
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
+            }
+            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_QVGA) -> {
+                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA)
+                mMediaRecorder?.setProfile(profile)
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
+            }
+            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_CIF) -> {
+                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_CIF)
+                mMediaRecorder?.setProfile(profile)
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
+            }
+            else -> {
+                mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
+                mMediaRecorder?.setVideoFrameRate(30)
+                mMediaRecorder?.setVideoSize(640, 480)
+                mMediaRecorder?.setVideoEncodingBitRate((1.5 * 1000 * 1000).toInt())
+                mMediaRecorder?.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT)
+                mMediaRecorder?.setAudioEncodingBitRate(96000)
+                mMediaRecorder?.setAudioChannels(1)
+                mMediaRecorder?.setAudioSamplingRate(48000)
+                mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+            }
         }
+
+
     }
 
     fun setupTouchListener() {
@@ -381,9 +426,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera?.unlock()
         mMediaRecorder!!.setCamera(mCamera)
+        val degrees = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, true)
+        mMediaRecorder!!.setOrientationHint(degrees)
         // Step 2: Set sources
-        mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
+        mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
         mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
+        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
         setupProfile()
         // Step 4: Set output file
@@ -393,13 +441,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mMediaRecorder!!.setOutputFile(videoSavePath)
         // Step 5: Set the preview output
         mMediaRecorder!!.setPreviewDisplay(mPreview?.holder?.surface)
-        val degrees = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, true)
-        mMediaRecorder!!.setOrientationHint(degrees)
-        if (degrees == degrees || degrees == 270) {
-            val temp = videoWidth
-            videoWidth = videoHeight
-            videoHeight = temp
-        }
+
         // Step 6: Prepare configured MediaRecorder
         try {
             mMediaRecorder!!.prepare()
@@ -441,13 +483,21 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         Log.i(TAG, "stopMediaRecorder currentTime:" + currentTime)
         //todo
         if (currentTime <= RECORD_MIN_TIME) {
-            CommonFunction.toast("录制时间过短")
+            CommonFunction.toast("录制时间不可小于5S")
         } else {
-            GLVideoConfirmActivity.start(
-                this,
-                Uri.fromFile(File(videoSavePath)),
-                currentTime * 1000L
+
+//            Constants.RESULT_CODE_CONFIRM_VIDEO
+            startActivityForResult<VideoVerifyConfirmActivity>(
+                VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
+                "ratio" to RATIO,
+                "path" to videoSavePath,
+                "duration" to currentTime * 1000L
             )
+//            GLVideoConfirmActivity.start(
+//                this,
+//                Uri.fromFile(File(videoSavePath)),
+//                currentTime * 1000L
+//            )
         }
     }
 
@@ -587,7 +637,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.switchRecordContentBtn -> {
-                CommonFunction.toast("换一个吧")
+                switchMvCopy()
             }
             R.id.btnBack -> {
                 onBackPressed()
@@ -604,6 +654,18 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                     }
                 }
             }
+        }
+    }
+
+    private fun switchMvCopy() {
+        if (mvCopy.isNotEmpty()) {
+            if (switchIndex < mvCopy.size - 1 && switchIndex >= 0) {
+                switchIndex += 1
+            } else {
+                switchIndex = 0
+            }
+            recordTitle.text = mvCopy[switchIndex].title
+            recordContent.text = mvCopy[switchIndex].content
         }
     }
 
@@ -669,9 +731,18 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null && info.isOK) {
                     //视频上传成功
-                    mPresenter.updateFaceInfo(hashMapOf("face" to key))
+                    mPresenter.uploadMv(
+                        hashMapOf(
+                            "mv_url" to key,
+                            "normal_id" to if (switchIndex > -1 && mvCopy.size > switchIndex) {
+                                mvCopy[switchIndex].id
+                            } else {
+                                0
+                            }
+                        )
+                    )
                 } else {
-                    CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                    CommonFunction.toast("视频提交失败，请重新进入录制")
                 }
             }, null
         )
@@ -680,21 +751,20 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     override fun onUpdateFaceInfo(code: Int) {
         when (code) {
             200 -> {
-                CommonFunction.toast("审核提交成功")
-                UserManager.saveUserVerify(2)
-                UserManager.saveHasFaceUrl(true)
-                setResult(Activity.RESULT_OK)
+                CommonFunction.toast("视频提交成功")
                 finish()
-                if (intent.getIntExtra(
-                        "type",
-                        TYPE_ACCOUNT_NORMAL
-                    ) == TYPE_ACCOUNT_DANGER
-                )
-                    EventBus.getDefault().postSticky(ForceFaceEvent(VerifyForceDialog.FORCE_GOING))
             }
         }
 
 
+    }
+
+    private var switchIndex = -1
+    private val mvCopy by lazy { mutableListOf<VideoVerifyBannerBean>() }
+    override fun onGetMvNormalCopy(code: MutableList<VideoVerifyBannerBean>) {
+        mvCopy.clear()
+        mvCopy.addAll(code)
+        switchMvCopy()
     }
 
 

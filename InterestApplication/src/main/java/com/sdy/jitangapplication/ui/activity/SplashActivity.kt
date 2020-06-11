@@ -14,10 +14,10 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.kotlin.base.ext.onClick
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.AMapManager
-import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
@@ -173,7 +173,7 @@ class SplashActivity : BaseActivity() {
     private fun start2login() {
         //闪验SDK预取号
         OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
-            startActivity<LoginActivity>()
+            startActivity<LoginActivity>("syCode" to p0)
             finish()
         }
 

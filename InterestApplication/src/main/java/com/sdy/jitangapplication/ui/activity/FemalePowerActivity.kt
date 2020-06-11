@@ -54,8 +54,12 @@ class FemalePowerActivity : BaseActivity() {
 
         //视频介绍
         powerVideo.clickWithTrigger {
-            if (video == 0)
                 CommonFunction.startToVideoIntroduce(this)
+//            if (video == 0) {
+//                CommonFunction.startToVideoIntroduce(this)
+//            } else if (video == 2) {
+//                CommonFunction.toast("视频正在审核中，请耐心等待")
+//            }
         }
 
 

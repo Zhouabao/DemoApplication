@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 
 /**
  *    author : ZFM
@@ -10,4 +11,7 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface VideoVerifyView : BaseView {
     fun onUpdateFaceInfo(code: Int)
+
+
+    fun onGetMvNormalCopy(code: MutableList<VideoVerifyBannerBean>)
 }
