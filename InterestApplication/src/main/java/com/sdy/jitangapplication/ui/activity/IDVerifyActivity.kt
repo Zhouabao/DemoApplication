@@ -6,19 +6,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.face.platform.FaceSDKManager
 import com.baidu.idl.face.platform.FaceStatusEnum
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity
-import com.baidu.idl.face.platform.utils.Base64Utils
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
-import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.net.RetrofitFactory
@@ -28,6 +25,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.utils.NetWorkUtils
 import com.sdy.baselibrary.utils.RandomUtils
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
@@ -37,24 +35,17 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
 import com.sdy.jitangapplication.event.AccountDangerEvent
-import com.sdy.jitangapplication.model.AccessTokenBean
-import com.sdy.jitangapplication.model.MatchFaceBean
+import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
-import com.zhy.http.okhttp.OkHttpUtils
-import com.zhy.http.okhttp.callback.Callback
-import okhttp3.Call
-import okhttp3.Request
-import okhttp3.Response
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import java.io.ByteArrayOutputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 /**
@@ -67,42 +58,47 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     companion object {
         const val TYPE_ACCOUNT_DANGER = 1 //账户异常发起
         const val TYPE_ACCOUNT_NORMAL = 2  //用户主动发起
+        const val TYPE_LIVE_CAPTURE = 3  //活体检测
 
         fun startActivity(
             context1: Context,
             type: Int = TYPE_ACCOUNT_NORMAL
         ) {
-            if (!UserManager.isHasFaceUrl()) {
-                CommonAlertDialog.Builder(context1)
-                    .setIconVisible(false)
-                    .setCancelIconIsVisibility(true)
-                    .setTitle("认证提醒")
-                    .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
-                    .setConfirmText("确定")
-                    .setCancelText("取消")
-                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                        override fun onClick(dialog: Dialog) {
-                            dialog.dismiss()
-                            context1.startActivity<IDVerifyActivity>(
-                                "type" to type
-                            )
-                        }
-                    })
-                    .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
-                        CommonAlertDialog.OnCancelListener {
-                        override fun onClick(dialog: Dialog) {
-                            dialog.dismiss()
-                        }
 
-                    })
-                    .create()
-                    .show()
-            } else {
-                context1.startActivity<NewUserInfoSettingsActivity>(
-                    "showToast" to true,
-                    "type" to type
-                )
-            }
+            if (type == TYPE_LIVE_CAPTURE) {
+                context1.startActivity<IDVerifyActivity>("type" to type)
+            } else
+                if (!UserManager.isHasFaceUrl()) {
+                    CommonAlertDialog.Builder(context1)
+                        .setIconVisible(false)
+                        .setCancelIconIsVisibility(true)
+                        .setTitle("认证提醒")
+                        .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
+                        .setConfirmText("确定")
+                        .setCancelText("取消")
+                        .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                            override fun onClick(dialog: Dialog) {
+                                dialog.dismiss()
+                                context1.startActivity<IDVerifyActivity>(
+                                    "type" to type
+                                )
+                            }
+                        })
+                        .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
+                            CommonAlertDialog.OnCancelListener {
+                            override fun onClick(dialog: Dialog) {
+                                dialog.dismiss()
+                            }
+
+                        })
+                        .create()
+                        .show()
+                } else {
+                    context1.startActivity<NewUserInfoSettingsActivity>(
+                        "showToast" to true,
+                        "type" to type
+                    )
+                }
         }
 
 
@@ -143,6 +139,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         }
     }
 
+    private val type by lazy { intent.getIntExtra("type", TYPE_ACCOUNT_NORMAL) }
 
     override fun getSwipeBackLayout(): SwipeBackLayout {
         return mHelper.swipeBackLayout
@@ -167,10 +164,12 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     override fun onCreate(savedInstanceState: Bundle?) {
         setFaceConfig()
         super.onCreate(savedInstanceState)
+        StatusBarUtil.immersive(this)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
-
+        setSwipeBackEnable(type != TYPE_LIVE_CAPTURE)
+        mCloseView.isVisible = type != TYPE_LIVE_CAPTURE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
             (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
@@ -179,20 +178,21 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             PermissionUtils.permission(PermissionConstants.CAMERA)
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
-                        if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
-                            PermissionUtils.permission(PermissionConstants.STORAGE)
-                                .callback(object : PermissionUtils.SimpleCallback {
-                                    override fun onGranted() {
-                                        initVerify()
-                                    }
+                        if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                        }
+                        PermissionUtils.permission(PermissionConstants.STORAGE)
+                            .callback(object : PermissionUtils.SimpleCallback {
+                                override fun onGranted() {
+                                    initVerify()
+                                }
 
-                                    override fun onDenied() {
-                                        CommonFunction.toast("文件存储权限被拒,请允许权限后再进行认证.")
-                                        finish()
-                                    }
+                                override fun onDenied() {
+                                    CommonFunction.toast("文件存储权限被拒,请允许权限后再进行认证.")
+                                    finish()
+                                }
 
-                                })
-                                .request()
+                            })
+                            .request()
                     }
 
                     override fun onDenied() {
@@ -212,12 +212,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
         MyApplication.livenessList.add(LivenessTypeEnum.Eye)
-        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadDown)
         MyApplication.livenessList.add(LivenessTypeEnum.HeadLeft)
         MyApplication.livenessList.add(LivenessTypeEnum.HeadRight)
-        //        MyApplication.livenessList.add(LivenessTypeEnum.Mouth)
-        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadUp)
-        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeftOrRight)
 
         // 为了android和ios 区分授权，appId=appname_face_android ,其中appname为申请sdk时的应用名
         // 应用上下文
@@ -226,11 +222,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         FaceSDKManager.getInstance()
             .initialize(this, Constants.licenseID, Constants.licenseFileName)
 
-
-        //获取accesstoken
-        //        getAccessToken()
-        //获取图片的base64
-        //        Thread(runnable).start()
     }
 
     private fun setFaceConfig() {
@@ -244,7 +235,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         //光照范围(0-1)推荐大于40
         config.setBrightnessValue(FaceEnvironment.VALUE_BRIGHTNESS)
         //裁剪人脸大小
-        config.setCropFaceValue(FaceEnvironment.VALUE_CROP_FACE_SIZE)
+        config.setCropFaceValue(FaceEnvironment.VALUE_MIN_FACE_SIZE)
         //人脸yaw,pitch,row角度，范围(-45,45)，推荐-15-15
         //低头抬头角度
         config.setHeadPitchValue(45)
@@ -314,11 +305,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         QNUploadManager.getInstance().put(
             filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.d(
-                    "OkHttp",
-                    "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}"
-                )
-                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null && info.isOK) {
                     savePersonal(
                         hashMapOf(
@@ -338,40 +324,48 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     /**
      * 保存个人信息
      */
+
     private fun savePersonal(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .savePersonal(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     loadingDialog.dismiss()
-                    when {
-                        t.code == 200 -> {
-                            CommonFunction.toast("审核提交成功")
-                            UserManager.saveUserVerify(2)
-                            UserManager.saveHasFaceUrl(true)
-                            setResult(Activity.RESULT_OK)
-                            finish()
-                            if (intent.getIntExtra(
-                                    "type",
-                                    TYPE_ACCOUNT_NORMAL
-                                ) == TYPE_ACCOUNT_DANGER
-                            )
+                    if (type == TYPE_LIVE_CAPTURE) {
+                        UserManager.startToFlow(
+                            this@IDVerifyActivity,
+                            intent.getSerializableExtra("morematchbean") as MoreMatchBean?
+                        )
+                    } else
+                        when (t.code) {
+                            200 -> {
+                                CommonFunction.toast("审核提交成功")
+                                UserManager.saveUserVerify(2)
+                                UserManager.saveHasFaceUrl(true)
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                                if (intent.getIntExtra(
+                                        "type",
+                                        TYPE_ACCOUNT_NORMAL
+                                    ) == TYPE_ACCOUNT_DANGER
+                                ) {
+                                }
                                 EventBus.getDefault().postSticky(
                                     AccountDangerEvent(
                                         AccountDangerDialog.VERIFY_ING
                                     )
                                 )
+                            }
+                            403 -> UserManager.startToLogin(context as Activity)
+                            else -> {
+                                CommonFunction.toast(t.msg)
+                            }
                         }
-                        t.code == 403 -> UserManager.startToLogin(context as Activity)
-                        else -> {
-                            CommonFunction.toast(t.msg)
-                        }
-                    }
                 }
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-
+                        TickDialog(this@IDVerifyActivity).show()
                     }
                     loadingDialog.dismiss()
                     CommonFunction.toast("认证审核提交失败，请重新进入认证")
@@ -382,167 +376,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
 
     /*-------------------by客户端-----------------------*/
-    private var accessToken = ""
-    private var avatorString: String? = null
-    /**
-     * 获取人脸验证的token
-     * https://aip.baidubce.com/oauth/2.0/token
-     * grant_type： 必须参数，固定为 client_credentials；
-    client_id： 必须参数，应用的API Key；
-    client_secret： 必须参数，应用的Secret Key；
-     */
-    private fun getAccessToken() {
-        OkHttpUtils.post().url("https://aip.baidubce.com/oauth/2.0/token")
-            .addParams("grant_type", "client_credentials")
-            .addParams("client_id", Constants.apiKey)
-            .addParams("client_secret", Constants.secretKey)
-            .build()
-            .execute(object : Callback<AccessTokenBean?>() {
-                override fun onResponse(response: AccessTokenBean?, id: Int) {
-                    if (response != null) {
-                        accessToken = response.access_token ?: ""
-                    }
-                }
-
-                override fun parseNetworkResponse(response: Response?, id: Int): AccessTokenBean? {
-                    if (response != null) {
-                        return Gson().fromJson(
-                            response.body()!!.string(),
-                            AccessTokenBean::class.java
-                        )
-                    }
-                    return null
-                }
-
-                override fun onError(call: Call?, e: Exception?, id: Int) {
-
-                }
-
-            })
-    }
-
     private val loadingDialog by lazy { LoadingDialog(this) }
-
-    /**
-     * 获取人脸验证的token
-     * https://aip.baidubce.com/rest/2.0/face/v2/match
-     * access_token
-     * images	是	string	分别base64编码后的2张图片数据，需urlencode，半角逗号分隔，单次请求最大不超过20M
-     * ext_fields	否	string	返回质量信息，取值固定，目前支持qualities(质量检测)(对所有图片都会做改处理)
-    image_liveness	否	string	返回的活体信息，“faceliveness,faceliveness” 表示对比对的两张图片都做活体检测；“,faceliveness” 表示对第一张图片不做活体检测、第二张图做活体检测；“faceliveness,” 表示对第一张图片做活体检测、第二张图不做活体检测；
-    注：需要用于判断活体的图片，图片中的人脸像素面积需要不小于100px*100px，人脸长宽与图片长宽比例，不小于1/3
-    types	否	string	请求对比的两张图片的类型，示例：“7，13”
-    7表示生活照：通常为手机、相机拍摄的人像图片、或从网络获取的人像图片等
-    11表示身份证芯片照：二代身份证内置芯片中的人像照片
-    12表示带水印证件照：一般为带水印的小图，如公安网小图
-    13表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片，注：需要确保人脸部分不可太小，通常为100px*100px
-     */
-    private fun matchFace(img1: String?, img2: String?) {
-        if (img1.isNullOrEmpty() || img2.isNullOrEmpty()) {
-            return
-        }
-        val images = arrayListOf<HashMap<String, String>>()
-        val map1 = hashMapOf<String, String>()
-        map1.put("image", img1)
-        map1.put("image_type", "BASE64")
-        map1.put("face_type", "LIVE")
-        map1.put("quality_control", "LOW")
-        map1.put("liveness_control", "NORMAL")
-
-        val map2 = hashMapOf<String, String>()
-        map2.put("image", img2)
-        map2.put("image_type", "BASE64")
-        map2.put("face_type", "LIVE")
-        map2.put("quality_control", "LOW")
-        map2.put("liveness_control", "NORMAL")
-        images.add(map1)
-        images.add(map2)
-        val params = GsonUtils.toJson(images)
-
-
-
-        OkHttpUtils.postString()
-            .url("https://aip.baidubce.com/rest/2.0/face/v3/match?access_token=${accessToken}")
-            .addHeader("Content-Type", "application/json")
-            .content(params)
-            .build()
-            .execute(object : Callback<MatchFaceBean?>() {
-                override fun onBefore(request: Request?, id: Int) {
-                }
-
-                override fun onResponse(response: MatchFaceBean?, id: Int) {
-                    loadingDialog.dismiss()
-
-                    Log.d("OkHttp", response.toString())
-                    if (response?.result?.score != null && response?.result.score >= 80) {
-                        loadingDialog.dismiss()
-                        CommonFunction.toast("认证成功！")
-//                        finish()
-                    } else {
-                        CommonFunction.toast("认证失败！")
-                    }
-                }
-
-                override fun parseNetworkResponse(response: Response?, id: Int): MatchFaceBean? {
-                    if (response != null) {
-                        Log.d("OkHttp", response.toString())
-                        return Gson().fromJson(
-                            response.body()!!.string(),
-                            MatchFaceBean::class.java
-                        )
-                    }
-                    return null
-                }
-
-                override fun onError(call: Call?, e: java.lang.Exception?, id: Int) {
-                    loadingDialog.dismiss()
-                    CommonFunction.toast("认证失败！")
-
-                    Log.d("OkHttp", "${id},${e?.message}")
-                }
-            })
-
-    }
-
-
-    /**
-     * 获取网络图片并转为Base64编码
-     *
-     * @param url
-     * 网络图片路径
-     * @return base64编码
-     * @throws Exception
-     */
-    private val runnable = Runnable {
-        try {
-            val u = URL(UserManager.getAvator())
-            // 打开图片路径
-            val conn = u.openConnection() as HttpURLConnection
-            // 设置请求方式为GET
-            conn.requestMethod = "GET"
-            // 设置超时响应时间为5秒
-            conn.connectTimeout = 5000
-            // 通过输入流获取图片数据
-            val inStream = conn.inputStream
-
-            val outStream = ByteArrayOutputStream()
-            val buffer = ByteArray(1024)
-            var len = 0
-
-            do {
-                outStream.write(buffer, 0, len)
-                len = inStream.read(buffer)
-            } while (len != -1)
-            inStream.close()
-            // 读取图片字节数组
-            val data = outStream.toByteArray()
-            // 对字节数组Base64编码
-            avatorString = Base64Utils.encodeToString(data, Base64Utils.NO_WRAP)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
 
     /**
      * 将图片转变为字节数组
@@ -561,5 +395,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         }
         AppManager.instance.finishActivity(this)
         FaceSDKManager.release()
+    }
+
+    override fun onBackPressed() {
+        if (type != TYPE_LIVE_CAPTURE)
+            super.onBackPressed()
     }
 }

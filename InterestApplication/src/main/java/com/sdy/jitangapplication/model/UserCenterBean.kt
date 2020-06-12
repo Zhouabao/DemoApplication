@@ -173,6 +173,7 @@ data class MoreMatchBean(
     var gender: Int = 0,
     var birth: Int = 0,
     var force_vip: Boolean = false,
+    var living_btn: Boolean = false,//  true  需要活体   false  不需要活体
     var isvip: Boolean = false
 ) : Serializable
 

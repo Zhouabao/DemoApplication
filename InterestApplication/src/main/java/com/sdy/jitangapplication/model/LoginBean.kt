@@ -20,16 +20,13 @@ data class ExtraBean(
     val im_token: String = "",
     val code: Int = 0,
     val msg: String = "",
-    val mytaglist: MutableList<TagBean>,
-    val myinterest: Boolean = false,
-    val aboutme: String = "",
     val city_name: String = "",
     val people_amount: Int = 0,
     val gender_str: String = "",
     var force_vip: Boolean = false,
     var isvip: Boolean = false,
-    var threshold_state: Boolean = false,
-    val want_steps: Boolean = false
+    val want_steps: Boolean = false,
+    val living_btn: Boolean = false
 )
 
 

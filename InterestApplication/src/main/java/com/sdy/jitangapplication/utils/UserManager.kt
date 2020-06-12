@@ -604,9 +604,17 @@ object UserManager {
         ) {
             context.startActivity<RegisterInfoActivity>()
             return
+        } else if (data?.extra_data?.living_btn == true) {
+            context.startActivity<IDVerifyActivity>(
+                "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE, "morematchbean" to MoreMatchBean(
+                    data.extra_data?.city_name ?: "",
+                    data.extra_data?.gender_str ?: "",
+                    data?.extra_data?.people_amount ?: 0
+                )
+            )
         } else if (registerFileBean?.supplement == 1) { //补充资料前移未走过
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
-            if (data.extra_data?.want_steps != true)//没有走完补充资料，就先走补充资料
+            if (data.extra_data?.want_steps != true) {//没有走完补充资料，就先走补充资料
                 context.startActivity<GetMoreMatchActivity>(
                     "moreMatch" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
@@ -614,7 +622,7 @@ object UserManager {
                         data?.extra_data?.people_amount ?: 0
                     )
                 )
-            else if (registerFileBean?.threshold == true && !data.extra_data?.isvip && getGender() == 1) {//走完补充资料,判断是否开启门槛，开启门槛并且不是会员就支付门槛
+            } else if (registerFileBean?.threshold == true && !data.extra_data?.isvip && getGender() == 1) {//走完补充资料,判断是否开启门槛，开启门槛并且不是会员就支付门槛
                 OpenVipDialog(
                     context,
                     MoreMatchBean(
@@ -673,6 +681,46 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME)
                 .put("people_amount", data?.extra_data?.people_amount ?: 0)
             saveUserInfo(data)
+            context.startActivity<MainActivity>()
+        }
+    }
+
+    fun startToFlow(context: Context, moreMatchBean: MoreMatchBean?) {
+        if (registerFileBean?.supplement == 1) { //补充资料前移未走过
+            context.startActivity<GetMoreMatchActivity>("moreMatch" to moreMatchBean)
+            return
+        } else if (registerFileBean?.supplement == 2) {//补充资料后移并且没有走过
+            if (moreMatchBean?.isvip != true) {//没有支付过门槛就跳门槛支付
+                OpenVipDialog(
+                    context,
+                    moreMatchBean,
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                ).show()
+            } else {//支付过门槛就跳更多关系
+                context.startActivity<GetRelationshipActivity>(
+                    "moreMatch" to MoreMatchBean(
+                        moreMatchBean?.city_name ?: "",
+                        moreMatchBean?.gender_str ?: "",
+                        moreMatchBean?.people_amount ?: 0
+                    )
+                )
+            }
+        } else if (registerFileBean?.supplement == 3 && registerFileBean?.threshold == true && moreMatchBean?.isvip != true) { //补充资料不开启
+            OpenVipDialog(
+                context,
+                moreMatchBean,
+                OpenVipDialog.FROM_REGISTER_OPEN_VIP
+            ).show()
+
+        } else {
+            //跳到主页
+            //保存个人信息
+            SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
+            SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
+            SPUtils.getInstance(Constants.SPNAME).put("gender", moreMatchBean?.gender ?: 0)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("people_amount", moreMatchBean?.people_amount ?: 0)
             context.startActivity<MainActivity>()
         }
     }

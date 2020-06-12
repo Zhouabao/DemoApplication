@@ -41,7 +41,6 @@ import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.presenter.RegisterInfoPresenter
 import com.sdy.jitangapplication.presenter.view.RegisterInfoView
 import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
-import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
 import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -625,43 +624,13 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             SPUtils.getInstance(Constants.SPNAME).put("gender", params["gender"] as Int)
 //            startActivity<RegisterInfoActivity>()
 
-            if (UserManager.registerFileBean?.supplement == 1) { //补充资料前移未走过
-                startActivity<GetMoreMatchActivity>("moreMatch" to moreMatchBean)
-                return
-                return
-            } else if (UserManager.registerFileBean?.supplement == 2) {//补充资料后移并且没有走过
-                if (moreMatchBean?.isvip != true) {//没有支付过门槛就跳门槛支付
-                    OpenVipDialog(
-                        this,
-                        moreMatchBean,
-                        OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                    ).show()
-                } else {//支付过门槛就跳更多关系
-                    startActivity<GetRelationshipActivity>(
-                        "moreMatch" to MoreMatchBean(
-                            moreMatchBean?.city_name ?: "",
-                            moreMatchBean?.gender_str ?: "",
-                            moreMatchBean?.people_amount ?: 0
-                        )
-                    )
-                }
-            } else if (UserManager.registerFileBean?.supplement == 3 && UserManager.registerFileBean?.threshold == true && moreMatchBean?.isvip != true) { //补充资料不开启
-                OpenVipDialog(
-                    this,
-                    moreMatchBean,
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                ).show()
-
-            } else {
-                //跳到主页
-                //保存个人信息
-                SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
-                SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
-                SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
-                SPUtils.getInstance(Constants.SPNAME).put("gender", moreMatchBean?.gender ?: 0)
-                SPUtils.getInstance(Constants.SPNAME).put("people_amount", moreMatchBean?.people_amount ?: 0)
-                startActivity<MainActivity>()
-            }
+            if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
+                startActivity<IDVerifyActivity>(
+                    "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
+                    "morematchbean" to moreMatchBean
+                )
+            } else
+                UserManager.startToFlow(this, moreMatchBean)
         } else {
             CommonFunction.toast(msg ?: "")
         }

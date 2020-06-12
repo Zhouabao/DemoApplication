@@ -437,10 +437,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             } else if (requestCode == REQUEST_ID_VERIFY) {
                 userInfoBean?.userinfo?.isfaced = UserManager.isUserVerify()
                 checkVerify()
-            } else if (requestCode == REQUEST_INTENTION) {
-                if (data != null && data.getSerializableExtra("intention") != null)
-                    userInfoBean?.userinfo?.intention =
-                        data.getSerializableExtra("intention") as LabelQualityBean?
             }
         }
     }
