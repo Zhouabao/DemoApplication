@@ -78,5 +78,6 @@ data class RegisterFileBean(
     var people_amount: Int = 0,
     var supplement: Int = 0,//补充资料 1 前置 2后置 3 关闭
     var threshold: Boolean = false,//门槛开关 开启true 关闭false
+    var liveGender: Boolean = false,//活体认证的性别判断
     var tourists: Boolean = false//	游客模式 开启true 关闭false
 )

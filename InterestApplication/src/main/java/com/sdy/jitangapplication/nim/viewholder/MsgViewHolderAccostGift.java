@@ -19,7 +19,7 @@ import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
  */
 public class MsgViewHolderAccostGift extends MsgViewHolderBase {
 
-    private TextView giftTitle; //礼物的名字
+    private TextView giftTitle,giftAmount; //礼物的名字
     private RelativeLayout giftStatusBg;//礼物背景状态
     private ImageView giftImg;//L礼物icon
     private AccostGiftAttachment attachment;
@@ -38,6 +38,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
     protected void inflateContentView() {
         //初始化数据
         giftTitle = findViewById(R.id.giftTitle);
+        giftAmount = findViewById(R.id.giftAmount);
         giftStatusBg = findViewById(R.id.giftStatusBg);
         giftImg = findViewById(R.id.giftImg);
     }
@@ -71,6 +72,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
             }
         }
         GlideUtil.loadImg(context, attachment.getGiftIcon(), giftImg);
+        giftAmount.setText("价值"+attachment.getId()+"糖果");
     }
 
     @Override

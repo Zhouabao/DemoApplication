@@ -1,41 +1,26 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sina.weibo.sdk.share.BaseActivity
-import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
 
 /**
  * 启动页面
  */
 class SplashActivity : BaseActivity() {
-
-    private val handler = Handler()
-
-    private val dialog: AlertDialog by lazy {
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null, false)
-        view.allowPermissionBtn.onClick {
-            requestPermissions()
-        }
-        AlertDialog.Builder(this).setView(view).setCancelable(false).create()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,11 +161,6 @@ class SplashActivity : BaseActivity() {
             startActivity<LoginActivity>("syCode" to p0)
             finish()
         }
-
-//        handler.postDelayed({
-//            startActivity<LoginActivity>()
-//            finish()
-//        }, 1000)
     }
 
 
@@ -220,20 +200,15 @@ class SplashActivity : BaseActivity() {
                 //获取权限成功进行定位
                 AMapManager.initLocation(this)
                 SPUtils.getInstance(Constants.SPNAME).put("autoPermissions", true)
-                dialog.dismiss()
                 start2login()
             }
         }
 
     }
 
-    private fun showAlertDialog() {
-        dialog.show()
-    }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
     }
 }

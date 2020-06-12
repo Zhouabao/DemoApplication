@@ -39,7 +39,6 @@ import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshTodayFateEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment
-import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.ui.adapter.AccostGiftAdapter
 import com.sdy.jitangapplication.ui.adapter.TodayFateAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
@@ -78,26 +77,31 @@ class TodayFateDialog(
         //待赠送的礼物
         accostGiftRv.layoutManager = GridLayoutManager(context1, 3)
         accostGiftRv.adapter = accostGiftAdapter
+        if (!data?.gift_list.isNullOrEmpty()) {
+            checkGiftPos = 0
+            data!!.gift_list[0].checked = true
+            myChooseCnt.text =
+                "向被你选中的女生每人送出${data!!.gift_list[0].amount}糖果礼物，体验女生主动撩你的感觉。${data?.out_time}未拆开将退回糖果"
+        }
+
         accostGiftAdapter.setNewData(data?.gift_list)
 
         accostGiftAdapter.setOnItemClickListener { _, view, position ->
-            for (data in accostGiftAdapter.data) {
-                if (data == accostGiftAdapter.data[position]) {
-                    data.checked = !data.checked
-                    if (data.checked) {
+            for (accostData in accostGiftAdapter.data) {
+                if (accostData == accostGiftAdapter.data[position]) {
+                    accostData.checked = !accostData.checked
+                    if (accostData.checked) {
                         checkGiftPos = position
+                        myChooseCnt.text =
+                            "向被你选中的女生每人送出${accostData.amount}糖果礼物，体验女生主动撩你的感觉。${data?.out_time}未拆开将退回糖果"
+
                     }
                 } else {
-                    data.checked = false
+                    accostData.checked = false
                 }
             }
             accostGiftAdapter.notifyDataSetChanged()
         }
-
-        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 0, title = "礼物1"))
-        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 1, title = "礼物2"))
-        accostGiftAdapter.addData(GiftBean(100, 1, UserManager.getAvator(), 2, title = "礼物3"))
-
 
 
 
@@ -136,23 +140,6 @@ class TodayFateDialog(
 
         markedUserRv.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
         markedUserRv.adapter = userAvatorAdapter
-
-//        iv1.addAnimatorListener(object : Animator.AnimatorListener {
-//            override fun onAnimationRepeat(animation: Animator?) {
-//
-//            }
-//
-//            override fun onAnimationEnd(animation: Animator?) {
-//                dismiss()
-//            }
-//
-//            override fun onAnimationCancel(animation: Animator?) {
-//            }
-//
-//            override fun onAnimationStart(animation: Animator?) {
-//            }
-//
-//        })
 
         initialize()
     }
@@ -272,12 +259,11 @@ class TodayFateDialog(
         if (manager.topPosition == adapter.data.size) {
             markLikeRv.visibility = View.INVISIBLE
             totalMarkCnt.text = "${userAvatorAdapter.data.size}位女生被你选中"
+            markLeftCount.isVisible = false
             if (userAvatorAdapter.data.size == 0) {
                 myChooseCnt.text = "没有你喜欢的女生？那明天再来看看吧"
                 sendGiftBtn.text = "回到首页"
             } else {
-                myChooseCnt.text =
-                    "向被你选中的女生每人送出${data?.gift_amount}糖果礼物，体验女生主动撩你的感觉。${data?.out_time}小时未拆开将退回糖果"
                 sendGiftBtn.text = "一键送出礼物"
             }
         } else {
@@ -317,6 +303,12 @@ class TodayFateDialog(
      *批量送出礼物
      */
     fun batchGreet() {
+        if (userAvatorAdapter.data.isNullOrEmpty() || checkGiftPos == -1 || accostGiftAdapter.data.size < checkGiftPos) {
+            CommonFunction.toast("当前没有可赠送的礼物")
+            return
+        }
+
+
         val loadingDialog = LoadingDialog(context1)
         val ids = mutableListOf<String>()
         for (data in userAvatorAdapter.data) {
@@ -329,6 +321,7 @@ class TodayFateDialog(
         }
         val params = hashMapOf<String, Any>()
         params["batch_accid"] = Gson().toJson(ids)
+        params["gift_id"] = accostGiftAdapter.data[checkGiftPos].id
         RetrofitFactory.instance.create(Api::class.java)
             .batchGreet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<BatchSendGiftBean?>>() {
@@ -352,12 +345,12 @@ class TodayFateDialog(
                                 val config1 = CustomMessageConfig()
                                 config1.enableUnreadCount = true
                                 config1.enablePush = false
-                                //todo 礼物的信息没有填写
                                 val giftAtt = AccostGiftAttachment(
                                     data.value.order_id,
-                                    SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
-                                    UserManager.getAvator(),
-                                    "出来玩儿啊"
+                                    AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
+                                    accostGiftAdapter.data[checkGiftPos].icon,
+                                    accostGiftAdapter.data[checkGiftPos].title,
+                                    accostGiftAdapter.data[checkGiftPos].amount
                                 )
                                 val giftMsg = MessageBuilder.createCustomMessage(
                                     data.value.accid,
@@ -372,7 +365,7 @@ class TodayFateDialog(
                                             if (data.index == (t.data?.order_ids
                                                     ?: mutableListOf()).size - 1
                                             ) {
-//                                                iv1.playAnimation()
+                                                dismiss()
                                             }
                                         }
 

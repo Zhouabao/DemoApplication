@@ -226,7 +226,8 @@ class ConfirmSendGiftDialog(
                 orderId,
                 AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL,
                 giftName.icon,
-                giftName.title
+                giftName.title,
+                giftName.amount
             )
         val message = MessageBuilder.createCustomMessage(
             account,

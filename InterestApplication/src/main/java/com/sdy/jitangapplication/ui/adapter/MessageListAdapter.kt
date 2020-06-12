@@ -212,7 +212,7 @@ class MessageListAdapter :
                         }
                     }
                     if (!hasList) {
-                        when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
+                        when ((item.attachment as AccostGiftAttachment).giftStatus) {
                             AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
                                 if (item.fromAccount == UserManager.getAccid()) {
                                     holder.itemView.text.text =

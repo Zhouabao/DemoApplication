@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/giftTitle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@id/giftImg"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="3dp"
@@ -24,6 +24,17 @@
             android:text="礼物已领取"
             android:textColor="#ff191919"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/giftAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/giftTitle"
+            android:layout_alignLeft="@id/giftTitle"
+            android:layout_marginTop="5dp"
+            android:text="价值0糖果"
+            android:textColor="#ff191919"
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/giftImg"
