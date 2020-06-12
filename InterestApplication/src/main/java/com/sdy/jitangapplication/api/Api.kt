@@ -289,20 +289,6 @@ interface Api {
     @POST("square/announceV13${Constants.END_BASE_URL}")
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-    /**
-     * 上传视频介绍
-     */
-    @FormUrlEncoded
-    @POST("Home/uploadMv${Constants.END_BASE_URL}")
-    fun uploadMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-    /**
-     * 视频认证模板
-     */
-    @FormUrlEncoded
-    @POST("Home/getMvNormalCopy${Constants.END_BASE_URL}")
-    fun getMvNormalCopy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
-
 
     /**
      * 通知添加特质
@@ -1152,5 +1138,27 @@ interface Api {
     @FormUrlEncoded
     @POST("Gift/checkGiftState${Constants.END_BASE_URL}")
     fun checkGiftState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftStateBean?>>
+
+
+    /**
+     * 上传视频介绍
+     */
+    @FormUrlEncoded
+    @POST("Home/uploadMv${Constants.END_BASE_URL}")
+    fun uploadMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 获取上传视频的标准视频
+     */
+    @FormUrlEncoded
+    @POST("Home/normalMv${Constants.END_BASE_URL}")
+    fun normalMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
+
+    /**
+     * 视频认证模板
+     */
+    @FormUrlEncoded
+    @POST("Home/getMvNormalCopy${Constants.END_BASE_URL}")
+    fun getMvNormalCopy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
 
 }

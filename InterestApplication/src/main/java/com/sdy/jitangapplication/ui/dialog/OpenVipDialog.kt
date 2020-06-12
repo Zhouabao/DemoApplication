@@ -202,7 +202,7 @@ class OpenVipDialog(
 
         //余额支付
         openVipBtn.clickWithTrigger {
-            if (UserManager?.registerFileBean?.threshold == true) {
+            if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {
                 if (chargeWayBeans.isNotEmpty()) {
                     ConfirmPayCandyDialog(
                         context1,

@@ -41,7 +41,7 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
         when (status) {
             VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO -> {
                 verifyState.text = "审核失败"
-                verifyTip.text = "视频审核未通过您可以重新录制视频"
+                verifyTip.text = "您的视频介绍未通过审核，您可在确保视频与头像一致的前提下重新录制"
                 continueBtn.text = "重新录制"
                 continueBtn.clickWithTrigger {
                     if (ActivityUtils.getTopActivity() !is VideoVerifyActivity)
@@ -52,7 +52,7 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
             }
             VERIFY_NORMAL_PASS -> {
                 verifyState.text = "审核通过"
-                verifyTip.text = "您的视频审核通过已开启私聊权限"
+                verifyTip.text = "您的视频介绍已通过审核"
                 continueBtn.text = "继续使用"
                 continueBtn.clickWithTrigger {
                     dismiss()

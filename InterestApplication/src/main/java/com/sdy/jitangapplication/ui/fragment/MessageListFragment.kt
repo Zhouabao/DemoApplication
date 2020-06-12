@@ -249,6 +249,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
             adapter.headerLayout.moreChatUpBtn.isVisible =
                 (data?.chatup_list ?: mutableListOf()).size > 4
+            adapter.headerLayout.getChildAt(0).isVisible = true
+        } else {
+            adapter.headerLayout.getChildAt(0).isVisible = false
         }
 //        moreChatUpBtn
         accostIds = data?.chatup_rid_list ?: mutableListOf()

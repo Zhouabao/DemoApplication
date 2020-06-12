@@ -38,18 +38,16 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
-import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
-import com.sdy.jitangapplication.ui.dialog.VerifyThenChatDialog
+import com.sdy.jitangapplication.ui.dialog.VideoIntroduceBeforeDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_video_verify.*
-import kotlinx.android.synthetic.main.dialog_verify_then_chat.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
 import java.io.File
@@ -85,20 +83,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 ToastHelper.showToast(context1, "当前系统版本暂不支持视频拍摄功能")
                 return
             }
-
-            val confirmDialog = VerifyThenChatDialog(
-                context1,
-                VerifyThenChatDialog.FROM_VERIFY_MUST_KNOW
-            )
-            confirmDialog.show()
-            confirmDialog.verifyBtn.clickWithTrigger {
-                if (requestCode != -1) {
-                    (context1 as Activity).startActivityForResult<VideoVerifyActivity>(requestCode)
-                } else {
-                    context1.startActivity<VideoVerifyActivity>()
-                }
-                confirmDialog.dismiss()
-            }
+            VideoIntroduceBeforeDialog(context1, requestCode).show()
 
         }
     }
@@ -120,8 +105,13 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_verify)
         initView()
+        switchMvCopy()
 
-        mPresenter.getMvNormalCopy()
+    }
+
+    private var switchIndex = -1
+    private val mvCopy: MutableList<VideoVerifyBannerBean> by lazy {
+        (intent.getSerializableExtra("copyMv") as CopyMvBean?)?.list ?: mutableListOf()
     }
 
     private fun initView() {
@@ -604,14 +594,6 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
 
 
-    }
-
-    private var switchIndex = -1
-    private val mvCopy by lazy { mutableListOf<VideoVerifyBannerBean>() }
-    override fun onGetMvNormalCopy(code: MutableList<VideoVerifyBannerBean>) {
-        mvCopy.clear()
-        mvCopy.addAll(code)
-        switchMvCopy()
     }
 
 

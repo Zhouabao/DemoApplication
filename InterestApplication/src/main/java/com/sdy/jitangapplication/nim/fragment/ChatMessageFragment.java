@@ -72,7 +72,8 @@ import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
-import com.sdy.jitangapplication.ui.dialog.VideoVerifyDialog;
+import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
+import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 
@@ -142,12 +143,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
             @Override
             public void onClick(@Nullable View v) {
-
             }
 
             @Override
             public void onLazyClick(@NotNull View v) {
-                CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+                if (!nimBean.getMy_isfaced())
+                    CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+                else if (nimBean.getMv_state() == 0)
+                    CommonFunction.INSTANCE.startToVideoIntroduce(getActivity(), -1);
             }
         });
         return rootView;
@@ -377,7 +380,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private Boolean canSendMsg() {
         //发起方并且次数为0 禁止发送
         if (nimBean.getIslimit()) {
-            new VideoVerifyDialog(getActivity()).show();
+            //如果没有认证就弹认证才能聊天,如果认证了就查看是否添加了认证视频
+            if (!nimBean.getMy_isfaced())
+                new VerifyAddChatDialog(getActivity(), nimBean.getApprove_chat_times()).show();
+            else if (nimBean.getMv_state() == 0)
+                new VideoAddChatTimeDialog(getActivity()).show();
             return false;
         } else {
             return true;
@@ -589,12 +596,18 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private void setTargetInfoData() {
 //        UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
         //显示提示认证的悬浮
-        if (nimBean.getMy_gender() == 2 && !nimBean.getMy_isfaced()) {
+        if (nimBean.getMy_gender() == 2 && (!nimBean.getMy_isfaced() || nimBean.getMv_state() == 0)) {
             verifyLl.setVisibility(View.VISIBLE);
-            if (nimBean.getResidue_msg_cnt() == nimBean.getNormal_chat_times()) {
-                leftChatTimes.setText("未认证每天仅能和" + nimBean.getNormal_chat_times() + "个用户聊天");
+            if (!nimBean.getMy_isfaced()) {
+                gotoVerifyBtn.setText("立即认证");
+                if (nimBean.getResidue_msg_cnt() == nimBean.getNormal_chat_times()) {
+                    leftChatTimes.setText("未认证每天仅能和" + nimBean.getNormal_chat_times() + "个用户聊天");
+                } else {
+                    leftChatTimes.setText("还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，认证后增加");
+                }
             } else {
-                leftChatTimes.setText("还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，认证后无限制");
+                gotoVerifyBtn.setText("视频介绍");
+                leftChatTimes.setText("今日还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，追加视频聊天不设限");
             }
         } else {
             verifyLl.setVisibility(View.INVISIBLE);

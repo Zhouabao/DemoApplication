@@ -59,10 +59,14 @@
 
     <TextView
         android:id="@+id/verifyTip"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.1"
         android:layout_marginTop="5dp"
-        android:text="您已通过视频认证已开启私聊权限"
+        android:text="您的视频介绍未通过审核，您可在确保视频与头像一致的前提下重新录制"
         android:textColor="#ff191919"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"

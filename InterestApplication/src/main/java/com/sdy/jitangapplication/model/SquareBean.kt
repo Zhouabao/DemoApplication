@@ -186,9 +186,14 @@ data class VideoVerifyBannerBean(
     var title: String = "",
     var icon: Int = 0,
     var id: Int = 0
-)
+) : Serializable
 
-data class CopyMvBean(var list: MutableList<VideoVerifyBannerBean> = mutableListOf())
+data class CopyMvBean(
+    val mv_url: String = "",
+    val mv_url_cover: String = "",
+    var list: MutableList<VideoVerifyBannerBean> = mutableListOf()
+):Serializable
+
 
 data class RecommendSquareBean(
     var accid: String = "",

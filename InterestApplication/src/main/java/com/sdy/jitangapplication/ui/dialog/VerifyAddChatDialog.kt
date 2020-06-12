@@ -12,7 +12,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.ui.holder.VideoVerifyHolderView
 import com.zhpan.bannerview.BannerViewPager
-import kotlinx.android.synthetic.main.dialog_video_verify.*
+import kotlinx.android.synthetic.main.dialog_face_verify.*
 
 /**
  *    author : ZFM
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.dialog_video_verify.*
  *    desc   :视频认证弹窗
  *    version: 1.0
  */
-class VideoVerifyDialog(val myContext: Context) :
+class VerifyAddChatDialog(val myContext: Context, val chatCount: Int) :
     Dialog(myContext, R.style.MyDialog) {
     companion object {
         const val POSITION_CANDY = 0 //获取糖果
@@ -31,7 +31,7 @@ class VideoVerifyDialog(val myContext: Context) :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_video_verify)
+        setContentView(R.layout.dialog_face_verify)
         initWindow()
         initView()
     }
@@ -51,9 +51,10 @@ class VideoVerifyDialog(val myContext: Context) :
                         "过往积累的糖果奖励一次性领取",
                         R.drawable.icon_verify_to_get_candy
                     ),
+                    //增加聊天机会
                     VideoVerifyBannerBean(
                         "今日聊天机会用完",
-                        "无限聊天机会，再无设限",
+                        "每天增加$chatCount 次聊天机会",
                         R.drawable.icon_verify_to_chat
                     ),
                     VideoVerifyBannerBean(

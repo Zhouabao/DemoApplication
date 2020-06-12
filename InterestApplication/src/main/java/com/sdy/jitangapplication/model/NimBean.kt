@@ -17,6 +17,8 @@ data class NimBean(
     var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
     var matching_content: String = "",
     var matching_icon: String = "",
+    var approve_chat_times: Int = 0,//认证后可聊天的人次数
+    var mv_state: Int = 0,//视频介绍0 没有 1 通过  2审核中
     var my_gender: Int = 0,
     var my_isfaced: Boolean = false,
     var square: List<Square> = listOf(),
@@ -27,7 +29,6 @@ data class NimBean(
     var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf(),
     var is_send_msg: Boolean = false,
     var force_isvip: Boolean = false
-//    var is_send_msg: Boolean = false  //本用户是否发送过消息
 
 ) : Serializable
 
