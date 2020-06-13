@@ -58,6 +58,8 @@ class FemalePowerActivity : BaseActivity() {
                 CommonFunction.startToVideoIntroduce(this)
             } else if (video == 2) {
                 CommonFunction.toast("视频正在审核中，请耐心等待")
+            } else {
+                CommonFunction.toast("您已经通过视频介绍")
             }
         }
 
