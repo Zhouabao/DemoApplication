@@ -76,7 +76,7 @@ class PrivacyDialog(
 
         }
         privacyContent.highlightColor = context1.resources.getColor(R.color.colorTransparent)
-        privacyContent.text = SpanUtils.with(privacyContent)
+        SpanUtils.with(privacyContent)
             .append("尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了")
             .append("《积糖用户协议》")
             .setClickSpan(clickSpanProtocol1)
