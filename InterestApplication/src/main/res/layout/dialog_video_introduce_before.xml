@@ -17,6 +17,7 @@
             android:layout_height="146dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
+            android:src="@drawable/default_image_10dp"
             app:layout_constraintBottom_toTopOf="@id/videoTitle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -91,30 +92,13 @@
             app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/videoStandardFl"
+
+    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        android:id="@+id/videoStandard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBlack"
-        android:visibility="gone">
-
-        <VideoView
-            android:id="@+id/videoStandard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-
-
-        <ImageView
-            android:id="@+id/closeBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/icon_close_transparent_video" />
-
-
-    </FrameLayout>
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 
 </FrameLayout>

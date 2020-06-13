@@ -214,14 +214,15 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     NIMClient.getService(MsgService::class.java)
                         .clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
                     ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
-                    EventBus.getDefault().post(GetNewMsgEvent())
-                    headAdapter.data[0].count = 0
-                    headAdapter.notifyItemChanged(0)
+
                 }
                 1 -> {
                     startActivity<MessageSquareActivity>()
                 }
             }
+            EventBus.getDefault().post(GetNewMsgEvent())
+            headAdapter.data[position].count = 0
+            headAdapter.notifyItemChanged(position)
         }
         return headView
     }
@@ -243,6 +244,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         headAdapter.data[1].count = (data?.square_count ?: 0)
         headAdapter.data[1].time = TimeUtil.getTimeShowString(System.currentTimeMillis(), true)
+        headAdapter.notifyItemChanged(1)
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())

@@ -11,14 +11,17 @@ import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.ui.activity.VideoVerifyActivity
 import com.sdy.jitangapplication.utils.UserManager
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.dialog_video_introduce_before.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -44,7 +47,6 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
         GlideUtil.loadCircleImg(context1, UserManager.getAvator(), avator)
 
         videoPlay.clickWithTrigger {
-            videoStandardFl.isVisible = true
             videoStandard.isVisible = true
             playVideo()
 
@@ -65,10 +67,9 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
 
 
         //
-        closeBtn.clickWithTrigger {
-            videoStandardFl.isVisible = false
+        videoStandard.backButton.onClick {
             videoStandard.isVisible = false
-            videoStandard.stopPlayback()
+            GSYVideoManager.releaseAllVideos()
         }
 
 
@@ -129,19 +130,11 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
     }
 
     private fun playVideo() {
-        videoStandard.setVideoPath(copyMvBean?.mv_url)
-        videoStandard.setOnPreparedListener {
-            videoStandard.start()
-        }
-        videoStandard.setOnCompletionListener {
-            videoStandard.start()
-        }
+        CommonFunction.initVideo(context1, videoStandard, copyMvBean?.mv_url ?: "")
     }
 
     override fun dismiss() {
         super.dismiss()
-        if (videoStandard.isPlaying) {
-            videoStandard.stopPlayback()
-        }
+        GSYVideoManager.releaseAllVideos()
     }
 }

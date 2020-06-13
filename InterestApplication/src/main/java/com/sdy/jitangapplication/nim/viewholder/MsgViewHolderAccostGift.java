@@ -72,7 +72,7 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
             }
         }
         GlideUtil.loadImg(context, attachment.getGiftIcon(), giftImg);
-        giftAmount.setText("价值"+attachment.getId()+"糖果");
+        giftAmount.setText("价值"+attachment.getGiftAmount()+"糖果");
     }
 
     @Override

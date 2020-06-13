@@ -658,7 +658,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity()).show();
                             }
                             //搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
-                            if (nimBeanBaseResp.getData().getRid_data() != null) {
+                            if (nimBeanBaseResp.getData().getRid_data() != null && !nimBeanBaseResp.getData().getRid_data().getIcon().isEmpty()) {
                                 new ReceiveAccostGiftDialog(getActivity(), nimBeanBaseResp.getData().getRid_data()).show();
                             }
 //                            if (content.getMsgType() == MsgTypeEnum.text)

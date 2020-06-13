@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ScreenUtils
@@ -43,6 +44,7 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import org.greenrobot.eventbus.EventBus
@@ -600,5 +602,16 @@ object CommonFunction {
         requestCode: Int = -1
     ) {
         VideoVerifyActivity.start(context, requestCode)
+    }
+
+
+    fun initVideo(context: Context, gsyVideoPlayer: StandardGSYVideoPlayer, url: String) {
+        gsyVideoPlayer.titleTextView.isVisible = false
+        gsyVideoPlayer.backButton.isVisible = true
+        gsyVideoPlayer.backButton.setImageResource(R.drawable.icon_close_transparent_video)
+        gsyVideoPlayer.setIsTouchWiget(false)
+
+        gsyVideoPlayer.setUp(url, true, "")
+        gsyVideoPlayer.startPlayLogic()
     }
 }

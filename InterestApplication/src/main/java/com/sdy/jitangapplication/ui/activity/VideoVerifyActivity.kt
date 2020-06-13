@@ -52,7 +52,6 @@ import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
 import java.io.File
 import java.io.IOException
-import kotlin.math.abs
 
 
 /**
@@ -98,7 +97,6 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     private var isRecording = false
     private var isCameraFront = true //当前是否是前置摄像头
     private var currentTime = 0
-    private var pictureSavePath = ""
     private var videoSavePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -194,36 +192,6 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mPreview?.setCamera(mCamera, isCameraFront)
     }
 
-    fun getOptionalSize(sizes: MutableList<Camera.Size>): Camera.Size {
-        var tolerance = 0.1
-        var tagetRatio = 500 / 375F
-        var optionSize: Camera.Size? = null
-        var minDiff = Double.MAX_VALUE
-        val targetHeight = ScreenUtils.getScreenWidth()
-        for (size in sizes) {
-            val ratio = size.width / size.height * 1f
-            if (abs(ratio - tagetRatio) > tolerance) {
-                continue
-            }
-            if (abs(size.height - targetHeight) < minDiff) {
-                optionSize = size
-                minDiff = abs(size.height - targetHeight).toDouble()
-            }
-        }
-
-        if (optionSize == null) {
-            minDiff = Double.MIN_VALUE
-            for (size in sizes) {
-                if (abs(size.height - targetHeight) < minDiff) {
-                    optionSize = size
-                    minDiff = abs(size.height - targetHeight).toDouble()
-                }
-            }
-        }
-        return optionSize!!
-
-    }
-
 
     override fun onPause() {
         super.onPause()
@@ -245,14 +213,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P) -> {
                 val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P)
                 mMediaRecorder?.setProfile(profile)
-                // default 12 * 1000 * 1000
                 mMediaRecorder?.setVideoSize(640, 480)
                 mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
             }
             CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P) -> {
                 val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P)
                 mMediaRecorder?.setProfile(profile)
-                // default 12 * 1000 * 1000
                 mMediaRecorder?.setVideoSize(640, 480)
                 mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
             }

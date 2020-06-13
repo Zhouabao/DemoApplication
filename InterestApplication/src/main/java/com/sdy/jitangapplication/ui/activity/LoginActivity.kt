@@ -85,15 +85,31 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
         loginCl.isVisible = !isOpenAuth
         //闪验预取号code为1022即为成功
-        if (syCode == 1022) {
-            onekeyLoginBtn.isVisible = true
-            phoneLoginBtn.visibility = View.INVISIBLE
-            wechatLoginBtn.visibility = View.INVISIBLE
+        if (syCode == 0) {
+            OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
+                if (p0 == 1022) {
+                    onekeyLoginBtn.isVisible = true
+                    phoneLoginBtn.visibility = View.INVISIBLE
+                    wechatLoginBtn.visibility = View.INVISIBLE
+                } else {
+                    onekeyLoginBtn.isVisible = false
+                    phoneLoginBtn.isVisible = true
+                    wechatLoginBtn.isVisible = true
+                }
+            }
         } else {
-            onekeyLoginBtn.isVisible = false
-            phoneLoginBtn.isVisible = true
-            wechatLoginBtn.isVisible = true
+            if (syCode == 1022) {
+                onekeyLoginBtn.isVisible = true
+                phoneLoginBtn.visibility = View.INVISIBLE
+                wechatLoginBtn.visibility = View.INVISIBLE
+            } else {
+                onekeyLoginBtn.isVisible = false
+                phoneLoginBtn.isVisible = true
+                wechatLoginBtn.isVisible = true
+            }
         }
+
+
 
 
 //        StatusBarUtil.immersive(this)

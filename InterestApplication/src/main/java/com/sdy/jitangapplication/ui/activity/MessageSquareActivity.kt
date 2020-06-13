@@ -163,8 +163,10 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
             if (data.isNullOrEmpty()) {
                 if (refreshLayout.state == RefreshState.Loading)
                     refreshLayout.finishLoadMoreWithNoMoreData()
-                else
+                else {
+                    refreshLayout.finishRefresh()
                     adapter.isUseEmpty(true)
+                }
             } else {
                 if (refreshLayout.state == RefreshState.Refreshing) {
                     refreshLayout.finishRefresh(true)

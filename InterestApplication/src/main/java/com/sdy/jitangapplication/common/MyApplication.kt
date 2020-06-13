@@ -25,6 +25,7 @@ import com.netease.nimlib.sdk.mixpush.NIMPushClient
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.util.NIMUtil
+import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -61,6 +62,15 @@ import org.greenrobot.eventbus.EventBus
 
 class MyApplication : BaseApplication() {
     init {
+        SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
+                .setReboundDuration(200)
+                .setEnableHeaderTranslationContent(true)
+        }
+//        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
+//            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+//            MaterialHeader(context).setColorSchemeResources(R.color.colorBlack)
+//        }
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
                 .setReboundDuration(200)
@@ -72,7 +82,6 @@ class MyApplication : BaseApplication() {
                 .setReboundDuration(200)
             ClassicsFooter(context).setFinishDuration(200).setDrawableSize(20F)
         }
-
     }
 
     companion object {
@@ -180,11 +189,17 @@ class MyApplication : BaseApplication() {
 
                     //视频介绍审核通过
                     91 -> {
-                        VerifyNormalResultDialog(ActivityUtils.getTopActivity(),VerifyNormalResultDialog.VERIFY_NORMAL_PASS).show()
+                        VerifyNormalResultDialog(
+                            ActivityUtils.getTopActivity(),
+                            VerifyNormalResultDialog.VERIFY_NORMAL_PASS
+                        ).show()
                     }
                     //视频介绍审核不通过
                     93 -> {
-                        VerifyNormalResultDialog(ActivityUtils.getTopActivity(),VerifyNormalResultDialog.VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO).show()
+                        VerifyNormalResultDialog(
+                            ActivityUtils.getTopActivity(),
+                            VerifyNormalResultDialog.VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO
+                        ).show()
                     }
                     //10头像未通过审核去进行人脸认证
                     10, 101 -> {

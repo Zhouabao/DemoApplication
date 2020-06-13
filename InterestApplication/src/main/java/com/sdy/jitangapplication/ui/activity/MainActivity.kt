@@ -488,7 +488,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                         ",square_count = ${allMsgCount.square_count}"
             )
 
-            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
+            showMsgDot(allMsgCount.square_count > 0 || msgCount > 0)
         }
     }
 

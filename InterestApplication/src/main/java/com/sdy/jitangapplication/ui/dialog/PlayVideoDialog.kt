@@ -2,13 +2,13 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
-import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.dialog_play_video.*
 
 /**
@@ -42,23 +42,23 @@ class PlayVideoDialog(val context1: Context, var mv_url: String) :
     }
 
     private fun showVideoPreview() {
-        mv_url =
-            "https://vdept.bdstatic.com/67595575393448417844347145375548/6839465a7047534e/e3875eb46f6085411f6b58a5bebfd8ac9ccca895cf0de9b560ee582cbddee11244d422f831b367210ac9b74c7c67aca3.mp4?auth_key=1590489563-0-0-df02513277d3cc50809c84c29a7d46bf"
+        CommonFunction.initVideo(context1, videoPreview, mv_url)
 //        videoPreview.setMediaController(MediaController(this))
-        videoPreview.setVideoURI(Uri.parse(mv_url))
-        videoPreview.setOnPreparedListener {
-            coverBlack.isVisible = false
-        }
-        videoPreview.setOnCompletionListener {
-            videoPreview.start()
-        }
+//        videoPreview.setVideoPath(mv_url)
+//        videoPreview.setOnPreparedListener {
+//            coverBlack.isVisible = false
+//        }
+//        videoPreview.setOnCompletionListener {
+//            videoPreview.start()
+//        }
 
-        playVideo.onClick {
-            videoPreview.start()
-            playVideo.isVisible = false
-        }
+//        playVideo.onClick {
+//            videoPreview.start()
+//            coverBlack.isVisible = false
+//            playVideo.isVisible = false
+//        }
 
-        closeBtn.onClick {
+        videoPreview.backButton.onClick {
             dismiss()
         }
     }
@@ -69,7 +69,7 @@ class PlayVideoDialog(val context1: Context, var mv_url: String) :
 
     override fun dismiss() {
         super.dismiss()
-        videoPreview.stopPlayback()
+        GSYVideoManager.releaseAllVideos()
 
     }
 

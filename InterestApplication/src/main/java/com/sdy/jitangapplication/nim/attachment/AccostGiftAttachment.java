@@ -47,6 +47,14 @@ public class AccostGiftAttachment extends CustomAttachment {
         this.giftStatus = giftStatus;
     }
 
+    public int getGiftAmount() {
+        return giftAmount;
+    }
+
+    public void setGiftAmount(int giftAmount) {
+        this.giftAmount = giftAmount;
+    }
+
     public int getId() {
         return orderId;
     }

@@ -152,7 +152,10 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             }
 
             itemView.userIntroduceVideoBtn.clickWithTrigger {
-                CommonFunction.startToVideoIntroduce(mContext)
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
             }
         } else {
             itemView.userChatBtn.isVisible = false

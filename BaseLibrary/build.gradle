@@ -89,6 +89,10 @@ dependencies {
     //上下拉刷新
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
+//    api 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+//    api 'com.scwang.smart:refresh-header-material:2.0.1'
+//    api 'com.scwang.smart:refresh-footer-classics:2.0.1'
+//    api 'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
