@@ -38,6 +38,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.UpdateApproveEvent
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
@@ -48,6 +49,7 @@ import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_video_verify.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
 import java.io.File
@@ -556,6 +558,9 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         when (code) {
             200 -> {
                 VerifyForceDialog(this, VerifyForceDialog.VIDEO_INTRODUCE_GOING).show()
+
+                //聊天页面刷新认证数据数据
+                EventBus.getDefault().post(UpdateApproveEvent())
             }
         }
 

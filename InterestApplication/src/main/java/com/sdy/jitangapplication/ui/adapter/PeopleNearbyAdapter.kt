@@ -120,7 +120,13 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
                     itemView.userContactBtn.isVisible = false
                 }
             }
-
+            //搭讪
+            itemView.userChatBtn.clickWithTrigger {
+                if (UserManager.touristMode)
+                    TouristDialog(mContext).show()
+                else
+                    CommonFunction.checkSendGift(mContext, item.accid)
+            }
             //获取联系方式
             itemView.userContactBtn.clickWithTrigger {
                 if (UserManager.touristMode)
@@ -144,19 +150,6 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
                     MatchDetailActivity.start(mContext, item.accid)
             }
 
-            itemView.userChatBtn.clickWithTrigger {
-                if (UserManager.touristMode)
-                    TouristDialog(mContext).show()
-                else
-                    CommonFunction.checkSendGift(mContext, item.accid)
-            }
-
-            itemView.userIntroduceVideoBtn.clickWithTrigger {
-                if (UserManager.touristMode)
-                    TouristDialog(mContext).show()
-                else
-                    CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
-            }
         } else {
             itemView.userChatBtn.isVisible = false
             itemView.userContactBtn.isVisible = false

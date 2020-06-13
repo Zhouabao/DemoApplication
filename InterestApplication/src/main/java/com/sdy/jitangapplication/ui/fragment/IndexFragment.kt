@@ -90,7 +90,10 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 
         //置顶卡片
         topCardBtn.clickWithTrigger {
-            TopCardDialog(activity!!).show()
+            if (UserManager.touristMode)
+                TouristDialog(activity!!).show()
+            else
+                TopCardDialog(activity!!).show()
 //            TouristDialog(activity!!).show()
         }
 

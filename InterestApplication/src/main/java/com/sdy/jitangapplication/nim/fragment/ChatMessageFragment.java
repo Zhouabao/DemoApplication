@@ -49,7 +49,6 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.common.OnLazyClickListener;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
@@ -80,8 +79,6 @@ import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,19 +136,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
 
         //去认证
-        gotoVerifyBtn.setOnClickListener(new OnLazyClickListener() {
-
-            @Override
-            public void onClick(@Nullable View v) {
-            }
-
-            @Override
-            public void onLazyClick(@NotNull View v) {
-                if (!nimBean.getMy_isfaced())
-                    CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
-                else if (nimBean.getMv_state() == 0)
-                    CommonFunction.INSTANCE.startToVideoIntroduce(getActivity(), -1);
-            }
+        gotoVerifyBtn.setOnClickListener(v -> {
+            if (!nimBean.getMy_isfaced())
+                CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+            else if (nimBean.getMv_state() == 0)
+                CommonFunction.INSTANCE.startToVideoIntroduce(getActivity(), -1);
         });
         return rootView;
     }
