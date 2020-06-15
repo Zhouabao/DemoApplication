@@ -342,7 +342,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                                 CommonFunction.toast("审核提交成功")
                                 UserManager.saveUserVerify(2)
                                 UserManager.saveHasFaceUrl(true)
-                                setResult(Activity.RESULT_OK)
+                                setResult(Activity.RESULT_OK, intent.putExtra("verify" , 2))
                                 finish()
                                 if (intent.getIntExtra(
                                         "type",

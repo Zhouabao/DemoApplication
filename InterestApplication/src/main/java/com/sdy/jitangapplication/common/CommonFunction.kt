@@ -612,6 +612,6 @@ object CommonFunction {
         gsyVideoPlayer.setIsTouchWiget(false)
 
         gsyVideoPlayer.setUp(url, true, "")
-        gsyVideoPlayer.startPlayLogic()
+//        gsyVideoPlayer.startPlayLogic()
     }
 }

@@ -36,7 +36,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.model.VipDescr
 import com.sdy.jitangapplication.model.VipPowerBean
@@ -543,6 +542,15 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 //        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
         mPresenter.myInfoCandy()
     }
+
+
+    //更新用户联系方式
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserCenterContactEvent(event: UserCenterContactEvent) {
+        userInfoBean?.userinfo?.contact_way = event.contact_way
+        setUserPower()
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {

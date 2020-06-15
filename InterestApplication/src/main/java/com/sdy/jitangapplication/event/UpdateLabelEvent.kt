@@ -72,7 +72,8 @@ class RePublishEvent(var republish: Boolean, val context: String)
 class UserCenterEvent(var refresh: Boolean)
 
 
-
+//更新用户联系方式
+class UserCenterContactEvent(var contact_way: Int)
 
 
 //更新账号信息

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,11 +14,14 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.UserCenterContactEvent
 import com.sdy.jitangapplication.model.ContactWayBean
 import com.sdy.jitangapplication.presenter.ChangeUserContactPresenter
 import com.sdy.jitangapplication.presenter.view.ChangeUserContactView
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_change_user_contact.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -146,6 +150,11 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
     override fun onSetContactResult(success: Boolean) {
         if (success) {
             CommonFunction.toast("修改成功！")
+            if (UserManager.getGender() == 2) {
+                EventBus.getDefault().post(UserCenterContactEvent(contactWay))
+            }
+            setResult(Activity.RESULT_OK, intent.putExtra("contact", contactWay))
+            finish()
         }
     }
 }

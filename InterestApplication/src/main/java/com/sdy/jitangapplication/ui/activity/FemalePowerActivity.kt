@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +15,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 
 /**
  * 女性个人权益
@@ -22,10 +24,16 @@ import org.jetbrains.anko.startActivity
 //                    "verify" to userInfoBean?.userinfo?.isfaced,
 //                    "video" to userInfoBean?.userinfo?.mv_faced
 class FemalePowerActivity : BaseActivity() {
-    private val contact by lazy { intent.getIntExtra("contact", 0) }
+    private val contact by lazy { intent.getIntExtra("contact", 0) }//联系方式  0  没有 1 电话 2微信 3 qq
     private val verify by lazy { intent.getIntExtra("verify", 0) }
     private val video by lazy { intent.getIntExtra("video", 0) }
     private val url by lazy { intent.getStringExtra("url") }
+
+    companion object {
+        const val REQUEST_ACCOUNT = 110
+        const val REQUEST_VERIFY = 120
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_female_power)
@@ -44,12 +52,12 @@ class FemalePowerActivity : BaseActivity() {
 
         //联系方式
         powerContact.clickWithTrigger {
-            startActivity<ChangeUserContactActivity>()
+            startActivityForResult<ChangeUserContactActivity>(REQUEST_ACCOUNT)
         }
 
         //真人认证
         powerVerify.clickWithTrigger {
-            CommonFunction.startToFace(this)
+            CommonFunction.startToFace(this, requestCode = REQUEST_VERIFY)
         }
 
         //视频介绍
@@ -103,5 +111,33 @@ class FemalePowerActivity : BaseActivity() {
         )
 
         GlideUtil.loadImg(this, url, allPowerIv)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_ACCOUNT) {
+                powerContact.setCompoundDrawablesWithIntrinsicBounds(
+                    null, resources.getDrawable(
+                        if (data?.getIntExtra("contact", 0) != 0) {
+                            R.drawable.icon_female_contact_open
+                        } else {
+                            R.drawable.icon_female_contact_no
+                        }
+                    ), null, null
+                )
+            }else if (requestCode == REQUEST_VERIFY) {
+//                /verify
+                powerContact.setCompoundDrawablesWithIntrinsicBounds(
+                    null, resources.getDrawable(
+                        if (data?.getIntExtra("verify", 0) != 1) {
+                            R.drawable.icon_female_contact_no
+                        } else {
+                            R.drawable.icon_female_contact_open
+                        }
+                    ), null, null
+                )
+            }
+        }
     }
 }

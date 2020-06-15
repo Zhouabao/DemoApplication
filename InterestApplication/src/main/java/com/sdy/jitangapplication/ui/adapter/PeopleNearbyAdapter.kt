@@ -36,6 +36,8 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             params.height = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
             if (helper.layoutPosition == 0) {
                 params.topMargin = SizeUtils.dp2px(15F)
+            } else {
+                params.topMargin = 0
             }
             params.bottomMargin = SizeUtils.dp2px(10F)
         } else {
@@ -137,6 +139,8 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
 
             //用户视频介绍
             itemView.userIntroduceVideoBtn.clickWithTrigger {
+//                CommonFunction.startToVideoIntroduce(mContext)
+
                 if (UserManager.touristMode)
                     TouristDialog(mContext).show()
                 else

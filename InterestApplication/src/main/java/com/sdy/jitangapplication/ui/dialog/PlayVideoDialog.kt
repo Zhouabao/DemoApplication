@@ -43,20 +43,6 @@ class PlayVideoDialog(val context1: Context, var mv_url: String) :
 
     private fun showVideoPreview() {
         CommonFunction.initVideo(context1, videoPreview, mv_url)
-//        videoPreview.setMediaController(MediaController(this))
-//        videoPreview.setVideoPath(mv_url)
-//        videoPreview.setOnPreparedListener {
-//            coverBlack.isVisible = false
-//        }
-//        videoPreview.setOnCompletionListener {
-//            videoPreview.start()
-//        }
-
-//        playVideo.onClick {
-//            videoPreview.start()
-//            coverBlack.isVisible = false
-//            playVideo.isVisible = false
-//        }
 
         videoPreview.backButton.onClick {
             dismiss()
