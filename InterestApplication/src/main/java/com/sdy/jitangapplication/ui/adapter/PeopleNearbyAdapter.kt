@@ -139,7 +139,7 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
 
             //用户视频介绍
             itemView.userIntroduceVideoBtn.clickWithTrigger {
-//                CommonFunction.startToVideoIntroduce(mContext)
+                //                CommonFunction.startToVideoIntroduce(mContext)
 
                 if (UserManager.touristMode)
                     TouristDialog(mContext).show()
@@ -148,10 +148,21 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             }
 
             itemView.clickWithTrigger {
-                if (UserManager.touristMode)
+                if (UserManager.touristMode) {
                     TouristDialog(mContext).show()
-                else
+                } else {
                     MatchDetailActivity.start(mContext, item.accid)
+
+//                    val intent = Intent(mContext, MatchDetailActivity::class.java)
+//                    intent.putExtra("target_accid", item.accid)
+//                    val bundler = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        mContext as Activity,
+//                        itemView.userAvator,
+//                        "matchdetailTransition"
+//                    ).toBundle()
+//                    mContext.startActivity(intent, bundler)
+
+                }
             }
 
         } else {
