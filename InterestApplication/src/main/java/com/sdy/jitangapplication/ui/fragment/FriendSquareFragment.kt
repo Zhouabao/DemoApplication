@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -50,11 +50,17 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 好友广场列表
  */
-class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView,
+class FriendSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
     OnRefreshListener,
     OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
-    override fun loadData() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
         initView()
 
     }

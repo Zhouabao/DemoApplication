@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -44,7 +44,7 @@ import org.greenrobot.eventbus.ThreadMode
  * 附近的人
  */
 class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
-    BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), PeopleNearbyView,
+    BaseMvpFragment<PeopleNearbyPresenter>(), PeopleNearbyView,
     OnRefreshListener, OnLoadMoreListener {
     companion object {
         const val TYPE_RECOMMEND = 1
@@ -83,7 +83,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         )
     }
 
-    override fun loadData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
 
 
         EventBus.getDefault().register(this)
@@ -106,8 +111,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
         rvPeopleNearby.layoutManager = linearLayoutManager
         rvPeopleNearby.adapter = adapter
+
 //        adapter.addHeaderView(initHeadView())
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
+        adapter.isUseEmpty(false)
         adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
         adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
@@ -128,10 +135,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         })
 
         updateFilterParams()
-        if (!UserManager.touristMode)
-            mPresenter.todayRecommend()
-        else
-            mPresenter.nearlyIndex(params,type)
+        if (!UserManager.touristMode) {
+            if (type == TYPE_RECOMMEND) {
+                mPresenter.todayRecommend()
+            } else
+                mPresenter.nearlyIndex(params, type)
+        } else {
+            mPresenter.nearlyIndex(params, type)
+        }
 
     }
 
@@ -257,7 +268,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日意向
             //资料完善度
             showOpenVipCl(nearBean?.isvip ?: false)
-            if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()))
+            if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND)
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean?.iscompleteguide != true) {
@@ -373,6 +384,15 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     fun onUpdateNearPeopleParamsEvent(event: UpdateNearPeopleParamsEvent) {
         updateFilterParams()
         refreshPeopleNearby.autoRefresh()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEnableRvScrollEvent(event: EnableRvScrollEvent) {
+        linearLayoutManager.isSmoothScrollbarEnabled = true;
+        linearLayoutManager.isAutoMeasureEnabled = true;
+        //取消recycleview的滑动
+        rvPeopleNearby.setHasFixedSize(true);
+        rvPeopleNearby.isNestedScrollingEnabled = event.enable;
     }
 
 

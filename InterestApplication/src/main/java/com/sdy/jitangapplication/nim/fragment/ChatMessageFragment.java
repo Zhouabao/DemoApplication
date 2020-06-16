@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -71,6 +72,7 @@ import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
+import com.sdy.jitangapplication.ui.dialog.UnlockChatWithCandyDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
 import com.sdy.jitangapplication.utils.UserManager;
@@ -117,6 +119,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private View rootView;
     private TextView leftChatTimes, gotoVerifyBtn;
     private LinearLayout messageActivityBottomLayout, verifyLl;
+    private FrameLayout unlockChatLl;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -132,6 +135,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         leftChatTimes = rootView.findViewById(R.id.leftChatTimes);
         gotoVerifyBtn = rootView.findViewById(R.id.gotoVerifyBtn);
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
+        unlockChatLl = rootView.findViewById(R.id.unlockChatLl);
         verifyLl = rootView.findViewById(R.id.verifyLl);
 
 
@@ -141,6 +145,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 CommonFunction.INSTANCE.startToFace(getActivity(), IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
             else if (nimBean.getMv_state() == 0)
                 CommonFunction.INSTANCE.startToVideoIntroduce(getActivity(), -1);
+        });
+
+        //糖果门槛消费聊天
+        unlockChatLl.setOnClickListener(v -> {
+            new UnlockChatWithCandyDialog(getActivity()).show();
         });
         return rootView;
     }

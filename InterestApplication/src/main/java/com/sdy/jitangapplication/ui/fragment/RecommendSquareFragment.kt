@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -45,7 +45,7 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 推荐
  */
-class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter>(),
+class RecommendSquareFragment : BaseMvpFragment<RecommendSquarePresenter>(),
     RecommendSquareView,
     OnRefreshListener, OnLoadMoreListener {
 
@@ -69,7 +69,12 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         )
     }
     private val adapter by lazy { RecommendSquareAdapter() }
-    override fun loadData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
         initView()
         mPresenter.squareEliteList(params)
     }

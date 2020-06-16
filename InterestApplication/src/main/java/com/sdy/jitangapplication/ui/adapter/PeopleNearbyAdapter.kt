@@ -35,7 +35,7 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
             params.height = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
             if (helper.layoutPosition == 0) {
-                params.topMargin = SizeUtils.dp2px(15F)
+                params.topMargin = SizeUtils.dp2px(10F)
             } else {
                 params.topMargin = 0
             }

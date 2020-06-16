@@ -29,7 +29,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -69,7 +69,7 @@ import kotlin.math.abs
 /**
  * 我的用户中心
  */
-class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView,
+class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterView,
     OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     companion object {
@@ -94,10 +94,16 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         return inflater.inflate(R.layout.fragment_user_center, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
 
-    override fun loadData() {
+    fun loadData() {
         EventBus.getDefault().register(this)
         initView()
+        if (!UserManager.touristMode)
+            mPresenter.myInfoCandy()
 //        mPresenter.getMemberInfo(params)
     }
 
@@ -170,7 +176,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         mStack.add(mySquareFragment)  //我的广场
         mStack.add(myTagFragment)   //我的兴趣
         vpMySquareAndTag.adapter =
-            MainPagerAdapter(activity!!.supportFragmentManager, mStack, titles)
+            MainPagerAdapter(childFragmentManager, mStack, titles)
         vpMySquareAndTag.offscreenPageLimit = 2
         initIndicator()
         vpMySquareAndTag.currentItem = 0
@@ -539,8 +545,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     //更新用户中心信息
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: UserCenterEvent) {
-//        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-        mPresenter.myInfoCandy()
+        if (!UserManager.touristMode)
+            mPresenter.myInfoCandy()
     }
 
 

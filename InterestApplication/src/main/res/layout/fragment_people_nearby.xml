@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         tools:context=".ui.fragment.PeopleNearbyFragment">
 
         <FrameLayout

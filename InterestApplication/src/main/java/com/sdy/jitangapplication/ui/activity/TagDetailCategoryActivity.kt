@@ -91,6 +91,7 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         refreshSamePerson.setOnRefreshListener(this)
         refreshSamePerson.setOnLoadMoreListener(this)
         refreshSamePerson.setPrimaryColorsId(R.color.colorTransparent)
+        refreshHeader.setColorSchemeColors(resources.getColor(R.color.colorOrange))
         stateSamePerson.retryBtn.onClick {
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.squareTagInfo(params)

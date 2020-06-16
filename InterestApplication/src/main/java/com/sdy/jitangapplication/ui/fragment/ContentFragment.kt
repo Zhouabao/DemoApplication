@@ -18,7 +18,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -52,8 +52,12 @@ import java.util.*
 /**
  * 内容页面
  */
-class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView {
+class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
 
     private val sp by lazy { SPUtils.getInstance(Constants.SPNAME) }
     private val filterPopupWindow by lazy {
@@ -98,7 +102,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     }
 
 
-    override fun loadData() {
+    fun loadData() {
         initView()
 
     }
@@ -193,7 +197,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     private fun initViewpager() {
         squareVp.setScrollable(true)
-        squareVp.adapter = MainPagerAdapter(activity!!.supportFragmentManager, mStack)
+        squareVp.adapter = MainPagerAdapter(childFragmentManager, mStack)
         squareVp.offscreenPageLimit = 4
 
         squareVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {

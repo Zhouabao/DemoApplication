@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -67,12 +67,19 @@ import kotlin.Comparator
 /**
  * 消息中心
  */
-class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), MessageListView {
-    override fun loadData() {
+class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageListView {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
         initView()
         registerObservers(true)
         registerOnlineStateChangeListener(true)
-        mPresenter.messageCensus(params)
+        if (!UserManager.touristMode)
+            mPresenter.messageCensus(params)
     }
 
     private val params by lazy {

@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rechargeCl"
         android:layout_width="match_parent"
-        android:layout_height="81dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginRight="4dp"
         android:background="@drawable/shape_rectangle_gray_white_10dp"
@@ -30,17 +30,31 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/candyPrice"
+            android:id="@+id/candyFirstPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:text="首次充值折扣¥50.00"
+            android:textColor="#ffff6318"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/candyCount" />
+
+
+        <TextView
+            android:id="@+id/candyPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="12dp"
             android:text="¥ 30.00"
             android:textColor="#ff888d92"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/candyCount" />
+            app:layout_constraintTop_toBottomOf="@id/candyFirstPrice" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

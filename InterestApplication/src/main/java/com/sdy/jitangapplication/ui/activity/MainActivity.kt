@@ -207,10 +207,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             override fun onPageSelected(position: Int) {
                 if (UserManager.touristMode && position != 0 && position != 1) {
                     TouristDialog(this@MainActivity).show()
-
                 } else {
                     if (position == 3) {
-//                    CancelPopEvent
                         EventBus.getDefault().postSticky(UserCenterEvent(true))
                     }
                     switchTab(position)

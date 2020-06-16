@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -35,11 +35,14 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 兴趣广场
  */
-class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSquareView,
+class TagSquareFragment : BaseMvpFragment<TagSquarePresenter>(), TagSquareView,
     OnRefreshListener {
 
-
-    override fun loadData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+     fun loadData() {
         initView()
     }
 

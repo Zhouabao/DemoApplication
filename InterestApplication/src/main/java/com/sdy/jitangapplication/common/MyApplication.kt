@@ -28,7 +28,6 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
-import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
@@ -44,7 +43,6 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
@@ -65,18 +63,18 @@ class MyApplication : BaseApplication() {
         SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
                 .setReboundDuration(200)
-                .setEnableHeaderTranslationContent(true)
+                .setEnableHeaderTranslationContent(false)
+        }
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            MaterialHeader(context).setColorSchemeResources(R.color.colorOrange)
         }
 //        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
-//            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
-//            MaterialHeader(context).setColorSchemeResources(R.color.colorBlack)
+//            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
+//                .setReboundDuration(200)
+//            ClassicsHeader(context).setFinishDuration(200)
+//
 //        }
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
-            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
-                .setReboundDuration(200)
-            ClassicsHeader(context).setFinishDuration(200)
-
-        }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
                 .setReboundDuration(200)

@@ -11,18 +11,23 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.EnableRvScrollEvent
 import com.sdy.jitangapplication.event.ShowNearCountEvent
 import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
+import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
+import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.ui.dialog.TopCardDialog
@@ -45,11 +50,11 @@ import java.util.*
 /**
  * 首页fragment
  */
-class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
+class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("推荐", "附近") }
+    private val titles by lazy { arrayOf("精选", "附近") }
     //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
     //    private val findByTagFragment by lazy { FindByTagFragment() }
@@ -67,12 +72,17 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     //    val titleAdapter by lazy { IndexSwitchAdapter() }
     private val todayWantDialog by lazy { TodayWantDialog(activity!!, null) }
 
-    override fun loadData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
+        EventBus.getDefault().post(EnableRvScrollEvent(false))
+
         EventBus.getDefault().register(this)
-
-
+        initHeadRecommendUser()
         initFragments()
-
         filterBtn.clickWithTrigger {
             if (UserManager.touristMode)
                 TouristDialog(activity!!).show()
@@ -97,17 +107,58 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 //            TouristDialog(activity!!).show()
         }
 
+
+    }
+
+    private var taged = false
+
+    private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
+    //初始化顶部推荐数据
+    private fun initHeadRecommendUser() {
+        recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        recommendUsers.adapter = peopleRecommendTopAdapter
+        peopleRecommendTopAdapter.addData(
+            NearPersonBean(
+                UserManager.getAvator(),
+                10,
+                distance = "附近",
+                gender = 2
+            )
+        )
+        peopleRecommendTopAdapter.addData(
+            NearPersonBean(
+                UserManager.getAvator(),
+                10,
+                distance = "附近",
+                gender = 2
+            )
+        )
+        peopleRecommendTopAdapter.addData(
+            NearPersonBean(
+                UserManager.getAvator(),
+                10,
+                distance = "附近",
+                gender = 2
+            )
+        )
+        peopleRecommendTopAdapter.addData(
+            NearPersonBean(
+                UserManager.getAvator(),
+                10,
+                distance = "附近",
+                gender = 2
+            )
+        )
     }
 
     private fun initFragments() {
-
 
         fragments.add(recommendFragment)
         fragments.add(sameCityFragment)
 
         vpIndex.setScrollable(!UserManager.touristMode)
         vpIndex.offscreenPageLimit = 2
-        vpIndex.adapter = MainPagerAdapter(activity!!.supportFragmentManager, fragments)
+        vpIndex.adapter = MainPagerAdapter(childFragmentManager, fragments)
         vpIndex.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 

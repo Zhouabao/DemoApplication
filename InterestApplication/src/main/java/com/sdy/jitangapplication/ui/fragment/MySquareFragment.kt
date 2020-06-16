@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -35,7 +35,7 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 我的广场
  */
-class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareView,
+class MySquareFragment : BaseMvpFragment<MySquarePresenter>(), MySquareView,
     OnRefreshListener, OnLoadMoreListener {
 
     private var page = 1
@@ -48,6 +48,11 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
         return inflater.inflate(R.layout.fragment_my_square, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
     //请求广场的参数 TODO要更新tagid
     private val params by lazy {
         hashMapOf<String, Any>(
@@ -57,9 +62,10 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
         )
     }
     private val adapter by lazy { RecommendSquareAdapter() }
-    override fun loadData() {
+     fun loadData() {
         initView()
-        mPresenter.aboutMeSquareCandy(params)
+        if (!UserManager.touristMode)
+            mPresenter.aboutMeSquareCandy(params)
     }
 
     private fun initView() {

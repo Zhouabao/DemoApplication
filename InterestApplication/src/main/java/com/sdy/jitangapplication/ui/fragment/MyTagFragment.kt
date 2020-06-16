@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQuality
@@ -25,7 +25,7 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 我的标签特质
  */
-class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
+class MyTagFragment : BaseMvpFragment<MyTagPresenter>(), MyTagView {
     private val tagAdapter by lazy { UserCenteTagAdapter() }
 
     override fun onCreateView(
@@ -37,7 +37,12 @@ class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
         return inflater.inflate(R.layout.fragment_my_tag, container, false)
     }
 
-    override fun loadData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
         initView()
     }
 

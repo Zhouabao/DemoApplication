@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 附近广场
  */
-class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>(),
+class NearbySquareFragment : BaseMvpFragment<TagDetailCategoryPresenter>(),
     TagDetailCategoryView,
     OnRefreshListener, OnLoadMoreListener {
 
@@ -59,7 +59,13 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
         )
     }
     private val adapter by lazy { RecommendSquareAdapter() }
-    override fun loadData() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadData()
+    }
+
+    fun loadData() {
         initView()
         mPresenter.squareTagInfo(params)
     }
