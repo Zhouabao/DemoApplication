@@ -115,16 +115,8 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
     //初始化顶部推荐数据
     private fun initHeadRecommendUser() {
-        recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL,false)
         recommendUsers.adapter = peopleRecommendTopAdapter
-        peopleRecommendTopAdapter.addData(
-            NearPersonBean(
-                UserManager.getAvator(),
-                10,
-                distance = "附近",
-                gender = 2
-            )
-        )
         peopleRecommendTopAdapter.addData(
             NearPersonBean(
                 UserManager.getAvator(),

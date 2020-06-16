@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -22,11 +23,7 @@ class PeopleRecommendTopAdapter :
         val itemView = helper.itemView
 
         val params = itemView.layoutParams as RecyclerView.LayoutParams
-        params.rightMargin = if (helper.layoutPosition == mData.size - 1) {
-            SizeUtils.dp2px(15f)
-        } else {
-            0
-        }
+        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 4f)) / 3
 
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
