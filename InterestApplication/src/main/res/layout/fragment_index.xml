@@ -51,7 +51,7 @@
                     android:id="@+id/topCardBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/shape_rectangle_orange_8dp"
                     android:paddingLeft="8dp"
                     android:paddingTop="5dp"
