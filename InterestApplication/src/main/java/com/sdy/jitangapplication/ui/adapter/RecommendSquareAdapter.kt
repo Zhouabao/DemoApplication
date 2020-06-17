@@ -12,8 +12,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.data.net.RetrofitFactory
@@ -32,7 +30,6 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_recommend_square.view.*
 
 //0文本 1图片 2视频 3语音
@@ -77,20 +74,12 @@ class RecommendSquareAdapter :
             helper.itemView.squareVideoState.isVisible = true
             helper.itemView.squareVideoState.setImageResource(R.drawable.icon_audio_recommend)
 
-            val transformation = MultiTransformation(
-                CenterCrop(),
-                BlurTransformation(SizeUtils.dp2px(10F)),
-                RoundedCornersTransformation(
-                    SizeUtils.dp2px(10F),
-                    0,
-                    RoundedCornersTransformation.CornerType.TOP
-                )
-            )
+
             Glide.with(mContext)
                 .load(item.avatar)
                 .priority(Priority.LOW)
                 .thumbnail(0.5F)
-                .transform(transformation)
+                .transform(BlurTransformation(SizeUtils.dp2px(10F)))
                 .into(helper.itemView.squareImg)
             GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.squareAudioCover)
         } else if (item.type == 1) {//图片
@@ -98,12 +87,10 @@ class RecommendSquareAdapter :
             helper.itemView.squareImg.isVisible = true
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareVideoState.isVisible = false
-            GlideUtil.loadRoundImgCenterCrop(
+            GlideUtil.loadImgCenterCrop(
                 mContext,
                 item.cover_url,
-                helper.itemView.squareImg,
-                SizeUtils.dp2px(10F),
-                RoundedCornersTransformation.CornerType.TOP
+                helper.itemView.squareImg
             )
         } else {//视频
             helper.itemView.squareOnlyTextContent.isVisible = false
@@ -111,12 +98,10 @@ class RecommendSquareAdapter :
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareVideoState.isVisible = true
             helper.itemView.squareVideoState.setImageResource(R.drawable.icon_play_transparent)
-            GlideUtil.loadRoundImgCenterCrop(
+            GlideUtil.loadImgCenterCrop(
                 mContext,
                 item.cover_url,
-                helper.itemView.squareImg,
-                SizeUtils.dp2px(10F),
-                RoundedCornersTransformation.CornerType.TOP
+                helper.itemView.squareImg
             )
         }
 

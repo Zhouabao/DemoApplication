@@ -24,11 +24,10 @@ class TagSquarePicAdapter(private var spanCount: Int = 3) :
         if (!item.cover_url.isNullOrEmpty()) {
             helper.itemView.pic.isVisible = true
             helper.itemView.content.isVisible = false
-            GlideUtil.loadRoundImgCenterCrop(
+            GlideUtil.loadImgCenterCrop(
                 mContext,
                 item.cover_url,
-                helper.itemView.pic,
-                SizeUtils.dp2px(8F)
+                helper.itemView.pic
             )
         } else {
             helper.itemView.content.isVisible = true
