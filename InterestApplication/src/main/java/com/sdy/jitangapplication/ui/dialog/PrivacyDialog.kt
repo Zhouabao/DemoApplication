@@ -138,7 +138,10 @@ class PrivacyDialog(
         if (nearBean != null && nearBean?.iscompleteguide != true) {
             GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
         } else if (!indexRecommends?.list.isNullOrEmpty()) {
-            TodayFateDialog(context1, nearBean, indexRecommends).show()
+            if (UserManager.getGender() == 1)
+                TodayFateDialog(context1, nearBean, indexRecommends).show()
+            else
+                TodayFateWomanDialog(context1, nearBean, indexRecommends).show()
         } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
             TodayWantDialog(context1, nearBean).show()
         } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {

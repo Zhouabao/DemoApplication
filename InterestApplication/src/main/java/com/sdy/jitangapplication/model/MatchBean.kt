@@ -219,13 +219,14 @@ data class NearPersonBean(
     var isfaced: Int = 0,
     var isvip: Boolean = false,
     var mv_faced: Boolean = false,
-    var mv_btn : Boolean = false,
+    var mv_btn: Boolean = false,
     var isplatinumvip: Boolean = false,
     var isfriend: Boolean = false,
     var member_level: Int = 0,
     var nickname: String = "",
     var online_time: String = "",
     var sign: String = "",
+    var checked: Boolean = false,
     var want: MutableList<String> = mutableListOf()
 )
 
@@ -258,5 +259,6 @@ data class IndexRecommendBean(
  */
 data class BatchGreetBean(
     var accid: String = "",
-    var order_id: String = ""
+    var order_id: String = "",
+    var msg: String = ""
 )

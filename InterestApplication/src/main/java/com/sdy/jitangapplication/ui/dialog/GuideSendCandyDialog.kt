@@ -84,7 +84,10 @@ class GuideSendCandyDialog(
     override fun dismiss() {
         super.dismiss()
         if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false) {
-            TodayFateDialog(myContext, nearBean, indexRecommends).show()
+            if (UserManager.getGender()==1)
+                TodayFateDialog(myContext, nearBean, indexRecommends).show()
+            else
+                TodayFateWomanDialog(myContext, nearBean, indexRecommends).show()
         } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
             TodayWantDialog(myContext, nearBean).show()
         } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {

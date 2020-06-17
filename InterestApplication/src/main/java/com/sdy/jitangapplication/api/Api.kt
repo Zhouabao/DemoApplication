@@ -42,6 +42,13 @@ interface Api {
     @POST("Home/batchSendCandy${Constants.END_BASE_URL}")
     fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<BatchSendGiftBean?>>
 
+    /**
+     * 批量送礼物成为好友
+     */
+    @FormUrlEncoded
+    @POST("Home/batchSendCandy${Constants.END_BASE_URL}")
+    fun batchGreetWoman(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<BatchGreetBean>?>>
+
 
     /**
      * 获取我的糖果
