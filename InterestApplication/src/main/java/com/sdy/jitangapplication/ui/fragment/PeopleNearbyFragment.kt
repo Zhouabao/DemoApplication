@@ -268,7 +268,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日意向
             //资料完善度
             showOpenVipCl(nearBean?.isvip ?: false)
-            if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND)
+            if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean?.iscompleteguide != true) {
@@ -281,6 +281,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
                     CompleteUserCenterDialog(activity!!).show()
                 }
+            }
+
 
             if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
                 EventBus.getDefault().post(

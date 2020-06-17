@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +25,11 @@ import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
+import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
-import com.sdy.jitangapplication.ui.dialog.TopCardDialog
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
@@ -45,6 +44,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.startActivity
 import java.util.*
 
 /**
@@ -100,11 +100,15 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
         //置顶卡片
         topCardBtn.clickWithTrigger {
+            //            if (UserManager.touristMode)
+//                TouristDialog(activity!!).show()
+//            else
+//                TopCardDialog(activity!!).show()
+//            TouristDialog(activity!!).show()
             if (UserManager.touristMode)
                 TouristDialog(activity!!).show()
             else
-                TopCardDialog(activity!!).show()
-//            TouristDialog(activity!!).show()
+                startActivity<IndexChoicenessActivity>()
         }
 
 
@@ -115,7 +119,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
     //初始化顶部推荐数据
     private fun initHeadRecommendUser() {
-        recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL,false)
+        recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recommendUsers.adapter = peopleRecommendTopAdapter
         peopleRecommendTopAdapter.addData(
             NearPersonBean(
@@ -246,10 +250,10 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
 //        在用户为黄金会员（有门槛）或普通用户时（无门槛）
-        if ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false) {
-            topCardBtn.isVisible = !event.showTop
-        } else {
-            topCardBtn.isVisible = false
-        }
+//        if ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false) {
+//            topCardBtn.isVisible = !event.showTop
+//        } else {
+//            topCardBtn.isVisible = false
+//        }
     }
 }

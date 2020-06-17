@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#FF0E1862"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="62dp"
+        tools:context=".ui.activity.IndexChoicenessActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FF0E1862">
+
+
+            <ImageView
+                android:id="@+id/bg2"
+                android:layout_width="wrap_content"
+                android:layout_height="262dp"
+                android:src="@drawable/icon_choiceness_bg1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="216dp"
+                android:src="@drawable/icon_choiceness_bg2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_bg_tobe_choiceness"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/backbtn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/icon_back_white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/indexChoicenessRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="262dp"
+                android:layout_marginTop="94dp"
+                android:src="@drawable/icon_choiceness_bg3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/indexChoiceTop" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/indexChoiceTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/indexChoicenessRv">
+
+                <ImageView
+                    android:id="@+id/autoChoicenessBg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_auto_choiceness_bg"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/icon_top1_ring"
+                    app:layout_constraintBottom_toBottomOf="@id/top1Iv"
+                    app:layout_constraintLeft_toLeftOf="@id/top1Iv"
+                    app:layout_constraintRight_toRightOf="@id/top1Iv"
+                    app:layout_constraintTop_toTopOf="@id/top1Iv" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/top1Iv"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="108dp"
+                    android:src="@drawable/icon_default_avator"
+                    app:civ_border_color="@color/transparent"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintLeft_toLeftOf="@id/autoChoicenessBg"
+                    app:layout_constraintRight_toRightOf="@id/autoChoicenessBg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/top1Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="先承君"
+                    android:textColor="#ffffb819"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top1Iv" />
+
+                <TextView
+                    android:id="@+id/top1Tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="NO.1"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top1Name" />
+
+                <TextView
+                    android:id="@+id/top1Candy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:drawableRight="@drawable/icon_candy_small"
+                    android:drawablePadding="4dp"
+                    android:text="365987"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top1Tv" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/icon_top2_ring"
+                    app:layout_constraintBottom_toBottomOf="@id/top2Iv"
+                    app:layout_constraintLeft_toLeftOf="@id/top2Iv"
+                    app:layout_constraintRight_toRightOf="@id/top2Iv"
+                    app:layout_constraintTop_toTopOf="@id/top2Iv" />
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/top2Iv"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/icon_default_avator"
+                    app:civ_border_color="@color/transparent"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintLeft_toLeftOf="@id/autoChoicenessBg"
+                    app:layout_constraintTop_toTopOf="@id/top1Iv" />
+
+
+                <TextView
+                    android:id="@+id/top2Name"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="先承君"
+                    android:textColor="#ffffb819"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top2Iv" />
+
+                <TextView
+                    android:id="@+id/top2Tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="NO.2"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/top2Name"
+                    app:layout_constraintRight_toRightOf="@id/top2Name"
+                    app:layout_constraintTop_toBottomOf="@id/top2Name" />
+
+                <TextView
+                    android:id="@+id/top2Candy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:drawableRight="@drawable/icon_candy_small"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="36225987"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/top2Name"
+                    app:layout_constraintRight_toRightOf="@id/top2Name"
+                    app:layout_constraintTop_toBottomOf="@id/top2Tv" />
+
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/icon_top3_ring"
+                    app:layout_constraintBottom_toBottomOf="@id/top3Iv"
+                    app:layout_constraintLeft_toLeftOf="@id/top3Iv"
+                    app:layout_constraintRight_toRightOf="@id/top3Iv"
+                    app:layout_constraintTop_toTopOf="@id/top3Iv" />
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/top3Iv"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="55dp"
+                    android:src="@drawable/icon_default_avator"
+                    app:civ_border_color="@color/transparent"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintRight_toRightOf="@id/autoChoicenessBg"
+                    app:layout_constraintTop_toTopOf="@id/top1Iv" />
+
+                <TextView
+                    android:id="@+id/top3Name"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="40dp"
+                    android:gravity="center"
+                    android:text="先承君"
+                    android:textColor="#ffffb819"
+                    android:textSize="12sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/top3Iv" />
+
+                <TextView
+                    android:id="@+id/top3Tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="NO.2"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/top3Name"
+                    app:layout_constraintRight_toRightOf="@id/top3Name"
+                    app:layout_constraintTop_toBottomOf="@id/top3Name" />
+
+                <TextView
+                    android:id="@+id/top3Candy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:drawableRight="@drawable/icon_candy_small"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="36225987"
+                    android:textColor="#ffffb819"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/top3Name"
+                    app:layout_constraintRight_toRightOf="@id/top3Name"
+                    app:layout_constraintTop_toBottomOf="@id/top3Tv" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="262dp"
+                android:layout_marginTop="90dp"
+                android:layout_marginBottom="157dp"
+                android:src="@drawable/icon_choiceness_bg4"
+                app:layout_constraintBottom_toBottomOf="@id/putchaseChoicenessCl"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tobeChoicenessCl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/indexChoiceTop">
+
+                <ImageView
+                    android:id="@+id/tobeChoicenessIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_choicess_power_man_bg"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/tobeChoicenessBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/icon_bg_choiceness_btn"
+                    android:gravity="center"
+                    android:text="立即获取"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/putchaseChoicenessCl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tobeChoicenessCl">
+
+                <ImageView
+                    android:id="@+id/bgPurchase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_purchase_choiceness_bg"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/purchaseCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="98dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_index_choiceness_bg"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/choicenessTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="15dp"
+                        android:text="1日置顶券"
+                        android:textColor="#ffffffff"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@id/choicenessDate"
+                        app:layout_constraintLeft_toLeftOf="@id/iv1"
+                        app:layout_constraintTop_toTopOf="@id/iv1" />
+
+                    <TextView
+                        android:id="@+id/choicenessDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="可选择置顶开始日期"
+                        android:textColor="#ffbfc8ff"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/iv1"
+                        app:layout_constraintLeft_toLeftOf="@id/choicenessTitle"
+                        app:layout_constraintTop_toBottomOf="@id/choicenessTitle" />
+
+                    <TextView
+                        android:id="@+id/choicenessCandy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="60dp"
+                        android:drawableRight="@drawable/icon_candy_small"
+                        android:drawablePadding="2dp"
+                        android:text="300"
+                        android:textColor="#ffffffff"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/purchaseBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/icon_bg_choiceness_btn"
+                    android:gravity="center"
+                    android:text="立即购买"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/purchaseCl" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:id="@+id/choicenessTicketTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="1日置顶券"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/choicenessTicketCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="持有1张"
+            android:textColor="#ffc5c6c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/choicenessTicketTitle"
+            app:layout_constraintTop_toBottomOf="@id/choicenessTicketTitle" />
+
+        <TextView
+            android:id="@+id/useChoicenessTicketBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_rectangle_lightorange_20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:text="立即使用"
+            android:textColor="#ffffffff"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

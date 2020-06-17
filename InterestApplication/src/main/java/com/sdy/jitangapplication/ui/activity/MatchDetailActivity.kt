@@ -749,7 +749,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
             R.id.backBtn1, R.id.btnBack2,
             R.id.backBtn -> {
-                finish()
+                onBackPressed()
             }
             R.id.cancelBlack -> { //取消拉黑
                 mPresenter.removeBlock(

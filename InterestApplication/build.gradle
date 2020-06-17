@@ -196,6 +196,9 @@ dependencies {
     implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1'
     //跑马灯
     implementation 'com.github.385841539:MarqueeView:1.0.0'
+    //日历控件
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+
     //带索引的通讯录
     implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
 //    compile 'com.github.nanchen2251:WaveSideBar:1.0.6'
