@@ -1168,4 +1168,11 @@ interface Api {
     @POST("Home/getMvNormalCopy${Constants.END_BASE_URL}")
     fun getMvNormalCopy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
 
+    /**
+     * 推荐10个
+     */
+    @FormUrlEncoded
+    @POST("Home/indexTop${Constants.END_BASE_URL}")
+    fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
+
 }

@@ -243,15 +243,25 @@ data class TodayFateBean(
 /**
  * 开屏页推荐
  */
-data class IndexRecommendBean(
+data class IndexTopBean(
     var accid: String = "",
     var age: Int = 0,
+    var amount: Int = 0,
     var avatar: String = "",
-    var constellation: String = "",
+    var distance: String = "",
     var gender: Int = 0,
-    var distance: Int = 0,
     var nickname: String = "",
     var checked: Boolean = true
+)
+
+data class A(
+    var accid: String = "",
+    var age: Int = 0,
+    var amount: Int = 0,
+    var avatar: String = "",
+    var distance: String = "",
+    var gender: Int = 0,
+    var nickname: String = ""
 )
 
 
