@@ -71,8 +71,8 @@ class VerifyForceDialog(val context1: Context, var status: Int = VIDEO_INTRODUCE
                 verifyTip.text = "视频审核未通过\n您可以重新视频认证"
             }
             VIDEO_INTRODUCE_GOING -> {
-                verifyIngAni.isVisible = true
-                verifyIngAni.playAnimation()
+//                verifyIngAni.isVisible = true
+//                verifyIngAni.playAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_ing)
                 verifyStateLogo.setImageResource(R.drawable.icon_wait_time)
                 verifyState.text = "视频正在审核中"

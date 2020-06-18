@@ -35,6 +35,7 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
              tobePtVipBtn.text = "成为钻石会员"
              tobePtVipBtn.clickWithTrigger {
                  context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+                 dismiss()
              }
 
          } else {
@@ -42,12 +43,11 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
              tobePtVipBtn.text = "添加视频介绍"
              tobePtVipBtn.clickWithTrigger {
                  CommonFunction.startToVideoIntroduce(context1)
+                 dismiss()
              }
 
          }
 
-
-        dismiss()
     }
 
     private fun initWindow() {

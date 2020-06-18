@@ -124,10 +124,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         StatusBarUtil.immersive(this)
         mainHandler = Handler()
 
-        val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
-        params.width = ScreenUtils.getScreenWidth()
-        params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
-        camera_preview.layoutParams = params
+
 
 //        setupTouchListener()
         btnBack.setOnClickListener(this)
@@ -141,12 +138,20 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         btnBack.setImageResource(R.drawable.icon_back_white)
     }
 
+    fun setVideoRatio(){
+        val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
+        params.width = ScreenUtils.getScreenWidth()
+        params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
+        camera_preview.layoutParams = params
+    }
+
     override fun onResume() {
         super.onResume()
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
             requestVideoPermissions()
             return
         } else {
+            setVideoRatio()
             setupSurfaceIfNeeded()
             setupCamera()
         }
@@ -199,8 +204,20 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     override fun onPause() {
         super.onPause()
-        releaseMediaRecorder()        // if you are using MediaRecorder, release it first
+        isAction = false
+        // stop recording and release camera
+        try {
+            mMediaRecorder?.stop()    // stop the recording
+        } catch (stopException: RuntimeException) {
+        }
+        releaseMediaRecorder()  // release the MediaRecorder object
+        mCamera?.lock()          // take camera access back from MediaRecorder
+        isRecording = false
+        mainHandler.removeCallbacks(progressRunnable)
+        stopButtonAnimation()
+        mProgressView.reset()
         releaseCamera()
+
     }
 
 

@@ -62,7 +62,9 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
             } else {
                 context1.startActivity<VideoVerifyActivity>("copyMv" to copyMvBean)
             }
-            dismiss()
+            verifyBtn.postDelayed({
+                dismiss()
+            }, 1000L)
         }
 
 

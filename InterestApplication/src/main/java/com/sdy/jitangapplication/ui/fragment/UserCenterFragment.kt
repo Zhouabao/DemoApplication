@@ -36,7 +36,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.model.VipDescr
 import com.sdy.jitangapplication.model.VipPowerBean
@@ -557,6 +556,18 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     fun onSetMyCandyEvent(event: SetMyCandyEvent) {
         candyCount.text = "${event.candyCount}"
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: FemaleVideoEvent) {
+        userInfoBean?.userinfo?.mv_faced = event.videoState
+        if (userInfoBean?.userinfo?.mv_faced == 1) {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_open_small)
+        } else {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_no_small)
+        }
+    }
+
 
 
     override fun onPause() {

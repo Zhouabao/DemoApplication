@@ -25,7 +25,6 @@ import com.netease.nimlib.sdk.mixpush.NIMPushClient
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.util.NIMUtil
-import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -44,7 +43,6 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
@@ -193,6 +191,10 @@ class MyApplication : BaseApplication() {
                             ActivityUtils.getTopActivity(),
                             VerifyNormalResultDialog.VERIFY_NORMAL_PASS
                         ).show()
+                        //更新录制视频介绍
+                        UserManager.my_mv_url = true
+                        EventBus.getDefault().post(TopCardEvent(false))
+                        EventBus.getDefault().post(FemaleVideoEvent(1))
                     }
                     //视频介绍审核不通过
                     93 -> {
@@ -200,6 +202,11 @@ class MyApplication : BaseApplication() {
                             ActivityUtils.getTopActivity(),
                             VerifyNormalResultDialog.VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO
                         ).show()
+
+                        //更新录制视频介绍
+                        UserManager.my_mv_url = false
+                        EventBus.getDefault().post(TopCardEvent(true))
+                        EventBus.getDefault().post(FemaleVideoEvent(0))
                     }
                     //10头像未通过审核去进行人脸认证
                     10, 101 -> {

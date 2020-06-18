@@ -28,7 +28,7 @@ import org.jetbrains.anko.startActivity
 class FemalePowerActivity : BaseActivity() {
     private val contact by lazy { intent.getIntExtra("contact", 0) }
     private val verify by lazy { intent.getIntExtra("verify", 0) }
-    private val video by lazy { intent.getIntExtra("video", 0) }
+    private var video = 0
     private val url by lazy { intent.getStringExtra("url") }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +46,7 @@ class FemalePowerActivity : BaseActivity() {
         btnBack.onClick {
             finish()
         }
+        video = intent.getIntExtra("video", 0)
 
         //联系方式
         powerContact.clickWithTrigger {
@@ -121,12 +122,13 @@ class FemalePowerActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: FemaleVideoEvent) {
+        video = event.videoState
         powerVideo.setCompoundDrawablesWithIntrinsicBounds(
             null, resources.getDrawable(
-                if (event.videoState == 0) {
-                    R.drawable.icon_female_video_no
-                } else {
+                if (event.videoState == 1) {
                     R.drawable.icon_female_video_open
+                } else {
+                    R.drawable.icon_female_video_no
                 }
             ), null, null
         )
