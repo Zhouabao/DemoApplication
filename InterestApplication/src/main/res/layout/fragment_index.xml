@@ -24,11 +24,12 @@
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
-            app:layout_scrollFlags="scroll|enterAlways|snap">
+            app:layout_scrollFlags="scroll|snap|enterAlways">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/recommendUsersLl"
                 android:layout_width="match_parent"
+                android:minHeight="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"

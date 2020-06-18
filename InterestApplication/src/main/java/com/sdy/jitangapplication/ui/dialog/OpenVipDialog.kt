@@ -18,7 +18,6 @@ import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
@@ -217,7 +216,7 @@ class OpenVipDialog(
 
 
         //取消支付
-        refuseBtn.onClick {
+        refuseBtn.clickWithTrigger {
             if (context1 !is MainActivity && context1 !is ChatActivity)
                 context1.startActivity<MainActivity>()
             else

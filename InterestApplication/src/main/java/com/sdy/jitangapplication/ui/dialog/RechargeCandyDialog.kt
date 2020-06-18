@@ -9,10 +9,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.PaywayBean
@@ -70,11 +70,11 @@ class RechargeCandyDialog(val myContext: Context) :
             candyPriceAdapter.notifyDataSetChanged()
         }
 
-        candyUsage.onClick {
+        candyUsage.clickWithTrigger {
             context.startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_CANDY_USAGE)
         }
 
-        confirmChargeBtn.onClick {
+        confirmChargeBtn.clickWithTrigger {
             ConfirmPayCandyDialog(myContext, candyPriceAdapter.data[checkPosition], payments).show()
             dismiss()
         }

@@ -22,6 +22,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.PayBean
@@ -88,7 +89,7 @@ class ConfirmPayCandyDialog(
             wechatCheck.isChecked = false
         }
 
-        confrimBtn.onClick {
+        confrimBtn.clickWithTrigger {
             if (alipayCheck.isChecked) {
                 createOrder(PAY_ALI)
             } else {
