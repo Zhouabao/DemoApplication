@@ -11,8 +11,12 @@ import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.FemaleVideoEvent
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -33,6 +37,7 @@ class FemalePowerActivity : BaseActivity() {
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundColor(Color.parseColor("#FFFFDCC1"))
         hotT1.text = "个人权益"
@@ -103,5 +108,27 @@ class FemalePowerActivity : BaseActivity() {
         )
 
         GlideUtil.loadImg(this, url, allPowerIv)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    /**
+     * @param event showTop是否展示topShow
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: FemaleVideoEvent) {
+        powerVideo.setCompoundDrawablesWithIntrinsicBounds(
+            null, resources.getDrawable(
+                if (event.videoState == 0) {
+                    R.drawable.icon_female_video_no
+                } else {
+                    R.drawable.icon_female_video_open
+                }
+            ), null, null
+        )
     }
 }

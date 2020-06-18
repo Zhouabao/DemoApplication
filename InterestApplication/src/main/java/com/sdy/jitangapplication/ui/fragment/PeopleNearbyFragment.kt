@@ -302,13 +302,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             UserManager.my_mv_url = nearBean.my_mv_url
             //保存 VIP信息
             UserManager.saveUserVip(nearBean.isvip)
-            EventBus.getDefault().post(TopCardEvent(nearBean.isplatinum))
-            onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //保存认证信息
             UserManager.saveUserVerify(nearBean.isfaced)
             //保存是否进行过人脸验证
             UserManager.saveHasFaceUrl(nearBean.has_face_url)
-
+            EventBus.getDefault().post(TopCardEvent(nearBean.isplatinum))
+            onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //第一次加载的时候就显示顶部提示条
             if (firstLoad) {
                 if (ranking_level == 2) {//2 真人提示

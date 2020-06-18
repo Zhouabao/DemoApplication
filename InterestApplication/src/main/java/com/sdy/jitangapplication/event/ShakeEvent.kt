@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.event
 import com.sdy.jitangapplication.model.CheckBean
 
 
-
 class MatchByWishHelpEvent(val isFirend: Boolean, val target_accid: String = "")
 
 class UpdateMyCandyAmountEvent(val reduceAmout: Int)
@@ -33,6 +32,9 @@ class UpdateTodayWantEvent(val todayWantBean: CheckBean?)
 
 //置顶卡片
 class TopCardEvent(val showTop: Boolean)
+
+//女性是否录制视频
+class FemaleVideoEvent(val videoState: Int)
 
 
 
