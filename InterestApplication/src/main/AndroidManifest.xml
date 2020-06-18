@@ -133,18 +133,11 @@
         <activity
             android:name=".ui.activity.MatchSucceedActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.LikeMeReceivedActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.VideoVerifyActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MessageLikeMeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MessageLikeMeOneDayActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.VipPowerActivity"
             android:screenOrientation="portrait" />
@@ -205,6 +198,7 @@
             android:screenOrientation="portrait" /> <!-- android:theme="@style/SplashTheme" -->
         <activity
             android:name=".ui.activity.SplashActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <data android:scheme="growing.fb176594ca56d270" />
