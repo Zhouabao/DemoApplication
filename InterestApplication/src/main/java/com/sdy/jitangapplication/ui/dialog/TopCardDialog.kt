@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_top_card.*
 import org.jetbrains.anko.startActivity
 
@@ -27,9 +29,24 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
     }
 
     private fun initView() {
-        tobePtVipBtn.clickWithTrigger {
-            context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
-        }
+
+         if (UserManager.getGender() == 1) {
+             text.text ="成为钻石会员\n将你的卡片置于顶部，获取更多联系"
+             tobePtVipBtn.text = "成为钻石会员"
+             tobePtVipBtn.clickWithTrigger {
+                 context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+             }
+
+         } else {
+             text.text =  "录制视频\n将你的卡片置于顶部，获取更多联系"
+             tobePtVipBtn.text = "录制视频介绍"
+             tobePtVipBtn.clickWithTrigger {
+                 CommonFunction.startToVideoIntroduce(context1)
+             }
+
+         }
+
+
         dismiss()
     }
 
