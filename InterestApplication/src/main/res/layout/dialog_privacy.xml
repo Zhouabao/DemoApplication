@@ -26,24 +26,30 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/privacyContent"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/privacyContentSv"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="260dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:lineSpacingMultiplier="1.2"
-        android:linksClickable="true"
-        android:textColor="#ff333333"
-        android:textColorLink="@color/colorOrange"
-        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="尊敬的用户，欢迎使用积糖。\n
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <TextView
+            android:id="@+id/privacyContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.4"
+            android:linksClickable="true"
+            android:textColor="#ff333333"
+            android:textColorLink="@color/colorOrange"
+            android:textSize="16sp"
+            tools:text="尊敬的用户，欢迎使用积糖。\n
 依据最新法律法规、监管政策等要求及业务实际情况，更新了《积糖用户协议》及《隐私政策》，特此向您提示：\n\n请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。点击同意即代表您已经阅读并同意《积糖用户协议》及《隐私政策》，如果您不同意，将可能影响使用积糖产品和服务。\n\n
 我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。" />
+    </androidx.core.widget.NestedScrollView>
 
 
     <View
@@ -52,7 +58,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
         android:background="@color/colorDivider"
-        app:layout_constraintTop_toBottomOf="@id/privacyContent" />
+        app:layout_constraintTop_toBottomOf="@id/privacyContentSv" />
 
     <LinearLayout
         android:layout_width="match_parent"

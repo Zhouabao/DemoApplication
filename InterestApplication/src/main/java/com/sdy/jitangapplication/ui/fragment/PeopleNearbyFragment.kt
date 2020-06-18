@@ -298,6 +298,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
             //头像等级
             ranking_level = nearBean!!.ranking_level
+            //保存是否上传过视频介绍
+            UserManager.my_mv_url = nearBean.my_mv_url
             //保存 VIP信息
             UserManager.saveUserVip(nearBean.isvip)
             EventBus.getDefault().post(TopCardEvent(nearBean.isplatinum))

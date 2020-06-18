@@ -202,11 +202,10 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
-//        在用户为黄金会员（有门槛）或普通用户时（无门槛）
-        if ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false) {
+        //在用户为黄金会员（有门槛）或普通用户时（无门槛）
+        //女性没有上传过视频介绍显示
+        if ((UserManager.getGender() == 1 && ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false))) {
             topCardBtn.isVisible = !event.showTop
-        } else {
-            topCardBtn.isVisible = false
-        }
+        } else topCardBtn.isVisible = UserManager.getGender() == 2 && UserManager.isUserVerify() == 1 && !UserManager.my_mv_url
     }
 }

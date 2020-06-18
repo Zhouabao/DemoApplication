@@ -182,6 +182,7 @@ data class NearBean(
     var isvip: Boolean = false,    //是否会员 true是 false不是
     var isplatinum: Boolean = false,    //是否会员 true是 false不是
     var isfaced: Int = 0,   //0未认证/认证不成功     1认证通过     2认证中
+    var my_mv_url: Boolean = false,
     var is_full: Boolean = false,//兴趣是否完整
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var today_find_pull: Boolean = false,
