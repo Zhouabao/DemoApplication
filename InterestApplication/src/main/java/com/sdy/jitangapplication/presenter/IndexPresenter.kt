@@ -20,6 +20,10 @@ class IndexPresenter : BasePresenter<IndexView>() {
             RetrofitFactory.instance.create(Api::class.java)
                 .indexTop(UserManager.getSignParams())
                 .excute(object : BaseSubscriber<BaseResp<IndexListBean?>>(mView) {
+                    override fun onStart() {
+                        super.onStart()
+                    }
+
                     override fun onNext(t: BaseResp<IndexListBean?>) {
                         super.onNext(t)
                         mView.indexTopResult(t.data)
@@ -34,6 +38,10 @@ class IndexPresenter : BasePresenter<IndexView>() {
             RetrofitFactory.instance.create(Api::class.java)
                 .indexTopThreshold(UserManager.getSignParams())
                 .excute(object : BaseSubscriber<BaseResp<IndexListBean?>>(mView) {
+                    override fun onStart() {
+                        super.onStart()
+                    }
+
                     override fun onNext(t: BaseResp<IndexListBean?>) {
                         super.onNext(t)
                         mView.indexTopResult(t.data)

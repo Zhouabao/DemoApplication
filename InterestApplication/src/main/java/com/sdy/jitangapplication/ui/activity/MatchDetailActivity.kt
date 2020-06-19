@@ -70,7 +70,7 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    OnLazyClickListener,  ViewTreeObserver.OnGlobalLayoutListener {
+    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -397,6 +397,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
         when (matchBean!!.contact_way) {
             1 -> {
+                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                    "他"
+                } else {
+                    "她"
+                }}的手机号"
                 contactNumber.isVisible = true
                 contactNumber.setCompoundDrawablesWithIntrinsicBounds(
                     resources.getDrawable(R.drawable.icon_phone_reg),
@@ -406,6 +411,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 )
             }
             2 -> {
+                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                    "他"
+                } else {
+                    "她"
+                }}的微信"
                 contactNumber.isVisible = true
                 contactNumber.setCompoundDrawablesWithIntrinsicBounds(
                     resources.getDrawable(R.drawable.icon_wechat_reg),
@@ -415,6 +425,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 )
             }
             3 -> {
+                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                    "他"
+                } else {
+                    "她"
+                }}的QQ"
                 contactNumber.isVisible = true
                 contactNumber.setCompoundDrawablesWithIntrinsicBounds(
                     resources.getDrawable(R.drawable.icon_qq_reg),
@@ -825,7 +840,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             dialog.dismiss()
         }
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

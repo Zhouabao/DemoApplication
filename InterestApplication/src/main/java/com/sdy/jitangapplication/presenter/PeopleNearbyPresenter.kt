@@ -10,6 +10,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.fragment.PeopleNearbyFragment
 import com.sdy.jitangapplication.utils.UserManager
@@ -25,19 +26,34 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
     /**
      * 获取首页附近的人
      */
-    fun nearlyIndex(params: HashMap<String, Any>, type: Int) {
+    private val loadingDialog by lazy { LoadingDialog(context) }
+
+    fun nearlyIndex(params: HashMap<String, Any>, type: Int, firstLoad: Boolean) {
         //游客模式则提醒登录
         if (UserManager.touristMode) {
             RetrofitFactory.instance.create(Api::class.java)
                 .thresholdIndex(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                    override fun onStart() {
+                        super.onStart()
+                        if (firstLoad) {
+                            loadingDialog.show()
+                        }
+                    }
+
                     override fun onNext(t: BaseResp<NearBean?>) {
                         super.onNext(t)
+                        if (firstLoad) {
+                            loadingDialog.dismiss()
+                        }
                         mView.nearlyIndexResult(t.code == 200, t.data)
                     }
 
                     override fun onError(e: Throwable?) {
                         super.onError(e)
+                        if (firstLoad) {
+                            loadingDialog.dismiss()
+                        }
                         if (e is BaseException) {
                             TickDialog(context).show()
                         } else
@@ -50,13 +66,23 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                     RetrofitFactory.instance.create(Api::class.java)
                         .recommendIndex(UserManager.getSignParams(params))
                         .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                            override fun onStart() {
+                                super.onStart()
+                            }
+
                             override fun onNext(t: BaseResp<NearBean?>) {
                                 super.onNext(t)
+                                if (loadingDialog.isShowing) {
+                                    loadingDialog.dismiss()
+                                }
                                 mView.nearlyIndexResult(t.code == 200, t.data)
                             }
 
                             override fun onError(e: Throwable?) {
                                 super.onError(e)
+                                if (loadingDialog.isShowing) {
+                                    loadingDialog.dismiss()
+                                }
                                 if (e is BaseException) {
                                     TickDialog(context).show()
                                 } else
@@ -90,16 +116,24 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
     /**
      * 获取今日缘分
      */
-    fun todayRecommend() {
+    fun todayRecommend(firstLoad: Boolean) {
         RetrofitFactory.instance.create(Api::class.java)
             .todayRecommend(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<TodayFateBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    if (firstLoad)
+                        loadingDialog.show()
+                }
+
                 override fun onNext(t: BaseResp<TodayFateBean?>) {
                     mView.onTodayRecommendResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {
                     mView.onTodayRecommendResult(null)
+                    if (loadingDialog.isShowing)
+                        loadingDialog.dismiss()
                 }
 
             })

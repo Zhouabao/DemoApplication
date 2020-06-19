@@ -13,7 +13,7 @@ import com.sdy.jitangapplication.R
  *    desc   :
  *    version: 1.0
  */
-class LoadingDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class LoadingDialog(context: Context) : Dialog(context, R.style.MyFullTransparentDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow()

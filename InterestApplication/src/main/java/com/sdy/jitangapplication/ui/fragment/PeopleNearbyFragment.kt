@@ -137,11 +137,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         updateFilterParams()
         if (!UserManager.touristMode) {
             if (type == TYPE_RECOMMEND) {
-                mPresenter.todayRecommend()
+                mPresenter.todayRecommend(firstLoad)
             } else
-                mPresenter.nearlyIndex(params, type)
+                mPresenter.nearlyIndex(params, type,firstLoad)
         } else {
-            mPresenter.nearlyIndex(params, type)
+            mPresenter.nearlyIndex(params, type,firstLoad)
         }
 
     }
@@ -250,13 +250,13 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         page = 1
         params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
-        mPresenter.nearlyIndex(params, type)
+        mPresenter.nearlyIndex(params, type,firstLoad)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page += 1
         params["page"] = page
-        mPresenter.nearlyIndex(params, type)
+        mPresenter.nearlyIndex(params, type,firstLoad)
     }
 
 
@@ -369,7 +369,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
          */
         if (data != null) {
             indexRecommends = data
-            mPresenter.nearlyIndex(params, type)
+            mPresenter.nearlyIndex(params, type,firstLoad)
         } else {
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_ERROR
         }

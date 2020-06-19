@@ -22,7 +22,6 @@
 
 
         <FrameLayout
-
             android:id="@+id/userContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -306,6 +305,7 @@
                             android:background="@drawable/rectangle_cover_bg_left_10dp"
                             android:gravity="center"
                             android:text="0/6"
+                            android:visibility="gone"
                             android:textColor="#ffffffff"
                             android:textSize="14sp"
                             app:layout_constraintRight_toRightOf="parent"
