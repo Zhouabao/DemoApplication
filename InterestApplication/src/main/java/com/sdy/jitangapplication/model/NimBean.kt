@@ -28,6 +28,8 @@ data class NimBean(
     var target_isfaced: Boolean = false,
     var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf(),
     var is_send_msg: Boolean = false,
+    var chatup_amount: Int = 0,//搭讪支付的糖果
+    var lockbtn: Boolean = false,//	true 弹出解锁聊天 false不弹出
     var force_isvip: Boolean = false
 
 ) : Serializable

@@ -726,7 +726,7 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfoCandyV21${Constants.END_BASE_URL}")
+    @POST("MemberInfo/getTargetInfoCandyEnd${Constants.END_BASE_URL}")
     fun getTargetInfoCandy(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 
@@ -1205,5 +1205,14 @@ interface Api {
     @FormUrlEncoded
     @POST("Ticket/buyTicket${Constants.END_BASE_URL}")
     fun buyTicket(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     *
+     * 男性解锁搭讪聊天消息
+     *
+     */
+    @FormUrlEncoded
+    @POST("Ticket/lockChatup${Constants.END_BASE_URL}")
+    fun lockChatup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

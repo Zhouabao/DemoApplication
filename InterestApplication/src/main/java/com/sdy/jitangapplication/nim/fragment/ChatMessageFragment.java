@@ -149,7 +149,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         //糖果门槛消费聊天
         unlockChatLl.setOnClickListener(v -> {
-            new UnlockChatWithCandyDialog(getActivity()).show();
+            new UnlockChatWithCandyDialog(getActivity(), nimBean.getChatup_amount(), sessionId).show();
         });
         return rootView;
     }
@@ -609,6 +609,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             }
         } else {
             verifyLl.setVisibility(View.INVISIBLE);
+        }
+
+        //显示糖果解锁聊天
+        if (nimBean.getLockbtn()) {
+            unlockChatLl.setVisibility(View.VISIBLE);
+        } else {
+            unlockChatLl.setVisibility(View.GONE);
         }
 
         EventBus.getDefault().post(new NimHeadEvent(nimBean, nimBean.getMy_gender() == 2 && !nimBean.getMy_isfaced()));
