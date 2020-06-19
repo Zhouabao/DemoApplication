@@ -240,21 +240,6 @@ data class TodayFateBean(
     var gift_list: MutableList<GiftBean> = mutableListOf()
 )
 
-/**
- * 开屏页推荐
- */
-data class IndexTopBean(
-    var accid: String = "",
-    var age: Int = 0,
-    var amount: Int = 0,
-    var avatar: String = "",
-    var distance: String = "",
-    var gender: Int = 0,
-    var nickname: String = "",
-    var checked: Boolean = true
-) : Serializable
-
-data class IndexListBean(var list: MutableList<IndexTopBean> = mutableListOf()) : Serializable
 
 
 /**

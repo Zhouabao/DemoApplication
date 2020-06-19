@@ -514,10 +514,12 @@ object CommonFunction {
             EventBus.getDefault().post(RefreshCandyMallEvent())
         } else if (ActivityUtils.getTopActivity() is MyCandyActivity) { //我的糖果界面充值
             EventBus.getDefault().post(RefreshMyCandyEvent(-1))
-        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {
+        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
             EventBus.getDefault().post(PayLabelResultEvent(true))
-        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
+        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())
+        } else if (ActivityUtils.getTopActivity() is IndexChoicenessActivity) {//购买置顶券
+            EventBus.getDefault().post(UpdateTicketDataEvent())
         } else if (ActivityUtils.getTopActivity() is MainActivity) {
             EventBus.getDefault().post(RefreshEvent(true))
         } else {

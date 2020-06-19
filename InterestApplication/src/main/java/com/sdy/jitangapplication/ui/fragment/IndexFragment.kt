@@ -23,7 +23,6 @@ import com.sdy.jitangapplication.event.ShowNearCountEvent
 import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.IndexListBean
-import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
@@ -77,7 +76,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         super.onViewCreated(view, savedInstanceState)
         loadData()
         mPresenter.indexTop()
-//        else
     }
 
     fun loadData() {
@@ -108,7 +106,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             if (UserManager.touristMode)
                 TouristDialog(activity!!).show()
             else
-                startActivity<IndexChoicenessActivity>("data" to indexListBean)
+                startActivity<IndexChoicenessActivity>()
         }
 
 
@@ -234,11 +232,9 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 //        }
     }
 
-    private var indexListBean: IndexListBean? = null
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null && !data!!.list.isNullOrEmpty()) {
-            indexListBean = data
-            peopleRecommendTopAdapter.setNewData(data?.list ?: mutableListOf<IndexTopBean>())
+            peopleRecommendTopAdapter.setNewData(data?.list)
         }
 
     }

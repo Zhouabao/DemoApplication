@@ -12,8 +12,11 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.FemaleVideoEvent
 import com.sdy.jitangapplication.event.UpdateMyTicketEvent
+import com.sdy.jitangapplication.event.UpdateTicketDataEvent
 import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.TicketBean
 import com.sdy.jitangapplication.model.VipPowerBean
@@ -82,17 +85,17 @@ class IndexChoicenessActivity : BaseActivity() {
     private fun setAutoChoicenessData() {
         if (peopleRecommendTopAdapter.data.size >= 1) {
             GlideUtil.loadImg(this, peopleRecommendTopAdapter.data[0].avatar, top1Iv)
-            top1Tv.text = peopleRecommendTopAdapter.data[0].nickname
+            top1Name.text = peopleRecommendTopAdapter.data[0].nickname
             top1Candy.text = "${peopleRecommendTopAdapter.data[0].amount}"
         }
         if (peopleRecommendTopAdapter.data.size >= 2) {
             GlideUtil.loadImg(this, peopleRecommendTopAdapter.data[1].avatar, top2Iv)
-            top2Tv.text = peopleRecommendTopAdapter.data[1].nickname
+            top2Name.text = peopleRecommendTopAdapter.data[1].nickname
             top2Candy.text = "${peopleRecommendTopAdapter.data[1].amount}"
         }
         if (peopleRecommendTopAdapter.data.size >= 3) {
             GlideUtil.loadImg(this, peopleRecommendTopAdapter.data[2].avatar, top3Iv)
-            top3Tv.text = peopleRecommendTopAdapter.data[2].nickname
+            top3Name.text = peopleRecommendTopAdapter.data[2].nickname
             top3Candy.text = "${peopleRecommendTopAdapter.data[2].amount}"
         }
 
@@ -101,17 +104,10 @@ class IndexChoicenessActivity : BaseActivity() {
 
 
     private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
-    private val listBean by lazy { intent.getSerializableExtra("data") as IndexListBean? }
     //初始化榜首数据
     private fun initHeadRecommendUser() {
         indexChoicenessRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         indexChoicenessRv.adapter = peopleRecommendTopAdapter
-        if (listBean != null && !listBean!!.list.isNullOrEmpty()) {
-            if (listBean!!.list.size >= 3)
-                peopleRecommendTopAdapter.setNewData(listBean!!.list.subList(0, 3))
-            else
-                peopleRecommendTopAdapter.setNewData(listBean!!.list)
-        }
     }
 
 
@@ -128,6 +124,8 @@ class IndexChoicenessActivity : BaseActivity() {
                     super.onNext(t)
                     if (t.code == 200) {
                         myTicket = t.data
+                        peopleRecommendTopAdapter.setNewData(myTicket?.list)
+
                         choicenessTitle.text = t.data?.ticket?.title ?: ""
                         choicenessDate.text = t.data?.ticket?.descr ?: ""
                         choicenessCandy.text = "${t.data?.ticket?.amount ?: 0}"
@@ -147,27 +145,44 @@ class IndexChoicenessActivity : BaseActivity() {
                                 tobeChoicenessBtn.text = "已获取"
                                 tobeChoicenessIv.setImageResource(R.drawable.icon_choicess_power_man_bg)
                                 tobeChoicenessBtn.isEnabled = false
+                                tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
                             } else {
                                 //男性置顶充值钻石会员
                                 tobeChoicenessBtn.text = "立即获取"
                                 tobeChoicenessIv.setImageResource(R.drawable.icon_choicess_power_man_bg)
                                 tobeChoicenessBtn.isEnabled = true
+                                tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn)
                                 tobeChoicenessBtn.clickWithTrigger {
                                     startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
                                 }
                             }
                         } else {
-                            if (t?.data?.mv_url == true) {
-                                tobeChoicenessBtn.text = "已获取"
-                                tobeChoicenessIv.setImageResource(R.drawable.icon_choicenss_woman_bg)
-                                tobeChoicenessBtn.isEnabled = false
-                            } else {
-                                //女性置顶上传视频介绍
-                                tobeChoicenessBtn.text = "上传视频介绍"
-                                tobeChoicenessBtn.isEnabled = true
-                                tobeChoicenessIv.setImageResource(R.drawable.icon_choicenss_woman_bg)
+                            tobeChoicenessIv.setImageResource(R.drawable.icon_choicenss_woman_bg)
+                            if (t?.data?.isfaced == 1) {
+                                if (t?.data?.my_mv_url == 1) {
+                                    tobeChoicenessBtn.text = "已获取"
+                                    tobeChoicenessBtn.isEnabled = false
+                                    tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
+                                } else if (t?.data?.my_mv_url == 2) {
+                                    tobeChoicenessBtn.text = "视频审核中"
+                                    tobeChoicenessBtn.isEnabled = false
+                                    tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
+                                } else {
+                                    //女性置顶上传视频介绍
+                                    tobeChoicenessBtn.text = "上传视频介绍"
+                                    tobeChoicenessBtn.isEnabled = true
+                                    tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn)
+                                    tobeChoicenessBtn.clickWithTrigger {
+                                        VideoVerifyActivity.start(this@IndexChoicenessActivity)
+                                    }
+                                }
+                            } else if (t?.data?.isfaced == 2) {
                                 tobeChoicenessBtn.clickWithTrigger {
-                                    VideoVerifyActivity.start(this@IndexChoicenessActivity)
+                                    CommonFunction.toast("请耐心等待认证结果")
+                                }
+                            } else {
+                                tobeChoicenessBtn.clickWithTrigger {
+                                    CommonFunction.startToFace(this@IndexChoicenessActivity)
                                 }
                             }
                         }
@@ -189,7 +204,43 @@ class IndexChoicenessActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateMyTicketEvent(eventBus: UpdateMyTicketEvent) {
-        myTicket?.my_ticket_sum = (myTicket?.my_ticket_sum ?: 0) + 1
+        myTicket?.my_ticket_sum = (myTicket?.my_ticket_sum ?: 0) + eventBus.ticketCount
         choicenessTicketCount.text = "持有${(myTicket?.my_ticket_sum ?: 0)}张"
+
+        if (myTicket?.my_ticket_sum == 0) {
+            useChoicenessTicketBtn.text = "立即购买"
+        } else
+            useChoicenessTicketBtn.text = "立即使用"
     }
+
+    /**
+     * 充值成功刷新页面
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateTicketDataEvent(eventBus: UpdateTicketDataEvent) {
+        getList()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFemaleVideoEvent(eventBus: FemaleVideoEvent) {
+        myTicket?.my_mv_url = eventBus.videoState
+        if (myTicket?.my_mv_url == 1) {
+            tobeChoicenessBtn.text = "已获取"
+            tobeChoicenessBtn.isEnabled = false
+            tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
+        } else if (myTicket?.my_mv_url == 2) {
+            tobeChoicenessBtn.text = "视频审核中"
+            tobeChoicenessBtn.isEnabled = false
+            tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
+        } else {
+            //女性置顶上传视频介绍
+            tobeChoicenessBtn.text = "上传视频介绍"
+            tobeChoicenessBtn.isEnabled = true
+            tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn)
+            tobeChoicenessBtn.clickWithTrigger {
+                VideoVerifyActivity.start(this@IndexChoicenessActivity)
+            }
+        }
+    }
+
 }

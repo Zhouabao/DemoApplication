@@ -7,4 +7,9 @@ package com.sdy.jitangapplication.event
  *    version: 1.0
  */
 
-class UpdateMyTicketEvent()
+class UpdateMyTicketEvent(val ticketCount: Int)
+
+
+
+//充值成功刷新页面数据
+class UpdateTicketDataEvent()

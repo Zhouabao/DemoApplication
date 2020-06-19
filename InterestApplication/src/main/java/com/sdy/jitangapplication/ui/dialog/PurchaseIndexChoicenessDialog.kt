@@ -11,6 +11,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateMyTicketEvent
 import com.sdy.jitangapplication.model.Ticket
@@ -79,7 +80,9 @@ class PurchaseIndexChoicenessDialog(val context1: Context, val ticket: Ticket?) 
                     super.onNext(t)
                     loadingDialog.dismiss()
                     if (t.code == 200) {
-                        EventBus.getDefault().post(UpdateMyTicketEvent())
+                        CommonFunction.toast(t.msg)
+                        dismiss()
+                        EventBus.getDefault().post(UpdateMyTicketEvent(1))
                     } else if (t.code == 201) {
                         OpenVipDialog(context1).show()
                     } else if (t.code == 419) {

@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import java.io.Serializable
+
 /**
  *    author : ZFM
  *    date   : 2020/6/1910:09
@@ -8,11 +10,13 @@ package com.sdy.jitangapplication.model
  */
 
 data class TicketBean(
-    var mv_url: Boolean = false,
+    var my_mv_url: Int = 0, //0未上传 1通过 2审核中
     var isplatinum: Boolean = false,
     var gender: Int = 0,
     var my_ticket_sum: Int = 0,
-    var ticket: Ticket = Ticket()
+    var isfaced: Int = 0,
+    var ticket: Ticket = Ticket(),
+    var list: MutableList<IndexTopBean> = mutableListOf()
 )
 
 data class Ticket(
@@ -22,3 +26,19 @@ data class Ticket(
 )
 
 
+
+/**
+ * 开屏页推荐
+ */
+data class IndexTopBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var amount: Int = 0,
+    var avatar: String = "",
+    var distance: String = "",
+    var gender: Int = 0,
+    var nickname: String = "",
+    var checked: Boolean = true
+) : Serializable
+
+data class IndexListBean(var list: MutableList<IndexTopBean> = mutableListOf()) : Serializable

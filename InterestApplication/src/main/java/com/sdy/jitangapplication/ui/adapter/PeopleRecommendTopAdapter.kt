@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -44,13 +45,19 @@ class PeopleRecommendTopAdapter :
 
         when (helper.layoutPosition) {
             0 -> {
+                itemView.userRankIv.isVisible = true
                 itemView.userRankIv.setImageResource(R.drawable.icon_candy_no1)
             }
             1 -> {
+                itemView.userRankIv.isVisible = true
                 itemView.userRankIv.setImageResource(R.drawable.icon_candy_no2)
             }
             2 -> {
+                itemView.userRankIv.isVisible = true
                 itemView.userRankIv.setImageResource(R.drawable.icon_candy_no3)
+            }
+            else->{
+                itemView.userRankIv.isVisible = false
             }
         }
 
