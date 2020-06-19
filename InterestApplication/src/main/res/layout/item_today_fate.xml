@@ -8,15 +8,17 @@
     android:layout_marginRight="15dp"
     android:background="@drawable/rectangle_white_10dp">
 
-    <ImageView
+    <com.sdy.baselibrary.widgets.RoundImageView
         android:id="@+id/userAvator"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/default_image_10dp"
+        android:src="@drawable/default_image_10dp"
+        app:borderRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:type="round" />
 
     <View
         android:layout_width="0dp"

@@ -379,7 +379,6 @@ class TodayFateDialog(
                             }
                         }
                         419 -> {
-                            CommonFunction.toast("糖果余额不足，请充值后重试")
                             AlertCandyEnoughDialog(
                                 context1,
                                 AlertCandyEnoughDialog.FROM_SEND_GIFT

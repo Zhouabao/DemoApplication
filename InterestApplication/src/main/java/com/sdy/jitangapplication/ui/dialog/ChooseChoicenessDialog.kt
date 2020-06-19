@@ -45,7 +45,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
 
         //选择当日
         chooseCalendarBtn.clickWithTrigger {
-            //todo 此处进行请求 看日期是否可选
+            // 此处进行请求 看日期是否可选
             if (calendarView.selectedDate != null) {
                 expendTicket("${calendarView.selectedDate?.year}-${calendarView.selectedDate?.month}-${calendarView.selectedDate?.day}")
             }
@@ -154,7 +154,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
-                            //todo 使用成功
+                            //使用成功
                             calendarCl.isVisible = false
                             completeCalendarLl.isVisible = true
                             val params = window?.attributes

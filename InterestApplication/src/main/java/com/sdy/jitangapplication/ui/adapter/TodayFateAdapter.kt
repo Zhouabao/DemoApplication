@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.adapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -22,11 +21,10 @@ class TodayFateAdapter :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_today_fate) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
-        GlideUtil.loadRoundImgCenterCrop(
+        GlideUtil.loadImgCenterCrop(
             mContext,
             item.avatar,
-            itemView.userAvator,
-            SizeUtils.dp2px(10F)
+            itemView.userAvator
         )
 
         SpanUtils.with(itemView.userNameAge)

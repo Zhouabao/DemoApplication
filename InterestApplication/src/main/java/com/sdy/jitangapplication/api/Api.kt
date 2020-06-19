@@ -28,12 +28,19 @@ interface Api {
 
 
     /**
-     * 每天首次开屏推荐
+     * 每天首次开屏推荐（男性）
      */
     @FormUrlEncoded
     @POST("Home/todayRecommend${Constants.END_BASE_URL}")
     fun todayRecommend(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<TodayFateBean?>>
 
+    /**
+     * 每天首次开屏推荐（女性）
+     * Tidings/chatupList
+     */
+    @FormUrlEncoded
+    @POST("Tidings/chatupList${Constants.END_BASE_URL}")
+    fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<AccostBean>?>>
 
     /**
      * 批量送礼物成为好友
@@ -46,7 +53,7 @@ interface Api {
      * 批量送礼物成为好友
      */
     @FormUrlEncoded
-    @POST("Home/batchSendCandy${Constants.END_BASE_URL}")
+    @POST("Home/batchChatup${Constants.END_BASE_URL}")
     fun batchGreetWoman(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<BatchGreetBean>?>>
 
 
@@ -1090,13 +1097,6 @@ interface Api {
     @POST("Gift/getGiftList${Constants.END_BASE_URL}")
     fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
 
-    /**
-     * 获取搭讪列表
-     * Tidings/chatupList
-     */
-    @FormUrlEncoded
-    @POST("Tidings/chatupList${Constants.END_BASE_URL}")
-    fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<AccostBean>?>>
 
     /**
      * 获取礼物列表
@@ -1214,5 +1214,6 @@ interface Api {
     @FormUrlEncoded
     @POST("Ticket/lockChatup${Constants.END_BASE_URL}")
     fun lockChatup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
 
 }

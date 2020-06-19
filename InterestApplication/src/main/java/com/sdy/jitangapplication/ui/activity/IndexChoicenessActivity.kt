@@ -17,7 +17,6 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.FemaleVideoEvent
 import com.sdy.jitangapplication.event.UpdateMyTicketEvent
 import com.sdy.jitangapplication.event.UpdateTicketDataEvent
-import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.TicketBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
@@ -63,7 +62,7 @@ class IndexChoicenessActivity : BaseActivity() {
                 ChooseChoicenessDialog(this).show()
         }
 
-        //立即使用,todo 如果有置顶券就立即使用,没有就弹购买
+        //立即使用, 如果有置顶券就立即使用,没有就弹购买
         useChoicenessTicketBtn.clickWithTrigger {
             if (myTicket?.my_ticket_sum == 0) {
                 PurchaseIndexChoicenessDialog(this, myTicket?.ticket).show()
@@ -74,7 +73,7 @@ class IndexChoicenessActivity : BaseActivity() {
 
         //立即购买 糖果置换置顶券
         purchaseBtn.clickWithTrigger {
-            //todo 如果糖果余额不足就弹充值
+            // 如果糖果余额不足就弹充值
             PurchaseIndexChoicenessDialog(this, myTicket?.ticket).show()
         }
     }
@@ -138,7 +137,7 @@ class IndexChoicenessActivity : BaseActivity() {
                             useChoicenessTicketBtn.text = "立即使用"
 
 
-                        //todo 判断男性用户是否是钻石会员，女性用户是否上传视频介绍
+                        // 判断男性用户是否是钻石会员，女性用户是否上传视频介绍
                         //立即获取
                         if (t?.data?.gender == 1) {
                             if (t?.data?.isplatinum == true) {

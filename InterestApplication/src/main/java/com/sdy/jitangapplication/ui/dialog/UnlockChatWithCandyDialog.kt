@@ -93,6 +93,15 @@ class UnlockChatWithCandyDialog(
                     if (t.code == 200) {
                         EventBus.getDefault().post(UpdateApproveEvent())
                         dismiss()
+                    } else if (t.code == 201) {
+                        OpenVipDialog(context1).show()
+                        dismiss()
+                    } else if (t.code == 419) {
+                        AlertCandyEnoughDialog(
+                            context1,
+                            AlertCandyEnoughDialog.FROM_SEND_GIFT
+                        ).show()
+                        dismiss()
                     }
                 }
 

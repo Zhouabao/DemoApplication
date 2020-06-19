@@ -113,7 +113,7 @@ class TodayFateWomanDialog(
             }
         }
         val params = hashMapOf<String, Any>()
-        params["accid_json"] = Gson().toJson(ids)
+        params["batch_accid"] = Gson().toJson(ids)
         RetrofitFactory.instance.create(Api::class.java)
             .batchGreetWoman(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<BatchGreetBean>?>>() {
@@ -137,13 +137,12 @@ class TodayFateWomanDialog(
                                     SessionTypeEnum.P2P,
                                     data.value.msg
                                 )
-                                val params = hashMapOf<String, Any>("needCandyImg" to false)
-                                msg.remoteExtension = params
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {
                                             if (data.index == (t.data?.size ?: 0) - 1) {
                                                 loadingDialog.dismiss()
+                                                dismiss()
                                                 CommonFunction.toast("送出招呼成功！")
                                             }
                                         }
