@@ -173,18 +173,18 @@
                                 android:src="@drawable/icon_female_contact_no" />
 
                             <ImageView
-                                android:id="@+id/videoIntroduceIv"
-                                android:layout_width="21dp"
-                                android:layout_height="21dp"
-                                android:layout_marginLeft="4dp"
-                                android:src="@drawable/icon_female_video_no" />
-
-                            <ImageView
                                 android:id="@+id/userVerifyIv"
                                 android:layout_width="21dp"
                                 android:layout_height="21dp"
                                 android:layout_marginLeft="4dp"
                                 android:src="@drawable/icon_female_verify_no" />
+
+                            <ImageView
+                                android:id="@+id/videoIntroduceIv"
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:layout_marginLeft="4dp"
+                                android:src="@drawable/icon_female_video_no" />
                         </LinearLayout>
 
                         <ImageView

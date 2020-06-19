@@ -41,7 +41,7 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
         GlideUtil.loadImg(context1, UserManager.getAvator(), userAvatar)
         when (status) {
             VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO -> {
-                verifyStateBg.setBackgroundResource(R.drawable.rectangle_red_green_verify_fail)
+                verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_fail)
                 verifyStateLogo.setImageResource(R.drawable.icon_verify__not_pass)
                 verifyState.text = "审核失败"
                 verifyTip.text = "您的视频介绍未通过审核，您可在确保视频与头像一致的前提下重新录制"
@@ -49,12 +49,11 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
                 continueBtn.clickWithTrigger {
                     if (ActivityUtils.getTopActivity() !is VideoVerifyActivity)
                         VideoVerifyActivity.start(context1)
-                    else
-                        dismiss()
+                    dismiss()
                 }
             }
             VERIFY_NORMAL_PASS -> {
-                verifyStateBg.setBackgroundResource(R.drawable.rectangle_oval_green_verify_pass)
+                verifyStateBg.setImageResource(R.drawable.rectangle_oval_green_verify_pass)
                 verifyStateLogo.setImageResource(R.drawable.icon_checked_relation)
                 verifyState.text = "审核通过"
                 verifyTip.text = "您的视频介绍已通过审核"

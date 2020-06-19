@@ -38,6 +38,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.FemaleVideoEvent
+import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateApproveEvent
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
@@ -122,10 +124,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         StatusBarUtil.immersive(this)
         mainHandler = Handler()
 
-        val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
-        params.width = ScreenUtils.getScreenWidth()
-        params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
-        camera_preview.layoutParams = params
+
 
 //        setupTouchListener()
         btnBack.setOnClickListener(this)
@@ -139,12 +138,20 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         btnBack.setImageResource(R.drawable.icon_back_white)
     }
 
+    fun setVideoRatio(){
+        val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
+        params.width = ScreenUtils.getScreenWidth()
+        params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
+        camera_preview.layoutParams = params
+    }
+
     override fun onResume() {
         super.onResume()
         if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
             requestVideoPermissions()
             return
         } else {
+            setVideoRatio()
             setupSurfaceIfNeeded()
             setupCamera()
         }
@@ -197,8 +204,20 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     override fun onPause() {
         super.onPause()
-        releaseMediaRecorder()        // if you are using MediaRecorder, release it first
+        isAction = false
+        // stop recording and release camera
+        try {
+            mMediaRecorder?.stop()    // stop the recording
+        } catch (stopException: RuntimeException) {
+        }
+        releaseMediaRecorder()  // release the MediaRecorder object
+        mCamera?.lock()          // take camera access back from MediaRecorder
+        isRecording = false
+        mainHandler.removeCallbacks(progressRunnable)
+        stopButtonAnimation()
+        mProgressView.reset()
         releaseCamera()
+
     }
 
 
@@ -269,33 +288,40 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     private fun prepareVideoRecorder(): Boolean {
         mMediaRecorder = MediaRecorder()
-        // Step 1: Unlock and set camera to MediaRecorder
-        mCamera?.unlock()
-        mMediaRecorder!!.setCamera(mCamera)
-        val degrees = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, true)
-        mMediaRecorder!!.setOrientationHint(degrees)
-        // Step 2: Set sources
-        mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
-        mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
-        // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        setupProfile()
-//        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        // Step 4: Set output file
-        val now = TimeUtil.getNow_millisecond()
-        videoSavePath =
-            CameraUtils.getOutputMediaFile(MEDIA_TYPE_VIDEO, now.toString()).getAbsolutePath()
-        mMediaRecorder!!.setOutputFile(videoSavePath)
-        // Step 5: Set the preview output
-        mMediaRecorder!!.setPreviewDisplay(mPreview?.holder?.surface)
-
-        // Step 6: Prepare configured MediaRecorder
         try {
+            // Step 1: Unlock and set camera to MediaRecorder
+            mCamera?.unlock()
+            mMediaRecorder!!.setCamera(mCamera)
+            val degrees = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, true)
+            mMediaRecorder!!.setOrientationHint(degrees)
+            // Step 2: Set sources
+            mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
+            mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
+            // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
+            setupProfile()
+//        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            // Step 4: Set output file
+            val now = TimeUtil.getNow_millisecond()
+            videoSavePath =
+                CameraUtils.getOutputMediaFile(MEDIA_TYPE_VIDEO, now.toString()).getAbsolutePath()
+            mMediaRecorder!!.setOutputFile(videoSavePath)
+            // Step 5: Set the preview output
+            mMediaRecorder!!.setPreviewDisplay(mPreview?.holder?.surface)
+            // Step 6: Prepare configured MediaRecorder
             mMediaRecorder!!.prepare()
         } catch (e: IllegalStateException) {
             Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.message)
             releaseMediaRecorder()
             return false
         } catch (e: IOException) {
+            Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
+            releaseMediaRecorder()
+            return false
+        } catch (e: NullPointerException) {
+            Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
+            releaseMediaRecorder()
+            return false
+        } catch (e: RuntimeException) {
             Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
             releaseMediaRecorder()
             return false
@@ -561,6 +587,11 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
                 //聊天页面刷新认证数据数据
                 EventBus.getDefault().post(UpdateApproveEvent())
+
+                //更新录制视频介绍
+                UserManager.my_mv_url = true
+                EventBus.getDefault().post(TopCardEvent(false))
+                EventBus.getDefault().post(FemaleVideoEvent(2))
             }
         }
 

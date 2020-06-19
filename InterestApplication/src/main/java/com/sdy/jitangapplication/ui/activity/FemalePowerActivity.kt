@@ -13,8 +13,12 @@ import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.FemaleVideoEvent
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 
 /**
@@ -26,7 +30,7 @@ import org.jetbrains.anko.startActivityForResult
 class FemalePowerActivity : BaseActivity() {
     private val contact by lazy { intent.getIntExtra("contact", 0) }//联系方式  0  没有 1 电话 2微信 3 qq
     private val verify by lazy { intent.getIntExtra("verify", 0) }
-    private val video by lazy { intent.getIntExtra("video", 0) }
+    private var video = 0
     private val url by lazy { intent.getStringExtra("url") }
 
     companion object {
@@ -41,6 +45,7 @@ class FemalePowerActivity : BaseActivity() {
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundColor(Color.parseColor("#FFFFDCC1"))
         hotT1.text = "个人权益"
@@ -49,6 +54,7 @@ class FemalePowerActivity : BaseActivity() {
         btnBack.onClick {
             finish()
         }
+        video = intent.getIntExtra("video", 0)
 
         //联系方式
         powerContact.clickWithTrigger {
@@ -126,7 +132,7 @@ class FemalePowerActivity : BaseActivity() {
                         }
                     ), null, null
                 )
-            }else if (requestCode == REQUEST_VERIFY) {
+            } else if (requestCode == REQUEST_VERIFY) {
 //                /verify
                 powerContact.setCompoundDrawablesWithIntrinsicBounds(
                     null, resources.getDrawable(
@@ -140,4 +146,28 @@ class FemalePowerActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    /**
+     * @param event showTop是否展示topShow
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: FemaleVideoEvent) {
+        video = event.videoState
+        powerVideo.setCompoundDrawablesWithIntrinsicBounds(
+            null, resources.getDrawable(
+                if (event.videoState == 1) {
+                    R.drawable.icon_female_video_open
+                } else {
+                    R.drawable.icon_female_video_no
+                }
+            ), null, null
+        )
+    }
+
 }

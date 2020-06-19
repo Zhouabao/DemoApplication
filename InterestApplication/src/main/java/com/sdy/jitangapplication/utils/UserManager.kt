@@ -172,9 +172,10 @@ object UserManager {
      */
     fun startToLogin(activity: Activity) {
         touristMode = false
-        AppManager.instance.finishAllActivity()
-        activity.startActivity<LoginActivity>()
         clearLoginData()
+        AppManager.instance.finishAllActivity()
+//        ActivityUtils.startLauncherActivity()
+        activity.startActivity<SplashActivity>()
     }
 
     /**

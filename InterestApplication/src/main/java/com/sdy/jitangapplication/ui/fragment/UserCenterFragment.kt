@@ -573,6 +573,18 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: FemaleVideoEvent) {
+        userInfoBean?.userinfo?.mv_faced = event.videoState
+        if (userInfoBean?.userinfo?.mv_faced == 1) {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_open_small)
+        } else {
+            videoIntroduceIv.setImageResource(R.drawable.icon_female_video_no_small)
+        }
+    }
+
+
+
     override fun onPause() {
         super.onPause()
         Log.d("onpause", "onpause=====")

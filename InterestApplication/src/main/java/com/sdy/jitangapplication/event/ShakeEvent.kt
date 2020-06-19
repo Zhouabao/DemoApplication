@@ -36,6 +36,9 @@ class EnableRvScrollEvent(val enable: Boolean)
 //置顶卡片
 class TopCardEvent(val showTop: Boolean)
 
+//女性是否录制视频
+class FemaleVideoEvent(val videoState: Int)
+
 
 
 

@@ -35,19 +35,19 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
              tobePtVipBtn.text = "成为钻石会员"
              tobePtVipBtn.clickWithTrigger {
                  context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+                 dismiss()
              }
 
          } else {
-             text.text =  "录制视频\n将你的卡片置于顶部，获取更多联系"
-             tobePtVipBtn.text = "录制视频介绍"
+             text.text =  "添加你的视频介绍\n获取首页优先推荐，解锁无限聊天机会"
+             tobePtVipBtn.text = "添加视频介绍"
              tobePtVipBtn.clickWithTrigger {
                  CommonFunction.startToVideoIntroduce(context1)
+                 dismiss()
              }
 
          }
 
-
-        dismiss()
     }
 
     private fun initWindow() {
