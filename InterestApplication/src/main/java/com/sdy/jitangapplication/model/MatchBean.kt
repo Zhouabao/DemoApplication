@@ -252,17 +252,9 @@ data class IndexTopBean(
     var gender: Int = 0,
     var nickname: String = "",
     var checked: Boolean = true
-)
+) : Serializable
 
-data class A(
-    var accid: String = "",
-    var age: Int = 0,
-    var amount: Int = 0,
-    var avatar: String = "",
-    var distance: String = "",
-    var gender: Int = 0,
-    var nickname: String = ""
-)
+data class IndexListBean(var list: MutableList<IndexTopBean> = mutableListOf()) : Serializable
 
 
 /**

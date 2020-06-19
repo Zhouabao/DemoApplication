@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
     android:background="#FF0E1862"
-    android:layout_height="match_parent">
+    android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="62dp"
+        android:overScrollMode="never"
         tools:context=".ui.activity.IndexChoicenessActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,15 +113,16 @@
 
                 <TextView
                     android:id="@+id/top1Name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="85dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="先承君"
+                    android:gravity="center"
                     android:textColor="#ffffb819"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/top1Iv" />
+                    app:layout_constraintTop_toBottomOf="@id/top1Iv"
+                    tools:text="先承君先承君" />
 
                 <TextView
                     android:id="@+id/top1Tv"
@@ -142,7 +144,7 @@
                     android:layout_marginTop="2dp"
                     android:drawableRight="@drawable/icon_candy_small"
                     android:drawablePadding="4dp"
-                    android:text="365987"
+                    android:text="0"
                     android:textColor="#ffffb819"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -178,12 +180,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dp"
                     android:layout_marginTop="20dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:text="先承君"
+                    android:maxLength="5"
                     android:textColor="#ffffb819"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/top2Iv" />
+                    app:layout_constraintTop_toBottomOf="@id/top2Iv"
+                    tools:text="先承君" />
 
                 <TextView
                     android:id="@+id/top2Tv"
@@ -207,7 +211,7 @@
                     android:drawableRight="@drawable/icon_candy_small"
                     android:drawablePadding="4dp"
                     android:gravity="center"
-                    android:text="36225987"
+                    android:text="0"
                     android:textColor="#ffffb819"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="@id/top2Name"
@@ -243,12 +247,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="40dp"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:text="先承君"
                     android:textColor="#ffffb819"
                     android:textSize="12sp"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/top3Iv" />
+                    app:layout_constraintTop_toBottomOf="@id/top3Iv"
+                    tools:text="先承君" />
 
                 <TextView
                     android:id="@+id/top3Tv"
@@ -256,7 +261,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:gravity="center"
-                    android:text="NO.2"
+                    android:text="NO.3"
                     android:textColor="#ffffb819"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -272,7 +277,7 @@
                     android:drawableRight="@drawable/icon_candy_small"
                     android:drawablePadding="4dp"
                     android:gravity="center"
-                    android:text="36225987"
+                    android:text="0"
                     android:textColor="#ffffb819"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="@id/top3Name"

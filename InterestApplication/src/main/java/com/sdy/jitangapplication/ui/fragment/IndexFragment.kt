@@ -22,7 +22,8 @@ import com.sdy.jitangapplication.event.EnableRvScrollEvent
 import com.sdy.jitangapplication.event.ShowNearCountEvent
 import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
-import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.IndexListBean
+import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
@@ -75,12 +76,16 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
+        mPresenter.indexTop()
+//        else
     }
 
     fun loadData() {
-        EventBus.getDefault().post(EnableRvScrollEvent(false))
-
+        mPresenter = IndexPresenter()
+        mPresenter.mView = this
+        mPresenter.context = activity!!
         EventBus.getDefault().register(this)
+        EventBus.getDefault().post(EnableRvScrollEvent(false))
         initHeadRecommendUser()
         initFragments()
         filterBtn.clickWithTrigger {
@@ -100,15 +105,10 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
         //置顶卡片
         topCardBtn.clickWithTrigger {
-            //            if (UserManager.touristMode)
-//                TouristDialog(activity!!).show()
-//            else
-//                TopCardDialog(activity!!).show()
-//            TouristDialog(activity!!).show()
             if (UserManager.touristMode)
                 TouristDialog(activity!!).show()
             else
-                startActivity<IndexChoicenessActivity>()
+                startActivity<IndexChoicenessActivity>("data" to indexListBean)
         }
 
 
@@ -121,30 +121,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     private fun initHeadRecommendUser() {
         recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recommendUsers.adapter = peopleRecommendTopAdapter
-        peopleRecommendTopAdapter.addData(
-            NearPersonBean(
-                UserManager.getAvator(),
-                10,
-                distance = "附近",
-                gender = 2
-            )
-        )
-        peopleRecommendTopAdapter.addData(
-            NearPersonBean(
-                UserManager.getAvator(),
-                10,
-                distance = "附近",
-                gender = 2
-            )
-        )
-        peopleRecommendTopAdapter.addData(
-            NearPersonBean(
-                UserManager.getAvator(),
-                10,
-                distance = "附近",
-                gender = 2
-            )
-        )
+
     }
 
     private fun initFragments() {
@@ -255,5 +232,14 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 //        } else {
 //            topCardBtn.isVisible = false
 //        }
+    }
+
+    private var indexListBean: IndexListBean? = null
+    override fun indexTopResult(data: IndexListBean?) {
+        if (data != null && !data!!.list.isNullOrEmpty()) {
+            indexListBean = data
+            peopleRecommendTopAdapter.setNewData(data?.list ?: mutableListOf<IndexTopBean>())
+        }
+
     }
 }

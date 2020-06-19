@@ -82,3 +82,4 @@ class RefreshCandyMallDetailEvent()
  * 更新糖果商城详情页
  */
 class RefreshCandyMessageEvent(val orderId: Int, val state: Int)
+

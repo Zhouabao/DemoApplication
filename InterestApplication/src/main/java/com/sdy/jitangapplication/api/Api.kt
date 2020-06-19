@@ -1173,6 +1173,37 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Home/indexTop${Constants.END_BASE_URL}")
-    fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CopyMvBean?>>
+    fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<IndexListBean?>>
+
+    /**
+     * 游客模式推荐10个
+     */
+    @FormUrlEncoded
+    @POST("Threshold/indexTop${Constants.END_BASE_URL}")
+    fun indexTopThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<IndexListBean?>>
+
+
+    /*-----------------------购买置顶券---------------------------*/
+
+    /**
+     * 获取制置顶券
+     */
+    @FormUrlEncoded
+    @POST("Ticket/getList${Constants.END_BASE_URL}")
+    fun getList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TicketBean?>>
+
+    /**
+     * 使用置顶券
+     */
+    @FormUrlEncoded
+    @POST("Ticket/expendTicket${Constants.END_BASE_URL}")
+    fun expendTicket(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TicketBean?>>
+
+    /**
+     * 购买置顶券
+     */
+    @FormUrlEncoded
+    @POST("Ticket/buyTicket${Constants.END_BASE_URL}")
+    fun buyTicket(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }
