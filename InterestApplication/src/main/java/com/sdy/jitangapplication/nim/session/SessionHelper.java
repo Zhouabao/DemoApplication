@@ -386,11 +386,6 @@ public class SessionHelper {
                         if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
                                 && message.getMsgType() != MsgTypeEnum.tip
                                 && message.getMsgType() != MsgTypeEnum.custom
-//                            && !(message.getAttachment() instanceof ChatMatchAttachment)
-//                            && !(message.getAttachment() instanceof ChatHiAttachment)
-//                            && !(message.getAttachment() instanceof SendGiftAttachment)
-//                            && !(message.getAttachment() instanceof WishHelpAttachment)
-//                            && !(message.getAttachment() instanceof SendCustomTipAttachment)
                                 && sendMan
                                 && differentGender) {
                             return true;

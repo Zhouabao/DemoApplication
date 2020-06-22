@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="快给她们打个招呼吧"
+        android:text="打个招呼吧，对方回复将会附带礼物"
         android:textColor="#ff888d92"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

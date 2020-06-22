@@ -1,8 +1,5 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.app.Activity
-import android.content.Intent
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -151,20 +148,20 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
             }
 
             itemView.clickWithTrigger {
-                //                if (UserManager.touristMode) {
-//                    TouristDialog(mContext).show()
-//                } else {
-//                    MatchDetailActivity.start(mContext, item.accid)
-//                }
+                if (UserManager.touristMode) {
+                    TouristDialog(mContext).show()
+                } else {
+                    MatchDetailActivity.start(mContext, item.accid)
+                }
 
-                val intent = Intent(mContext, MatchDetailActivity::class.java)
-                intent.putExtra("target_accid", item.accid)
-
-                val bundler = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    mContext as Activity,
-                    itemView.userAvator, "matchdetailImg"
-                ).toBundle()
-                mContext.startActivity(intent, bundler)
+//                val intent = Intent(mContext, MatchDetailActivity::class.java)
+//                intent.putExtra("target_accid", item.accid)
+//
+//                val bundler = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                    mContext as Activity,
+//                    itemView.userAvator, "matchdetailImg"
+//                ).toBundle()
+//                mContext.startActivity(intent, bundler)
 
             }
 

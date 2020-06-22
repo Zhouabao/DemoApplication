@@ -86,7 +86,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("回复消息将获得一个对方赠送的糖果，糖果可以")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                        .append("兑换礼物")
+                        .append("提现")
                         .setClickSpan(new ClickableSpan() {
                             @Override
                             public void updateDrawState(@NonNull TextPaint ds) {

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
@@ -119,6 +121,15 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     private fun initHeadRecommendUser() {
         recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recommendUsers.adapter = peopleRecommendTopAdapter
+        peopleRecommendTopAdapter.setOnItemClickListener { adapter, view, position ->
+            if (!UserManager.touristMode)
+                MatchDetailActivity.start(
+                    activity!!,
+                    peopleRecommendTopAdapter.data[position].accid
+                )
+            else
+                TouristDialog(activity!!).show()
+        }
 
     }
 
@@ -235,6 +246,9 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null && !data!!.list.isNullOrEmpty()) {
             peopleRecommendTopAdapter.setNewData(data?.list)
+            indexToolBarLayout.isVisible = true
+        } else {
+            indexToolBarLayout.isVisible = false
         }
 
     }

@@ -71,10 +71,15 @@ class ConfirmPayCandyDialog(
 
 
     private fun initView() {
-        price.text = "¥${if (chargeBean.discount_price != 0.0) {
-            chargeBean.discount_price
+        price.text = "¥${
+        if (!chargeBean.isfirst) {
+            if (chargeBean.discount_price != 0.0) {
+                chargeBean.discount_price
+            } else {
+                chargeBean.original_price
+            }
         } else {
-            chargeBean.original_price
+            chargeBean.discount_price
         }}"
         price.typeface = Typeface.createFromAsset(myContext.assets, "DIN_Alternate_Bold.ttf")
         close.onClick {

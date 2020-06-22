@@ -51,6 +51,7 @@ data class ChargeWayBean(
     var type: Int?,//	1 原价售卖 2折扣价售卖 3限时折扣
     var unit_price: Double = 0.0,//单价(显示)
     var amount: Int = 0,
+    var isfirst: Boolean = false,//是否首充  true  首充   false  常规
     var product_id: String = "",
     var checked: Boolean = false
 )

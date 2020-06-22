@@ -53,7 +53,6 @@ class IndexChoicenessActivity : BaseActivity() {
         //榜首
         initHeadRecommendUser()
 
-        setAutoChoicenessData()
 
 
         //选择置顶日期
@@ -140,6 +139,8 @@ class IndexChoicenessActivity : BaseActivity() {
                         // 判断男性用户是否是钻石会员，女性用户是否上传视频介绍
                         //立即获取
                         if (t?.data?.gender == 1) {
+                            tobeChoicenessCount.text =
+                                "获取钻石会员，每月获得${t?.data?.platinum_free_cnt ?: 0}次置顶"
                             if (t?.data?.isplatinum == true) {
                                 tobeChoicenessBtn.text = "已获取"
                                 tobeChoicenessIv.setImageResource(R.drawable.icon_choicess_power_man_bg)
@@ -156,6 +157,7 @@ class IndexChoicenessActivity : BaseActivity() {
                                 }
                             }
                         } else {
+                            tobeChoicenessCount.text = "上传视频介绍获取${t?.data?.mv_free_cnt ?: 0}次精选机会"
                             tobeChoicenessIv.setImageResource(R.drawable.icon_choicenss_woman_bg)
                             if (t?.data?.isfaced == 1) {
                                 if (t?.data?.my_mv_url == 1) {
@@ -185,6 +187,7 @@ class IndexChoicenessActivity : BaseActivity() {
                                 }
                             }
                         }
+                        setAutoChoicenessData()
 
                     }
                 }

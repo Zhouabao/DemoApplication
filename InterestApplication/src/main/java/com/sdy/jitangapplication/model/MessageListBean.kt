@@ -19,6 +19,9 @@ data class MessageListBean(
 /*************消息列表**************/
 data class MessageListBean1(
     var square_count: Int = 0,//评论未读数
+    var square_type: Int = 0,// 1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
+    var square_time: String = "",
+    var square_nickname: String = "",
     var chatup_list_lasttime: String = "",
     var session_list_arr: MutableList<MessageGiftBean> = mutableListOf(),
     var chatup_rid_list: MutableList<String> = mutableListOf(), //要剔除的id

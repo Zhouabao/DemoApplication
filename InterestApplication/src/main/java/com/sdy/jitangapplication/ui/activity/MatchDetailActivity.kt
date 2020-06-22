@@ -125,10 +125,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter.mView = this
         mPresenter.context = this
 
-        //设置图片的宽度占满屏幕，宽高比9:16
+        //设置图片的宽度占满屏幕，宽高比4:5
         val layoutParams = clPhotos.layoutParams as ConstraintLayout.LayoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
-        layoutParams.height = ScreenUtils.getScreenWidth()
+        layoutParams.height = ScreenUtils.getScreenWidth() / 4 * 5
         clPhotos.layoutParams = layoutParams
 
 
@@ -196,8 +196,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
         //用户详细信息列表
-        detailUserInformationRv.layoutManager =
-            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        detailUserInformationRv.layoutManager = GridLayoutManager(this, 3)
         detailUserInformationRv.adapter = detailUserInformationAdapter
         //用户动态
         listSquareRv.layoutManager =
@@ -208,6 +207,31 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
+        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val manager = (listSquareRv.layoutManager as StaggeredGridLayoutManager)
+                    var positions = manager.findLastCompletelyVisibleItemPositions(intArrayOf(0, 0))
+
+                    if (adapter.itemCount >= page * Constants.PAGESIZE) {
+                        if (positions.isNotEmpty()) {
+                            val pos = positions[0].coerceAtLeast(positions[1])
+                            if (pos > manager.itemCount - 5) {
+                                page += 1
+                                params1["page"] = page
+                                mPresenter.getSomeoneSquare(params1)
+                            }
+                        }
+                    } else {
+                        adapter.loadMoreEnd()
+                    }
+                }
+            }
+        })
+
+
         //用户兴趣
         detailRvTag.layoutManager = GridLayoutManager(this, 2)
         detailRvTag.adapter = userTagAdapter
@@ -221,17 +245,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         usergiftAdapter.setEmptyView(R.layout.empty_gift, rvGift)
         usergiftAdapter.isUseEmpty(false)
 
-        adapter.setPreLoadNumber(Constants.PAGESIZE * page - 5)
-        adapter.setOnLoadMoreListener({
-            if (adapter.data.size < page * Constants.PAGESIZE) {
-                adapter.loadMoreEnd()
-            } else {
-                page += 1
-                params1["page"] = page
-                mPresenter.getSomeoneSquare(params1)
-                adapter.setPreLoadNumber(Constants.PAGESIZE * page - 5)
-            }
-        }, listSquareRv)
 
         scrollDetail.setZoomView(detailPhotosVp)
         scrollDetail.setOnScrollListener { scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -720,11 +733,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         isRefresh: Boolean
     ) {
         if (result) {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data?.list == null || data!!.list!!.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
                     adapter.isUseEmpty(true)
-                    adapter.loadMoreEnd()
                 }
                 adapter.notifyDataSetChanged()
             } else {
@@ -735,12 +747,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                     adapter.addData(data?.list)
                 }
-                adapter.loadMoreComplete()
             }
         } else {
-            if (page > 1)
-                adapter.loadMoreFail()
-            else
+            if (page == 1)
                 stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 

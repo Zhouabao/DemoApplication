@@ -243,14 +243,22 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
     override fun onMessageCensusResult(data: MessageListBean1?) {
         if (data?.square_count ?: 0 > 0)
             EventBus.getDefault().post(GetNewMsgEvent())
-        headAdapter.data[1].msg =
-            if ((data?.square_count ?: 0) > 0) {
-                "有新的广场消息"
-            } else {
-                "暂时没有广场消息哦"
+        headAdapter.data[1].msg = when (data?.square_type) {
+            1 -> {
+                "${data?.square_nickname}赞了你的动态"
             }
+            2 -> {
+                "${data?.square_nickname}评论了你的动态"
+            }
+            3 -> {
+                "${data?.square_nickname}赞了你的评论"
+            }
+            else -> {
+                "暂时没有新动态哦"
+            }
+        }
         headAdapter.data[1].count = (data?.square_count ?: 0)
-        headAdapter.data[1].time = TimeUtil.getTimeShowString(System.currentTimeMillis(), true)
+        headAdapter.data[1].time = (data?.square_time ?: "")
         headAdapter.notifyItemChanged(1)
         adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
 

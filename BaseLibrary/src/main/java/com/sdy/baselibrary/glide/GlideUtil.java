@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.duluduludala.xkvideo.base.config.GlideSmartRoundedCornersTransform;
 import com.sdy.baselibrary.R;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class GlideUtil {
     private static RequestOptions getOptions() {
         return new RequestOptions()
                 .fitCenter()
-                .priority(Priority.HIGH)
+                .priority(Priority.NORMAL)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
@@ -151,13 +152,13 @@ public class GlideUtil {
      * @param tartgetImg
      */
     public static void loadRoundImgCenterCrop(Context context, Object url, ImageView tartgetImg, int radius) {
-        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0));
+        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new GlideSmartRoundedCornersTransform(radius, 0));
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
 //                .placeholder(R.drawable.default_image)
 //                .error(R.drawable.default_image)
-                .thumbnail(0.5F)
+//                .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -178,7 +179,7 @@ public class GlideUtil {
                 .priority(Priority.NORMAL)
                 .placeholder(R.drawable.default_image_10dp)
 //                .error(R.drawable.default_image)
-                .thumbnail(0.5F)
+//                .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -191,7 +192,7 @@ public class GlideUtil {
                 .priority(Priority.NORMAL)
 //                .placeholder(R.drawable.default_image)
 //                .error(R.drawable.default_image)
-                .thumbnail(0.5F)
+//                .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -210,7 +211,7 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .thumbnail(0.5F)
+//                .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -224,7 +225,7 @@ public class GlideUtil {
                 .placeholder(R.drawable.default_image_5dp)
                 .override(width, height)
                 .error(R.drawable.default_image_5dp)
-                .thumbnail(0.5F)
+//                .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -241,7 +242,7 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.LOW)
-                .thumbnail(0.1F)
+//                .thumbnail(0.1F)
                 .transform(new CenterCrop())
                 .into(tartgetImg);
 
