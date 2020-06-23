@@ -3,9 +3,12 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SpanUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.baselibrary.glide.GlideUtil
@@ -22,8 +25,10 @@ import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
 import com.sdy.jitangapplication.ui.dialog.ChooseChoicenessDialog
 import com.sdy.jitangapplication.ui.dialog.PurchaseIndexChoicenessDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_index_choiceness.*
+import kotlinx.android.synthetic.main.error_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -50,8 +55,30 @@ class IndexChoicenessActivity : BaseActivity() {
             finish()
         }
 
+        retryBtn.clickWithTrigger {
+            getList()
+        }
+
         //榜首
         initHeadRecommendUser()
+
+        if (UserManager.getGender() == 1) {
+            titleIv.setImageResource(R.drawable.icon_bg_tobe_choiceness_man)
+            SpanUtils.with(topTitle)
+                .append("当日消耗糖果")
+                .append("前3名")
+                .setForegroundColor(resources.getColor(R.color.colorOrange))
+                .append("次日自动进入精选")
+                .create()
+        } else {
+            titleIv.setImageResource(R.drawable.icon_bg_tobe_choiceness_woman)
+            SpanUtils.with(topTitle)
+                .append("当日获取糖果")
+                .append("前3名")
+                .setForegroundColor(resources.getColor(R.color.colorOrange))
+                .append("次日自动进入精选")
+                .create()
+        }
 
 
         //立即使用, 如果有置顶券就立即使用,没有就弹购买
@@ -113,6 +140,7 @@ class IndexChoicenessActivity : BaseActivity() {
                 override fun onNext(t: BaseResp<TicketBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
+                        stateChoiceness.viewState = MultiStateView.VIEW_STATE_CONTENT
                         myTicket = t.data
                         peopleRecommendTopAdapter.setNewData(myTicket?.list)
 
@@ -124,8 +152,9 @@ class IndexChoicenessActivity : BaseActivity() {
                         choicenessTicketTitle.text = t.data?.ticket?.title ?: ""
                         if (t.data?.my_ticket_sum == 0) {
                             useChoicenessTicketBtn.text = "立即购买"
-                        } else
+                        } else {
                             useChoicenessTicketBtn.text = "立即使用"
+                        }
 
 
                         // 判断男性用户是否是钻石会员，女性用户是否上传视频介绍
@@ -181,11 +210,18 @@ class IndexChoicenessActivity : BaseActivity() {
                         }
                         setAutoChoicenessData()
 
+                    } else {
+                        stateChoiceness.viewState = MultiStateView.VIEW_STATE_ERROR
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(this@IndexChoicenessActivity).show()
+                    } else {
+                        stateChoiceness.viewState = MultiStateView.VIEW_STATE_ERROR
+                    }
                 }
             })
     }
