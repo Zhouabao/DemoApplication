@@ -337,37 +337,13 @@ public class SessionHelper {
                     new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
             }
 
-            @Override
-            public void onGetShowMsgClicked(Context context, IMMessage message) {
-                //消息遮罩弹出相应弹窗
-                //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
-                if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0)//0 不验证
-                    if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {//1去认证
-                        new HumanVerifyDialog(context).show();
-                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {//2去开通会员
-                        new ChatToViplDialog(context).show();
-                    }
-            }
 
             @Override
             public boolean isUserVip() {
                 return UserManager.INSTANCE.isUserVip();
             }
 
-            //聊天是否需要付费或者认证才能查看
-            @Override
-            public boolean isApprove(IMMessage message) {
-                //&& message.getMsgType() != MsgTypeEnum.tip && message.getMsgType() != MsgTypeEnum.custom
-                if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID) && message.getDirect() == MsgDirectionEnum.In) {
-                    //除开小助手的消息，除开tip消息和匹配成功的消息之外 其他都要显示
-                    if (message.getMsgType() != MsgTypeEnum.tip && !(message.getAttachment() instanceof ChatMatchAttachment) && !(message.getAttachment() instanceof ChatHiAttachment)) { //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
-                        if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0 && message.getTime() / 1000 >= UserManager.INSTANCE.getApproveBean().getApprove_time()) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
+
 
             @Override
             public boolean isShowGiftIcon(IMMessage message) {
@@ -394,14 +370,6 @@ public class SessionHelper {
                         }
                     }
                 }
-            }
-
-            @Override
-            public long approveTime() {
-                if (UserManager.INSTANCE.getApproveBean() != null) {
-                    return UserManager.INSTANCE.getApproveBean().getApprove_time();
-                }
-                return 0;
             }
 
             @Override

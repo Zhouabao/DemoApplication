@@ -22,20 +22,12 @@ public interface SessionEventListener {
     void onGetReceivcedMsgClicked(Context context, IMMessage message);
 
 
-    // 点击获取认证或者付费，用于弹出会员窗口
-    void onGetShowMsgClicked(Context context, IMMessage message);
-
 
     // 用户是否是VIP
     boolean isUserVip();
 
-    //聊天是否需要付费和认证才能查看
-    boolean isApprove(IMMessage message);
-
     //聊天是否需要显示礼物icon
     boolean isShowGiftIcon(IMMessage message);
-
-    long approveTime();
 
     String robotAccount();
 }

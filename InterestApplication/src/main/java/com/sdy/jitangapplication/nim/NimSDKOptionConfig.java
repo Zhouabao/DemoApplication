@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
+
 import com.netease.nim.uikit.api.wrapper.MessageRevokeTip;
 import com.netease.nim.uikit.api.wrapper.NimUserInfoProvider;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderThumbBase;
@@ -18,7 +19,6 @@ import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
 import com.sdy.jitangapplication.ui.activity.MainActivity;
-import com.sdy.jitangapplication.utils.UserManager;
 
 import java.io.IOException;
 
@@ -163,9 +163,7 @@ public class NimSDKOptionConfig {
 
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
-            if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0) {
-                return "有消息未查看";
-            } else if (message.getAttachment() instanceof ChatHiAttachment) {
+            if (message.getAttachment() instanceof ChatHiAttachment) {
                 /* public static int CHATHI_MATCH = 1;
     public static int CHATHI_HI = 2;
     public static int CHATHI_RFIEND = 3;

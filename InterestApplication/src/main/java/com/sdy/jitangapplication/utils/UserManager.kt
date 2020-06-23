@@ -28,7 +28,6 @@ import java.util.*
  */
 object UserManager {
     var registerFileBean: RegisterFileBean? = null
-    var approveBean: ApproveBean? = null
     var my_mv_url: Boolean = false //是否上传过视频介绍
     var showIndexRecommend: Boolean = false
     var touristMode: Boolean = false//是否是处于游客模式

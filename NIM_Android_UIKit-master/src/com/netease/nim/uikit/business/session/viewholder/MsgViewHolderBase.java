@@ -53,7 +53,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     protected FrameLayout contentContainer;
     protected LinearLayout nameContainer;
     protected TextView readReceiptTextView;
-    protected ImageView readReceiptTextViewIv, msgInvisibleIv;
+    protected ImageView readReceiptTextViewIv;
     protected TextView readReceiptTextViewBtn;
     protected LinearLayout readReceiptTextViewLl;
     protected TextView ackMsgTextView;
@@ -195,7 +195,6 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         readReceiptTextViewIv = findViewById(R.id.textViewAlreadyReadIv);
         readReceiptTextViewBtn = findViewById(R.id.textViewAlreadyReadBtn);
         readReceiptTextViewLl = findViewById(R.id.textViewAlreadyReadLl);
-        msgInvisibleIv = findViewById(R.id.message_item_invisible);
         ackMsgTextView = findViewById(R.id.team_ack_msg);
         giftImageView = findViewById(R.id.message_item_gift);
 
@@ -224,13 +223,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     }
 
     private void setMessageIsVisible() {
-        if (NimUIKitImpl.getSessionListener().isApprove(message)) {
-            contentContainer.setVisibility(View.GONE);
-            msgInvisibleIv.setVisibility(View.VISIBLE);
-        } else {
-            contentContainer.setVisibility(View.VISIBLE);
-            msgInvisibleIv.setVisibility(View.GONE);
-        }
+        contentContainer.setVisibility(View.VISIBLE);
     }
 
     public void refreshCurrentItem() {
@@ -351,14 +344,6 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
             });
         }
 
-        if (NimUIKitImpl.getSessionListener() != null) {
-            msgInvisibleIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NimUIKitImpl.getSessionListener().onGetShowMsgClicked(context, message);
-                }
-            });
-        }
     }
 
     /**
