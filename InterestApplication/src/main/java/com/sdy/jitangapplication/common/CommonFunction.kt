@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.animation.OvershootInterpolator
@@ -160,7 +161,9 @@ object CommonFunction {
                             NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                 .setCallback(object : RequestCallback<Void> {
                                     override fun onSuccess(p0: Void?) {
-                                        ChatActivity.start(context1, target_accid)
+                                        Handler().postDelayed({
+                                            ChatActivity.start(context1, target_accid)
+                                        }, 500L)
                                     }
 
                                     override fun onFailed(p0: Int) {
