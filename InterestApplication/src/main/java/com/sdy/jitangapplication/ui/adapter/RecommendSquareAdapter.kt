@@ -30,6 +30,7 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_recommend_square.view.*
 
 //0文本 1图片 2视频 3语音
@@ -87,10 +88,12 @@ class RecommendSquareAdapter :
             helper.itemView.squareImg.isVisible = true
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareVideoState.isVisible = false
-            GlideUtil.loadImgCenterCrop(
+            GlideUtil.loadRoundImgCenterCrop(
                 mContext,
                 item.cover_url,
-                helper.itemView.squareImg
+                helper.itemView.squareImg,
+                SizeUtils.dp2px(10F),
+                RoundedCornersTransformation.CornerType.TOP
             )
         } else {//视频
             helper.itemView.squareOnlyTextContent.isVisible = false

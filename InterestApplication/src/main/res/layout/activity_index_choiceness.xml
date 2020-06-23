@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    tools:context=".ui.activity.IndexChoicenessActivity"
-    app:msv_viewState="loading">
+    app:msv_viewState="loading"
+    tools:context=".ui.activity.IndexChoicenessActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="62dp"
-            android:overScrollMode="never"
-         >
+            android:overScrollMode="never">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -512,17 +511,15 @@
 
             <TextView
                 android:id="@+id/useChoicenessTicketBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="96dp"
+                android:layout_height="40dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_rectangle_lightorange_20dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="10dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="10dp"
+                android:gravity="center"
                 android:text="立即使用"
                 android:textColor="#ffffffff"
                 android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

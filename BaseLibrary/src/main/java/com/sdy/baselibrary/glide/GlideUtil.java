@@ -156,7 +156,7 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-//                .placeholder(R.drawable.default_image)
+                .placeholder(R.drawable.default_image_10dp)
 //                .error(R.drawable.default_image)
 //                .thumbnail(0.5F)
                 .transform(multiTransformation)

@@ -12,15 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.sdy.jitangapplication.widgets.RoundTopImageView
+        <ImageView
             android:id="@+id/squareImg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:topRadius="10dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/squareOnlyTextContent"
