@@ -12,7 +12,9 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.AccostBean
+import com.sdy.jitangapplication.model.AccostListBean
 import com.sdy.jitangapplication.presenter.view.AccostListView
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -27,15 +29,15 @@ class AccostListPresenter : BasePresenter<AccostListView>() {
      */
     fun chatupList(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .chatupList(params)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<AccostBean>?>>(mView) {
+            .chatupList(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<AccostListBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
                 }
 
-                override fun onNext(t: BaseResp<MutableList<AccostBean>?>) {
+                override fun onNext(t: BaseResp<AccostListBean?>) {
                     super.onNext(t)
-                    mView.onChatupListResult(t.data)
+                    mView.onChatupListResult(t.data?.list?: mutableListOf())
                 }
 
                 override fun onError(e: Throwable?) {

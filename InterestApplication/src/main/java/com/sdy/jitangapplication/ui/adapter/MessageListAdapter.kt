@@ -54,52 +54,23 @@ class MessageListAdapter :
             holder.itemView.menuTop.setImageResource(R.drawable.icon_top_msg)
         }
 
-        if (item.fromAccount != UserManager.getAccid() && item.attachment !is ChatHiAttachment && UserManager.approveBean != null && UserManager.approveBean!!.isapprove != 0 && item.time / 1000 >= UserManager.approveBean!!.approve_time) {
-            holder.itemView.text.text = "有消息未查看"
-            holder.itemView.msgNew.isVisible = true
-        } else {
-            holder.itemView.msgNew.isVisible = false
-            when (item.attachment) {
-                is ChatHiAttachment -> holder.itemView.text.text =
-                    when ((item.attachment as ChatHiAttachment).showType) {
-                        ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                        ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                        ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
-                        else -> ""
-                    }
-                is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
-                is SendGiftAttachment -> {
-                    var hasList = false
-                    for (data in session_list_arr) {
-                        if ((item.attachment as SendGiftAttachment).id == data.id) {
-                            when (data.state) {
-                                SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
-                                    if (item.fromAccount == UserManager.getAccid()) {
-                                        holder.itemView.text.text = "[礼物]糖果礼物待领取"
-                                    } else {
 
-                                        holder.itemView.text.text =
-                                            SpanUtils.with(holder.itemView.text)
-                                                .append("[礼物]")
-                                                .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                                .append("糖果礼物待领取")
-                                                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                                .create()
-                                    }
-                                }
-                                SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
-                                    holder.itemView.text.text = "[礼物]糖果礼物已领取"
-                                }
-                                SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
-                                    holder.itemView.text.text = "[礼物]糖果礼物已退回"
-                                }
-                            }
-                            hasList = true
-                            break
-                        }
-                    }
-                    if (!hasList) {
-                        when ((item.attachment as SendGiftAttachment).giftStatus) {
+        holder.itemView.msgNew.isVisible = false
+        when (item.attachment) {
+            is ChatHiAttachment -> holder.itemView.text.text =
+                when ((item.attachment as ChatHiAttachment).showType) {
+                    ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
+                    ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                    ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                    else -> ""
+                }
+            is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
+            is ContactAttachment -> holder.itemView.text.text = (item.attachment as ContactAttachment).contactContent
+            is SendGiftAttachment -> {
+                var hasList = false
+                for (data in session_list_arr) {
+                    if ((item.attachment as SendGiftAttachment).id == data.id) {
+                        when (data.state) {
                             SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
                                 if (item.fromAccount == UserManager.getAccid()) {
                                     holder.itemView.text.text = "[礼物]糖果礼物待领取"
@@ -121,53 +92,52 @@ class MessageListAdapter :
                                 holder.itemView.text.text = "[礼物]糖果礼物已退回"
                             }
                         }
+                        hasList = true
+                        break
                     }
                 }
-                is WishHelpAttachment -> {
-                    var hasList = false
-                    for (data in session_list_arr) {
-                        if ((item.attachment as WishHelpAttachment).orderId == data.id) {
-                            when (data.state) {
-                                WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
-                                    if (item.fromAccount == UserManager.getAccid()) {
-                                        holder.itemView.text.text =
-                                            "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
-                                    } else {
-                                        holder.itemView.text.text =
-                                            SpanUtils.with(holder.itemView.text)
-                                                .append("[助力]")
-                                                .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                                .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
-                                                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                                .create()
-                                    }
-                                }
-                                WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN -> {
-                                    holder.itemView.text.text =
-                                        "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
-                                }
-                                WishHelpAttachment.WISH_HELP_STATUS_HAS_RETURNED -> {
-                                    holder.itemView.text.text =
-                                        "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
-                                }
+                if (!hasList) {
+                    when ((item.attachment as SendGiftAttachment).giftStatus) {
+                        SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
+                            if (item.fromAccount == UserManager.getAccid()) {
+                                holder.itemView.text.text = "[礼物]糖果礼物待领取"
+                            } else {
+
+                                holder.itemView.text.text =
+                                    SpanUtils.with(holder.itemView.text)
+                                        .append("[礼物]")
+                                        .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                        .append("糖果礼物待领取")
+                                        .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                        .create()
                             }
-                            hasList = true
-                            break
+                        }
+                        SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
+                            holder.itemView.text.text = "[礼物]糖果礼物已领取"
+                        }
+                        SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
+                            holder.itemView.text.text = "[礼物]糖果礼物已退回"
                         }
                     }
-                    if (!hasList) {
-                        when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
+                }
+            }
+            is WishHelpAttachment -> {
+                var hasList = false
+                for (data in session_list_arr) {
+                    if ((item.attachment as WishHelpAttachment).orderId == data.id) {
+                        when (data.state) {
                             WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
                                 if (item.fromAccount == UserManager.getAccid()) {
                                     holder.itemView.text.text =
                                         "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
                                 } else {
-                                    holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
-                                        .append("[助力]")
-                                        .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                        .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
-                                        .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                        .create()
+                                    holder.itemView.text.text =
+                                        SpanUtils.with(holder.itemView.text)
+                                            .append("[助力]")
+                                            .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                            .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
+                                            .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                            .create()
                                 }
                             }
                             WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN -> {
@@ -179,69 +149,96 @@ class MessageListAdapter :
                                     "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
                             }
                         }
+                        hasList = true
+                        break
                     }
                 }
-                is AccostGiftAttachment -> {
-                    var hasList = false
-                    for (data in session_list_arr) {
-                        if ((item.attachment as AccostGiftAttachment).id == data.id) {
-                            when (data.state) {
-                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
-                                    if (item.fromAccount == UserManager.getAccid()) {
-                                        holder.itemView.text.text =
-                                            "[搭讪]搭讪礼物待领取"
-                                    } else {
-                                        holder.itemView.text.text =
-                                            SpanUtils.with(holder.itemView.text)
-                                                .append("[搭讪]")
-                                                .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                                .append("搭讪礼物待领取")
-                                                .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                                .create()
-                                    }
-                                }
-                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
-                                    holder.itemView.text.text = "[搭讪]搭讪礼物已领取"
-                                }
-                                AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
-                                    holder.itemView.text.text = "[搭讪]搭讪礼物已退回"
-                                }
+                if (!hasList) {
+                    when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
+                        WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
+                            if (item.fromAccount == UserManager.getAccid()) {
+                                holder.itemView.text.text =
+                                    "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                            } else {
+                                holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
+                                    .append("[助力]")
+                                    .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                    .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
+                                    .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                    .create()
                             }
-                            hasList = true
-                            break
+                        }
+                        WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN -> {
+                            holder.itemView.text.text =
+                                "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                        }
+                        WishHelpAttachment.WISH_HELP_STATUS_HAS_RETURNED -> {
+                            holder.itemView.text.text =
+                                "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
                         }
                     }
-                    if (!hasList) {
-                        when ((item.attachment as AccostGiftAttachment).giftStatus) {
+                }
+            }
+            is AccostGiftAttachment -> {
+                var hasList = false
+                for (data in session_list_arr) {
+                    if ((item.attachment as AccostGiftAttachment).id == data.id) {
+                        when (data.state) {
                             AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
                                 if (item.fromAccount == UserManager.getAccid()) {
                                     holder.itemView.text.text =
                                         "[搭讪]搭讪礼物待领取"
                                 } else {
-                                    holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
-                                        .append("[搭讪]")
-                                        .setForegroundColor(Color.parseColor("#FFFD4417"))
-                                        .append("搭讪礼物待领取")
-                                        .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                                        .create()
+                                    holder.itemView.text.text =
+                                        SpanUtils.with(holder.itemView.text)
+                                            .append("[搭讪]")
+                                            .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                            .append("搭讪礼物待领取")
+                                            .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                            .create()
                                 }
                             }
                             AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
-                                holder.itemView.text.text =
-                                    "[搭讪]搭讪礼物已领取"
+                                holder.itemView.text.text = "[搭讪]搭讪礼物已领取"
                             }
                             AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
-                                holder.itemView.text.text =
-                                    "[搭讪]搭讪礼物已退回"
+                                holder.itemView.text.text = "[搭讪]搭讪礼物已退回"
                             }
+                        }
+                        hasList = true
+                        break
+                    }
+                }
+                if (!hasList) {
+                    when ((item.attachment as AccostGiftAttachment).giftStatus) {
+                        AccostGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
+                            if (item.fromAccount == UserManager.getAccid()) {
+                                holder.itemView.text.text =
+                                    "[搭讪]搭讪礼物待领取"
+                            } else {
+                                holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
+                                    .append("[搭讪]")
+                                    .setForegroundColor(Color.parseColor("#FFFD4417"))
+                                    .append("搭讪礼物待领取")
+                                    .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                                    .create()
+                            }
+                        }
+                        AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
+                            holder.itemView.text.text =
+                                "[搭讪]搭讪礼物已领取"
+                        }
+                        AccostGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
+                            holder.itemView.text.text =
+                                "[搭讪]搭讪礼物已退回"
                         }
                     }
                 }
-
-                is SendCustomTipAttachment -> holder.itemView.text.text =
-                    (item.attachment as SendCustomTipAttachment).content
-                else -> holder.itemView.text.text = item.content
             }
+
+            is SendCustomTipAttachment -> holder.itemView.text.text =
+                (item.attachment as SendCustomTipAttachment).content
+            else -> holder.itemView.text.text = item.content
         }
 
         holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)

@@ -113,10 +113,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
                     .append(context1.resources.getTextArray(R.array.custom_months)[day.month - 1])
                     .append("月")
             }
-        });
-        calendarView.setOnDateChangedListener { widget, date, selected ->
-
-        }
+        })
     }
 
 

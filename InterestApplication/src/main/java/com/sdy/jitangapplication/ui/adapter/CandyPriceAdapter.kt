@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.ChargeWayBean
 import kotlinx.android.synthetic.main.item_candy_price.view.*
+import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -49,14 +50,15 @@ class CandyPriceAdapter :
 
             holder.itemView.candyPrice.visibility = View.VISIBLE
             SpanUtils.with(holder.itemView.candyPrice)
-                .append("原价${item.original_price},")
+                .append("原价${BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)}")
                 .setStrikethrough()
-                .append("首充立减${item.original_price - item.discount_price}")
+                .append(",首充立减${BigDecimal(item.original_price - item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)}")
                 .create()
 
         } else {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append("价格 ")
+                .setBold()
                 .append(
                     "¥${if (item.discount_price != 0.0) {
                         item.discount_price

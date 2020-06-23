@@ -6,6 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_viewState="loading"
     tools:context=".ui.activity.AccostListActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +27,7 @@
             app:layout_constraintTop_toBottomOf="@+id/llTitle"
             app:srlDisableContentWhenLoading="true"
             app:srlDisableContentWhenRefresh="true"
+            app:srlEnableLoadMoreWhenContentNotFull="false"
             app:srlEnableLoadMore="true"
             app:srlEnableRefresh="true">
 

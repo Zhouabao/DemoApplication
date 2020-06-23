@@ -176,11 +176,7 @@ class MyApplication : BaseApplication() {
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                             EventBus.getDefault().postSticky(UserCenterEvent(true))
                         }
-                        if (UserManager.approveBean?.isapprove != 0) {
-                            EventBus.getDefault().postSticky(UpdateHiEvent())
-                            if (ActivityUtils.getTopActivity() is ChatActivity)
-                                EventBus.getDefault().postSticky(UpdateApproveEvent())
-                        }
+
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
                     }
@@ -193,7 +189,6 @@ class MyApplication : BaseApplication() {
                         ).show()
                         //更新录制视频介绍
                         UserManager.my_mv_url = true
-                        EventBus.getDefault().post(TopCardEvent(false))
                         EventBus.getDefault().post(FemaleVideoEvent(1))
                     }
                     //视频介绍审核不通过
@@ -205,7 +200,6 @@ class MyApplication : BaseApplication() {
 
                         //更新录制视频介绍
                         UserManager.my_mv_url = false
-                        EventBus.getDefault().post(TopCardEvent(true))
                         EventBus.getDefault().post(FemaleVideoEvent(0))
                     }
                     //10头像未通过审核去进行人脸认证

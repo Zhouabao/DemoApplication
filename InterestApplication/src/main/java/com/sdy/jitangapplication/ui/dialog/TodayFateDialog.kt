@@ -341,7 +341,7 @@ class TodayFateDialog(
                         200 -> {
                             sendGiftBtn.isEnabled = false
                             for (data in (t.data?.order_ids ?: mutableListOf()).withIndex()) {
-                                //发送礼物消息
+                                //发送搭讪礼物消息
                                 val config1 = CustomMessageConfig()
                                 config1.enableUnreadCount = true
                                 config1.enablePush = false
@@ -362,6 +362,7 @@ class TodayFateDialog(
                                     .sendMessage(giftMsg, false)
                                     .setCallback(object : RequestCallback<Void?> {
                                         override fun onSuccess(param: Void?) {
+                                            CommonFunction.sendAccostTip(data.value.accid)
                                             if (data.index == (t.data?.order_ids
                                                     ?: mutableListOf()).size - 1
                                             ) {
@@ -419,7 +420,6 @@ class TodayFateDialog(
             })
 
     }
-
 
     override fun dismiss() {
         super.dismiss()

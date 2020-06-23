@@ -15,9 +15,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="身高"
+        android:text="相处方式"
         android:textColor="#ff888d92"
-        android:textSize="14sp"
+        android:textSize="11sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,8 +35,9 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textColor="#FF191919"
-        android:textSize="13sp"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/infoTitle"
         app:layout_constraintRight_toRightOf="parent"

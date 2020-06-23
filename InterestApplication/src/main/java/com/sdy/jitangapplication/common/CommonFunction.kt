@@ -126,11 +126,7 @@ object CommonFunction {
     fun checkSendGift(context1: Context, target_accid: String) {
         val loadingDialog = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
-            .checkSendCandy(
-                UserManager.getSignParams(
-                    hashMapOf("target_accid" to target_accid)
-                )
-            )
+            .checkSendCandy(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
             .excute(object : BaseSubscriber<BaseResp<Any?>>() {
                 override fun onStart() {
                     super.onStart()
@@ -153,6 +149,27 @@ object CommonFunction {
                         }
                         206 -> {//已经是好友了
                             ChatActivity.start(context1, target_accid)
+                        }
+                        207 -> {//女性对男性搭讪
+                            //随机发送一条招呼文本消息
+                            val msg = MessageBuilder.createTextMessage(
+                                target_accid,
+                                SessionTypeEnum.P2P,
+                                t.msg
+                            )
+                            NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
+                                .setCallback(object : RequestCallback<Void> {
+                                    override fun onSuccess(p0: Void?) {
+                                        ChatActivity.start(context1, target_accid)
+                                    }
+
+                                    override fun onFailed(p0: Int) {
+                                    }
+
+                                    override fun onException(p0: Throwable?) {
+                                    }
+
+                                })
                         }
                         401 -> {//女性未认证
                             VerifyThenChatDialog(context1).show()
@@ -233,6 +250,18 @@ object CommonFunction {
                     }
                 })
         }
+    }
+
+    fun sendAccostTip(target_accid: String, tipContent: String = "回复对方消息自动领取搭讪礼物") {
+        val attachment =
+            SendCustomTipAttachment(tipContent, SendCustomTipAttachment.CUSTOME_TIP_NORMAL, false)
+        val tip =
+            MessageBuilder.createCustomMessage(target_accid, SessionTypeEnum.P2P, attachment)
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = true
+        config.enablePush = true
+        tip.config = config
+        NIMClient.getService(MsgService::class.java).sendMessage(tip, false)
     }
 
 

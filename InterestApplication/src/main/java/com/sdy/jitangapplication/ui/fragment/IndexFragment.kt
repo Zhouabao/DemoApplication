@@ -230,22 +230,16 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     /**
-     * @param event showTop用户是否是钻石会员
+     * 刷新顶部推荐数据
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
-//        在用户为黄金会员（有门槛）或普通用户时（无门槛）
-//        if ((UserManager.registerFileBean?.threshold == true && UserManager.isUserVip()) || UserManager.registerFileBean?.threshold == false) {
-//            topCardBtn.isVisible = !event.showTop
-//        } else {
-//            topCardBtn.isVisible = false
-//        }
+        mPresenter.indexTop()
     }
 
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null && !data!!.list.isNullOrEmpty()) {
             peopleRecommendTopAdapter.setNewData(data?.list)
         }
-
     }
 }

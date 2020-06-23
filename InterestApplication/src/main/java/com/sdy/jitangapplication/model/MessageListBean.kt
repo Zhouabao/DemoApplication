@@ -75,6 +75,7 @@ data class ContactBean(
 )
 
 
+data class AccostListBean(var list: MutableList<AccostBean> = mutableListOf())
 data class AccostBean(
     var accid: String = "",
     var avatar: String = "",

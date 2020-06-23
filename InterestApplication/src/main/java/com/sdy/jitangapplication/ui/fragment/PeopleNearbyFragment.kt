@@ -257,6 +257,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
         mPresenter.nearlyIndex(params, type, firstLoad)
+        EventBus.getDefault().post(TopCardEvent(true))
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -328,7 +329,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             UserManager.saveUserVerify(nearBean.isfaced)
             //保存是否进行过人脸验证
             UserManager.saveHasFaceUrl(nearBean.has_face_url)
-            EventBus.getDefault().post(TopCardEvent(nearBean.isplatinum))
             onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //第一次加载的时候就显示顶部提示条
             if (firstLoad) {

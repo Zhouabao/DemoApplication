@@ -13,12 +13,17 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.AccostBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.AccostListPresenter
 import com.sdy.jitangapplication.presenter.view.AccostListView
 import com.sdy.jitangapplication.ui.adapter.AccostListAdapter
 import kotlinx.android.synthetic.main.activity_accost_list.*
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 全部搭讪
@@ -39,17 +44,31 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         mPresenter.mView = this
         mPresenter.context = this
 
-        refreshAccost.setOnRefreshLoadMoreListener(this)
+        hotT1.text = "搭讪列表"
+        btnBack.clickWithTrigger {
+            finish()
+        }
 
+        retryBtn.clickWithTrigger {
+            mPresenter.chatupList(params)
+        }
+
+        refreshAccost.setOnRefreshLoadMoreListener(this)
         rvAccost.layoutManager = LinearLayoutManager(this)
         rvAccost.adapter = adapter
-
-
+        adapter.bindToRecyclerView(rvAccost)
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.content->{
+                    ChatActivity.start(this, adapter.data[position].accid)
+                }
+            }
+        }
     }
 
     override fun onChatupListResult(data: MutableList<AccostBean>?) {
         //获取最近联系人列表
-        mPresenter.getRecentContacts(data?: mutableListOf())
+        mPresenter.getRecentContacts(data ?: mutableListOf())
     }
 
 
@@ -57,7 +76,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         contacts: MutableList<RecentContact>,
         t: MutableList<AccostBean>
     ) {
-        if (t.isNullOrEmpty()) {
+        if (t.isNullOrEmpty() && t.size < Constants.PAGESIZE) {
             refreshAccost.finishLoadMoreWithNoMoreData()
         } else {
             refreshAccost.finishLoadMore(true)

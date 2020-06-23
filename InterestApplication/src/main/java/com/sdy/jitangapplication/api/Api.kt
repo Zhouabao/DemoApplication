@@ -40,7 +40,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tidings/chatupList${Constants.END_BASE_URL}")
-    fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<AccostBean>?>>
+    fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AccostListBean?>>
 
     /**
      * 批量送礼物成为好友

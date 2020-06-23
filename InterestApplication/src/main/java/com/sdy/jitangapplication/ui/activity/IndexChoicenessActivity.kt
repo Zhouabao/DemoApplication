@@ -54,13 +54,6 @@ class IndexChoicenessActivity : BaseActivity() {
         initHeadRecommendUser()
 
 
-
-        //选择置顶日期
-        choicenessDate.clickWithTrigger {
-            if (myTicket != null)
-                ChooseChoicenessDialog(this).show()
-        }
-
         //立即使用, 如果有置顶券就立即使用,没有就弹购买
         useChoicenessTicketBtn.clickWithTrigger {
             if (myTicket?.my_ticket_sum == 0) {
@@ -97,7 +90,6 @@ class IndexChoicenessActivity : BaseActivity() {
             top3Candy.text = "${peopleRecommendTopAdapter.data[2].amount}"
         }
 
-        choicenessCandy.text = ""
     }
 
 

@@ -217,6 +217,9 @@ class ConfirmSendGiftDialog(
             })
     }
 
+    /**
+     * 发送搭讪礼物消息
+     */
     private fun sendAccostGiftMessage(orderId: Int) {
         val config = CustomMessageConfig()
         config.enableUnreadCount = true
@@ -245,6 +248,8 @@ class ConfirmSendGiftDialog(
                     dismiss()
                     //关闭礼物弹窗
                     EventBus.getDefault().post(CloseDialogEvent())
+                    //发送搭讪礼物tip消息
+                    CommonFunction.sendAccostTip(account)
                 }
 
                 override fun onFailed(code: Int) {
