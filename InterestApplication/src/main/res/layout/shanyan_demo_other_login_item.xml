@@ -10,7 +10,6 @@
         android:layout_centerHorizontal="true">
 
         <View
-            android:id="@+id/shanyan_dmeo_view"
             android:layout_width="51dp"
             android:layout_height="1dp"
             android:layout_centerVertical="true"
@@ -19,7 +18,6 @@
         </View>
 
         <TextView
-            android:id="@+id/shanyan_dmeo_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -27,7 +25,6 @@
             android:textColor="#ffffffff" />
 
         <View
-            android:id="@+id/shanyan_dmeo_view1"
             android:layout_width="51dp"
             android:layout_height="1dp"
             android:layout_alignParentRight="true"

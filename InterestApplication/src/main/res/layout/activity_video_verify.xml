@@ -74,7 +74,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recordCl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -110,7 +109,6 @@
             app:layout_constraintTop_toBottomOf="@id/cameraTip">
 
             <ImageView
-                android:id="@+id/capturebg"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_centerInParent="true"

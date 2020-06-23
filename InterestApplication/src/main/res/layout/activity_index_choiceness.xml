@@ -22,7 +22,6 @@
 
 
             <ImageView
-                android:id="@+id/bg2"
                 android:layout_width="wrap_content"
                 android:layout_height="262dp"
                 android:src="@drawable/icon_choiceness_bg1"
@@ -30,6 +29,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+
                 android:layout_width="wrap_content"
                 android:layout_height="216dp"
                 android:src="@drawable/icon_choiceness_bg2"
@@ -38,10 +38,10 @@
 
 
             <ImageView
-                android:id="@+id/title"
+                android:id="@+id/titleIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_bg_tobe_choiceness"
+                android:src="@drawable/icon_bg_tobe_choiceness_man"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -367,7 +367,6 @@
                 app:layout_constraintTop_toBottomOf="@id/tobeChoicenessCl">
 
                 <ImageView
-                    android:id="@+id/bgPurchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_purchase_choiceness_bg"
