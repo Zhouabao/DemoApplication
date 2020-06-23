@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateApproveEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.dialog_unlock_with_candy.*
@@ -92,6 +93,7 @@ class UnlockChatWithCandyDialog(
                     loadingDialog.dismiss()
                     if (t.code == 200) {
                         EventBus.getDefault().post(UpdateApproveEvent())
+                        EventBus.getDefault().post(UpdateHiEvent())
                         dismiss()
                     } else if (t.code == 201) {
                         OpenVipDialog(context1).show()

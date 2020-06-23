@@ -247,7 +247,7 @@ dependencies {
     //高斯模糊背景
     implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
     implementation files('libs\\shanyan_sdk_v2.3.1.5.aar')
 
     //微信支付
