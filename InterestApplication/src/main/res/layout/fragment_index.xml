@@ -14,11 +14,11 @@
 
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/indexToolBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:minHeight="0dp"
-            android:id="@+id/indexToolBarLayout"
             app:collapsedTitleGravity="left"
             app:contentScrim="@color/colorTransparent"
             app:expandedTitleGravity="center"
@@ -30,10 +30,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/recommendUsersLl"
                 android:layout_width="match_parent"
-                android:minHeight="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
+                android:minHeight="0dp"
                 android:orientation="horizontal">
 
                 <TextView

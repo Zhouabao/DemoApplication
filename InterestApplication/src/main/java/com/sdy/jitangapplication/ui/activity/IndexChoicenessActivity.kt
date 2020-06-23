@@ -206,6 +206,10 @@ class IndexChoicenessActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateMyTicketEvent(eventBus: UpdateMyTicketEvent) {
+        if (eventBus.ticketCount > 0) {
+            ChooseChoicenessDialog(this).show()
+        }
+
         myTicket?.my_ticket_sum = (myTicket?.my_ticket_sum ?: 0) + eventBus.ticketCount
         choicenessTicketCount.text = "持有${(myTicket?.my_ticket_sum ?: 0)}张"
 

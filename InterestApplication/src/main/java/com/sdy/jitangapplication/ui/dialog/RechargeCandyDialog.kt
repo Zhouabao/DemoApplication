@@ -83,7 +83,7 @@ class RechargeCandyDialog(val myContext: Context) :
     private val payments by lazy { mutableListOf<PaywayBean>() }
     fun giftRechargeList() {
         RetrofitFactory.instance.create(Api::class.java)
-            .giftRechargeList(UserManager.getSignParams())
+            .candyRechargeList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(t: BaseResp<ChargeWayBeans?>) {
                     super.onNext(t)

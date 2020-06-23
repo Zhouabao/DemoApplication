@@ -30,6 +30,7 @@ import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
@@ -39,6 +40,7 @@ import kotlinx.android.synthetic.main.fragment_people_nearby.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 附近的人
@@ -100,6 +102,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         refreshPeopleNearby.setOnRefreshListener(this)
         refreshPeopleNearby.setOnLoadMoreListener(this)
 
+        changeAvatorBtn.clickWithTrigger {
+            startActivity<NewUserInfoSettingsActivity>()
+        }
+
         statePeopleNearby.retryBtn.onClick {
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_LOADING
             refreshPeopleNearby.autoRefresh()
@@ -139,9 +145,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (type == TYPE_RECOMMEND) {
                 mPresenter.todayRecommend(firstLoad)
             } else
-                mPresenter.nearlyIndex(params, type,firstLoad)
+                mPresenter.nearlyIndex(params, type, firstLoad)
         } else {
-            mPresenter.nearlyIndex(params, type,firstLoad)
+            mPresenter.nearlyIndex(params, type, firstLoad)
         }
 
     }
@@ -250,13 +256,13 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         page = 1
         params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
-        mPresenter.nearlyIndex(params, type,firstLoad)
+        mPresenter.nearlyIndex(params, type, firstLoad)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page += 1
         params["page"] = page
-        mPresenter.nearlyIndex(params, type,firstLoad)
+        mPresenter.nearlyIndex(params, type, firstLoad)
     }
 
 
@@ -369,7 +375,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
          */
         if (data != null) {
             indexRecommends = data
-            mPresenter.nearlyIndex(params, type,firstLoad)
+            mPresenter.nearlyIndex(params, type, firstLoad)
         } else {
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_ERROR
         }

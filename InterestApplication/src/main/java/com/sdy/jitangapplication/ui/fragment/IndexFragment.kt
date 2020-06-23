@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -246,9 +245,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null && !data!!.list.isNullOrEmpty()) {
             peopleRecommendTopAdapter.setNewData(data?.list)
-            indexToolBarLayout.isVisible = true
-        } else {
-            indexToolBarLayout.isVisible = false
         }
 
     }

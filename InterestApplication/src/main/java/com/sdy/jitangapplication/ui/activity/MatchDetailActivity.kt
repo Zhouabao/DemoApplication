@@ -35,6 +35,8 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.friend.FriendService
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -70,7 +72,7 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
+    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener, OnRefreshLoadMoreListener {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -124,6 +126,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+        refreshListSquare.setOnRefreshLoadMoreListener(this)
+
 
         //设置图片的宽度占满屏幕，宽高比4:5
         val layoutParams = clPhotos.layoutParams as ConstraintLayout.LayoutParams
@@ -207,29 +212,29 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
-        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val manager = (listSquareRv.layoutManager as StaggeredGridLayoutManager)
-                    var positions = manager.findLastCompletelyVisibleItemPositions(intArrayOf(0, 0))
-
-                    if (adapter.itemCount >= page * Constants.PAGESIZE) {
-                        if (positions.isNotEmpty()) {
-                            val pos = positions[0].coerceAtLeast(positions[1])
-                            if (pos > manager.itemCount - 5) {
-                                page += 1
-                                params1["page"] = page
-                                mPresenter.getSomeoneSquare(params1)
-                            }
-                        }
-                    } else {
-                        adapter.loadMoreEnd()
-                    }
-                }
-            }
-        })
+//        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    val manager = (listSquareRv.layoutManager as StaggeredGridLayoutManager)
+//                    var positions = manager.findLastCompletelyVisibleItemPositions(intArrayOf(0, 0))
+//
+//                    if (adapter.itemCount >= page * Constants.PAGESIZE) {
+//                        if (positions.isNotEmpty()) {
+//                            val pos = positions[0].coerceAtLeast(positions[1])
+//                            if (pos > manager.itemCount - 5) {
+//                                page += 1
+//                                params1["page"] = page
+//                                mPresenter.getSomeoneSquare(params1)
+//                            }
+//                        }
+//                    } else {
+//                        adapter.loadMoreEnd()
+//                    }
+//                }
+//            }
+//        })
 
 
         //用户兴趣
@@ -733,6 +738,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         isRefresh: Boolean
     ) {
         if (result) {
+
 //            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data?.list == null || data!!.list!!.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
@@ -748,9 +754,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     adapter.addData(data?.list)
                 }
             }
+
+            if (data?.list.isNullOrEmpty() || (data?.list
+                    ?: mutableListOf()).size < Constants.PAGESIZE
+            )
+                refreshListSquare.finishLoadMoreWithNoMoreData()
+            else
+                refreshListSquare.finishLoadMore()
         } else {
             if (page == 1)
                 stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            else
+                refreshListSquare.finishLoadMore(false)
         }
 
     }
@@ -881,6 +896,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (clTop > 0) {
             clUserInfoTop.viewTreeObserver.removeOnGlobalLayoutListener(this)
         }
+    }
+
+    override fun onLoadMore(refreshLayout: RefreshLayout) {
+        page += 1
+        params1["page"] = page
+        mPresenter.getSomeoneSquare(params1)
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
     }
 
 

@@ -305,9 +305,9 @@
                             android:background="@drawable/rectangle_cover_bg_left_10dp"
                             android:gravity="center"
                             android:text="0/6"
-                            android:visibility="gone"
                             android:textColor="#ffffffff"
                             android:textSize="14sp"
+                            android:visibility="gone"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/detailUserWishRv" />
 
@@ -326,12 +326,12 @@
                             android:id="@+id/detailUserInformationRv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="8dp"
                             android:background="@color/colorWhite"
                             android:nestedScrollingEnabled="false"
                             android:overScrollMode="never"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/detailUserWishRv" />
@@ -423,18 +423,28 @@
                             app:layout_constraintTop_toBottomOf="@id/rvGift" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/listSquareRv"
+                    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                        android:id="@+id/refreshListSquare"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="8dp"
-                        android:nestedScrollingEnabled="true"
-                        android:overScrollMode="never"
-                        android:scrollbars="none"
+                        android:layout_height="wrap_content"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/clUserInfo" />
+                        app:layout_constraintTop_toBottomOf="@id/clUserInfo"
+                        app:srlEnableLoadMore="true"
+                        app:srlEnableLoadMoreWhenContentNotFull="true"
+                        app:srlEnableRefresh="false">
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/listSquareRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="8dp"
+                            android:nestedScrollingEnabled="true"
+                            android:overScrollMode="never"
+                            android:scrollbars="none" />
+                    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
                     <View
                         android:layout_width="0dp"
@@ -443,7 +453,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/listSquareRv" />
+                        app:layout_constraintTop_toBottomOf="@id/refreshListSquare" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.sdy.jitangapplication.widgets.HeadZoomScrollView>
@@ -491,13 +501,18 @@
                     android:src="@drawable/icon_more_black" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/icon_bg_matchdetail_cover"
+                app:layout_constraintTop_toBottomOf="@id/refreshListSquare" />
+
             <ImageView
                 android:id="@+id/detailUserChatBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
                 android:src="@drawable/icon_matchdetail_continue_chat" />
 
 

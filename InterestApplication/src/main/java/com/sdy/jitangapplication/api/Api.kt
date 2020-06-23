@@ -1078,8 +1078,8 @@ interface Api {
      * 充值价格列表
      */
     @FormUrlEncoded
-    @POST("PayOrder/giftRechargeList${Constants.END_BASE_URL}")
-    fun giftRechargeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
+    @POST("PayOrder/candyRechargeList${Constants.END_BASE_URL}")
+    fun candyRechargeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
     /**
      * 绑定支付宝账号
