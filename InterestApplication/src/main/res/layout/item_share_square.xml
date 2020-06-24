@@ -17,7 +17,7 @@
                 android:id="@+id/shareDesc"
                 android:textColor="#ffffffff"
                 android:textSize="15sp"
-                android:maxWidth="@dimen/max_bubble_width"
+                android:maxWidth="240dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

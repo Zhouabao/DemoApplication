@@ -34,7 +34,6 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
@@ -53,6 +52,7 @@ import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
+import com.vivo.push.PushClient
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 import org.greenrobot.eventbus.EventBus
@@ -66,7 +66,8 @@ class MyApplication : BaseApplication() {
                 .setEnableHeaderTranslationContent(false)
         }
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
-            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
+                .setReboundDuration(200)
             MaterialHeader(context).setColorSchemeResources(R.color.colorOrange)
         }
 //        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
@@ -307,6 +308,7 @@ class MyApplication : BaseApplication() {
 
     }
 
+
     private fun initSy() {
         //code为1022:成功；其他：失败
         OneKeyLoginManager.getInstance().init(applicationContext, Constants.SY_APP_ID) { p0, p1 ->
@@ -390,6 +392,7 @@ class MyApplication : BaseApplication() {
         if (NIMUtil.isMainProcess(this)) {
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
+
 
             NimUIKit.init(this, buildUIKitOptions())
             // 设置地理位置提供者。如果需要发送地理位置消息，该参数必须提供。如果不需要，可以忽略。

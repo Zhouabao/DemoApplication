@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/gradient_white_0_18_18_0"
-        android:maxWidth="@dimen/max_bubble_width">
+        android:maxWidth="240dp">
 
         <TextView
             android:id="@+id/giftTitle"

@@ -59,8 +59,8 @@
 
     <Button
         android:id="@+id/my_location"
-        android:layout_width="@dimen/friend_map_btn_height"
-        android:layout_height="@dimen/friend_map_btn_height"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_above="@+id/assist_my_location"
         android:layout_marginLeft="12dip"
         android:background="@drawable/btn_location_selector" />

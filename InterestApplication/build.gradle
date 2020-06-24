@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 apply plugin: 'channel'
+apply plugin: 'com.huawei.agconnect'
 android {
     signingConfigs {
 
@@ -209,15 +210,14 @@ dependencies {
     //云信UI库
     implementation project(path: ':NIM_Android_UIKit-master')
     // 云信推送
-//    implementation 'com.netease.nimlib:push:6.8.0'
-//    implementation 'com.huawei.android.hms:push:2.6.3.301'
-    implementation 'com.huawei.android.hms:base:2.6.3.301'
-    implementation 'com.huawei.android.hms:push:2.6.0.301'
-    implementation files('libs\\MiPush_SDK_Client_3_6_19.jar')
-    implementation files('libs\\nim-push-6.7.0.jar')
-    implementation files('libs\\com.coloros.mcssdk.jar')
-    implementation files('libs\\pushsdk_v2.3.4.jar')
-    implementation 'com.meizu.flyme.internet:push-internal:3.6.3@aar'
+    implementation 'com.huawei.hms:push:4.0.4.301'
+    implementation files('libs\\MiPush_SDK_Client_3_7_6.jar')
+    implementation files('libs\\nim-push-7.7.2.jar')
+//    implementation files('libs\\com.coloros.mcssdk.jar')
+    implementation files('libs\\vivo_pushsdk-v2.9.0.0.aar')
+    implementation files('libs\\com.heytap.msp-push-2.1.0.aar')
+    implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
+//    implementation 'com.heytap.mcssdk:mcssdk:2.0.2'
     //数美黑产防范
     implementation files('libs\\smantifraud.aar')
 

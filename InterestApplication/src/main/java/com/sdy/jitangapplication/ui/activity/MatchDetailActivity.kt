@@ -740,18 +740,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (result) {
 
 //            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            if (data?.list == null || data!!.list!!.size == 0) {
+            if (data?.list == null || data.list.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
                     adapter.isUseEmpty(true)
                 }
                 adapter.notifyDataSetChanged()
             } else {
-                if (data?.list.size > 0) {
-                    for (data in data?.list) {
+                if (data.list.size > 0) {
+                    for (data in data.list) {
                         data.originalLike = data.isliked
                         data.originalLikeCount = data.like_cnt
                     }
-                    adapter.addData(data?.list)
+                    adapter.addData(data.list)
                 }
             }
 
