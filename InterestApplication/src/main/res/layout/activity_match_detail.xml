@@ -260,11 +260,96 @@
                             app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
                             tools:text="十分钟前在线" />
 
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/contactCl"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/rectangle_transparent_contact"
+                            app:layout_constraintEnd_toEndOf="@id/detailUserSign"
+                            app:layout_constraintStart_toStartOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge">
+
+                            <TextView
+                                android:id="@+id/contactTip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:text="添加她的微信，让关系更亲密"
+                                android:textColor="#ff191919"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/contactNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/shape_rectangle_green_15"
+                                android:gravity="center"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="5dp"
+                                android:text="联系方式"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/uservideoCl"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/rectangle_transparent_contact"
+                            app:layout_constraintEnd_toEndOf="@id/detailUserSign"
+                            app:layout_constraintStart_toStartOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/contactCl">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:text="点击查看真人视频，发现更真实的她"
+                                android:textColor="#ff191919"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/videoIntroduce"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/shape_rectangle_blue_15"
+                                android:gravity="center"
+                                android:paddingLeft="13dp"
+                                android:paddingTop="5dp"
+                                android:paddingRight="13dp"
+                                android:paddingBottom="5dp"
+                                android:text="查看视频"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                         <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                             android:id="@+id/detailUserSign"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="20dp"
+
                             android:layout_marginRight="15dp"
                             android:ellipsize="end"
                             android:lineSpacingMultiplier="1.1"
@@ -281,7 +366,7 @@
                             app:ep_need_expand="true"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@id/detailUserName"
-                            app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge"
+                            app:layout_constraintTop_toBottomOf="@id/uservideoCl"
                             tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。" />
 
 
@@ -515,46 +600,6 @@
                 android:layout_gravity="bottom|center"
                 android:src="@drawable/icon_matchdetail_continue_chat" />
 
-
-            <TextView
-                android:id="@+id/videoIntroduce"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="7dp"
-                android:background="@drawable/rectangle_transparent_contact"
-                android:drawableLeft="@drawable/icon_video_introduce"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                android:text="视频介绍"
-                android:textColor="#ff191919"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/contactNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="7dp"
-                android:background="@drawable/rectangle_transparent_contact"
-                android:drawableLeft="@drawable/icon_wechat_reg"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                android:text="联系方式"
-                android:textColor="#ff191919"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
 
         </FrameLayout>
 

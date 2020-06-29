@@ -137,18 +137,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         clPhotos.layoutParams = layoutParams
 
 
-        val contactNumberparams1 = (contactNumber.layoutParams as FrameLayout.LayoutParams)
-        contactNumberparams1.topMargin =
-            layoutParams.height - SizeUtils.dp2px(49F) - SizeUtils.dp2px(38F)
-        contactNumber.layoutParams = contactNumberparams1
-
-
-        val contactNumberparams2 = (videoIntroduce.layoutParams as FrameLayout.LayoutParams)
-        contactNumberparams2.topMargin =
-            contactNumberparams1.topMargin - SizeUtils.dp2px(38F) - SizeUtils.dp2px(15F)
-        videoIntroduce.layoutParams = contactNumberparams2
-
-
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
@@ -415,53 +403,39 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
         when (matchBean!!.contact_way) {
             1 -> {
-                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                contactTip.text = "获取${if (matchBean!!.gender == 1) {
                     "他"
                 } else {
                     "她"
-                }}的手机号"
-                contactNumber.isVisible = true
-                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
-                    resources.getDrawable(R.drawable.icon_phone_reg),
-                    null,
-                    null,
-                    null
-                )
+                }}的手机号，让关系更亲密"
+                contactNumber.text = "查看电话"
+                contactCl.isVisible = true
             }
             2 -> {
-                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                contactTip.text = "添加${if (matchBean!!.gender == 1) {
                     "他"
                 } else {
                     "她"
-                }}的微信"
-                contactNumber.isVisible = true
-                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
-                    resources.getDrawable(R.drawable.icon_wechat_reg),
-                    null,
-                    null,
-                    null
-                )
+                }}的微信，让关系更亲密"
+                contactNumber.text = "查看微信"
+                contactCl.isVisible = true
             }
             3 -> {
-                contactNumber.text = "解锁${if (matchBean!!.gender == 1) {
+                contactTip.text = "添加${if (matchBean!!.gender == 1) {
                     "他"
                 } else {
                     "她"
-                }}的QQ"
-                contactNumber.isVisible = true
-                contactNumber.setCompoundDrawablesWithIntrinsicBounds(
-                    resources.getDrawable(R.drawable.icon_qq_reg),
-                    null,
-                    null,
-                    null
-                )
+                }}的QQ，让关系更亲密"
+
+                contactNumber.text = "查看QQ"
+                contactCl.isVisible = true
             }
             else -> {
-                contactNumber.isVisible = false
+                contactCl.isVisible = false
             }
         }
 
-        videoIntroduce.isVisible = matchBean!!.mv_btn
+        uservideoCl.isVisible = matchBean!!.mv_btn
 
         if (matchBean!!.intention_title.isNullOrEmpty()) {
             detailUserIntention1.isVisible = false
