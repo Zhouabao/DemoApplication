@@ -23,10 +23,7 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.AnnounceEvent
-import com.sdy.jitangapplication.event.RePublishEvent
-import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
-import com.sdy.jitangapplication.event.UploadEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.presenter.ContentPresenter
 import com.sdy.jitangapplication.presenter.view.ContentView
 import com.sdy.jitangapplication.ui.activity.PublishActivity
@@ -189,7 +186,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
     private fun initFragments() {
 
-        mStack.add(FriendSquareFragment())
+        mStack.add(NewestSquareFragment())
         mStack.add(RecommendSquareFragment())
         mStack.add(TagSquareFragment())
         mStack.add(NearbySquareFragment())
@@ -291,6 +288,8 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
             uploadFl.postDelayed({
                 uploadFl.isVisible = false
             }, 500)
+
+            EventBus.getDefault().post(RefreshSquareEvent(true))
             SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
         } else {
             UserManager.cancelUpload = true

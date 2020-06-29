@@ -48,9 +48,9 @@ import org.greenrobot.eventbus.ThreadMode
 
 
 /**
- * 好友广场列表
+ * 最新广场列表
  */
-class FriendSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
+class NewestSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
     OnRefreshListener,
     OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
@@ -88,6 +88,7 @@ class FriendSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
 
     //当前请求页
     var page = 1
+
     //请求广场的参数 TODO要更新tagid
     private val listParams by lazy {
         hashMapOf(

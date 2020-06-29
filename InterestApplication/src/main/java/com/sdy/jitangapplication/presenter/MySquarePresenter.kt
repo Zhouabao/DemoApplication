@@ -101,78 +101,78 @@ class MySquarePresenter : BasePresenter<MySquareView>() {
     /**
      * 广场发布
      */
-    fun publishContent(
-        type: Int,
-        params: HashMap<String, Any>,
-        keyList: MutableList<String> = mutableListOf()
-    ) {
-        params["comment"] = Gson().toJson(keyList)
-        RetrofitFactory.instance.create(Api::class.java)
-            .squareAnnounce(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onStart() {
-                    super.onStart()
-                    if (type == 0) {
-                        EventBus.getDefault().postSticky(UploadEvent(1, 1, 0.0))
-                    }
-                }
-
-                override fun onNext(t: BaseResp<Any?>) {
-                    if (t.code == 200) {
-                        if (type == 0) {
-                            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0))
-                        }
-                        mView.onSquareAnnounceResult(type, true, 200)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onSquareAnnounceResult(type, false, t.code)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onSquareAnnounceResult(type, false, 200)
-                    }
-                }
-            })
-    }
-
-
-    /**
-     * QN上传照片
-     * 文件名格式：ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
-     * type 1图片 2视频 3音频
-     */
-    fun uploadFile(totalCount: Int, currentCount: Int, filePath: String, imagePath: String, type: Int) {
-        val file = File(filePath)
-        if (!file.exists()) {
-            Log.d("OkHttp", "文件不存在")
-            return
-        }
-        QNUploadManager.getInstance().put(
-            file,
-            imagePath,
-            SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
-            { key, info, response ->
-                if (info != null) {
-                    if (!info.isOK) {
-                        mView.onSquareAnnounceResult(1, false, 200)
-                    }
-                }
-            },
-            UploadOptions(
-                null, null, false,
-                UpProgressHandler { key, percent ->
-                    EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
-                    if (percent == 1.0) {
-                        mView.onQnUploadResult(true, type, key)
-                    }
-                }, UserManager.cancellationHandler
-            )
-        )
-    }
+//    fun publishContent(
+//        type: Int,
+//        params: HashMap<String, Any>,
+//        keyList: MutableList<String> = mutableListOf()
+//    ) {
+//        params["comment"] = Gson().toJson(keyList)
+//        RetrofitFactory.instance.create(Api::class.java)
+//            .squareAnnounce(UserManager.getSignParams(params))
+//            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+//                override fun onStart() {
+//                    super.onStart()
+//                    if (type == 0) {
+//                        EventBus.getDefault().postSticky(UploadEvent(1, 1, 0.0))
+//                    }
+//                }
+//
+//                override fun onNext(t: BaseResp<Any?>) {
+//                    if (t.code == 200) {
+//                        if (type == 0) {
+//                            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0))
+//                        }
+//                        mView.onSquareAnnounceResult(type, true, 200)
+//                    } else {
+//                        CommonFunction.toast(t.msg)
+//                        mView.onSquareAnnounceResult(type, false, t.code)
+//                    }
+//                }
+//
+//                override fun onError(e: Throwable?) {
+//                    if (e is BaseException) {
+//                        TickDialog(context).show()
+//                    } else {
+//                        mView.onSquareAnnounceResult(type, false, 200)
+//                    }
+//                }
+//            })
+//    }
+//
+//
+//    /**
+//     * QN上传照片
+//     * 文件名格式：ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+//     * type 1图片 2视频 3音频
+//     */
+//    fun uploadFile(totalCount: Int, currentCount: Int, filePath: String, imagePath: String, type: Int) {
+//        val file = File(filePath)
+//        if (!file.exists()) {
+//            Log.d("OkHttp", "文件不存在")
+//            return
+//        }
+//        QNUploadManager.getInstance().put(
+//            file,
+//            imagePath,
+//            SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+//            { key, info, response ->
+//                if (info != null) {
+//                    if (!info.isOK) {
+//                        mView.onSquareAnnounceResult(1, false, 200)
+//                    }
+//                }
+//            },
+//            UploadOptions(
+//                null, null, false,
+//                UpProgressHandler { key, percent ->
+//                    EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
+//                    if (percent == 1.0) {
+//                        mView.onQnUploadResult(true, type, key)
+//                    }
+//                }, UserManager.cancellationHandler
+//            )
+//        )
+//    }
 
 
 }

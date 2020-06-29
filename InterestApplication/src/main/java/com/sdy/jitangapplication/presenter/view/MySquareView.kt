@@ -14,8 +14,8 @@ interface MySquareView : BaseView {
 
     fun onCheckBlockResult(b: Boolean)
 
-    fun onSquareAnnounceResult(i: Int, b: Boolean, code: Int)
+//    fun onSquareAnnounceResult(i: Int, b: Boolean, code: Int)
 
-    fun onQnUploadResult(b: Boolean, type: Int, key: String?)
+//    fun onQnUploadResult(b: Boolean, type: Int, key: String?)
 
 }

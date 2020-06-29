@@ -20,6 +20,7 @@ import com.sdy.demoap.MultiListDetailPlayAdapter
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -49,7 +50,8 @@ import org.jetbrains.anko.toast
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
  *    from 确定内容的来源地  1好友列表 2广场列表 3广场消息
  */
-public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
+public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(),
+    SquarePlayDetailView,
     View.OnClickListener {
 
     //确定内容的来源地  1好友列表 2广场列表 3广场消息
@@ -171,6 +173,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
         }
     }
+
     //音频当前播放位置
     private var currPlayIndex = -1
 
@@ -213,7 +216,8 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                     if (mediaPlayer == null || currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
                         //还原播放器
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "")
+                            .prepareMedia()
                         currPlayIndex = position
                     }
 
@@ -315,7 +319,11 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     private var currentIndex = 0
-    private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, currentIndex: Int) {
+    private fun moveToPosition(
+        manager: LinearLayoutManager,
+        mRecyclerView: RecyclerView,
+        currentIndex: Int
+    ) {
         val firstItem = manager.findFirstVisibleItemPosition()
         val lastItem = manager.findLastVisibleItemPosition()
         if (currentIndex <= firstItem) {
@@ -330,6 +338,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     lateinit var moreActionDialog: MoreActionNewDialog
+
     /**
      * 展示更多操作对话框
      */
@@ -425,6 +434,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
         if (result) {
             toast("删除动态成功！")
+            EventBus.getDefault().post(RefreshDeleteSquareEvent(adapter.data[position].id ?: 0))
             if (adapter.data.size == 1) {
                 finish()
             } else {

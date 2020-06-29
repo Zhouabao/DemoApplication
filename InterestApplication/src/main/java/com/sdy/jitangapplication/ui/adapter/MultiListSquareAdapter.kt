@@ -29,6 +29,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
@@ -593,6 +594,7 @@ class MultiListSquareAdapter(
 
 
     lateinit var moreActionDialog: MoreActionNewDialog
+
     /**
      * 展示更多操作对话框
      */
@@ -781,6 +783,7 @@ class MultiListSquareAdapter(
             } else if (data[position].type == SquareBean.VIDEO) {
                 GSYVideoManager.releaseAllVideos()
             }
+            EventBus.getDefault().post(RefreshDeleteSquareEvent(data[position].id ?: 0))
             data.removeAt(position)
             notifyItemRemoved(position + headerLayoutCount)
             EventBus.getDefault().postSticky(UserCenterEvent(true))

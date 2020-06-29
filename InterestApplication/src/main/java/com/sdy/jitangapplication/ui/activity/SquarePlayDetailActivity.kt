@@ -21,6 +21,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -89,8 +90,17 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             intent.putExtra("type", type)
             //这里指定了共享的视图元素
             if (transactionView != null) {
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
-                ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity,
+                    transactionView,
+                    OPTION_VIEW
+                )
+                ActivityCompat.startActivityForResult(
+                    activity,
+                    intent,
+                    REQUEST_CODE,
+                    options.toBundle()
+                )
             } else {
                 activity.startActivityForResult(intent, REQUEST_CODE)
             }
@@ -196,7 +206,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
         val drawable1 =
             resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
-        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+        drawable1!!.setBounds(
+            0,
+            0,
+            drawable1.intrinsicWidth,
+            drawable1.intrinsicHeight
+        )    //需要设置图片的大小才能显示
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         detailPlaydianzan.text =
             "${if (squareBean!!.like_cnt < 0) {
@@ -204,7 +219,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             } else {
                 squareBean!!.like_cnt
             }}"
-        detailPlayUserVipIv.isVisible = squareBean.isvip == 1 ||squareBean.isplatinumvip
+        detailPlayUserVipIv.isVisible = squareBean.isvip == 1 || squareBean.isplatinumvip
 
         if (squareBean!!.isplatinumvip) {
             detailPlayUserVipIv.setImageResource(R.drawable.icon_pt_vip)
@@ -215,6 +230,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
 
     lateinit var moreActionDialog: MoreActionNewDialog
+
     /**
      * 展示更多操作对话框
      */
@@ -305,6 +321,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             CommonFunction.toast("删除动态成功！")
             finish()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().post(RefreshDeleteSquareEvent(squareBean!!.id ?: 0))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
         } else {
             CommonFunction.toast("删除动态失败！")
@@ -342,7 +359,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
             val drawable1 =
                 resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
-            drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+            drawable1!!.setBounds(
+                0,
+                0,
+                drawable1.intrinsicWidth,
+                drawable1.intrinsicHeight
+            )    //需要设置图片的大小才能显示
             detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
             detailPlaydianzan.text = "${squareBean.like_cnt}"
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))

@@ -7,7 +7,7 @@
     android:background="#FFF7F8F9"
     app:srlEnableLoadMore="true"
     app:srlEnableLoadMoreWhenContentNotFull="true"
-    app:srlEnableRefresh="false">
+    app:srlEnableRefresh="true">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMySquare"

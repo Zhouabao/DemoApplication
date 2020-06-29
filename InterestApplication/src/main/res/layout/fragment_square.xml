@@ -25,7 +25,7 @@
             app:srlDisableContentWhenLoading="true"
             app:srlDisableContentWhenRefresh="true"
             app:srlEnableLoadMoreWhenContentNotFull="false"
-            tools:context=".ui.fragment.FriendSquareFragment">
+            tools:context=".ui.fragment.NewestSquareFragment">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/squareDynamicRv"
