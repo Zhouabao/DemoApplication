@@ -90,6 +90,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
                 if (recentContactt.contactId == data.accid) {
                     data.unreadCnt = recentContactt.unreadCount
                     data.time = recentContactt.time
+                    data.content = recentContactt.content
                 }
             }
         }

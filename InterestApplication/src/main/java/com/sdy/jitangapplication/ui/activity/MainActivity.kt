@@ -22,6 +22,8 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
 import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.StatusCode
+import com.netease.nimlib.sdk.auth.AuthServiceObserver
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
@@ -54,14 +56,19 @@ import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
     private val titles = arrayOf("心动", "发现", "消息", "我的")
+
     //fragment栈管理
     private val mStack = Stack<Fragment>()
+
     //首页
     private val indexFragment by lazy { IndexFragment() }
+
     //广场
     private val contentFragment by lazy { ContentFragment() }
+
     //消息
     private val messageListFragment by lazy { MessageListFragment() }
+
     //我
     private val myFragment by lazy { UserCenterFragment() }
 
@@ -145,6 +152,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java)
             .observeReceiveMessage(incomingMessageObserver, true)
+        NIMClient.getService(AuthServiceObserver::class.java)
+            .observeOnlineStatus(userStatusObserver, true)
 
 
         //首页禁止滑动
@@ -446,6 +455,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         EventBus.getDefault().unregister(this)
         NIMClient.getService(MsgServiceObserve::class.java)
             .observeReceiveMessage(incomingMessageObserver, false)
+        NIMClient.getService(AuthServiceObserver::class.java)
+            .observeOnlineStatus(userStatusObserver, false)
     }
 
 
@@ -532,6 +543,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.msgList()
     }
 
+    private val userStatusObserver: Observer<StatusCode> by lazy {
+        Observer<StatusCode> {
+            if (it.wontAutoLogin()) {
+                TickDialog(ActivityUtils.getTopActivity()).show()
+            }
+        }
+    }
+
     companion object {
         const val REQUEST_LABEL_CODE = 2000
 
@@ -554,6 +573,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     private var showNear = false
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShowNearCountEvent(event: ShowNearCountEvent) {
         if (canShowNear && !showNear) {
@@ -709,6 +729,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     private var accountDangerDialog: AccountDangerDialog? = null
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAccountDangerEvent(event: AccountDangerEvent) {
         if (accountDangerDialog != null) {
@@ -724,7 +745,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
             EventBus.getDefault()
-                .removeStickyEvent(EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java))
+                .removeStickyEvent(
+                    EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java)
+                )
         }
     }
 

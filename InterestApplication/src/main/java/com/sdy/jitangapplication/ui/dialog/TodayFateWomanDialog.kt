@@ -71,7 +71,15 @@ class TodayFateWomanDialog(
 
         rvFate.layoutManager = GridLayoutManager(context1, 3)
         rvFate.adapter = adapter
+
+
+        //全部默认选中
+        for (data in data?.list ?: mutableListOf()) {
+            data.checked = true
+        }
         adapter.setNewData(data?.list?: mutableListOf<NearPersonBean>())
+        checkFateEnable()
+
         RecyclerViewUtil.changeItemAnimation(rvFate, false)
         adapter.setOnItemClickListener { _, view, position ->
             adapter.data[position].checked = !adapter.data[position].checked

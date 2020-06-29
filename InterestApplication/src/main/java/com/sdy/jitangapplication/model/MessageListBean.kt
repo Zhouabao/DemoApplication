@@ -83,7 +83,8 @@ data class AccostBean(
     var gender: Int = 0,
     var unreadCnt: Int = 0,
     var time: Long = 0L,
-    var nickname: String = ""
+    var nickname: String = "",
+    var content: String = ""
 )
 
 /****************黑名单*******************/

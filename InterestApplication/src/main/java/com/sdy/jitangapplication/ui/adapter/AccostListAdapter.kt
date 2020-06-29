@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -38,14 +39,12 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
         )
 
 
-        holder.itemView.msgOnLineState.isVisible = NimUIKitImpl.enableOnlineState()
-                && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).isNullOrEmpty()
-                && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).contains(
-            "在线"
-        )
-        holder.itemView.newCount.isVisible = item.unreadCnt > 0
         if (UserManager.getGender() == 1) {
-            holder.itemView.text.text = "新的搭讪消息"
+            holder.itemView.text.text = if (item.content.isNotEmpty()) {
+                item.content
+            } else {
+                "新的搭讪消息"
+            }
         } else {
             if (item.unreadCnt > 0) {
                 SpanUtils.with(holder.itemView.text)
@@ -58,6 +57,19 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
                 holder.itemView.text.text = "[礼物]搭讪礼物待领取"
             }
         }
+
+
+        holder.itemView.latelyTime.isVisible = item.time != 0L
+        holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)
+        holder.itemView.msgOnLineState.isVisible = NimUIKitImpl.enableOnlineState()
+                && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid)
+            .isNullOrEmpty()
+                && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid)
+            .contains(
+                "在线"
+            )
+        holder.itemView.newCount.isVisible = item.unreadCnt > 0
+
     }
 
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/swipeLayout"
     android:background="@color/colorWhite"
     app:canRightSwipe="false"
     app:contentView="@id/content"
@@ -65,6 +65,7 @@
             android:text="2分钟前"
             android:textColor="#FFC5C6C8"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/msgTitle" />
 
