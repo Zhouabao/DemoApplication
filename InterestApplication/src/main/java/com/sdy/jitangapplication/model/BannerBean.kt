@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
-import com.flyco.tablayout.listener.CustomTabEntity
 
 /**
  *    author : ZFM
@@ -13,20 +12,14 @@ import com.flyco.tablayout.listener.CustomTabEntity
 /**
  * 问卷渠道
  */
-data class ChannelBean(
-    var id: Int = 0,
+data class UserRelationshipBean(
     var title: String = "",
-    var check: Boolean = false
+    val relationType: Int = 1
 ) : MultiItemEntity {
     override fun getItemType(): Int {
-        if (title == "其他") {
-            return 0
-        } else {
-            return 1
-        }
+        return relationType
     }
 }
-
 
 
 /**

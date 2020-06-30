@@ -14,6 +14,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.GiftBeans
 import com.sdy.jitangapplication.ui.adapter.SendGiftAdapter
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.dialog_chat_send_gift.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -57,7 +59,7 @@ class ChatSendGiftDialog(
         }
 
         chargeBtn.onClick {
-            RechargeCandyDialog(context).show()
+            CommonFunction.gotoCandyRecharge(context)
         }
     }
 

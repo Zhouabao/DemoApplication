@@ -16,8 +16,7 @@ android {
         //如  ../facesharp.jks//签名文件路径
 //        def filePath = "D:/AndroidProjects/keystorefile/demo.jks"  //如  ../facesharp.jks//签名文件路径
 
-
-        debug {
+        dev {
             storeFile file(filePath)
             storePassword password
             keyAlias = alias
@@ -64,6 +63,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.dev
+        }
         release {
             //打开混淆
 //            minifyEnabled false

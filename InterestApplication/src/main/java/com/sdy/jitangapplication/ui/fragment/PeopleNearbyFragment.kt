@@ -31,7 +31,8 @@ import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
-import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
+import com.sdy.jitangapplication.ui.adapter.PeopleNearbyManAdapter
+import com.sdy.jitangapplication.ui.adapter.PeopleNearbyWomanAdapter
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
@@ -53,7 +54,13 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         const val TYPE_SAMECITY = 2
     }
 
-    private val adapter by lazy { PeopleNearbyAdapter() }
+    private val adapter by lazy {
+        if (UserManager.getGender() == 1) {
+            PeopleNearbyManAdapter()
+        } else {
+            PeopleNearbyWomanAdapter()
+        }
+    }
     private var firstLoad = true
     private var ranking_level: Int = 0
     private var page = 1
@@ -257,7 +264,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
         mPresenter.nearlyIndex(params, type, firstLoad)
-        EventBus.getDefault().post(TopCardEvent(true))
+        if (type == TYPE_RECOMMEND)
+            EventBus.getDefault().post(TopCardEvent(true))
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

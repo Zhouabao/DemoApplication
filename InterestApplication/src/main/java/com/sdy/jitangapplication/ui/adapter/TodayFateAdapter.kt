@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.UserRelationshipBean
 import kotlinx.android.synthetic.main.item_today_fate.view.*
 
 /**
@@ -62,7 +63,11 @@ class TodayFateAdapter :
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             val adapter = UserRelationshipAdapter()
             itemView.userRelationshipRv.adapter = adapter
-            adapter.setNewData(item.want)
+            val datas = mutableListOf<UserRelationshipBean>()
+            for (data in item.want) {
+                datas.add(UserRelationshipBean(data))
+            }
+            adapter.setNewData(datas)
             itemView.userRelationshipRv.setOnTouchListener { v, event ->
                 itemView.onTouchEvent(event)
             }

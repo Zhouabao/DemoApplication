@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.dialog_send_gift_be_friend.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -60,7 +61,7 @@ class SendGiftBeFriendDialog(val account: String, val context1: Context) :
 
         //糖果充值
         chargeBtn.onClick {
-            RechargeCandyDialog(context).show()
+            CommonFunction.gotoCandyRecharge(context1)
         }
 
         //赠送礼物

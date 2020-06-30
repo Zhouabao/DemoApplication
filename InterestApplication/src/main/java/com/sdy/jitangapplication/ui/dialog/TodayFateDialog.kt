@@ -158,6 +158,7 @@ class TodayFateDialog(
 
     /*---------------------卡片参数和方法------------------------------*/
     private val manager by lazy { CardStackLayoutManager(context1, this) }
+
     //用户适配器
     private val adapter by lazy { TodayFateAdapter() }
 
@@ -442,7 +443,7 @@ class TodayFateDialog(
                 }
             }
             R.id.rechargeCandyBtn -> {//糖果充值
-                RechargeCandyDialog(context1).show()
+                CommonFunction.gotoCandyRecharge(context1)
             }
             R.id.stepOutBtn -> {//跳过充值
                 dismiss()

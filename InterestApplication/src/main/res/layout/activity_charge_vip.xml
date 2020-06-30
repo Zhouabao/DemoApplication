@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/layout_actionbar" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="0dp"
+        android:layout_height="132dp"
+        android:background="@drawable/gradient_orange"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle" />
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="糖果余额"
+        android:textColor="#ffffffff"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/view1"
+        app:layout_constraintTop_toTopOf="@id/view1" />
+
+    <TextView
+        android:id="@+id/candyAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="0"
+        android:textColor="#ffffffff"
+        android:textSize="34sp"
+        app:layout_constraintLeft_toLeftOf="@id/t1"
+        app:layout_constraintTop_toBottomOf="@id/t1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="糖果可用于：发起意向邀约、赠送礼物、解锁聊天等"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/t1"
+        app:layout_constraintTop_toBottomOf="@id/candyAmount" />
+
+    <TextView
+        android:id="@+id/firstChargeTime"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/rectangle_light_orange"
+        android:drawableLeft="@drawable/icon_first_charge"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="首充特惠活动持续至2020-07-14"
+        android:textColor="#ffff6318"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vipChargeRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/firstChargeTime" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

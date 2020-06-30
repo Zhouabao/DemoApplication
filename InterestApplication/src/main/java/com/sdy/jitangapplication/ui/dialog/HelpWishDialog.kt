@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.dialog_help_wish.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -108,8 +109,7 @@ class HelpWishDialog(
         }
 
         chargeBtn.onClick {
-            RechargeCandyDialog(context).show()
-
+            CommonFunction.gotoCandyRecharge(context)
         }
 
     }

@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.presenter.MyCandyPresenter
 import com.sdy.jitangapplication.presenter.view.MyCandyView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
 import com.sdy.jitangapplication.ui.dialog.AddWishGiftDialog
-import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog
 import com.sdy.jitangapplication.ui.dialog.WithdrawCandyDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_candy.*
@@ -206,7 +205,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
                 candyNewRecord.isVisible = false
             }
             R.id.rechargeCandy -> {//充值
-                RechargeCandyDialog(this).show()
+                CommonFunction.gotoCandyRecharge(this)
             }
             R.id.withdrawCandy -> {//提现
                 WithdrawCandyDialog(this).show()

@@ -16,6 +16,7 @@ data class ChargeWayBeans(
     val pt_list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val paylist: MutableList<PaywayBean>? = mutableListOf(),
     val isvip: Boolean = false,
+    val candyCount: Int = 0,
     val vip_express: String = "",
     val isplatinum: Boolean = false,
     val threshold_btn: Boolean = false,

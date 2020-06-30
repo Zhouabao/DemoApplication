@@ -7,9 +7,11 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.confirm
 import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -56,7 +58,7 @@ class AlertCandyEnoughDialog(var context1: Context, var from: Int = FROM_PRODUCT
         }
 
         confirm.onClick {
-            RechargeCandyDialog(context1).show()
+            CommonFunction.gotoCandyRecharge(context1)
             dismiss()
         }
 

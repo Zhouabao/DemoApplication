@@ -178,7 +178,7 @@ class OpenPtVipDialog(
                             ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
                     } else if (t.code == 419) {
                         loading.dismiss()
-                        RechargeCandyDialog(context).show()
+                        CommonFunction.gotoCandyRecharge(context1)
                     } else {
                         loading.dismiss()
                     }

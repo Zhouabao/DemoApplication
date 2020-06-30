@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.item_people_nearby.view.*
  *    desc   :
  *    version: 1.0
  */
-class PeopleNearbyAdapter(var fromCard: Boolean = false) :
+class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
@@ -95,7 +96,11 @@ class PeopleNearbyAdapter(var fromCard: Boolean = false) :
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             val adapter = UserRelationshipAdapter()
             itemView.userRelationshipRv.adapter = adapter
-            adapter.setNewData(item.want)
+            val datas = mutableListOf<UserRelationshipBean>()
+            for (data in item.want) {
+                datas.add(UserRelationshipBean(data))
+            }
+            adapter.setNewData(datas)
             itemView.userRelationshipRv.setOnTouchListener { v, event ->
                 itemView.onTouchEvent(event)
             }

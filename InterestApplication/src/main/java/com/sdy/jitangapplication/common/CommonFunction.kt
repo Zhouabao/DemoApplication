@@ -223,8 +223,10 @@ object CommonFunction {
 //                                if (t.data?.isnew_friend == true) {
 //                                    sendMatchFriendMessage(target_accid)
 //                                } else {
-                                Thread.sleep(200L)
-                                ChatActivity.start(context, target_accid)
+                                Handler().postDelayed({
+                                    ChatActivity.start(context, target_accid)
+                                }, 500L)
+
 //                            }
                             }
                             200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
@@ -373,6 +375,14 @@ object CommonFunction {
         }
     }
 
+
+    /**
+     * 跳转到糖果充值
+     */
+    fun gotoCandyRecharge(context: Context) {
+        context.startActivity<CandyRechargeActivity>()
+//        RechargeCandyDialog(context).show()
+    }
 
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
         NIMClient.getService(MsgService::class.java)
