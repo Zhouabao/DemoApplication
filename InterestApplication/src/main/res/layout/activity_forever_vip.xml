@@ -128,6 +128,18 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/payExplain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="前置收费仅为过滤广告及确保您是我们的高端用户\n打造高端约会环境获取更好的交友体验"
+                android:textColor="#ffc5c6c8"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vipChargeCl" />
 
             <TextView
                 android:id="@+id/openVipBtn"
@@ -135,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/icon_bg_open_vip"
                 android:drawablePadding="9dp"
                 android:gravity="center"
@@ -145,7 +157,23 @@
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vipChargeCl" />
+                app:layout_constraintTop_toBottomOf="@id/payExplain" />
+
+            <TextView
+                android:id="@+id/shareFriendsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/icon_bg_share_friend"
+                android:gravity="center"
+                android:text="分享好友免费获得黄金会员"
+                android:textColor="#ffff6318"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/refuseBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/openVipBtn" />
 
 
             <TextView
@@ -153,7 +181,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="5dp"
+                android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:text="稍后询问"
                 android:textColor="#FFCBCDD3"
@@ -162,19 +190,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/openVipBtn" />
-
-            <TextView
-                android:id="@+id/payExplain"
-                app:layout_constraintTop_toBottomOf="@id/refuseBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:text="前置收费仅为过滤广告及确保您是我们的高端用户\n打造高端约会环境获取更好的交友体验"
-                android:textColor="#ffc5c6c8"
-                android:textSize="12sp" />
+                app:layout_constraintTop_toBottomOf="@id/shareFriendsBtn" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

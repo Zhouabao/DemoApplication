@@ -95,7 +95,8 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.CandyRechargeActivity"></activity>
+        <activity android:name=".ui.activity.ShareFriendsActivity"></activity>
+        <activity android:name=".ui.activity.CandyRechargeActivity" />
         <activity android:name=".ui.activity.IndexChoicenessActivity" />
         <activity android:name=".ui.activity.VideoVerifyConfirmActivity" />
         <activity android:name=".ui.activity.AccostListActivity" />

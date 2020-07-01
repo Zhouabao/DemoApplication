@@ -29,14 +29,25 @@ import com.umeng.socialize.media.UMWeb
 import com.umeng.socialize.media.UMusic
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 
+
 /**
  *    author : ZFM
  *    date   : 2019/6/2716:22
  *    desc   : 新的更多操作对话框
  *    version: 1.0
  */
-class MoreActionNewDialog(private var myContext: Context, var squareBean: SquareBean? = null) :
+class MoreActionNewDialog(
+    private var myContext: Context,
+    var squareBean: SquareBean? = null,
+    var url: String = "",
+    var type: Int = TYPE_SHARE_SQUARE
+) :
     Dialog(myContext, R.style.MyDialog), View.OnClickListener {
+
+    companion object {
+        const val TYPE_SHARE_SQUARE = 1
+        const val TYPE_SHARE_VIP_URL = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,12 +112,24 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
 
 
     /**
+     * 封装分享
+     */
+    private fun shareToThirdParty(platformConfig: SHARE_MEDIA) {
+        if (type == TYPE_SHARE_VIP_URL) {
+            shareWeb(platformConfig)
+        } else {
+            shareSquare(platformConfig)
+        }
+    }
+
+
+    /**
      * 分享动态
     const val PIC = 1
     const val VIDEO = 2
     const val AUDIO = 3
      */
-    private fun shareToThirdParty(platformConfig: SHARE_MEDIA) {
+    private fun shareSquare(platformConfig: SHARE_MEDIA) {
         if (squareBean?.type == SquareBean.PIC) {
             //多图上传,需要带文字描述
             if (!squareBean?.photo_json.isNullOrEmpty()) {
@@ -126,12 +149,12 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
                         } else "「你先抓紧看看这个」"
                     )//分享内容
                     .withMedia(image)//多张图片
-//                    .withMedias(*images)//多张图片
+                    //                    .withMedias(*images)//多张图片
                     .setCallback(callback)
                     .share()
 
             } else {            //文本分享
-//                http://www.baidu.com
+                //                http://www.baidu.com
                 val web = UMWeb("http://")
                 web.title = "${squareBean?.nickname} 在积糖发了动态"//标题
                 web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
@@ -187,6 +210,22 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
     }
 
 
+    /**
+     * todo 链接分享文案修改
+     */
+    private fun shareWeb(platformConfig: SHARE_MEDIA) {
+        val web = UMWeb(url)
+        web.title = "马上与空姐，艺人模特，清北牛津学生，白领结伴游玩..." //标题
+        web.description = "我花了九牛二虎之力，找来了空姐，艺人，清北牛津学生，模特，白领..."//描述
+        web.setThumb(UMImage(myContext, R.drawable.icon_logo)) //缩略图
+        ShareAction(myContext as Activity)
+            .setPlatform(platformConfig)
+            .withMedia(web)
+            .setCallback(callback)
+            .share()
+    }
+
+
     /*第三方平台分享回调*/
     private val callback = object : UMShareListener {
         /**
@@ -195,8 +234,10 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
          */
         override fun onResult(p0: SHARE_MEDIA?) {
             Log.d("share===", "结果。。。。")
-
-            addShare()
+            if (type == TYPE_SHARE_SQUARE)
+                addShare()
+            else
+                dismiss()
         }
 
         /**
@@ -233,7 +274,7 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
 
     /*-------------------------分享成功回调----------------------------*/
     private fun addShare() {
-        val params = hashMapOf<String,Any>()
+        val params = hashMapOf<String, Any>()
         params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
             .addShare(UserManager.getSignParams(params))

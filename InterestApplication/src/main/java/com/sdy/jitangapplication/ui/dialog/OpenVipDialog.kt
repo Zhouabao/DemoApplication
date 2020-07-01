@@ -31,6 +31,7 @@ import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.ShareFriendsActivity
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_forever_vip.*
@@ -103,6 +104,7 @@ class OpenVipDialog(
                 refuseBtn.text = "不，谢谢"
             }
             FROM_REGISTER_OPEN_VIP -> {
+                //todo 新增分享好友获取会员，填写信息
                 if (UserManager.getGender() == 1) {
                     if (UserManager?.registerFileBean?.threshold == true) {
                         moreInfoText.text = "成为会员和她们亲密接触"
@@ -142,11 +144,13 @@ class OpenVipDialog(
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
                     payExplain.isVisible = true
+                    shareFriendsBtn.isVisible = true
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false
                     openVipBtn.text = "立即加入"
                     payExplain.isVisible = false
+                    shareFriendsBtn.isVisible = false
                 }
 
             }
@@ -221,6 +225,12 @@ class OpenVipDialog(
                 context1.startActivity<MainActivity>()
             else
                 dismiss()
+        }
+
+
+        //分享给好友
+        shareFriendsBtn.clickWithTrigger {
+            context1.startActivity<ShareFriendsActivity>()
         }
     }
 
