@@ -26,7 +26,8 @@ data class ExtraBean(
     var force_vip: Boolean = false,
     var isvip: Boolean = false,
     val want_steps: Boolean = false,
-    val living_btn: Boolean = false
+    val living_btn: Boolean = false,
+    val share_btn: String = ""
 )
 
 
@@ -84,3 +85,25 @@ data class loginOffCauseBean(
     var list: MutableList<String> = mutableListOf()
 )
 
+/**
+ * 我邀请他人注册
+ */
+data class MyInviteBean(
+    var girl_cnt: Int = 0,//	女孩数目
+    var invite_url: String = "",//我的邀请连接
+    var invited_cnt: Int = 0,//已经邀请了几个
+    var invited_list: MutableList<InvitedBean> = mutableListOf(),//	已经邀请了的人列表
+    var share_normal_cnt: Int = 0,//标准邀请几位人
+    var viplist: MutableList<ViplistBean> = mutableListOf(),//	轮动成为会员的数据
+    var wait_invite_cnt: Int = 0//在邀请几个
+)
+
+data class InvitedBean(
+    var avatar: String = "",
+    var nickname: String = ""
+)
+
+data class ViplistBean(
+    var avatar: String = "",
+    var nickname: String = ""
+)

@@ -464,7 +464,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     /**
      * 展示联系方式
      */
-    private var contactWay = 1 //0手机号   1微信  2QQ
+    private var contactWay = 2 //0手机号   1微信  2QQ
     private val contactWays by lazy { mutableListOf("手机号", "微信", "QQ") }
     private val contactWaysIcon by lazy {
         mutableListOf(

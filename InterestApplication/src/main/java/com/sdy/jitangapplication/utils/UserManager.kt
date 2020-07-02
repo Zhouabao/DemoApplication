@@ -11,7 +11,10 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.MoreMatchBean
+import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -38,15 +41,19 @@ object UserManager {
 
     //手动取消上传
     var cancelUpload = false
+
     //帮助取消上传的handler
     val cancellationHandler = UpCancellationSignal { cancelUpload }
 
     //发布动态的状态
     var publishState: Int = 0  //0未发布  1进行中   -1失败--违规400  -2失败--发布失败
+
     //发布
     var publishParams: HashMap<String, Any> = hashMapOf()
+
     //发布的对象
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
+
     //发布的对象keylist
     var keyList: MutableList<String> = mutableListOf()
 
@@ -199,7 +206,8 @@ object UserManager {
     fun isUserInfoMade(): Boolean {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
-                SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
+                SPUtils.getInstance(Constants.SPNAME).getString("avatar")
+                    .contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0
 //                || getSpLabels().isNullOrEmpty()
@@ -628,10 +636,10 @@ object UserManager {
                     MoreMatchBean(
                         data?.extra_data?.city_name ?: "",
                         data?.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0
+                        data?.extra_data?.people_amount ?: 0,
+                        share_btn = data?.extra_data?.share_btn
                     ),
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                ).show()
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP).show()
             } else {
                 //跳到主页
                 //保存个人信息
@@ -651,7 +659,8 @@ object UserManager {
                     MoreMatchBean(
                         data?.extra_data?.city_name ?: "",
                         data?.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0
+                        data?.extra_data?.people_amount ?: 0,
+                        share_btn = data?.extra_data?.share_btn?:""
                     ),
                     OpenVipDialog.FROM_REGISTER_OPEN_VIP
                 ).show()
@@ -671,7 +680,8 @@ object UserManager {
                 MoreMatchBean(
                     data?.extra_data?.city_name ?: "",
                     data?.extra_data?.gender_str ?: "",
-                    data?.extra_data?.people_amount ?: 0
+                    data?.extra_data?.people_amount ?: 0,
+                    share_btn = data?.extra_data?.share_btn?:""
                 ),
                 OpenVipDialog.FROM_REGISTER_OPEN_VIP
             ).show()

@@ -1,5 +1,8 @@
 package com.sdy.jitangapplication.model
 
+import android.os.Parcel
+import android.os.Parcelable
+
 /**
  *    author : ZFM
  *    date   : 2019/7/3017:02
@@ -55,7 +58,60 @@ data class ChargeWayBean(
     var isfirst: Boolean = false,//是否首充  true  首充   false  常规
     var product_id: String = "",
     var checked: Boolean = false
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readByte() != 0.toByte(),
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readDouble(),
+        parcel.readValue(Float::class.java.classLoader) as? Float,
+        parcel.readDouble(),
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readDouble(),
+        parcel.readInt(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readString() ?: "",
+        parcel.readByte() != 0.toByte()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeByte(if (is_promote) 1 else 0)
+        parcel.writeValue(duration)
+        parcel.writeString(ename)
+        parcel.writeInt(id)
+        parcel.writeDouble(discount_price)
+        parcel.writeValue(limited_price)
+        parcel.writeDouble(original_price)
+        parcel.writeString(title)
+        parcel.writeInt(giving_amount)
+        parcel.writeString(descr)
+        parcel.writeValue(type)
+        parcel.writeDouble(unit_price)
+        parcel.writeInt(amount)
+        parcel.writeByte(if (isfirst) 1 else 0)
+        parcel.writeString(product_id)
+        parcel.writeByte(if (checked) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<ChargeWayBean> {
+        override fun createFromParcel(parcel: Parcel): ChargeWayBean {
+            return ChargeWayBean(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ChargeWayBean?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class LabelChargeWayBean(
     var paylist: MutableList<PaywayBean> = mutableListOf(),
@@ -72,7 +128,34 @@ data class PaywayBean(
     val comments: String = "",
     val id: Int = 0,
     val payment_type: Int = 0//支付类型 1支付宝 2微信支付 3余额支付
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readInt()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(comments)
+        parcel.writeInt(id)
+        parcel.writeInt(payment_type)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<PaywayBean> {
+        override fun createFromParcel(parcel: Parcel): PaywayBean {
+            return PaywayBean(parcel)
+        }
+
+        override fun newArray(size: Int): Array<PaywayBean?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 data class PayBean(
     val order_id: String? = "",

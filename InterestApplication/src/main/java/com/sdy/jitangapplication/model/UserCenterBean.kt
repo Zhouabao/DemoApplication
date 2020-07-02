@@ -174,7 +174,8 @@ data class MoreMatchBean(
     var birth: Int = 0,
     var force_vip: Boolean = false,
     var living_btn: Boolean = false,//  true  需要活体   false  不需要活体
-    var isvip: Boolean = false
+    var isvip: Boolean = false,
+    var share_btn: String = ""//分享开关是否显示
 ) : Serializable
 
 

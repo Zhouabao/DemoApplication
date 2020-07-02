@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.MyInviteBean
 
 /**
  *    author : ZFM
@@ -9,4 +10,6 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface ShareFriendsView : BaseView {
+
+    fun myInviteResult(myInviteBean: MyInviteBean?)
 }

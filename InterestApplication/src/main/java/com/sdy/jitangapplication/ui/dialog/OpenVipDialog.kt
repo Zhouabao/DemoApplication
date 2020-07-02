@@ -105,6 +105,8 @@ class OpenVipDialog(
             }
             FROM_REGISTER_OPEN_VIP -> {
                 //todo 新增分享好友获取会员，填写信息
+                shareFriendsBtn.isVisible = !moreMatch?.share_btn.isNullOrEmpty()
+                shareFriendsBtn.text = moreMatch?.share_btn
                 if (UserManager.getGender() == 1) {
                     if (UserManager?.registerFileBean?.threshold == true) {
                         moreInfoText.text = "成为会员和她们亲密接触"
@@ -144,13 +146,11 @@ class OpenVipDialog(
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
                     payExplain.isVisible = true
-                    shareFriendsBtn.isVisible = true
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false
                     openVipBtn.text = "立即加入"
                     payExplain.isVisible = false
-                    shareFriendsBtn.isVisible = false
                 }
 
             }
@@ -230,7 +230,10 @@ class OpenVipDialog(
 
         //分享给好友
         shareFriendsBtn.clickWithTrigger {
-            context1.startActivity<ShareFriendsActivity>()
+            context1.startActivity<ShareFriendsActivity>(
+                "chargeWayBeans" to chargeWayBeans,
+                "payways" to payways
+            )
         }
     }
 

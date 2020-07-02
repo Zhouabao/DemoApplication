@@ -590,7 +590,10 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/getSignTemplate${Constants.END_BASE_URL}")
-    fun getSignTemplate(@Field("page") page: Int, @Field("gender") gender: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+    fun getSignTemplate(
+        @Field("page") page: Int,
+        @Field("gender") gender: Int
+    ): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /****************************消息************************************/
 
@@ -1214,6 +1217,15 @@ interface Api {
     @FormUrlEncoded
     @POST("Ticket/lockChatup${Constants.END_BASE_URL}")
     fun lockChatup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     *
+     * 我邀请他人注册
+     *
+     */
+    @FormUrlEncoded
+    @POST("Share/myInvite${Constants.END_BASE_URL}")
+    fun myInvite(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyInviteBean?>>
 
 
 }
