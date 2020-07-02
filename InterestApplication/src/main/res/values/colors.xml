@@ -34,5 +34,6 @@
     <color name="colorBlackC9">#C9C9C9</color>
     <color name="colorGradientOrange">#FF7F32</color>
     <color name="colorGradientRed">#FF003E</color>
+    <color name="shadow_color">#7F000000</color>
 
 </resources>

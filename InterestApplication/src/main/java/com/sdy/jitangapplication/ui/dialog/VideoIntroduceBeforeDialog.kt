@@ -20,6 +20,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.ui.activity.VideoVerifyActivity
+import com.sdy.jitangapplication.ui.activity.VideoVerifyActivity1
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.dialog_video_introduce_before.*
@@ -61,7 +62,7 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
                     "copyMv" to copyMvBean
                 )
             } else {
-                context1.startActivity<VideoVerifyActivity>("copyMv" to copyMvBean)
+                context1.startActivity<VideoVerifyActivity1>("copyMv" to copyMvBean)
             }
             verifyBtn.postDelayed({
                 dismiss()

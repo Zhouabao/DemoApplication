@@ -52,9 +52,10 @@ import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-import com.vivo.push.PushClient
+import iknow.android.utils.BaseUtils
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
+import nl.bravobit.ffmpeg.FFmpeg
 import org.greenrobot.eventbus.EventBus
 
 
@@ -300,11 +301,21 @@ class MyApplication : BaseApplication() {
         //bugly初始化
         Bugly.init(this, Constants.BUGLY_APP_ID, false)
 
+        initFFmpegBinary()
+
         //数美黑产
         initSM()
 
         //闪验
         initSy()
+
+    }
+
+    private fun initFFmpegBinary() {
+        BaseUtils.init(this)
+        if (!FFmpeg.getInstance(applicationContext).isSupported) {
+            Log.e("MyApplication", "Android cup arch not supported!")
+        }
 
     }
 

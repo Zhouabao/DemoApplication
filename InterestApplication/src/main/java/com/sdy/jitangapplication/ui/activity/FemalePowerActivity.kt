@@ -68,17 +68,18 @@ class FemalePowerActivity : BaseActivity() {
 
         //视频介绍
         powerVideo.clickWithTrigger {
-            if (verify == 1) {
-                if (video == 0) {
-                    CommonFunction.startToVideoIntroduce(this)
-                } else if (video == 2) {
-                    CommonFunction.toast("视频正在审核中，请耐心等待")
-                } else {
-                    CommonFunction.toast("您已经通过视频介绍")
-                }
-            } else {
-                CommonFunction.toast("请先完成真人认证再录制视频介绍")
-            }
+            CommonFunction.startToVideoIntroduce(this)
+//            if (verify == 1) {
+//                if (video == 0) {
+//                    CommonFunction.startToVideoIntroduce(this)
+//                } else if (video == 2) {
+//                    CommonFunction.toast("视频正在审核中，请耐心等待")
+//                } else {
+//                    CommonFunction.toast("您已经通过视频介绍")
+//                }
+//            } else {
+//                CommonFunction.toast("请先完成真人认证再录制视频介绍")
+//            }
         }
 
 

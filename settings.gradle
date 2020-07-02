@@ -1,1 +1,2 @@
+include ':camerafilter'
 include ':InterestApplication', ':BaseLibrary', 'SwipeBackLibrary', ':NIM_Android_UIKit-master', ':faceplatform', ':faceplatform-ui'

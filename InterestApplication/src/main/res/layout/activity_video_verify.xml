@@ -74,9 +74,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recordCl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:clipChildren="false"
         android:paddingLeft="38dp"
         android:paddingRight="38dp"
@@ -85,18 +85,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/camera_preview">
 
-        <TextView
-            android:id="@+id/cameraTip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="单击拍照，长按录像"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
             android:id="@+id/rl"
@@ -106,14 +94,7 @@
             android:clipChildren="false"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cameraTip">
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_capture_bg"
-                android:visibility="gone" />
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <ImageView
@@ -159,6 +140,36 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rl" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/turnCameraBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:drawableTop="@drawable/icon_turn_camera"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="翻转"
+        android:textColor="#ff191919"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/recordCl"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recordCl" />
+
+    <TextView
+        android:id="@+id/chooseVideoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="60dp"
+        android:drawableTop="@drawable/icon_choose_video"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="上传"
+        android:textColor="#ff191919"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/recordCl"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recordCl" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

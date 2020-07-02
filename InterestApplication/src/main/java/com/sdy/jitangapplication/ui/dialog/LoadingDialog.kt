@@ -31,6 +31,7 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.MyFullTransparen
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)
+        
     }
 
 }

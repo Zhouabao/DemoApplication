@@ -645,7 +645,7 @@ object CommonFunction {
         context: Context,
         requestCode: Int = -1
     ) {
-        VideoVerifyActivity.start(context, requestCode)
+        VideoVerifyActivity1.start(context, requestCode)
     }
 
 

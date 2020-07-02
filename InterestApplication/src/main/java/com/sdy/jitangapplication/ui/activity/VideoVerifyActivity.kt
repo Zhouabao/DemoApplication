@@ -26,6 +26,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.utils.NetWorkUtils
+import com.luck.picture.lib.config.PictureMimeType
 import com.netease.nim.uikit.common.ToastHelper
 import com.netease.nim.uikit.common.media.imagepicker.camera.CameraPreview
 import com.netease.nim.uikit.common.media.imagepicker.camera.CameraUtils
@@ -69,6 +70,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
         const val VIDEO_PERMISSIONS_REQUEST_CODE = 1
         const val RESULT_CODE_RECORD_VIDEO = 1006
+        const val RESULT_CODE_CHOOSE_VIDEO = 1007
         const val RESULT_CODE_CONFIRM_VIDEO = 1008
         const val RESULT_CODE_CONFIRM_IMAGE = 1009
         const val EXTRA_RESULT_ITEMS = "extra_result_items"
@@ -124,11 +126,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mainHandler = Handler()
 
 
-
 //        setupTouchListener()
         btnBack.setOnClickListener(this)
         switchRecordContentBtn.setOnClickListener(this)
         captureButton.setOnClickListener(this)
+        chooseVideoBtn.setOnClickListener(this)
+        turnCameraBtn.setOnClickListener(this)
         longPressRunnable = LongPressRunnable()
 
         llTitle.setBackgroundResource(R.color.colorTransparent)
@@ -137,7 +140,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         btnBack.setImageResource(R.drawable.icon_back_white)
     }
 
-    fun setVideoRatio(){
+    fun setVideoRatio() {
         val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth()
         params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
@@ -224,6 +227,9 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mCamera!!.stopPreview()
         releaseCamera()
         isCameraFront = !isCameraFront
+        mPreview = null
+        setVideoRatio()
+        setupSurfaceIfNeeded()
         setupCamera()
         mCamera?.startPreview()
     }
@@ -503,6 +509,17 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             }
             R.id.btnBack -> {
                 onBackPressed()
+            }
+            R.id.turnCameraBtn -> {
+                switchCamera()
+            }
+            R.id.chooseVideoBtn -> {
+                CommonFunction.onTakePhoto(
+                    this,
+                    1,
+                    RESULT_CODE_CHOOSE_VIDEO,
+                    PictureMimeType.ofVideo()
+                )
             }
             R.id.captureButton -> {
                 if (!isRecording) {
