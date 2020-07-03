@@ -82,7 +82,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
 
         calendarView.addDecorator(object : DayViewDecorator {
             override fun shouldDecorate(day: CalendarDay): Boolean {
-                return (day.month == CalendarDay.today().month && day.day <= CalendarDay.today().day)
+                return (day.month == CalendarDay.today().month && day.day < CalendarDay.today().day)
             }
 
             override fun decorate(view: DayViewFacade) {
@@ -92,7 +92,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
         })
         calendarView.addDecorator(object : DayViewDecorator {
             override fun shouldDecorate(day: CalendarDay): Boolean {
-                return !(day.month == CalendarDay.today().month && day.day <= CalendarDay.today().day)
+                return !(day.month == CalendarDay.today().month && day.day < CalendarDay.today().day)
             }
 
             override fun decorate(view: DayViewFacade) {
@@ -102,7 +102,7 @@ class ChooseChoicenessDialog(val context1: Context) : Dialog(context1, R.style.M
         calendarView.selectedDate = CalendarDay.from(
             CalendarDay.today().year,
             CalendarDay.today().month,
-            CalendarDay.today().day + 1
+            CalendarDay.today().day
         )
         calendarView.setTitleFormatter(object :
             MonthArrayTitleFormatter(context1.resources.getTextArray(R.array.custom_months)) {
