@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/rectangle_white_15dp"
+    android:gravity="bottom">
+
+
+    <ImageView
+        android:id="@+id/userAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/icon_contact_pass"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/closeBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/icon_close"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/verifyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="联系方式审核未通过"
+        android:textColor="#ff191919"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userAvatar" />
+
+
+    <TextView
+        android:id="@+id/verifyTip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="17dp"
+        android:gravity="center"
+        android:text="联系信息审核不通过，可能对您进行隐藏，请尽快修改（聊天信息可在设置界面隐藏）"
+        android:textColor="#ffb5b7b9"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verifyState" />
+
+
+    <TextView
+        android:id="@+id/changeBtn"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/shape_rectangle_orange_24dp"
+        android:gravity="center"
+        android:text="立即替换"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verifyTip" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

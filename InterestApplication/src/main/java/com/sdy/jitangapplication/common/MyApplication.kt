@@ -42,6 +42,7 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.ContactNotPassDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
@@ -203,6 +204,11 @@ class MyApplication : BaseApplication() {
                         //更新录制视频介绍
                         UserManager.my_mv_url = false
                         EventBus.getDefault().post(FemaleVideoEvent(0))
+                    }
+
+                    //联系方式审核未通过
+                    99 -> {
+                        ContactNotPassDialog(ActivityUtils.getTopActivity()).show()
                     }
                     //10头像未通过审核去进行人脸认证
                     10, 101 -> {
