@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.common.MyApplication
 import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.HumanVerfiyDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
@@ -64,7 +65,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             context1: Context,
             type: Int = TYPE_ACCOUNT_NORMAL
         ) {
-
             if (type == TYPE_LIVE_CAPTURE) {
                 context1.startActivity<IDVerifyActivity>("type" to type)
             } else
@@ -94,10 +94,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         .create()
                         .show()
                 } else {
-                    context1.startActivity<NewUserInfoSettingsActivity>(
-                        "showToast" to true,
-                        "type" to type
-                    )
+                    HumanVerfiyDialog(context1, type, true).show()
                 }
         }
 
@@ -134,7 +131,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     .create()
                     .show()
             } else {
-                context1.startActivity<NewUserInfoSettingsActivity>("showToast" to true)
+                HumanVerfiyDialog(context1, type, true).show()
             }
         }
     }
@@ -269,9 +266,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             loadingDialog.show()
             if (images != null && images.size > 0) {
                 val fileKey =
-                    "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME)
+                        .getString(
+                            "accid"
+                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
                     )}"
 
@@ -342,7 +340,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                                 CommonFunction.toast("审核提交成功")
                                 UserManager.saveUserVerify(2)
                                 UserManager.saveHasFaceUrl(true)
-                                setResult(Activity.RESULT_OK, intent.putExtra("verify" , 2))
+                                setResult(Activity.RESULT_OK, intent.putExtra("verify", 2))
                                 finish()
                                 if (intent.getIntExtra(
                                         "type",

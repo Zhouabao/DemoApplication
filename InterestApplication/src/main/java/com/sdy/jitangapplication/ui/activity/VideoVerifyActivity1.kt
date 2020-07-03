@@ -17,6 +17,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.dingmouren.camerafilter.ConstantFilters
@@ -79,7 +80,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
         const val RESULT_CODE_CONFIRM_VIDEO = 1008
 
 
-        const val RECORD_MAX_TIME = 20 //录制的总时长秒数，单位秒，默认30秒
+        const val RECORD_MAX_TIME = 15 //录制的总时长秒数，单位秒，默认30秒
         const val RECORD_MIN_TIME = 5 //最小录制时长，单位秒，默认1秒
         const val REQUEST_VIDEO_PERMISSIONS = 1
         const val PERMISSIONS_FRAGMENT_DIALOG = "permission_dialog"
@@ -127,11 +128,11 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
 
     private fun initListener() {
         btnBack.setOnClickListener(this)
+        rightBtn2.setOnClickListener(this)
         switchRecordContentBtn.setOnClickListener(this)
         captureButton.setOnClickListener(this)
         chooseVideoBtn.setOnClickListener(this)
         turnCameraBtn.setOnClickListener(this)
-        cameraFilterBtn.setOnClickListener(this)
 
         //滤镜对话框选择滤镜的监听
         filterDialog.setOnFilterChangedListener {
@@ -139,12 +140,12 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
         }
 
         filterDialog.setOnShowListener {
-            rl.animate().alpha(0F).setDuration(1000L).start()
+//            recordCl.animate().alpha(0F).setDuration(1000L).start()
         }
 
 
         filterDialog.setOnDismissListener {
-            rl.animate().alpha(1F).setDuration(1000L).start()
+//            recordCl.animate().alpha(1F).setDuration(1000L).start()
         }
     }
 
@@ -166,6 +167,8 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
         llTitle.setBackgroundResource(R.color.colorTransparent)
         hotT1.text = "视频介绍"
         hotT1.textColor = Color.WHITE
+        rightBtn2.isVisible = true
+        rightBtn2.setImageResource(R.drawable.icon_filter_gallery)
         btnBack.setImageResource(R.drawable.icon_back_white)
 
         CGENativeLibrary.setLoadImageCallback(LoadAssetsImageCallback(this), null)
@@ -351,7 +354,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                 camera_preview.switchCamera()
 //                switchCamera()
             }
-            R.id.cameraFilterBtn -> {
+            R.id.rightBtn2 -> {
                 filterDialog.show()
             }
             R.id.chooseVideoBtn -> {
@@ -410,8 +413,6 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                     }
 
                 VideoTrimmerActivity.start(this, path)
-            } else {
-                CommonFunction.toast("视频无效，请重新选择")
             }
         }
     }

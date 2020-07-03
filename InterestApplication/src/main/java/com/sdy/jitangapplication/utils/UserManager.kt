@@ -528,7 +528,7 @@ object UserManager {
 
 
     /**
-     * 是否展示赠送礼物规则提醒
+     * 是否进行过认证头像
      */
     fun isHasFaceUrl(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("hasFaceUrl", false)

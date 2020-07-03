@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.FemaleVideoEvent
+import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -63,7 +64,17 @@ class FemalePowerActivity : BaseActivity() {
 
         //真人认证
         powerVerify.clickWithTrigger {
-            CommonFunction.startToFace(this, requestCode = REQUEST_VERIFY)
+            when (verify) {
+                1 -> {
+                    CommonFunction.toast("您已通过认证")
+                }
+                2, 3 -> {
+                    CommonFunction.toast("认证审核中...")
+                }
+                else -> {
+                    CommonFunction.startToFace(this, requestCode = REQUEST_VERIFY)
+                }
+            }
         }
 
         //视频介绍

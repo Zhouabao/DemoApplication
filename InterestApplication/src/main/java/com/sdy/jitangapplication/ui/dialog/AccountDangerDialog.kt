@@ -17,6 +17,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -45,6 +46,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
         const val VERIFY_NEED_ACCOUNT_DANGER = 0 //账号异常去认证
         const val VERIFY_ING = 1//认证中
         const val VERIFY_NOT_PASS = 2//未通过
+        const val VERIFY_NOT_PASS_FORCE = 3//强制认证未通过
         const val VERIFY_PASS = 3//通过
     }
 
@@ -77,7 +79,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    CommonFunction.startToFace(context1,IDVerifyActivity.TYPE_ACCOUNT_DANGER)
+                    CommonFunction.startToFace(context1, IDVerifyActivity.TYPE_ACCOUNT_DANGER)
                 }
             }
             VERIFY_ING -> {
@@ -94,6 +96,37 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
 
             }
             VERIFY_NOT_PASS -> {
+                closeBtn.isVisible = true
+                accountDangerImgAlert.isVisible = true
+                humanVerify.isVisible = true
+                accountDangerLogo.isVisible = false
+                accountDangerVerifyStatuLogo.isVisible = true
+                GlideUtil.loadCircleImg(
+                    context1,
+                    UserManager.getAvator(),
+                    accountDangerVerifyStatuLogo
+                )
+//                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
+                accountDangerTitle.text = "认证审核不通过"
+                accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
+                accountDangerBtn.text = "修改头像"
+                accountDangerLoading.isVisible = false
+                accountDangerBtn.isEnabled = true
+                accountDangerBtn.onClick {
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                        context1.startActivity<NewUserInfoSettingsActivity>()
+                    else
+                        dismiss()
+                }
+                humanVerify.onClick {
+                    humanVerify(1)
+                }
+
+                closeBtn.clickWithTrigger {
+                    dismiss()
+                }
+            }
+            VERIFY_NOT_PASS_FORCE -> {
                 accountDangerImgAlert.isVisible = false
                 humanVerify.isVisible = false
                 accountDangerLogo.isVisible = false
@@ -158,7 +191,10 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
             .humanAduit(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-
+                    if (t.code == 200) {
+                        CommonFunction.toast("已提交人工审核，请耐心等待")
+                        dismiss()
+                    }
                 }
 
                 override fun onError(e: Throwable?) {

@@ -694,7 +694,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             setData(data)
             if (intent.getBooleanExtra("showToast", false)) {
-                CommonFunction.toast("您已认证过，请主动替换真实头像")
+                CommonFunction.toast("点击首张图片替换真人头像即可再次审核")
             }
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
