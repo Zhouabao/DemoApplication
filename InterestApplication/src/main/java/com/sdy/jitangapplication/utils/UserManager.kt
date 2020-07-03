@@ -34,6 +34,8 @@ object UserManager {
     var my_mv_url: Boolean = false //是否上传过视频介绍
     var showIndexRecommend: Boolean = false
     var touristMode: Boolean = false//是否是处于游客模式
+    var showCandyMessage: Boolean = true//聊天是否显示糖果
+    var showCandyTime: Long = 0L//聊天显示糖果的时间
 
     //每次进入APP弹完善个人资料弹窗
     var showCompleteUserCenterDialog: Boolean = false
@@ -639,7 +641,8 @@ object UserManager {
                         data?.extra_data?.people_amount ?: 0,
                         share_btn = data?.extra_data?.share_btn
                     ),
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP).show()
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                ).show()
             } else {
                 //跳到主页
                 //保存个人信息
@@ -660,7 +663,7 @@ object UserManager {
                         data?.extra_data?.city_name ?: "",
                         data?.extra_data?.gender_str ?: "",
                         data?.extra_data?.people_amount ?: 0,
-                        share_btn = data?.extra_data?.share_btn?:""
+                        share_btn = data?.extra_data?.share_btn ?: ""
                     ),
                     OpenVipDialog.FROM_REGISTER_OPEN_VIP
                 ).show()
@@ -681,7 +684,7 @@ object UserManager {
                     data?.extra_data?.city_name ?: "",
                     data?.extra_data?.gender_str ?: "",
                     data?.extra_data?.people_amount ?: 0,
-                    share_btn = data?.extra_data?.share_btn?:""
+                    share_btn = data?.extra_data?.share_btn ?: ""
                 ),
                 OpenVipDialog.FROM_REGISTER_OPEN_VIP
             ).show()

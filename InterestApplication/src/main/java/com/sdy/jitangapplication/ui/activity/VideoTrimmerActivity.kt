@@ -50,7 +50,6 @@ class VideoTrimmerActivity : BaseActivity(), VideoTrimListener {
     }
 
     override fun onFinishTrim(url: String) {
-//        todo 发通知回调视频截取成功
         EventBus.getDefault().post(VideoTrimmerEvent(url))
         finish()
     }

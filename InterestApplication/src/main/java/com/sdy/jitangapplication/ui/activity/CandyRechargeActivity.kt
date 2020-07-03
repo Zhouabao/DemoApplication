@@ -61,7 +61,7 @@ class CandyRechargeActivity : BaseMvpActivity<ChargeVipPresenter>(), ChargeVipVi
             if (!data?.list.isNullOrEmpty()) {
                 data!!.list!![0].checked = true
             }
-            candyAmount.text = "${data?.candyCount}"
+            candyAmount.text = "${data?.mycandy_amount}"
             candyPriceAdapter.addData(data?.list ?: mutableListOf())
             payments.addAll(data?.paylist ?: mutableListOf<PaywayBean>())
         }

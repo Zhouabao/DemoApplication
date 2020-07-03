@@ -44,8 +44,8 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
 //                        payways
 //                    ).show()
 //                }
-    private val chargeWayBeans by lazy { intent.getParcelableArrayListExtra<ChargeWayBean>("chargeWayBeans")  }
-    private val payways by lazy { intent.getParcelableArrayListExtra<PaywayBean>("payways")  }
+    private val chargeWayBeans by lazy { intent.getParcelableArrayListExtra<ChargeWayBean>("chargeWayBeans") }
+    private val payways by lazy { intent.getParcelableArrayListExtra<PaywayBean>("payways") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,9 +97,15 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
     /**
      * 展示更多操作对话框
      */
-    private fun showShareDialog(url: String) {
+    private fun showShareDialog(url: String, title: String, descr: String) {
         moreActionDialog =
-            MoreActionNewDialog(this, url = url, type = MoreActionNewDialog.TYPE_SHARE_VIP_URL)
+            MoreActionNewDialog(
+                this,
+                url = url,
+                type = MoreActionNewDialog.TYPE_SHARE_VIP_URL,
+                title = title,
+                content = descr
+            )
         moreActionDialog.show()
 
         moreActionDialog.collect.isVisible = true
@@ -123,8 +129,16 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
             R.id.shareNowBtn -> {
                 if (myInviteBean != null) {
                     //todo 修改分享链接
-//                    showShareDialog("${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}")
-                    showShareDialog("http://192.168.0.119/ppsns/UnShare/register/v1.json?invite_id=ixfaab")
+//                    showShareDialog(
+//                        "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
+//                        myInviteBean!!.invite_title,
+//                        myInviteBean!!.invite_descr
+//                    )
+                    showShareDialog(
+                        "http://192.168.0.119/ppsns/UnShare/register/v1.json?invite_id=ixfaab",
+                        myInviteBean!!.invite_title,
+                        myInviteBean!!.invite_descr
+                    )
                 }
             }
             //直接开通会员

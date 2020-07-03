@@ -40,7 +40,9 @@ class MoreActionNewDialog(
     private var myContext: Context,
     var squareBean: SquareBean? = null,
     var url: String = "",
-    var type: Int = TYPE_SHARE_SQUARE
+    var type: Int = TYPE_SHARE_SQUARE,
+    var title: String = "",
+    var content: String = ""
 ) :
     Dialog(myContext, R.style.MyDialog), View.OnClickListener {
 
@@ -215,8 +217,8 @@ class MoreActionNewDialog(
      */
     private fun shareWeb(platformConfig: SHARE_MEDIA) {
         val web = UMWeb(url)
-        web.title = "马上与空姐，艺人模特，清北牛津学生，白领结伴游玩..." //标题
-        web.description = "我花了九牛二虎之力，找来了空姐，艺人，清北牛津学生，模特，白领..."//描述
+        web.title =title
+        web.description = content
         web.setThumb(UMImage(myContext, R.drawable.icon_logo)) //缩略图
         ShareAction(myContext as Activity)
             .setPlatform(platformConfig)

@@ -26,6 +26,7 @@
                 android:id="@+id/shareFriendsIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
                 android:src="@drawable/icon_share_friends"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -33,12 +34,12 @@
 
             <ViewFlipper
                 android:id="@+id/vipFriendsVF"
-                android:layout_width="181dp"
+                android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_marginTop="5dp"
                 android:autoStart="true"
                 android:background="@drawable/rectangle_left_half_transparent_14dp"
-                android:flipInterval="3000"
+                android:flipInterval="2000"
                 android:inAnimation="@anim/push_up_in"
                 android:outAnimation="@anim/push_up_out"
                 app:layout_constraintRight_toRightOf="parent"

@@ -30,8 +30,9 @@ data class NimBean(
     var is_send_msg: Boolean = false,
     var chatup_amount: Int = 0,//搭讪支付的糖果
     var lockbtn: Boolean = false,//	true 弹出解锁聊天 false不弹出
-    var force_isvip: Boolean = false
-
+    var force_isvip: Boolean = false,
+    var chat_expend_amount: Int = 0,//1要显示 2不显示
+    var chat_expend_time: Long = 0L
 ) : Serializable
 
 data class ChatGiftStateBean(
@@ -43,6 +44,7 @@ data class ChatGiftStateBean(
 data class ResidueCountBean(
     var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
     var get_help_amount: Int = 0,
+
     var ret_tips_arr: MutableList<SendTipBean> = mutableListOf(),
     var rid_data: GiftBean? = null
 )

@@ -26,7 +26,6 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
-import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -42,7 +41,6 @@ import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
-import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
@@ -61,8 +59,6 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderWishHelp;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
-import com.sdy.jitangapplication.ui.dialog.ChatToViplDialog;
-import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 
 import java.util.ArrayList;
@@ -92,7 +88,6 @@ public class SessionHelper {
     private static List<PopupMenuItem> menuItemList;
 
     public static final boolean USE_LOCAL_ANTISPAM = true;
-
 
     public static void init() {
         // 注册自定义消息附件解析器
@@ -127,7 +122,6 @@ public class SessionHelper {
         }
     }
 
-
     // 定制化单聊界面。如果使用默认界面，返回null即可
     private static SessionCustomization getP2pCustomization() {
         if (p2pCustomization == null) {
@@ -152,15 +146,15 @@ public class SessionHelper {
             };
             // 背景
             p2pCustomization.backgroundColor = Color.WHITE;
-            //            p2pCustomization.backgroundUri = "file:///android_asset/xx/bk.jpg";
-            //            p2pCustomization.backgroundUri = "file:///sdcard/Pictures/bk.png";
-            //            p2pCustomization.backgroundUri = "android.resource://com.netease.nim.demo/drawable/bk"
+            // p2pCustomization.backgroundUri = "file:///android_asset/xx/bk.jpg";
+            // p2pCustomization.backgroundUri = "file:///sdcard/Pictures/bk.png";
+            // p2pCustomization.backgroundUri = "android.resource://com.netease.nim.demo/drawable/bk"
             // 定制加号点开后可以包含的操作， 默认已经有图片，视频等消息了
             ArrayList<ChatBaseAction> actions = new ArrayList<>();
 
             actions.add(new RecordAction());
             actions.add(new EmojAction());
-//            p2pCustomization.actions = actions;
+            // p2pCustomization.actions = actions;
             p2pCustomization.withSticker = true;
             // 定制ActionBar右边的按钮，可以加多个
             ArrayList<SessionCustomization.OptionsButton> buttons = new ArrayList<>();
@@ -168,7 +162,7 @@ public class SessionHelper {
 
                 @Override
                 public void onClick(Context context, View view, String sessionId) {
-                    //initPopuptWindow(context, view, sessionId, SessionTypeEnum.P2P);
+                    // initPopuptWindow(context, view, sessionId, SessionTypeEnum.P2P);
                 }
             };
             cloudMsgButton.iconId = R.drawable.icon_more_black;
@@ -176,7 +170,7 @@ public class SessionHelper {
 
                 @Override
                 public void onClick(Context context, View view, String sessionId) {
-                    MessageInfoActivity.startActivity(context, sessionId); //打开聊天信息
+                    MessageInfoActivity.startActivity(context, sessionId); // 打开聊天信息
                 }
             };
             infoButton.iconId = R.drawable.icon_more_black;
@@ -222,7 +216,7 @@ public class SessionHelper {
             ArrayList<ChatBaseAction> actions = new ArrayList<>();
             actions.add(new RecordAction());
             actions.add(new EmojAction());
-//            myP2pCustomization.actions = actions;
+            // myP2pCustomization.actions = actions;
             myP2pCustomization.withSticker = true;
             // 定制ActionBar右边的按钮，可以加多个
             ArrayList<SessionCustomization.OptionsButton> buttons = new ArrayList<>();
@@ -235,25 +229,24 @@ public class SessionHelper {
         if (!USE_LOCAL_ANTISPAM) {
             return true;
         }
-        LocalAntiSpamResult result = NIMClient.getService(MsgService.class).checkLocalAntiSpam(message.getContent(),
-                "**");
+        LocalAntiSpamResult result =
+                NIMClient.getService(MsgService.class).checkLocalAntiSpam(message.getContent(), "**");
         int operator = result == null ? 0 : result.getOperator();
         switch (operator) {
-            case 1: // 替换，允许发送
-                message.setContent(result.getContent());
-                return true;
-            case 2: // 拦截，不允许发送
-                return false;
-            case 3: // 允许发送，交给服务器
-                message.setClientAntiSpam(true);
-                return true;
-            case 0:
-            default:
-                break;
+        case 1: // 替换，允许发送
+            message.setContent(result.getContent());
+            return true;
+        case 2: // 拦截，不允许发送
+            return false;
+        case 3: // 允许发送，交给服务器
+            message.setClientAntiSpam(true);
+            return true;
+        case 0:
+        default:
+            break;
         }
         return true;
     }
-
 
     private static RecentCustomization getRecentCustomization() {
         if (recentCustomization == null) {
@@ -262,13 +255,17 @@ public class SessionHelper {
                 @Override
                 public String getDefaultDigest(RecentContact recent) {
                     if (recent.getAttachment() instanceof ChatHiAttachment) {
-                        if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
+                        if (((ChatHiAttachment) recent.getAttachment())
+                                .getShowType() == ChatHiAttachment.CHATHI_MATCH) {
                             return "『匹配消息』";
-                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
+                        } else if (((ChatHiAttachment) recent.getAttachment())
+                                .getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
                             return "『好友消息』";
-                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
+                        } else if (((ChatHiAttachment) recent.getAttachment())
+                                .getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
                             return "『消息过期』";
-                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
+                        } else if (((ChatHiAttachment) recent.getAttachment())
+                                .getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
                             return "『意向匹配』";
                         }
 
@@ -291,10 +288,9 @@ public class SessionHelper {
         return recentCustomization;
     }
 
-
-    //自定义消息界面
+    // 自定义消息界面
     private static void registerViewHolders() {
-//        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
+        // NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
         NimUIKit.registerMsgItemViewHolder(AccostGiftAttachment.class, MsgViewHolderAccostGift.class);
         NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
         NimUIKit.registerMsgItemViewHolder(WishHelpAttachment.class, MsgViewHolderWishHelp.class);
@@ -304,9 +300,8 @@ public class SessionHelper {
         NimUIKit.registerMsgItemViewHolder(ContactAttachment.class, MsgViewHolderContact.class);
         NimUIKit.registerTipMsgViewHolder(MsgViewHolderTip.class);
         // NimUIKit.registerMsgItemViewHolder(FileAttachment.class, MsgViewHolderFile.class);
-//        NimUIKit.registerMsgItemViewHolder(CustomAttachment.class, MsgViewHolderDefCustom.class);
+        // NimUIKit.registerMsgItemViewHolder(CustomAttachment.class, MsgViewHolderDefCustom.class);
     }
-
 
     private static void setSessionListener() {
         SessionEventListener listener = new SessionEventListener() {
@@ -315,7 +310,7 @@ public class SessionHelper {
             public void onAvatarClicked(Context context, IMMessage message) {
                 // 一般用于打开用户资料页面
                 if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
-                    //context.startActivity(new Intent(context, UserCenterActivity.class));
+                    // context.startActivity(new Intent(context, UserCenterActivity.class));
                 } else if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID))
                     MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
             }
@@ -332,42 +327,39 @@ public class SessionHelper {
 
             @Override
             public void onGetReceivcedMsgClicked(Context context, IMMessage message) {
-                //获取已读回执，用于弹出会员详情
+                // 获取已读回执，用于弹出会员详情
                 if (!UserManager.INSTANCE.isUserVip())
                     new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
             }
-
 
             @Override
             public boolean isUserVip() {
                 return UserManager.INSTANCE.isUserVip();
             }
 
-
-
             @Override
             public boolean isShowGiftIcon(IMMessage message) {
-                //男的发的并且是(女的收的或者男方自己)
-//                   && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
-//                            || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
+                // todo 根据服务器返回的字段来设置消息是否要消耗糖果
+                // 男的发的并且是(女的收的或者男方自己)  并且控制时间与显示与否
+                // && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
+                // || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
                 if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {
                     return false;
                 } else {
-                    boolean sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
-                    boolean differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum()
-                            != ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
-                    if (message.getRemoteExtension() != null && message.getRemoteExtension().get("needCandyImg") != null && ((Boolean) message.getRemoteExtension().get("needCandyImg")) == false) {
-                        return false;
+                    boolean sendMan =
+                            ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount()))
+                                    .getGenderEnum() == GenderEnum.MALE;
+                    boolean differentGender =
+                            ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId()))
+                                    .getGenderEnum() != ((NimUserInfo) NimUIKit.getUserInfoProvider()
+                                            .getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
+                    if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
+                            && message.getMsgType() != MsgTypeEnum.tip && message.getMsgType() != MsgTypeEnum.custom
+                            && sendMan && differentGender && UserManager.INSTANCE.getShowCandyMessage()
+                            && message.getTime() > UserManager.INSTANCE.getShowCandyTime()) {
+                        return true;
                     } else {
-                        if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
-                                && message.getMsgType() != MsgTypeEnum.tip
-                                && message.getMsgType() != MsgTypeEnum.custom
-                                && sendMan
-                                && differentGender) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
@@ -380,7 +372,6 @@ public class SessionHelper {
         NimUIKit.setSessionListener(listener);
     }
 
-
     /**
      * 消息转发过滤器
      */
@@ -392,8 +383,8 @@ public class SessionHelper {
                 if (message.getMsgType() == MsgTypeEnum.custom) {
                     // 白板消息和阅后即焚消息，红包消息 不允许转发
                     return true;
-                } else if (message.getMsgType() == MsgTypeEnum.robot && message.getAttachment() != null &&
-                        ((RobotAttachment) message.getAttachment()).isRobotSend()) {
+                } else if (message.getMsgType() == MsgTypeEnum.robot && message.getAttachment() != null
+                        && ((RobotAttachment) message.getAttachment()).isRobotSend()) {
                     return true; // 如果是机器人发送的消息 不支持转发
                 }
                 return false;
@@ -424,9 +415,8 @@ public class SessionHelper {
         NIMClient.getService(MsgServiceObserve.class).observeRevokeMessage(new NimMessageRevokeObserver(), true);
     }
 
-
     private static void initPopuptWindow(Context context, View view, String sessionId,
-                                         SessionTypeEnum sessionTypeEnum) {
+            SessionTypeEnum sessionTypeEnum) {
         if (popupMenu == null) {
             menuItemList = new ArrayList<>();
             popupMenu = new NIMPopupMenu(context, menuItemList, listener);
@@ -442,71 +432,68 @@ public class SessionHelper {
         @Override
         public void onItemClick(final PopupMenuItem item) {
             switch (item.getTag()) {
-                case ACTION_HISTORY_QUERY:
-//                    MessageHistoryActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum()); // 漫游消息查询
-                    SearchMessageActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum());//搜索聊天记录
+            case ACTION_HISTORY_QUERY:
+                // MessageHistoryActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum()); //
+                // 漫游消息查询
+                SearchMessageActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum());// 搜索聊天记录
 
-                    break;
-                case ACTION_SEARCH_MESSAGE:
-                    SearchMessageActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum());//搜索聊天记录
-                    break;
-                case ACTION_CLEAR_MESSAGE:
-                    EasyAlertDialogHelper
-                            .createOkCancelDiolag(item.getContext(), null, "确定要清空吗？", true,
-                                    new EasyAlertDialogHelper.OnDialogActionListener() {
+                break;
+            case ACTION_SEARCH_MESSAGE:
+                SearchMessageActivity.start(item.getContext(), item.getSessionId(), item.getSessionTypeEnum());// 搜索聊天记录
+                break;
+            case ACTION_CLEAR_MESSAGE:
+                EasyAlertDialogHelper.createOkCancelDiolag(item.getContext(), null, "确定要清空吗？", true,
+                        new EasyAlertDialogHelper.OnDialogActionListener() {
 
-                                        @Override
-                                        public void doCancelAction() {
-                                        }
+                            @Override
+                            public void doCancelAction() {
+                            }
 
-                                        @Override
-                                        public void doOkAction() {
-                                            NIMClient.getService(MsgService.class)
-                                                    .clearChattingHistory(
-                                                            item.getSessionId(),
-                                                            item.getSessionTypeEnum());
-                                            MessageListPanelHelper.getInstance()
-                                                    .notifyClearMessages(
-                                                            item.getSessionId());
-                                        }
-                                    }).show();
-                    break;
-                case ACTION_CLEAR_P2P_MESSAGE:
-                    String title = item.getContext().getString(R.string.message_p2p_clear_tips);
-                    CustomAlertDialog alertDialog = new CustomAlertDialog(item.getContext());
-                    alertDialog.setTitle(title);
-                    alertDialog.addItem("确定", new CustomAlertDialog.onSeparateItemClickListener() {
+                            @Override
+                            public void doOkAction() {
+                                NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
+                                        item.getSessionTypeEnum());
+                                MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
+                            }
+                        }).show();
+                break;
+            case ACTION_CLEAR_P2P_MESSAGE:
+                String title = item.getContext().getString(R.string.message_p2p_clear_tips);
+                CustomAlertDialog alertDialog = new CustomAlertDialog(item.getContext());
+                alertDialog.setTitle(title);
+                alertDialog.addItem("确定", new CustomAlertDialog.onSeparateItemClickListener() {
 
-                        @Override
-                        public void onClick() {
-                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
-                                    item.getSessionTypeEnum());
-                            MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
-                        }
-                    });
-                    String itemText = item.getContext().getString(R.string.sure_keep_roam);
-                    alertDialog.addItem(itemText, new CustomAlertDialog.onSeparateItemClickListener() {
+                    @Override
+                    public void onClick() {
+                        NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
+                                item.getSessionTypeEnum());
+                        MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
+                    }
+                });
+                String itemText = item.getContext().getString(R.string.sure_keep_roam);
+                alertDialog.addItem(itemText, new CustomAlertDialog.onSeparateItemClickListener() {
 
-                        @Override
-                        public void onClick() {
-                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(), item.getSessionTypeEnum());
-                            MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
-                        }
-                    });
-                    alertDialog.addItem("取消", new CustomAlertDialog.onSeparateItemClickListener() {
+                    @Override
+                    public void onClick() {
+                        NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
+                                item.getSessionTypeEnum());
+                        MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
+                    }
+                });
+                alertDialog.addItem("取消", new CustomAlertDialog.onSeparateItemClickListener() {
 
-                        @Override
-                        public void onClick() {
-                        }
-                    });
-                    alertDialog.show();
-                    break;
+                    @Override
+                    public void onClick() {
+                    }
+                });
+                alertDialog.show();
+                break;
             }
         }
     };
 
     private static List<PopupMenuItem> getMoreMenuItems(Context context, String sessionId,
-                                                        SessionTypeEnum sessionTypeEnum) {
+            SessionTypeEnum sessionTypeEnum) {
         List<PopupMenuItem> moreMenuItems = new ArrayList<PopupMenuItem>();
         moreMenuItems.add(new PopupMenuItem(context, ACTION_HISTORY_QUERY, sessionId, sessionTypeEnum,
                 DemoCache.getContext().getString(R.string.message_history_query)));
