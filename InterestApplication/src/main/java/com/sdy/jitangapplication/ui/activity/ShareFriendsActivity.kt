@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * todo 数据填充
  * 分享给好友
  */
 class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFriendsView,
@@ -128,17 +127,11 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
             //立即分享
             R.id.shareNowBtn -> {
                 if (myInviteBean != null) {
-                    //todo 修改分享链接
                     showShareDialog(
                         "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
                         myInviteBean!!.invite_title,
                         myInviteBean!!.invite_descr
                     )
-//                    showShareDialog(
-//                        "http://192.168.0.119/ppsns/UnShare/register/v1.json?invite_id=ixfaab",
-//                        myInviteBean!!.invite_title,
-//                        myInviteBean!!.invite_descr
-//                    )
                 }
             }
             //直接开通会员

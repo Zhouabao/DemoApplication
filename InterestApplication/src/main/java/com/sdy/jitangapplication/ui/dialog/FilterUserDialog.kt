@@ -53,7 +53,8 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             sp.getInt("limit_age_low", 18).toFloat(),
             sp.getInt("limit_age_high", 35).toFloat()
         )
-        filterAge.text = "${seekBarAge.leftSeekBar.progress.toInt()}-${seekBarAge.rightSeekBar.progress.toInt()}岁"
+        filterAge.text =
+            "${seekBarAge.leftSeekBar.progress.toInt()}-${seekBarAge.rightSeekBar.progress.toInt()}岁"
 
         rbSexAll.check(
             when (sp.getInt("filter_gender", 3)) {
@@ -78,7 +79,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             switchShowVerify.isChecked = sp.getInt("audit_only", 1) == 2
 
         } else {
-            if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
+            if (UserManager.isUserVerify() == 2) {
                 btnVerify.text = "认证中"
             } else {
                 btnVerify.text = "未认证"
@@ -94,7 +95,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             ChargeVipDialog(ChargeVipDialog.FILTER_ONLINE, context1).show()
         }
         btnVerify.onClick {
-            if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
+            if (UserManager.isUserVerify() == 2) {
                 CommonFunction.toast("认证正在审核中，请耐心等待哦~")
             } else {
                 CommonFunction.startToFace(context1)
@@ -104,7 +105,12 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
             }
 
-            override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
+            override fun onRangeChanged(
+                view: RangeSeekBar?,
+                leftValue: Float,
+                rightValue: Float,
+                isFromUser: Boolean
+            ) {
                 filterAge.text = "${leftValue.toInt()}-${rightValue.toInt()}岁"
             }
 

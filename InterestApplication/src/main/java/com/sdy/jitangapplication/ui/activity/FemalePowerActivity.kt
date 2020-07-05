@@ -14,7 +14,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.FemaleVideoEvent
-import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -79,6 +78,7 @@ class FemalePowerActivity : BaseActivity() {
 
         //视频介绍
         powerVideo.clickWithTrigger {
+            //todo 还原视频介绍代码
             CommonFunction.startToVideoIntroduce(this)
 //            if (verify == 1) {
 //                if (video == 0) {

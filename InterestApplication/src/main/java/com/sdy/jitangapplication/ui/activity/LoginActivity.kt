@@ -279,9 +279,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
         if (data != null) {
-            //todo 切换配置
-//            data!!.threshold = false
-//            data!!.supplement = 1
             UserManager.registerFileBean = data
             if (data?.tourists) {
                 touristBtn.visibility = View.VISIBLE

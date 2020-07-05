@@ -106,7 +106,6 @@ class OpenVipDialog(
                 refuseBtn.text = "不，谢谢"
             }
             FROM_REGISTER_OPEN_VIP -> {
-                //todo 新增分享好友获取会员，填写信息
                 shareFriendsBtn.isVisible = !moreMatch?.share_btn.isNullOrEmpty()
                 shareFriendsBtn.text = moreMatch?.share_btn
                 if (UserManager.getGender() == 1) {

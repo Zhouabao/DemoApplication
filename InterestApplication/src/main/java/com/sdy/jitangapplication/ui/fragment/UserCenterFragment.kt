@@ -330,7 +330,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             verifyState.text = "已认证"
             verifyState.textColor = resources.getColor(R.color.colorWhite)
             verifyState.setBackgroundResource(R.drawable.gradient_blue_11dp)
-        } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
+        } else if (userInfoBean?.userinfo?.isfaced == 2) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_not)
             verifyState.text = "审核中"
             verifyState.textColor = Color.parseColor("#FFC5C6C8")

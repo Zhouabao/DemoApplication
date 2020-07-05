@@ -94,6 +94,7 @@ class HumanVerfiyDialog(val context1: Context, val type: Int, val showToast: Boo
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
+                        //todo 新增审核中状态
                         CommonFunction.toast("已提交人工审核，请耐心等待")
                         dismiss()
                     }
