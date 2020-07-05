@@ -36,21 +36,23 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
 
     }
 
-    private var gender = 1//默认是男性
+    private var gender = 0//默认是男性
     private var alertGender = false
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.genderMan -> {
+                checkNextBtnEnable()
                 genderCheckedMan.isVisible = true
                 genderCheckedWoman.isVisible = false
                 gender = 1
             }
             R.id.genderWoman -> {
+                checkNextBtnEnable()
                 genderCheckedWoman.isVisible = true
                 genderCheckedMan.isVisible = false
                 gender = 2
             }
-            R.id.nextBtn->{
+            R.id.nextBtn -> {
                 if (!alertGender) {
                     CommonAlertDialog.Builder(this)
                         .setTitle("提示")
@@ -78,6 +80,11 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
             }
         }
     }
+
+    fun checkNextBtnEnable() {
+        nextBtn.isEnabled = gender != 0
+    }
+
 
     override fun onUploadUserInfoResult(uploadResult: Boolean, moreMatchBean: MoreMatchBean?) {
         if (uploadResult) {
