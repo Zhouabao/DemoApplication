@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.presenter.GetMoreMatchPresenter
@@ -63,7 +64,12 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
 
 
         Log.d("getAvator()", UserManager.getAvator())
-        GlideUtil.loadCircleImg(this, UserManager.getAvator(), myAvator)
+        if (UserManager.getAvator().isNullOrEmpty() || UserManager.getAvator()
+                .contains(Constants.DEFAULT_AVATAR)
+        )
+            GlideUtil.loadCircleImg(this, R.drawable.icon_logo_orange_circle, myAvator)
+        else
+            GlideUtil.loadCircleImg(this, UserManager.getAvator(), myAvator)
 
 
         val scaleAnimationX = ObjectAnimator.ofFloat(myAvator, "scaleX", 0F, 1F)
@@ -123,7 +129,7 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
         when (v.id) {
             R.id.nextStep -> {
                 startActivity<GetRelationshipActivity>(
-                    "moreMatch" to intent.getSerializableExtra("moreMatch") as MoreMatchBean?
+                    "moreMatch" to moreMatch
                 )
                 finish()
             }

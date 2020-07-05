@@ -260,7 +260,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             this.data = data
             //更新本地缓存
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.nickname!!)
-            SPUtils.getInstance(Constants.SPNAME).put("gender", data.gender!!)
+            UserManager.saveGender(data.gender!!)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.avatar!!)
 
             userNickName.text = "${data.nickname}"

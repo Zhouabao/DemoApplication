@@ -544,12 +544,7 @@ object CommonFunction {
             || ActivityUtils.getTopActivity() is GetRelationshipActivity
             || ActivityUtils.getTopActivity() is VerifyCodeActivity
         ) {//注册界面支付会员进入首页
-            if (UserManager.registerFileBean?.supplement == 2) {
-                context.startActivity<GetRelationshipActivity>()
-                EventBus.getDefault().post(CloseDialogEvent())
-            } else {
-                context.startActivity<MainActivity>()
-            }
+            EventBus.getDefault().post(CloseDialogEvent())
         } else if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) { //糖果充值更新糖果
             EventBus.getDefault().post(RefreshCandyMallDetailEvent())
         } else if (ActivityUtils.getTopActivity() is CandyMallActivity) { //糖果商城充值

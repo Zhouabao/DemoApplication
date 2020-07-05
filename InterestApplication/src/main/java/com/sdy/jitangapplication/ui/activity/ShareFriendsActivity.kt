@@ -129,16 +129,16 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
             R.id.shareNowBtn -> {
                 if (myInviteBean != null) {
                     //todo 修改分享链接
-//                    showShareDialog(
-//                        "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
-//                        myInviteBean!!.invite_title,
-//                        myInviteBean!!.invite_descr
-//                    )
                     showShareDialog(
-                        "http://192.168.0.119/ppsns/UnShare/register/v1.json?invite_id=ixfaab",
+                        "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
                         myInviteBean!!.invite_title,
                         myInviteBean!!.invite_descr
                     )
+//                    showShareDialog(
+//                        "http://192.168.0.119/ppsns/UnShare/register/v1.json?invite_id=ixfaab",
+//                        myInviteBean!!.invite_title,
+//                        myInviteBean!!.invite_descr
+//                    )
                 }
             }
             //直接开通会员

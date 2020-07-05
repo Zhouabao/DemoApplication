@@ -50,7 +50,7 @@ class CompleteUserCenterDialog(val context1: Context) : Dialog(context1, R.style
         params?.windowAnimations = R.style.MyDialogCenterAnimation
         window?.attributes = params
         setCancelable(true)
-        setCanceledOnTouchOutside(true)
+        setCanceledOnTouchOutside(false)
     }
 
     override fun dismiss() {

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.accounts.Account
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -117,6 +118,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //                onForceFaceEvent(ForceFaceEvent(VerifyForceDialog.FORCE_GOING))
 //            }
 //        }
+
 
 
     }

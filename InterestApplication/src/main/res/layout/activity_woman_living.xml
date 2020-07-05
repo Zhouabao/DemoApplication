@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.WomanLivingActivity">
+
+    <TextView
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="16dp"
+        android:text="活体认证"
+        android:textColor="#ff000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="认证仅为判断你是真实用户\n不会对其他用户公开"
+        android:textColor="#ff4c4c4c"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
+
+    <ImageView
+        android:id="@+id/livingBg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:src="@drawable/icon_living_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2" />
+
+
+    <TextView
+        android:id="@+id/t3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:drawableTop="@drawable/icon_living_face_phone"
+        android:drawablePadding="10dp"
+        android:text="正对手机"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/t4"
+        app:layout_constraintTop_toBottomOf="@id/livingBg" />
+
+    <TextView
+        android:id="@+id/t4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:drawableTop="@drawable/icon_living_light"
+        android:drawablePadding="10dp"
+        android:text="光源充足"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/t3"
+        app:layout_constraintRight_toLeftOf="@id/t5"
+        app:layout_constraintTop_toBottomOf="@id/livingBg" />
+
+    <TextView
+        android:id="@+id/t5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:drawableTop="@drawable/icon_living_face"
+        android:drawablePadding="10dp"
+        android:text="脸无遮挡"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/t4"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/livingBg" />
+
+    <TextView
+        android:id="@+id/beginLivingBtn"
+        android:layout_width="298dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_rectangle_orange_24dp"
+        android:gravity="center"
+        android:text="开始识别"
+        android:textColor="#ffffffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

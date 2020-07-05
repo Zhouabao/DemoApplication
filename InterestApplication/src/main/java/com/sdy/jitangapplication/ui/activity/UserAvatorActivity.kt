@@ -507,9 +507,9 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
     override fun onRegisterAddPhoto(data: MoreMatchBean?) {
         if (data != null && data!!.gender_str.isNotEmpty()) {
-            SPUtils.getInstance(Constants.SPNAME).put("avatar", data?.avatar)
-            startActivity<GetMoreMatchActivity>("moreMatch" to data)
-            finish()
+//            SPUtils.getInstance(Constants.SPNAME).put("avatar", data?.avatar)
+//            startActivity<GetMoreMatchActivity>("moreMatch" to data)
+//            finish()
         } else {
             btnNextStep.isEnabled = true
         }

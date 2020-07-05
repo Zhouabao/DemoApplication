@@ -145,7 +145,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:gravity="center"
-            android:text="人工审核"
+            android:text="申请人工审核"
             android:textColor="#ffc5c6c8"
             android:textSize="14sp"
             android:visibility="gone"

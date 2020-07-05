@@ -14,9 +14,7 @@ import com.sdy.jitangapplication.presenter.GetRelationshipPresenter
 import com.sdy.jitangapplication.presenter.view.GetRelationshipView
 import com.sdy.jitangapplication.ui.adapter.GetRelationshipVpAdapter
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_get_relationship.*
-import org.jetbrains.anko.startActivity
 
 /**
  * 寻求什么关系
@@ -130,23 +128,14 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
     override fun onAddWant(b: Boolean, data: MoreMatchBean?) {
         if (b) {
-            if (UserManager.registerFileBean?.supplement == 2) {
-                startActivity<MainActivity>()
+            val moreMatchBean = intent.getSerializableExtra("moreMatch") as MoreMatchBean?
+            moreMatchBean?.people_amount = data?.people_amount ?: 0
+            OpenVipDialog(
+                this,
+                moreMatchBean,
+                OpenVipDialog.FROM_REGISTER_OPEN_VIP
+            ).show()
 
-//                finish()
-            } else {
-                OpenVipDialog(
-                    this,
-                    data,
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                ).show()
-
-//                startActivity<ForeverVipActivity>(
-//                    "people_amount" to data?.people_amount,
-//                    "city_name" to data?.city_name,
-//                    "gender_str" to data?.gender_str
-//                )
-            }
 
         }
     }

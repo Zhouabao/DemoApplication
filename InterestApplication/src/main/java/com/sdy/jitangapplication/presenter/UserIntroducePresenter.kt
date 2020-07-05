@@ -51,7 +51,7 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
                         SPUtils.getInstance(Constants.SPNAME).put("nickname", t.data?.nickname)
                         SPUtils.getInstance(Constants.SPNAME).put("avatar", t.data?.avatar)
                         t.data?.gender?.let {
-                            SPUtils.getInstance(Constants.SPNAME).put("gender", it)
+                            UserManager.saveGender(it)
                         }
                         t.data?.birth?.let {
                             SPUtils.getInstance(Constants.SPNAME).put("birth", it)

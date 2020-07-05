@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -44,7 +43,6 @@ import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
 import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_register_info.*
 import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
@@ -294,13 +292,14 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
 
 
     private fun checkConfirmEnable() {
-        nextBtn.isEnabled = userGender.text.isNotEmpty()
-                && userBirth.text.isNotEmpty()
-                && userNickName.text.isNotEmpty()
-                && (userSign.text.isNotEmpty() || userQuickSign.text.isNotEmpty())
-                && contactWay != -1
-                && contactWayEt.text.isNotEmpty()
-                && (params["avatar"] != null && params["avatar"].toString().isNotEmpty())
+        nextBtn.isEnabled =
+//            userGender.text.isNotEmpty() &&
+            userBirth.text.isNotEmpty()
+                    && userNickName.text.isNotEmpty()
+//                    && (userSign.text.isNotEmpty() || userQuickSign.text.isNotEmpty())
+                    && contactWay != -1
+                    && contactWayEt.text.isNotEmpty()
+                    && (params["avatar"] != null && params["avatar"].toString().isNotEmpty())
     }
 
     override fun onLazyClick(v: View) {
@@ -342,49 +341,49 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 checkConfirmEnable()
             }
             R.id.nextBtn -> {//下一步
-                if (!alertGender) {
-                    CommonAlertDialog.Builder(this)
-                        .setTitle("提示")
-                        .setContent("性别确定了就不能更改了奥")
-                        .setConfirmText("我知道了")
-                        .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                            override fun onClick(dialog: Dialog) {
-                                params["nickname"] = userNickName.text.trim().toString()
-                                if (chooseSign != null) {
-                                    params["sign_id"] = chooseSign!!.id
-                                    params["sign"] = chooseSign!!.content
-                                } else {
-                                    params["sign"] = userSign.text.trim().toString()
-                                }
-                                params["contact_way"] = contactWay
-                                params["contact_way_content"] = contactWayEt.text.trim().toString()
-                                mPresenter.setProfileCandy(1, params)
-                                dialog.dismiss()
-                            }
-                        })
-                        .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                            override fun onClick(dialog: Dialog) {
-                                dialog.dismiss()
-                                alertGender = true
-                            }
-                        })
-                        .setCancelAble(true)
-                        .setCancelText("取消")
-                        .create()
-                        .show()
-                } else {
-                    params["nickname"] = userNickName.text.trim().toString()
-                    params["sign"] = userSign.text.trim().toString()
-                    if (chooseSign != null) {
-                        params["sign_id"] = chooseSign!!.id
-                        params["sign"] = chooseSign!!.content
-                    } else {
-                        params["sign"] = userSign.text.trim().toString()
-                    }
-                    params["contact_way"] = contactWay
-                    params["contact_way_content"] = contactWayEt.text.trim().toString()
-                    mPresenter.setProfileCandy(1, params)
-                }
+//                if (!alertGender) {
+//                    CommonAlertDialog.Builder(this)
+//                        .setTitle("提示")
+//                        .setContent("性别确定了就不能更改了奥")
+//                        .setConfirmText("我知道了")
+//                        .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+//                            override fun onClick(dialog: Dialog) {
+//                                params["nickname"] = userNickName.text.trim().toString()
+//                                if (chooseSign != null) {
+//                                    params["sign_id"] = chooseSign!!.id
+//                                    params["sign"] = chooseSign!!.content
+//                                } else {
+//                                    params["sign"] = userSign.text.trim().toString()
+//                                }
+//                                params["contact_way"] = contactWay
+//                                params["contact_way_content"] = contactWayEt.text.trim().toString()
+//                                mPresenter.setProfileCandy(1, params)
+//                                dialog.dismiss()
+//                            }
+//                        })
+//                        .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+//                            override fun onClick(dialog: Dialog) {
+//                                dialog.dismiss()
+//                                alertGender = true
+//                            }
+//                        })
+//                        .setCancelAble(true)
+//                        .setCancelText("取消")
+//                        .create()
+//                        .show()
+//                } else {
+                params["nickname"] = userNickName.text.trim().toString()
+//                params["sign"] = userSign.text.trim().toString()
+//                if (chooseSign != null) {
+//                    params["sign_id"] = chooseSign!!.id
+//                    params["sign"] = chooseSign!!.content
+//                } else {
+//                    params["sign"] = userSign.text.trim().toString()
+//                }
+                params["contact_way"] = contactWay
+                params["contact_way_content"] = contactWayEt.text.trim().toString()
+                mPresenter.setProfileCandy(1, params)
+//                }
 
             }
         }
@@ -393,6 +392,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
 
 
     private val params by lazy { hashMapOf<String, Any>() }
+
     /**
      * 展示日历
      */
@@ -426,6 +426,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     }
 
     private var alertGender = false
+
     /**
      * 展示条件选择器
      */
@@ -480,6 +481,17 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             OnOptionsSelectListener { options1, options2, options3, v ->
                 chooseContactBtn.setImageResource(contactWaysIcon[options1])
                 contactWay = options1 + 1
+                contactWayEt.hint = "${when (options1) {
+                    0 -> {
+                        "请输入正确的手机号，可设置隐藏"
+                    }
+                    1 -> {
+                        "请输入正确的微信号，可设置隐藏"
+                    }
+                    else -> {
+                        "请输入正确的QQ号，可设置隐藏"
+                    }
+                }}"
                 checkConfirmEnable()
             })
             .setSubmitText("确定")
@@ -621,14 +633,10 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     ) {
         if (uploadResult) {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
-            SPUtils.getInstance(Constants.SPNAME).put("gender", params["gender"] as Int)
 //            startActivity<RegisterInfoActivity>()
 
             if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
-                startActivity<IDVerifyActivity>(
-                    "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
-                    "morematchbean" to moreMatchBean
-                )
+                startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
             } else
                 UserManager.startToFlow(this, moreMatchBean)
         } else {

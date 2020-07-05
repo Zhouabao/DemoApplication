@@ -30,7 +30,9 @@ import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
 import com.sdy.jitangapplication.ui.activity.ShareFriendsActivity
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -205,7 +207,7 @@ class OpenVipDialog(
 
         //余额支付
         openVipBtn.clickWithTrigger {
-            if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {
+            if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {//门槛开启（成为会员）
                 if (chargeWayBeans.isNotEmpty()) {
                     ConfirmPayCandyDialog(
                         context1,
@@ -213,18 +215,22 @@ class OpenVipDialog(
                         payways
                     ).show()
                 }
-            } else {
-                context1.startActivity<MainActivity>()
+            } else {//门槛关闭（立即加入）
+                if (UserManager.getGender() == 1) {
+                    context1.startActivity<RegisterInfoActivity>()
+                } else
+                    context1.startActivity<MainActivity>()
             }
         }
 
 
         //取消支付
         refuseBtn.clickWithTrigger {
-            if (context1 !is MainActivity && context1 !is ChatActivity)
+            if (context1 !is MainActivity && context1 !is ChatActivity) {
                 context1.startActivity<MainActivity>()
-            else
+            } else {
                 dismiss()
+            }
         }
 
 
@@ -311,19 +317,25 @@ class OpenVipDialog(
     }
 
 
-    override fun show() {
-        super.show()
-    }
-
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
+    override fun dismiss() {
+        super.dismiss()
+        if (LoginActivity.weakrefrece != null && LoginActivity.weakrefrece!!.get() != null) {
+            (LoginActivity.weakrefrece!!.get() as LoginActivity).finish()
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCloseDialogEvent(event: CloseDialogEvent) {
-        if (isShowing) {
-            dismiss()
-        }
+        if (from == FROM_REGISTER_OPEN_VIP) {
+            context1.startActivity<RegisterInfoActivity>()
+        } else
+            if (isShowing) {
+                dismiss()
+            }
     }
 }

@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.activity.UserAvatorActivity">
+>
 
     <TextView
         android:id="@+id/tv1"

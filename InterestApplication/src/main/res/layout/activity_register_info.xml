@@ -1,5 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@color/colorWhite"-->
+<!--    android:fitsSystemWindows="true"-->
+<!--    android:overScrollMode="never"-->
+<!--    tools:context=".ui.activity.RegisterInfoActivity">-->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,386 +18,399 @@
     android:overScrollMode="never"
     tools:context=".ui.activity.RegisterInfoActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="16dp"
+        android:text="介绍一下自己吧"
+        android:textColor="#ff000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/moreInfoTitle"
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="填写辅助信息让别人更了解你"
+        android:textColor="#ff4c4c4c"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userAvatarCl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2">
+
+        <ImageView
+            android:id="@+id/userAvatorTake"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_gray_bg"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_camera_white"
+            app:layout_constraintBottom_toBottomOf="@id/userAvator"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/userAvator" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvator"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rectangle_white_10dp"
+            android:src="@drawable/icon_default_avator"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/userAvatorTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="60dp"
-            android:text="介绍一下自己吧"
+            android:layout_marginBottom="1dp"
+            android:src="@drawable/icon_bg_transparent_avator_bg"
+            app:layout_constraintBottom_toBottomOf="@id/userAvator"
+            app:layout_constraintLeft_toLeftOf="@id/userAvator"
+            app:layout_constraintRight_toRightOf="@id/userAvator" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
+
+        <TextView
+            android:id="@+id/t3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"
             android:textColor="#ff000000"
-            android:textSize="27sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/userNickName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:background="@null"
+            android:hint="大家该怎么称呼你呢"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/t3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clGender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clName">
+
+        <TextView
+            android:id="@+id/t4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性别"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/t2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="填写辅助信息让别人更了解你"
-            android:textColor="#ff4c4c4c"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/userAvatarCl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t2">
-
-            <ImageView
-                android:id="@+id/userAvatorTake"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:background="@drawable/circle_gray_bg"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_camera_white"
-                app:layout_constraintBottom_toBottomOf="@id/userAvator"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/userAvator" />
-
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/userAvator"
-                android:layout_width="115dp"
-                android:layout_height="115dp"
-                android:layout_gravity="center"
-                android:background="@drawable/rectangle_white_10dp"
-                android:src="@drawable/icon_default_avator"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/userAvatorTip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:src="@drawable/icon_bg_transparent_avator_bg"
-                app:layout_constraintBottom_toBottomOf="@id/userAvator"
-                app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                app:layout_constraintRight_toRightOf="@id/userAvator" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clName"
+            android:id="@+id/userGender"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
-
-            <TextView
-                android:id="@+id/t3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="昵称"
-                android:textColor="#ff000000"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/userNickName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="25dp"
-                android:background="@null"
-                android:hint="大家该怎么称呼你呢"
-                android:maxLength="10"
-                android:maxLines="1"
-                android:textColor="@color/colorBlack19"
-                android:textColorHint="#ffc5c6c8"
-                android:textSize="16sp"
-                app:layout_constraintLeft_toRightOf="@id/t3"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/t3" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clGender"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clName">
-
-            <TextView
-                android:id="@+id/t4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="性别"
-                android:textColor="#ff000000"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/userGender"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="25dp"
-                android:hint="选择您的性别"
-                android:textColor="@color/colorBlack19"
-                android:textColorHint="#ffc5c6c8"
-                android:textSize="16sp"
-                app:layout_constraintLeft_toRightOf="@id/t4"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/t4" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clBirth"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clGender">
-
-            <TextView
-                android:id="@+id/t5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="生日"
-                android:textColor="#ff000000"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/userBirth"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="25dp"
-                android:hint="满18岁才可以使用软件哦"
-                android:textColor="@color/colorBlack19"
-                android:textColorHint="#ffc5c6c8"
-                android:textSize="16sp"
-                app:layout_constraintLeft_toRightOf="@id/t5"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clContactWay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:layout_constraintLeft_toLeftOf="@id/clBirth"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clBirth">
-
-            <TextView
-                android:id="@+id/t7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="联系方式"
-                android:textColor="#ff000000"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/chooseContactBtn"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="15dp"
-                android:drawablePadding="3dp"
-                android:src="@drawable/icon_wechat1"
-                app:layout_constraintLeft_toLeftOf="@id/t7"
-                app:layout_constraintTop_toBottomOf="@id/t7" />
-
-            <ImageView
-                android:id="@+id/view1"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginLeft="2dp"
-                android:src="@drawable/icon_arrow_down"
-                app:layout_constraintBottom_toBottomOf="@id/chooseContactBtn"
-                app:layout_constraintLeft_toRightOf="@id/chooseContactBtn"
-                app:layout_constraintTop_toTopOf="@id/chooseContactBtn" />
-
-
-            <EditText
-                android:id="@+id/contactWayEt"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="15dp"
-                android:background="@null"
-                android:hint="填写虚假账号可能导致封号"
-                android:maxLines="1"
-                android:textColor="@color/colorBlack19"
-                android:textColorHint="#ffc5c6c8"
-                android:textSize="16sp"
-                app:layout_constraintLeft_toRightOf="@id/view1"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/chooseContactBtn" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/t6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="关于你"
-            android:textColor="#ff000000"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintTop_toBottomOf="@id/clContactWay" />
-
-
-        <EditText
-            android:id="@+id/userSign"
-            android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginRight="25dp"
-            android:background="@drawable/shape_rectangle_gray_9dp"
-            android:gravity="start"
-            android:hint="简单的介绍一下自己吧"
-            android:lineSpacingMultiplier="1.4"
-            android:maxLength="200"
-            android:padding="10dp"
+            android:hint="选择您的性别"
             android:textColor="@color/colorBlack19"
-            android:textColorHint="#C5C6C8"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/t4"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t6" />
-
-        <TextView
-            android:id="@+id/userQuickSign"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/shape_rectangle_white_6dp"
-            android:maxLines="2"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="43dp"
-            android:paddingBottom="5dp"
-            android:textColor="#ff191919"
-            android:textSize="14sp"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@id/userSign"
-            app:layout_constraintRight_toRightOf="@id/userSign"
-            app:layout_constraintTop_toTopOf="@id/userSign" />
-
-        <ImageView
-            android:id="@+id/userQuickSignDel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/icon_delete_sign"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/userQuickSign"
-            app:layout_constraintRight_toRightOf="@id/userQuickSign"
-            app:layout_constraintTop_toTopOf="@id/userQuickSign" />
-
-
-        <TextView
-            android:id="@+id/quickSign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="快速签名"
-            android:textColor="#ff6796fa"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/userSign"
-            app:layout_constraintRight_toRightOf="@id/userSign" />
-
-        <TextView
-            android:id="@+id/nextBtn"
-            android:layout_width="0dp"
-            android:layout_height="83dp"
-            android:layout_marginTop="33dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/selector_confirm_btn1"
-            android:enabled="false"
-            android:gravity="center"
-            android:text="下一步"
-            android:textColor="@color/colorWhite"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/userSign" />
-        <RelativeLayout
-            android:id="@+id/avatorNotifyLl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="invisible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_rectangle_with_shadow"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/icon_logo" />
-
-                <TextView
-                    android:id="@+id/avatorNotify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="9dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:text="果然盛世美颜，就它吧"
-                    android:textColor="@color/colorOrange" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/icon_triangle" />
-
-        </RelativeLayout>
+            app:layout_constraintTop_toTopOf="@id/t4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clBirth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clGender">
+
+        <TextView
+            android:id="@+id/t5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生日"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userBirth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="25dp"
+            android:hint="满18岁才可以使用软件哦"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/t5"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clContactWay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/clBirth"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clBirth">
+
+        <TextView
+            android:id="@+id/t7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系方式"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/t8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="(仅会员和付费用户可见)"
+            android:textColor="#ffc5c6c8"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/t7"
+            app:layout_constraintLeft_toRightOf="@id/t7"
+            app:layout_constraintTop_toTopOf="@id/t7" />
+
+        <ImageView
+            android:id="@+id/chooseContactBtn"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/icon_wechat1"
+            app:layout_constraintLeft_toLeftOf="@id/t7"
+            app:layout_constraintTop_toBottomOf="@id/t7" />
+
+        <ImageView
+            android:id="@+id/view1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="2dp"
+            android:src="@drawable/icon_arrow_down"
+            app:layout_constraintBottom_toBottomOf="@id/chooseContactBtn"
+            app:layout_constraintLeft_toRightOf="@id/chooseContactBtn"
+            app:layout_constraintTop_toTopOf="@id/chooseContactBtn" />
+
+
+        <EditText
+            android:id="@+id/contactWayEt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入正确的微信号，可设置隐藏"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/view1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/chooseContactBtn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/t6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="关于你"
+        android:textColor="#ff000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/clContactWay" />
+
+
+    <EditText
+        android:id="@+id/userSign"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/shape_rectangle_gray_9dp"
+        android:gravity="start"
+        android:hint="简单的介绍一下自己吧"
+        android:lineSpacingMultiplier="1.4"
+        android:maxLength="200"
+        android:padding="10dp"
+        android:textColor="@color/colorBlack19"
+        android:textColorHint="#C5C6C8"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t6" />
+
+    <TextView
+        android:id="@+id/userQuickSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_rectangle_white_6dp"
+        android:maxLines="2"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="43dp"
+        android:paddingBottom="5dp"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/userSign"
+        app:layout_constraintRight_toRightOf="@id/userSign"
+        app:layout_constraintTop_toTopOf="@id/userSign" />
+
+    <ImageView
+        android:id="@+id/userQuickSignDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_delete_sign"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/userQuickSign"
+        app:layout_constraintRight_toRightOf="@id/userQuickSign"
+        app:layout_constraintTop_toTopOf="@id/userQuickSign" />
+
+
+    <TextView
+        android:id="@+id/quickSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="快速签名"
+        android:textColor="#ff6796fa"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/userSign"
+        app:layout_constraintRight_toRightOf="@id/userSign" />
+
+    <TextView
+        android:id="@+id/nextBtn"
+        android:layout_width="0dp"
+        android:layout_height="83dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/selector_confirm_btn1"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="下一步"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/avatorNotifyLl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userAvatarCl">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_rectangle_with_shadow"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/icon_logo" />
+
+            <TextView
+                android:id="@+id/avatorNotify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="9dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="果然盛世美颜，就它吧"
+                android:textColor="@color/colorOrange" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/icon_triangle" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--</androidx.core.widget.NestedScrollView>-->
