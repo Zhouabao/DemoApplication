@@ -40,6 +40,9 @@ import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
+import com.sdy.jitangapplication.ui.activity.GetMoreMatchActivity
+import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
+import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.ui.dialog.ContactNotPassDialog
@@ -130,12 +133,11 @@ class MyApplication : BaseApplication() {
                             EventBus.getDefault()
                                 .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
-                            EventBus.getDefault().postSticky(
-                                ReVerifyEvent(
-                                    customerMsgBean.type,
-                                    customerMsgBean.msg
+                            if (ActivityUtils.getTopActivity() !is GetMoreMatchActivity && ActivityUtils.getTopActivity() !is GetRelationshipActivity)
+                                CommonFunction.startToFace(
+                                    ActivityUtils.getTopActivity(),
+                                    IDVerifyActivity.TYPE_ACCOUNT_NORMAL
                                 )
-                            )
                         }
                     }
                     //7强制替换头像
