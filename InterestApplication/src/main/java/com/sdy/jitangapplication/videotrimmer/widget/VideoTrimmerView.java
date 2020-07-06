@@ -18,12 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.videotrimmer.interfaces.IVideoTrimmerView;
 import com.sdy.jitangapplication.videotrimmer.interfaces.VideoTrimListener;
 import com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerAdapter;
@@ -36,6 +36,7 @@ import iknow.android.utils.thread.UiThreadExecutor;
 
 import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.MAX_COUNT_RANGE;
 import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.MAX_SHOOT_DURATION;
+import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.MIN_SHOOT_DURATION;
 import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.RECYCLER_VIEW_PADDING;
 import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.THUMB_WIDTH;
 import static com.sdy.jitangapplication.videotrimmer.trim.VideoTrimmerUtil.VIDEO_FRAMES_WIDTH;
@@ -59,7 +60,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     private RangeSeekBarView mRangeSeekBarView;
     private LinearLayout mSeekBarLayout;
     private ImageView mRedProgressIcon;
-    private TextView mVideoShootTipTv, chooseTimeTv;
+    private TextView chooseTimeTv;
     private float mAverageMsPx;// 每毫秒所占的px
     private float averagePxMs;// 每px所占用的ms毫秒
     private Uri mSourceUri;
@@ -97,7 +98,6 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
         mPlayView = findViewById(R.id.icon_video_play);
         mSeekBarLayout = findViewById(R.id.seekBarLayout);
         mRedProgressIcon = findViewById(R.id.positionIcon);
-        mVideoShootTipTv = findViewById(R.id.video_shoot_tip);
         chooseTimeTv = findViewById(R.id.chooseTimeTv);
         mVideoThumbRecyclerView = findViewById(R.id.video_frames_recyclerView);
         mVideoThumbRecyclerView
@@ -141,8 +141,6 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
         mSourceUri = videoURI;
         mVideoView.setVideoURI(videoURI);
         mVideoView.requestFocus();
-        mVideoShootTipTv.setText(String.format(mContext.getResources().getString(R.string.video_shoot_tip),
-                VideoTrimmerUtil.VIDEO_MAX_TIME));
     }
 
     private void startShootVideoThumbs(final Context context, final Uri videoUri, int totalThumbsCount,
@@ -262,7 +260,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
 
     private void onSaveClicked() {
         if (mRightProgressPos - mLeftProgressPos < VideoTrimmerUtil.MIN_SHOOT_DURATION) {
-            Toast.makeText(mContext, "视频长不足3秒,无法上传", Toast.LENGTH_SHORT).show();
+            CommonFunction.INSTANCE.toast("视频长不足" + MIN_SHOOT_DURATION / 1000L + "秒,无法上传");
         } else {
             mVideoView.pause();
             VideoTrimmerUtil.trim(mContext, mSourceUri.getPath(), StorageUtil.getCacheDir(), mLeftProgressPos,

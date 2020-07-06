@@ -96,11 +96,28 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
     }
 
     private val filterDialog by lazy { DialogFilter(this) }
-    private val mStartRecordingFilterCallback by lazy { StartRecordingFilterCallback(this) }
+    private val mStartRecordingFilterCallback by lazy {
+        object : StartRecordingFilterCallback(this) {
+            override fun startRecordingOver(success: Boolean) {
+//            super.startRecordingOver(success)
+                if (success) {
+                    CommonFunction.toast("开始录制视频")
+                    runOnUiThread {
+                        chooseVideoBtn.isEnabled = false
+                    }
+                } else {
+                    CommonFunction.toast("录制视频失败")
+                }
+            }
+        }
+    }
     private val mEndRecordingFilterCallback by lazy {
         object : EndRecordingFilterCallback(this) {
             override fun endRecordingOK() {
                 super.endRecordingOK()
+                runOnUiThread {
+                    chooseVideoBtn.isEnabled = true
+                }
                 startActivityForResult<VideoVerifyConfirmActivity>(
                     VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
                     "ratio" to RATIO,
@@ -218,17 +235,18 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
     }
 
     private fun stopMediaRecorder() {
-        camera_preview.endRecording(mEndRecordingFilterCallback)
+        if (currentTime <= RECORD_MIN_TIME) {
+            CommonFunction.toast("录制时间不可小于5S")
+            isAction = true
+            return
+        }
         isRecording = false
         mainHandler.removeCallbacks(progressRunnable)
         stopButtonAnimation()
         mProgressView.reset()
-        if (currentTime <= RECORD_MIN_TIME) {
-            CommonFunction.toast("录制时间不可小于5S")
-        } else {
-            mEndRecordingFilterCallback.endRecordingOK()
+//        mEndRecordingFilterCallback.endRecordingOK()
+        camera_preview.endRecording(mEndRecordingFilterCallback)
 
-        }
     }
 
     inner class LongPressRunnable : Runnable {

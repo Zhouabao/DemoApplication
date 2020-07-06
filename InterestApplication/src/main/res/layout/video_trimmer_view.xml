@@ -20,10 +20,63 @@
 
     </RelativeLayout>
 
+
+    <FrameLayout
+        android:id="@+id/video_frames_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/layout_surface_view"
+        android:layout_marginBottom="17dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/video_frames_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            tools:background="@color/colorOrange" />
+
+        <ImageView
+            android:id="@+id/positionIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="35dp"
+            android:contentDescription="@null"
+            android:src="@drawable/icon_seek_bar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@color/shadow_color" />
+
+            <LinearLayout
+                android:id="@+id/seekBarLayout"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:orientation="vertical" />
+
+            <View
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@color/shadow_color" />
+        </LinearLayout>
+    </FrameLayout>
+
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/black">
 
@@ -37,65 +90,16 @@
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="12dp"
+            android:visibility="gone"
             tools:text="拖动选择你要发表的10秒以内片段" />
 
-        <FrameLayout
-            android:id="@+id/video_frames_layout"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@+id/video_shoot_tip">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/video_frames_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                tools:background="@color/colorOrange" />
-
-            <ImageView
-                android:id="@+id/positionIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="35dp"
-                android:contentDescription="@null"
-                android:src="@drawable/icon_seek_bar" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="35dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:background="#7F000000" />
-
-                <LinearLayout
-                    android:id="@+id/seekBarLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:orientation="vertical" />
-
-                <View
-                    android:layout_width="35dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:background="#7F000000" />
-            </LinearLayout>
-        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@+id/video_frames_layout"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/video_shoot_tip"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -105,9 +109,10 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:gravity="center"
+                android:padding="10dp"
                 android:text="已选取 0s"
-                android:textColor="#ffffffff"
-                android:textSize="12sp" />
+                android:textColor="@android:color/white"
+                android:textSize="16dp" />
 
             <ImageView
                 android:id="@+id/icon_video_play"
@@ -124,9 +129,10 @@
                 android:layout_gravity="right|center_vertical"
                 android:background="@drawable/gradient_orange_17dp"
                 android:gravity="center"
-                android:text="完成"
+                android:text="确认使用"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
+
 
         </FrameLayout>
 

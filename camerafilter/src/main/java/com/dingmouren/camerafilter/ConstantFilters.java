@@ -9,7 +9,7 @@ package com.dingmouren.camerafilter;
 
 public class ConstantFilters {
     public static final String FILTERS[] = {
-//            "",
+            "",
 //            "@curve RGB(0,255)(255,0) @style cm mapping0.jpg 80 80 8 3", // ASCII art (字符画效果)
 //            "@beautify face 1 480 640", //Beautify
 //            "@adjust lut edgy_amber.png",
@@ -120,7 +120,7 @@ public class ConstantFilters {
     };
 
     public static final int IMG_FILTERS[] = new int[]{
-//            R.drawable.filter_0,
+            R.drawable.filter_0,
 //            R.drawable.filter_1,
 //            R.drawable.filter_2,
 //            R.drawable.filter_3,

@@ -108,6 +108,7 @@ public class FilterCameraActivity extends AppCompatActivity {
         mEndRecordingFilterCallback = new EndRecordingFilterCallback(this);
     }
 
+
     private void initListener() {
         /*返回*/
         mImgBack.setOnClickListener(new View.OnClickListener() {
