@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.kotlin.base.common.BaseConstant
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nim.uikit.common.util.sys.ClipboardUtil
@@ -30,6 +29,7 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 /**
  * 分享给好友
@@ -77,11 +77,7 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
         shareFriendsRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
             if (myInviteBean != null) {
-                showShareDialog(
-                    "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
-                    myInviteBean!!.invite_title,
-                    myInviteBean!!.invite_descr
-                )
+                showShareDialog()
             }
         }
 
@@ -105,14 +101,18 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
     /**
      * 展示更多操作对话框
      */
-    private fun showShareDialog(url: String, title: String, descr: String) {
+    private fun showShareDialog() {
+//         myInviteBean!!.invite_url,
+//                            myInviteBean!!.invite_title,
+//                            myInviteBean!!.invite_descr
         moreActionDialog =
             MoreActionNewDialog(
                 this,
-                url = url,
+                url = myInviteBean!!.invite_url,
                 type = MoreActionNewDialog.TYPE_SHARE_VIP_URL,
-                title = title,
-                content = descr
+                title = myInviteBean!!.invite_title,
+                content = myInviteBean!!.invite_descr,
+                pic = myInviteBean!!.invite_pic
             )
         moreActionDialog.show()
 
@@ -126,7 +126,7 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
         moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
 
         moreActionDialog.collect.onClick {
-            ClipboardUtil.clipboardCopyText(this, url)
+            ClipboardUtil.clipboardCopyText(this, myInviteBean?.invite_url ?: "")
             CommonFunction.toast("分享链接已复制")
         }
     }
@@ -136,11 +136,12 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
             //立即分享
             R.id.shareNowBtn -> {
                 if (myInviteBean != null) {
-                    showShareDialog(
-                        "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
-                        myInviteBean!!.invite_title,
-                        myInviteBean!!.invite_descr
-                    )
+                    if (myInviteBean!!.wait_invite_cnt == 0) {
+                        startActivity<RegisterInfoActivity>()
+                        finish()
+                    } else {
+                        showShareDialog()
+                    }
                 }
             }
             //直接开通会员
@@ -169,6 +170,11 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
                     myInviteBean!!.invited_list.add(InvitedBean("", ""))
             }
             adapter.setNewData(myInviteBean!!.invited_list)
+
+            for (marqueeLabel in myInviteBean!!.viplist) {
+                vipFriendsVF.addView(getMarqueeView(marqueeLabel))
+            }
+
             SpanUtils.with(shareFriendsTitle)
                 .append(
                     "分享${if (myInviteBean?.share_normal_cnt == 1) {
@@ -185,18 +191,24 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
                 .setForegroundColor(Color.parseColor("#FFFD4417"))
                 .append("位超主动小姐姐产生无限可能")
                 .create()
-            SpanUtils.with(shareFriendsCount)
-                .append("已邀请")
-                .append("${myInviteBean!!.invited_cnt}")
-                .setForegroundColor(Color.parseColor("#FFFD4417"))
-                .append("位，再邀请")
-                .append("${myInviteBean!!.wait_invite_cnt}")
-                .setForegroundColor(Color.parseColor("#FFFD4417"))
-                .append("位好友注册即可成为会员")
-                .create()
+            if (myInviteBean.wait_invite_cnt == 0) {
+                shareFriendsCount.text = "已完成分享助力成为黄金会员"
+                shareNowBtn.text = "进入积糖"
+                openVipBtn.visibility = View.INVISIBLE
+            } else {
+                shareNowBtn.text = "立即分享"
+                openVipBtn.isVisible = true
 
-            for (marqueeLabel in myInviteBean!!.viplist) {
-                vipFriendsVF.addView(getMarqueeView(marqueeLabel))
+                SpanUtils.with(shareFriendsCount)
+                    .append("已邀请")
+                    .append("${myInviteBean!!.invited_cnt}")
+                    .setForegroundColor(Color.parseColor("#FFFD4417"))
+                    .append("位，再邀请")
+                    .append("${myInviteBean!!.wait_invite_cnt}")
+                    .setForegroundColor(Color.parseColor("#FFFD4417"))
+                    .append("位好友注册即可成为会员")
+                    .create()
+
             }
         }
     }

@@ -42,7 +42,8 @@ class MoreActionNewDialog(
     var url: String = "",
     var type: Int = TYPE_SHARE_SQUARE,
     var title: String = "",
-    var content: String = ""
+    var content: String = "",
+    var pic: String = ""
 ) :
     Dialog(myContext, R.style.MyDialog), View.OnClickListener {
 
@@ -217,9 +218,9 @@ class MoreActionNewDialog(
      */
     private fun shareWeb(platformConfig: SHARE_MEDIA) {
         val web = UMWeb(url)
-        web.title =title
+        web.title = title
         web.description = content
-        web.setThumb(UMImage(myContext, R.drawable.icon_logo)) //缩略图
+        web.setThumb(UMImage(myContext, pic)) //缩略图
         ShareAction(myContext as Activity)
             .setPlatform(platformConfig)
             .withMedia(web)

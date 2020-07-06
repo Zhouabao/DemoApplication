@@ -18,7 +18,7 @@ class ShareFriendsAdapter :
     BaseQuickAdapter<InvitedBean, BaseViewHolder>(R.layout.item_share_friends) {
     override fun convert(helper: BaseViewHolder, item: InvitedBean) {
 
-        if (item.avatar.isNullOrEmpty()) {
+        if (item.nickname.isNullOrEmpty()) {
             GlideUtil.loadCircleImg(
                 mContext,
                 R.drawable.icon_share_friends_default,

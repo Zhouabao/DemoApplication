@@ -93,6 +93,7 @@ data class MyInviteBean(
     var invite_url: String = "",//我的邀请连接
     var invite_title: String = "",//我的邀请标题
     var invite_descr: String = "",//我的邀请描述
+    var invite_pic: String = "",//我的邀请描述
     var invited_cnt: Int = 0,//已经邀请了几个
     var invited_list: MutableList<InvitedBean> = mutableListOf(),//	已经邀请了的人列表
     var share_normal_cnt: Int = 0,//标准邀请几位人
