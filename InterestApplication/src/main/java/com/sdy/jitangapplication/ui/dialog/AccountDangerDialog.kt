@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
@@ -93,7 +94,6 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerBtn.text = ""
                 accountDangerLoading.isVisible = true
                 accountDangerBtn.isEnabled = false
-
             }
             VERIFY_NOT_PASS -> {
                 closeBtn.isVisible = true
@@ -110,6 +110,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerTitle.text = "认证审核不通过"
                 accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
                 accountDangerBtn.text = "修改头像"
+                humanVerify.setTextColor(Color.parseColor("#FFFF6318"))
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
@@ -128,7 +129,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
             }
             VERIFY_NOT_PASS_FORCE -> {
                 accountDangerImgAlert.isVisible = false
-                humanVerify.isVisible = false
+                humanVerify.isVisible = true
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
@@ -192,8 +193,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
+                        changeVerifyStatus(VERIFY_ING)
                         CommonFunction.toast("已提交人工审核，请耐心等待")
-                        dismiss()
                     }
                 }
 

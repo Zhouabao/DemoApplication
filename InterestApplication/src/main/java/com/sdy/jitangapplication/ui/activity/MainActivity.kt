@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.accounts.Account
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -118,7 +117,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //                onForceFaceEvent(ForceFaceEvent(VerifyForceDialog.FORCE_GOING))
 //            }
 //        }
-
 
 
     }
@@ -695,10 +693,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             accountDangerDialog!!.dismiss()
             accountDangerDialog = null
         }
-//        if (verifyForceDialog != null && verifyForceDialog!!.isShowing) {
-//            verifyForceDialog!!.dismiss()
-//            verifyForceDialog = null
-//        }
+
         if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {//11
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
@@ -708,20 +703,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN,
                 event.avator
             ).show()
-        } else {
-            when {
-                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7
-                    UserManager.saveNeedChangeAvator(true)//需要换头像
-                    UserManager.saveForceChangeAvator(false)//是否强制替换过头像
-                    UserManager.saveChangeAvatorType(1)//头像不合规
-                    showGotoVerifyDialog(event.type, event.avator)
-                }
-                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
-                    HumanVerifyDialog(this).apply {
-                        type = GotoVerifyDialog.TYPE_CHANGE_ABLUM
-                    }.show()
-                }
-            }
+        } else if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS) { //7
+            UserManager.saveNeedChangeAvator(true)//需要换头像
+            UserManager.saveForceChangeAvator(false)//是否强制替换过头像
+            UserManager.saveChangeAvatorType(1)//头像不合规
+            showGotoVerifyDialog(event.type, event.avator)
         }
         if (EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
@@ -752,31 +738,4 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
         }
     }
-
-//    private var verifyForceDialog: VerifyForceDialog? = null
-//    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-//    fun onForceFaceEvent(event: ForceFaceEvent) {
-//
-//        if (accountDangerDialog != null) {
-//            accountDangerDialog!!.dismiss()
-//            accountDangerDialog = null
-//        }
-//        if (verifyForceDialog != null) {
-//            verifyForceDialog!!.dismiss()
-//            verifyForceDialog = null
-//        }
-//
-//        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
-//            verifyForceDialog = VerifyForceDialog(ActivityUtils.getTopActivity())
-//            verifyForceDialog!!.show()
-//            verifyForceDialog!!.changeVerifyStatus(event.type)
-//        }
-//        if (EventBus.getDefault().getStickyEvent(ForceFaceEvent::class.java) != null) {
-//            // 若粘性事件存在，将其删除
-//            EventBus.getDefault()
-//                .removeStickyEvent(EventBus.getDefault().getStickyEvent(ForceFaceEvent::class.java))
-//        }
-//    }
-
-
 }

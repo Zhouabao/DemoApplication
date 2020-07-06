@@ -27,7 +27,6 @@ class HumanVerifyDialog(val context1: Context) :
     }
 
     var type: Int = HUMAN_VERIFY
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_human_verify)
@@ -59,13 +58,6 @@ class HumanVerifyDialog(val context1: Context) :
                 moreInfoTitle.text = "账号未认证"
                 t2.text = "为保证双方社交体验\n聊天功能仅对已通过认证的用户开启"
                 verifyBtn.text = "立即认证"
-            }
-            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
-                accountDangerIv.isVisible = false
-                accountDangerLogo.setImageResource(R.drawable.icon_complete_album)
-                moreInfoTitle.text = "完善相册"
-                t2.text = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
-                verifyBtn.text = "立即完善"
             }
         }
     }

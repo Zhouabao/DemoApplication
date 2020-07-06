@@ -2,9 +2,9 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import com.kotlin.base.data.net.RetrofitFactory
@@ -52,6 +52,7 @@ class HumanVerfiyDialog(val context1: Context, val type: Int, val showToast: Boo
         accountDangerTitle.text = "认证审核不通过"
         accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
         accountDangerBtn.text = "修改头像"
+        humanVerify.setTextColor(Color.parseColor("#FFFF6318"))
         accountDangerLoading.isVisible = false
         accountDangerBtn.isEnabled = true
         accountDangerBtn.onClick {

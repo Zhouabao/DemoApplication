@@ -103,7 +103,7 @@ class MyApplication : BaseApplication() {
                         customNotification.content,
                         CustomerMsgBean::class.java
                     )
-                Log.d("OkHttp", "${customerMsgBean.toString()}====")
+                Log.d("customerMsgBean", "${customerMsgBean.toString()}====")
                 when (customerMsgBean.type) {
                     //1.系统通知新的消息数量
                     1 -> {
