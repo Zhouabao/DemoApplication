@@ -1290,7 +1290,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 //                    +  + (positionItem!!.adName ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
 
                     locationCity.ellipsize = TextUtils.TruncateAt.MARQUEE
-                    locationCity.isSingleLine = true
+                    locationCity.maxLines = 1
                     locationCity.isSelected = true
                     locationCity.isFocusable = true
                     locationCity.isFocusableInTouchMode = true

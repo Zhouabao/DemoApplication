@@ -231,31 +231,13 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
 
     private void setUpListeners() {
 
-        findViewById(R.id.finishBtn).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onSaveClicked();
-            }
+        findViewById(R.id.finishBtn).setOnClickListener(view -> onSaveClicked());
+        mVideoView.setOnPreparedListener(mp -> {
+            mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            videoPrepared(mp);
         });
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-                videoPrepared(mp);
-            }
-        });
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                videoCompleted();
-            }
-        });
-        mPlayView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playVideoOrPause();
-            }
-        });
+        mVideoView.setOnCompletionListener(mp -> videoCompleted());
+        mPlayView.setOnClickListener(v -> playVideoOrPause());
     }
 
     private void onSaveClicked() {

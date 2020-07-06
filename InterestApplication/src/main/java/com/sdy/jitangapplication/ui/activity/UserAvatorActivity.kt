@@ -263,7 +263,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                     if (data != null) {
                         startAnimation(false)
                         var path =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
                                     data
                                 )[0].androidQToPath.isNullOrEmpty()
                             ) {
@@ -331,7 +331,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 REQUEST_PIC_CODE -> {
                     if (data != null) {
                         var path =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
                                     data
                                 )[0].androidQToPath.isNullOrEmpty()
                             ) {

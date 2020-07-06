@@ -421,7 +421,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
         } else if (requestCode == RESULT_CODE_CHOOSE_VIDEO) {//视频选择成功
             if (resultCode == Activity.RESULT_OK) {
                 var path =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
                             data
                         )[0].androidQToPath.isNullOrEmpty()
                     ) {
@@ -469,7 +469,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
      * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      * face_source_type是否是消息过来的上传 1是 0否
      */
-    private fun uploadProfile(filePath: String) {
+    private fun uploadProfile(filePath: String, fromCrop: Boolean = false) {
         val fileKey =
             "${Constants.FILE_NAME_INDEX}${Constants.VIDEOFACE}${UserManager.getAccid()}/" +
                     "${System.currentTimeMillis()}/${RandomUtils.getRandomString(16)}"
@@ -482,6 +482,8 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
             { key, info, response ->
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null && info.isOK) {
+                    if (fromCrop)
+                        File(filePath).delete()
                     //视频上传成功
                     mPresenter.uploadMv(
                         hashMapOf(
@@ -521,7 +523,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onVideoTrimmerEvent(event: VideoTrimmerEvent) {
         if (!event.filePath.isNullOrEmpty()) {
-            uploadProfile(event.filePath)
+            uploadProfile(event.filePath, true)
         }
     }
 

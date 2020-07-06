@@ -528,7 +528,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                         params.remove("avatar")
 //                        startAnimation(false)
                         var path =
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
                                     data
                                 )[0].androidQToPath.isNullOrEmpty()
                             ) {
