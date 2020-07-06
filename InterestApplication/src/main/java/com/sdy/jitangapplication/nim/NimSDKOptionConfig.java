@@ -16,7 +16,11 @@ import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.common.Constants;
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
 import com.sdy.jitangapplication.ui.activity.MainActivity;
 
@@ -61,7 +65,7 @@ public class NimSDKOptionConfig {
         // 云信私有化配置项
         configServerAddress(options, context);
         options.mixPushConfig = buildMixPushConfig();
-        //        options.mNosTokenSceneConfig = createNosTokenScene();
+        // options.mNosTokenSceneConfig = createNosTokenScene();
         options.loginCustomTag = "登录自定义字段";
         options.appKey = Constants.NIM_APP_KEY;
         return options;
@@ -89,7 +93,8 @@ public class NimSDKOptionConfig {
         String storageRootPath = null;
         try {
             // SD卡应用扩展存储区(APP卸载后，该目录下被清除，用户也可以在设置界面中手动清除)，请根据APP对数据缓存的重要性及生命周期来决定是否采用此缓存目录.
-            // 该存储区在API 19以上不需要写权限，即可配置 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
+            // 该存储区在API 19以上不需要写权限，即可配置 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+            // android:maxSdkVersion="18"/>
             if (context.getExternalCacheDir() != null) {
                 storageRootPath = context.getExternalCacheDir().getCanonicalPath();
             }
@@ -141,12 +146,12 @@ public class NimSDKOptionConfig {
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         // 点击通知需要跳转到的界面
         config.notificationEntrance = MainActivity.class;
-//        config.notificationSmallIconId = R.drawable.icon_logo;
-//        config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
+        // config.notificationSmallIconId = R.drawable.icon_logo;
+        // config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
         // 通知铃声的uri字符串
         config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
         config.notificationFolded = true;
-//        config.notificationFolded = false;
+        // config.notificationFolded = false;
         config.downTimeEnableNotification = true;
         // 呼吸灯配置
         config.ledARGB = Color.GREEN;
@@ -164,20 +169,24 @@ public class NimSDKOptionConfig {
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
             if (message.getAttachment() instanceof ChatHiAttachment) {
-                /* public static int CHATHI_MATCH = 1;
-    public static int CHATHI_HI = 2;
-    public static int CHATHI_RFIEND = 3;
-    public static int CHATHI_OUTTIME = 4;*/
                 switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
-                    case 1:
-                        return "『匹配消息』";
-                    case 3:
-                        return "『好友消息』";
-                    case 4:
-                        return "『过期消息』";
-                    default:
-                        return null;// 采用SDK默认文案
+                case 1:
+                    return "『匹配消息』";
+                case 3:
+                    return "『好友消息』";
+                case 4:
+                    return "『过期消息』";
+                default:
+                    return null;// 采用SDK默认文案
                 }
+            } else if (message.getAttachment() instanceof AccostGiftAttachment) {
+                return "『搭讪礼物』";
+            } else if (message.getAttachment() instanceof ShareSquareAttachment) {
+                return "『动态分享内容』";
+            } else if (message.getAttachment() instanceof SendGiftAttachment) {
+                return "『糖果礼物』";
+            } else if (message.getAttachment() instanceof WishHelpAttachment) {
+                return "『心愿助力』";
             }
 
             return null;
@@ -202,16 +211,13 @@ public class NimSDKOptionConfig {
         config.xmAppKey = "5181816924448";
         config.xmCertificateName = "JITANGXIAOMI";
 
-
         // 华为推送
         config.hwCertificateName = "JITANGHUAWEI";
-
 
         // 魅族推送
         config.mzAppId = "123952";
         config.mzAppKey = "97aaf629b9a84da999fa60272e591486";
         config.mzCertificateName = "JITANGFLYME";
-
 
         // vivo推送
         config.vivoCertificateName = "JITANGVIVO";
