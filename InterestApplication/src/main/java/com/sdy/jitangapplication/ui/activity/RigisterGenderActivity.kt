@@ -41,16 +41,16 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.genderMan -> {
-                checkNextBtnEnable()
                 genderCheckedMan.isVisible = true
                 genderCheckedWoman.isVisible = false
                 gender = 1
+                checkNextBtnEnable()
             }
             R.id.genderWoman -> {
-                checkNextBtnEnable()
                 genderCheckedWoman.isVisible = true
                 genderCheckedMan.isVisible = false
                 gender = 2
+                checkNextBtnEnable()
             }
             R.id.nextBtn -> {
                 if (!alertGender) {

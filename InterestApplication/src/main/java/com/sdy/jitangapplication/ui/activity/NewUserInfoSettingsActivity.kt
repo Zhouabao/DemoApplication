@@ -223,7 +223,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     }
 
                 } else {
-                    if (adapter.data.size > 2)
+                    if (adapter.data.size > 1)
                         showDeleteDialog(vh.layoutPosition)
                 }
             }

@@ -75,6 +75,15 @@ class ShareFriendsActivity : BaseMvpActivity<ShareFriendsPresenter>(), ShareFrie
         openVipBtn.setOnClickListener(this)
         shareFriendsRv.layoutManager = GridLayoutManager(this, 1)
         shareFriendsRv.adapter = adapter
+        adapter.setOnItemClickListener { _, view, position ->
+            if (myInviteBean != null) {
+                showShareDialog(
+                    "${BaseConstant.SERVER_ADDRESS}${myInviteBean!!.invite_url}",
+                    myInviteBean!!.invite_title,
+                    myInviteBean!!.invite_descr
+                )
+            }
+        }
 
 //        #FFFD4417
     }
