@@ -14,7 +14,6 @@ interface RegisterInfoView : BaseView {
 
     fun uploadImgResult(ok: Boolean, key: String)
 
-    fun onCheckAvatorResult(b: Boolean, msg: String)
 //
 //    fun onAddPhotoWallResult(data: MyPhotoBean)
 //

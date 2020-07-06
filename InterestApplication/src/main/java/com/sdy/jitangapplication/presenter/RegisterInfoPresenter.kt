@@ -98,30 +98,4 @@ class RegisterInfoPresenter : BasePresenter<RegisterInfoView>() {
         )
     }
 
-
-    // 检查头像是否合规
-    fun checkAvatar(params: HashMap<String, Any>) {
-        if (!checkNetWork()) {
-            return
-        }
-
-        RetrofitFactory.instance.create(Api::class.java)
-            .checkAvatar(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    super.onNext(t)
-                    if (t.code == 200) {
-                        mView.onCheckAvatorResult(true, t.msg)
-                    } else {
-                        mView.onCheckAvatorResult(false, t.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    mView.onCheckAvatorResult(false, "网络异常，请重新选择上传")
-                }
-            })
-    }
-
-
 }

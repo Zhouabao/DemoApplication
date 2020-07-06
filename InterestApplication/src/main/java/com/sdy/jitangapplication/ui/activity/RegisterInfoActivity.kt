@@ -609,23 +609,6 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     }
 
 
-    /**
-     * 头像审核结果
-     */
-    override fun onCheckAvatorResult(checkResult: Boolean, msg: String) {
-        mPresenter.loadingDialg.dismiss()
-        avatorNotify.text = "$msg"
-//        startAnimation(true)
-        if (checkResult) {
-            params["avatar"] = userProfile ?: ""
-        } else {
-            CommonFunction.longToast(msg)
-        }
-        checkConfirmEnable()
-
-    }
-
-
     override fun onUploadUserInfoResult(
         uploadResult: Boolean,
         msg: String?,
@@ -650,9 +633,11 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
 
     override fun uploadImgResult(ok: Boolean, key: String) {
         if (ok) {
-            userProfile = key
-            mPresenter.checkAvatar(hashMapOf("avatar" to userProfile.toString()))
+            params["avatar"] = userProfile ?: ""
+        } else {
+            CommonFunction.longToast("头像上传失败")
         }
+        checkConfirmEnable()
     }
 
 }

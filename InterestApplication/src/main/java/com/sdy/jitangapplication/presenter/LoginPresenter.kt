@@ -51,6 +51,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             "flash_token" to flash_token,
             "type" to type
         )
+        params.putAll(UserManager.getLocationParams())
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {

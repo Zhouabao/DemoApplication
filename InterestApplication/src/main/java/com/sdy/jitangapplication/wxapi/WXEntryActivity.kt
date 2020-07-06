@@ -95,6 +95,7 @@ class WXEntryActivity : WXCallbackActivity() {
      */
     private fun loginWithWechat(code: String) {
         val params = hashMapOf<String, Any>("type" to VerifyCodeActivity.TYPE_LOGIN_WECHAT, "wxcode" to code)
+        params.putAll(UserManager.getLocationParams())
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {

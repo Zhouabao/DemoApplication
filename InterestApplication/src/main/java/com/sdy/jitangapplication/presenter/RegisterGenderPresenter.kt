@@ -22,8 +22,10 @@ class RegisterGenderPresenter : BasePresenter<RegisterGenderView>() {
             return
         }
 
+        val params = UserManager.getLocationParams()
+        params["gender"] = gender
         RetrofitFactory.instance.create(Api::class.java)
-            .setProfileCandy(UserManager.getSignParams(hashMapOf("gender" to gender)))
+            .setProfileCandy(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MoreMatchBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -38,17 +40,17 @@ class RegisterGenderPresenter : BasePresenter<RegisterGenderView>() {
                 override fun onNext(t: BaseResp<MoreMatchBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
-                        mView.onUploadUserInfoResult(true)
+                        mView.onUploadUserInfoResult(true, t.data)
                     } else {
                         CommonFunction.toast(t.msg)
-                        mView.onUploadUserInfoResult(false)
+                        mView.onUploadUserInfoResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     loadingDialg.dismiss()
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.onUploadUserInfoResult(false)
+                    mView.onUploadUserInfoResult(false, null)
                 }
             })
     }

@@ -178,6 +178,18 @@ data class MoreMatchBean(
     var share_btn: String = ""//分享开关是否显示
 ) : Serializable
 
+data class A(
+    var avatar: String = "",
+    var city_name: String = "",
+    var force_vip: Boolean = false,
+    var gender: Int = 0,
+    var gender_str: String = "",
+    var living_btn: Boolean = false,
+    var nickname: String = "",
+    var people_amount: Int = 0,
+    var share_btn: String = ""
+)
+
 
 data class ContactWayBean(
     var contact_way: Int = 0,

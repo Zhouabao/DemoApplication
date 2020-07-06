@@ -544,6 +544,15 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("hasFaceUrl", has_face_url)
     }
 
+    fun getLocationParams(): HashMap<String, Any> {
+        return hashMapOf(
+            "lng" to getlongtitude().toFloat(),
+            "lat" to getlatitude().toFloat(),
+            "city_name" to getCity(),
+            "province_name" to getProvince()
+        )
+    }
+
 
     fun getBaseParams(): HashMap<String, Any> {
         return hashMapOf(
