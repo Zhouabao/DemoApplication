@@ -62,6 +62,7 @@ class CandyRechargeActivity : BaseMvpActivity<ChargeVipPresenter>(), ChargeVipVi
                 data!!.list!![0].checked = true
             }
             candyAmount.text = "${data?.mycandy_amount}"
+            firstChargeTime.text = data?.first_recharge ?: ""
             candyPriceAdapter.addData(data?.list ?: mutableListOf())
             payments.addAll(data?.paylist ?: mutableListOf<PaywayBean>())
         }

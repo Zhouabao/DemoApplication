@@ -629,11 +629,9 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     }
 
     //用户头像
-    private var userProfile: String? = null
-
     override fun uploadImgResult(ok: Boolean, key: String) {
         if (ok) {
-            params["avatar"] = userProfile ?: ""
+            params["avatar"] = key
         } else {
             CommonFunction.longToast("头像上传失败")
         }
