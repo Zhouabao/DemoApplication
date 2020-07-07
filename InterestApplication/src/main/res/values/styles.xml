@@ -134,7 +134,14 @@
         <item name="android:windowExitAnimation">@anim/dialog_center_exit</item>
     </style>
 
-    <!--横向的progressBar-->
+    <style name="BottomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
+    </style>
 
     <!--横向的progressBar-->
     <style name="progressBarHorizontal11" parent="android:Widget.ProgressBar.Horizontal">

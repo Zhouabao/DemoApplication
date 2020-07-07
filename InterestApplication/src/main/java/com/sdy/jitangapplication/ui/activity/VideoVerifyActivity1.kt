@@ -20,11 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
-import com.dingmouren.camerafilter.ConstantFilters
-import com.dingmouren.camerafilter.callback.LoadAssetsImageCallback
-import com.dingmouren.camerafilter.dialog.DialogFilter
-import com.dingmouren.camerafilter.listener.EndRecordingFilterCallback
-import com.dingmouren.camerafilter.listener.StartRecordingFilterCallback
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.utils.NetWorkUtils
 import com.luck.picture.lib.PictureSelector
@@ -35,6 +30,11 @@ import com.netease.nim.uikit.common.media.imagepicker.camera.ErrorDialog
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.camera_filter.ConstantFilters
+import com.sdy.jitangapplication.camera_filter.callback.LoadAssetsImageCallback
+import com.sdy.jitangapplication.camera_filter.dialog.DialogFilter
+import com.sdy.jitangapplication.camera_filter.listener.EndRecordingFilterCallback
+import com.sdy.jitangapplication.camera_filter.listener.StartRecordingFilterCallback
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener

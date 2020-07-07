@@ -28,7 +28,7 @@
         android:visibility="gone"
         android:layout_marginTop="100dp"
         android:layout_marginRight="20dp"
-        android:src="@drawable/img_filter"
+        android:src="@drawable/icon_filter_gallery"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
