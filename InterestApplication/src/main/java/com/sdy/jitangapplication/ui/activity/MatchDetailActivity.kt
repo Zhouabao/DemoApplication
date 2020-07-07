@@ -51,7 +51,6 @@ import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
-import com.sdy.jitangapplication.ui.dialog.HelpWishDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
@@ -140,7 +139,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
-        guidelWishHelp.setOnClickListener(this)
         giftAll.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
@@ -151,41 +149,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         videoIntroduce.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
-
-        //用户心愿列表
-//        detailUserWishRv.viewTreeObserver.addOnGlobalLayoutListener(this)
-        detailUserWishRv.layoutManager =
-            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        CustomPagerSnapHelper().attachToRecyclerView(detailUserWishRv)
-        detailUserWishRv.adapter = wishGiftAdapter
-        wishGiftAdapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.helpWishBtn -> {
-                    HelpWishDialog(
-                        matchBean!!.mycandy_amount,
-                        matchBean!!.accid,
-                        matchBean!!.nickname ?: "",
-                        wishGiftAdapter.data[position],
-                        this,
-                        matchBean!!.isfriend == 1
-                    ).show()
-                }
-            }
-        }
-        detailUserWishIndicator.typeface =
-            Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
-        detailUserWishRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                detailUserWishIndicator.text = SpanUtils.with(detailUserWishIndicator)
-                    .append("${(detailUserWishRv.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() + 1}")
-                    .setFontSize(14, true)
-                    .setBold()
-                    .append(" / ${matchBean!!.wish_cnt}")
-                    .setFontSize(10, true)
-                    .create()
-            }
-        })
 
 
         //用户详细信息列表
@@ -303,12 +266,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     private val detailUserInformationAdapter by lazy { MatchDetailInfoAdapter() }
 
-    /**
-     *心愿礼物适配器
-     */
-    private val wishGiftAdapter by lazy { WishGiftAdapter(this) }
-
-
     @SuppressLint("SetTextI18n")
     private fun initData() {
         val data = matchBean!!.label_quality
@@ -337,34 +294,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             userTagAdapter.addData(data)
         }
 
-        guidelWishHelp.isVisible =
-            !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
-        val scaleAni = ObjectAnimator.ofFloat(guidelWishHelp, "scaleX", 0.9F, 1F, 0.9F)
-        scaleAni.repeatCount = 2
-        scaleAni.duration = 1500L
-        val scaleAni1 = ObjectAnimator.ofFloat(guidelWishHelp, "scaleY", 0.9F, 1F, 0.9F)
-        scaleAni1.repeatCount = 2
-        scaleAni1.duration = 1500L
-        val set = AnimatorSet()
-        set.playTogether(scaleAni, scaleAni1)
-        set.start()
-        set.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                guidelWishHelp.isVisible = false
-                UserManager.saveShowGuideHelpWish(true)
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
 
 
         if (matchBean!!.gift_list.isNullOrEmpty()) {
@@ -373,24 +302,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             usergiftAdapter.setNewData(matchBean!!.gift_list)
 
         detailUserInformationAdapter.setNewData(matchBean!!.personal_info)
-
-        if (matchBean!!.wish_list.isNullOrEmpty()) {
-            detailUserWishIndicator.isVisible = false
-            detailUserWishRv.isVisible = false
-        } else {
-            detailUserWishRv.isVisible = true
-            detailUserWishIndicator.isVisible = true
-            wishGiftAdapter.setNewData(matchBean!!.wish_list)
-            detailUserWishIndicator.text = SpanUtils.with(detailUserWishIndicator)
-                .append("1")
-                .setFontSize(14, true)
-                .setBold()
-                .append(" / ${matchBean!!.wish_cnt}")
-                .setFontSize(10, true)
-                .create()
-        }
-
-//        EventBus.getDefault().post(UpdateSquareEvent())
 
         detailUserName.text = matchBean!!.nickname ?: ""
         detailUserName.textSize = if ((matchBean!!.nickname ?: "").length > 6) {
@@ -776,10 +687,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.giftAll -> { //查看全部礼物
                 startActivity<SomeoneGetGiftActivity>("target_accid" to targetAccid)
             }
-            R.id.guidelWishHelp -> {//查看全部礼物
-                guidelWishHelp.isVisible = false
-                UserManager.saveShowGuideHelpWish(true)
-            }
+
             R.id.notifyAddTagBtn -> {//通知对方添加特质
                 mPresenter.needNotice(hashMapOf<String, Any>("target_accid" to matchBean!!.accid))
                 notifyAddTagBtn.isEnabled = false

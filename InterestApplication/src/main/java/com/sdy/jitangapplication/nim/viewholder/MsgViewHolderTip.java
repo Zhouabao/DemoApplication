@@ -14,7 +14,6 @@ import com.blankj.utilcode.util.SpanUtils;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.jitangapplication.common.CommonFunction;
-import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
@@ -70,10 +69,7 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
                                     context.startActivity(intent);
                                 } else if (type == 2) {
                                     CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL,-1);
-                                } else if (type == 3) {
-                                    Intent intent = new Intent(context, CandyMallActivity.class);
-                                    context.startActivity(intent);
-                                } else if (type == 4) {
+                                }  else if (type == 4) {
                                     MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
                                 }
                             }

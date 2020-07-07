@@ -549,13 +549,7 @@ object CommonFunction {
             || ActivityUtils.getTopActivity() is VerifyCodeActivity
         ) {//注册界面支付会员进入首页
             EventBus.getDefault().post(CloseDialogEvent())
-        } else if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) { //糖果充值更新糖果
-            EventBus.getDefault().post(RefreshCandyMallDetailEvent())
-        } else if (ActivityUtils.getTopActivity() is CandyMallActivity) { //糖果商城充值
-            EventBus.getDefault().post(RefreshCandyMallEvent())
-        } else if (ActivityUtils.getTopActivity() is MyCandyActivity) { //我的糖果界面充值
-            EventBus.getDefault().post(RefreshMyCandyEvent(-1))
-        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
+        }  else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
             EventBus.getDefault().post(PayLabelResultEvent(true))
         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())

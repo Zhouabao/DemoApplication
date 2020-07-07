@@ -17,7 +17,6 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
-import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
@@ -105,23 +104,6 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                             CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
                         }
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).create());
-            break;
-        case SendCustomTipAttachment.CUSTOME_TIP_WOMAN_CHAT_COUNT:// 女方聊天条数到达设定条数时,没有心愿礼物 4
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("你还没有心愿礼物，快去")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("糖果商城").setClickSpan(new ClickableSpan() {
-                        @Override
-                        public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(Color.parseColor("#FF6796FA"));
-                            ds.setUnderlineText(false);
-                        }
-
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            Intent intent = new Intent(context, CandyMallActivity.class);
-                            context.startActivity(intent);
-                        }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("看看吧")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
             break;
         case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_HAS_GIFT:// 男方 双方聊天数>设定聊天条数 女方有心愿礼物 5
             notificationTextView.setText(SpanUtils.with(notificationTextView).append("你们聊的还不错，")

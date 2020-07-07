@@ -113,25 +113,7 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.activity.GetMoreMatchActivity" />
         <activity android:name=".ui.activity.RegisterInfoActivity" />
-        <activity android:name=".ui.activity.AddressManagerActivity" />
         <activity android:name=".ui.activity.SomeoneGetGiftActivity" />
-        <activity
-            android:name=".ui.activity.MyOrderActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AddAddressActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".ui.activity.CandyProductDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.CandyMallActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.CandyRecordActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.BindAlipayAccountActivity"
             android:screenOrientation="portrait" />

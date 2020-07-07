@@ -567,11 +567,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSetMyCandyEvent(event: SetMyCandyEvent) {
-        candyCount.text = "${event.candyCount}"
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: FemaleVideoEvent) {

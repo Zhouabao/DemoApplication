@@ -463,16 +463,6 @@ object UserManager {
     }
 
 
-    /**
-     * 是否展示首页的引导使用
-     */
-    fun isShowGuideCandy(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideCandy", false)
-    }
-
-    fun saveShowGuideCandy(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideCandy", isShow)
-    }
 
     /**
      * 是否展示引导喜欢我的
@@ -497,17 +487,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideMarkLike", isShow)
     }
 
-
-    /**
-     * 是否展示助力礼物
-     */
-    fun isShowGuideHelpWish(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideHelpWish", false)
-    }
-
-    fun saveShowGuideHelpWish(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideHelpWish", isShow)
-    }
 
 
     /**

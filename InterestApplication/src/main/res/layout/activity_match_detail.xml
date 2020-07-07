@@ -370,56 +370,20 @@
                             tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。" />
 
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/detailUserWishRv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/colorWhite"
-                            android:overScrollMode="never"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/detailUserSign" />
-
-                        <TextView
-                            android:id="@+id/detailUserWishIndicator"
-                            android:layout_width="38dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginRight="15dp"
-                            android:background="@drawable/rectangle_cover_bg_left_10dp"
-                            android:gravity="center"
-                            android:text="0/6"
-                            android:textColor="#ffffffff"
-                            android:textSize="14sp"
-                            android:visibility="gone"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/detailUserWishRv" />
-
-                        <ImageView
-                            android:id="@+id/guidelWishHelp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginBottom="66dp"
-                            android:src="@drawable/icon_guide_wish_help"
-                            android:visibility="gone"
-                            app:layout_constraintBottom_toBottomOf="@id/detailUserWishRv"
-                            app:layout_constraintRight_toRightOf="@id/detailUserWishRv" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/detailUserInformationRv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="12dp"
                             android:layout_marginRight="8dp"
                             android:background="@color/colorWhite"
                             android:nestedScrollingEnabled="false"
                             android:overScrollMode="never"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/detailUserWishRv" />
+                            app:layout_constraintTop_toBottomOf="@id/detailUserSign" />
 
                         <TextView
                             android:id="@+id/tag1"

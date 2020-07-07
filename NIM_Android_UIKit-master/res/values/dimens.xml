@@ -57,7 +57,6 @@
     <dimen name="avatar_size_robot">40dip</dimen>
 
     <!-- bubble -->
-    <dimen name="max_bubble_width">240dip</dimen>
     <dimen name="max_text_bubble_width">222dip</dimen>
     <dimen name="bottom_component_margin_horizontal">6dip</dimen>
     <dimen name="bottom_component_margin_vertical">8dip</dimen>
@@ -80,6 +79,5 @@
 
 
     <!-- map -->
-    <dimen name="friend_map_btn_height">42dp</dimen>
     <dimen name="friend_map_bound_padding">80dp</dimen>
 </resources>

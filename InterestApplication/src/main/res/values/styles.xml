@@ -153,14 +153,6 @@
         <item name="android:maxHeight">20dp</item>
     </style>
     <!--横向的progressBar-->
-    <style name="progressBarHorizontal27" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:indeterminateOnly">false</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">53dp</item>
-        <item name="android:progressDrawable">@drawable/progress_horizontal_27_radius</item>
-        <item name="android:minHeight">53dp</item>
-        <item name="android:maxHeight">53dp</item>
-    </style>
 
 
     <!--横向的progressBar-->

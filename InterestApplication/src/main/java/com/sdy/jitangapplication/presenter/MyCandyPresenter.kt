@@ -7,6 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.BillBean
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.PullWithdrawBean
 import com.sdy.jitangapplication.presenter.view.MyCandyView
@@ -71,4 +72,27 @@ class MyCandyPresenter : BasePresenter<MyCandyView>() {
             })
     }
 
+
+    /**
+     * 获取交易流水
+     */
+    fun myBillList(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .myBillList(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MutableList<BillBean>??>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<BillBean>??>) {
+                    super.onNext(t)
+                    mView.onMyBillList(t.code == 200, t.data)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else mView.onMyBillList(false, null)
+                }
+            })
+
+
+    }
 }

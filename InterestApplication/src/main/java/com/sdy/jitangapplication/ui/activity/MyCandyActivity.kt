@@ -11,23 +11,22 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.event.SetMyCandyEvent
-import com.sdy.jitangapplication.event.UpdateWantStateEvent
+import com.sdy.jitangapplication.model.BillBean
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
-import com.sdy.jitangapplication.model.ProductBean
 import com.sdy.jitangapplication.model.PullWithdrawBean
 import com.sdy.jitangapplication.presenter.MyCandyPresenter
 import com.sdy.jitangapplication.presenter.view.MyCandyView
-import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
-import com.sdy.jitangapplication.ui.dialog.AddWishGiftDialog
+import com.sdy.jitangapplication.ui.adapter.CandyRecordAdapter
 import com.sdy.jitangapplication.ui.dialog.WithdrawCandyDialog
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_candy.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
@@ -40,9 +39,9 @@ import org.jetbrains.anko.startActivity
  * 我的糖果中心
  */
 class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazyClickListener,
-    OnLoadMoreListener {
+    OnLoadMoreListener, OnRefreshListener {
 
-    private val candyProductAdapter by lazy { CandyProductAdapter() }
+    private val candyProductAdapter by lazy { CandyRecordAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,82 +65,60 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
         btnBack.setOnClickListener(this)
         withdrawCandy.setOnClickListener(this)
         rechargeCandy.setOnClickListener(this)
-        candyRecordBtn.setOnClickListener(this)
-        allProductBtn.setOnClickListener(this)
 
-        refreshMyCandy.setOnLoadMoreListener(this)
+        refreshMyRecord.setOnLoadMoreListener(this)
+        refreshMyRecord.setOnRefreshListener(this)
         stateMyCandy.retryBtn.onClick {
             stateMyCandy.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.goodsCategoryList(params)
+            mPresenter.myBillList(params)
         }
-        productRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        productRv.adapter = candyProductAdapter
-        candyProductAdapter.setOnItemClickListener { _, view, position ->
-            startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
-        }
-
-
-        guideCandyList.onClick {
-            guideCandyList.isVisible = false
-            guideCandyAll.isVisible = true
-        }
-        guideCandyAll.onClick {
-            guideCandyAll.isVisible = false
-            if (isWithdraw)
-                guideCandyWithdraw.isVisible = true
-            else
-                guideCandyRecord.isVisible = true
-        }
-        guideCandyWithdraw.onClick {
-            guideCandyWithdraw.isVisible = false
-            guideCandyRecord.isVisible = true
-        }
-        guideCandyRecord.onClick {
-            guideCandyRecord.isVisible = false
-            hasGuideCandy = true
-            UserManager.saveShowGuideCandy(true)
-        }
-
+        recordRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recordRv.adapter = candyProductAdapter
     }
 
 
     override fun finish() {
-        if (UserManager.getGender() == 2 && hasGuideCandy) {
-            AddWishGiftDialog(this).show()
-            hasGuideCandy = false
-        } else {
-            super.finish()
-        }
+        super.finish()
     }
 
 
     override fun ongoodsCategoryList(success: Boolean, data: GoodsCategoryBeans?) {
-        if (success) {
-            stateMyCandy.viewState = MultiStateView.VIEW_STATE_CONTENT
-            candyProductAdapter.addData(data?.list ?: mutableListOf())
-            if ((data?.list ?: mutableListOf<ProductBean>()).size < Constants.PAGESIZE) {
-                refreshMyCandy.finishLoadMoreWithNoMoreData()
-            } else {
-                refreshMyCandy.finishLoadMore(true)
-            }
-        } else {
-            stateMyCandy.viewState = MultiStateView.VIEW_STATE_ERROR
-        }
+
     }
 
     private var isWithdraw = false
     override fun onMyCadnyResult(candyCoun: PullWithdrawBean?) {
         if (candyCoun != null) {
             EventBus.getDefault().post(SetMyCandyEvent(candyCoun!!.candy_amount))
-            candyProductAdapter.mycandy = candyCoun!!.candy_amount
+            mycandy = candyCoun!!.candy_amount
             candyCount.text = CommonFunction.num2thousand("${candyCoun.candy_amount}")
-            candyNewRecord.isVisible = candyCoun.has_unread
             withdrawCandy.isVisible = candyCoun.is_withdraw
             isWithdraw = candyCoun.is_withdraw
-            guideCandyList.isVisible = !UserManager.isShowGuideCandy()
 
         }
-        mPresenter.goodsCategoryList(params)
+        mPresenter.myBillList(params)
+    }
+
+
+    override fun onMyBillList(success: Boolean, billList: MutableList<BillBean>?) {
+        if (success) {
+            stateMyCandy.viewState = MultiStateView.VIEW_STATE_CONTENT
+            if (refreshMyRecord.state != RefreshState.Loading) {
+                candyProductAdapter.data.clear()
+                candyProductAdapter.notifyDataSetChanged()
+                refreshMyRecord.finishRefresh()
+                refreshMyRecord.resetNoMoreData()
+            } else {
+                if ((billList ?: mutableListOf<BillBean>()).size < Constants.PAGESIZE) {
+                    refreshMyRecord.finishLoadMoreWithNoMoreData()
+                } else {
+                    refreshMyRecord.finishLoadMore(true)
+                }
+            }
+            candyProductAdapter.addData(billList ?: mutableListOf<BillBean>())
+        } else {
+            stateMyCandy.viewState = MultiStateView.VIEW_STATE_ERROR
+        }
     }
 
     private var page = 1
@@ -152,11 +129,18 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
         )
     }
 
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        page = 1
+        params["page"] = page
+        mPresenter.myBillList(params)
+    }
+
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         params["page"] = page
-        mPresenter.goodsCategoryList(params)
+        mPresenter.myBillList(params)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -165,44 +149,20 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
 
 
     //    candyCount
+    var mycandy = 0
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
-        if (event.candyCount >= 0) {
-            candyCount.text =
-                CommonFunction.num2thousand("${candyProductAdapter.mycandy - event.candyCount}")
+        mycandy -= event.candyCount
+        candyCount.text = CommonFunction.num2thousand("$mycandy")
 
-            candyProductAdapter.mycandy = candyProductAdapter.mycandy - event.candyCount
-            candyProductAdapter.notifyDataSetChanged()
-        } else {
-            mPresenter.myCadny()
-            candyProductAdapter.data.clear()
-            page = 1
-            params["page"] = page
-        }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun updateWantStateEvent(event: UpdateWantStateEvent) {
-        for (data in candyProductAdapter.data.withIndex()) {
-            if (data.value.id == event.id) {
-                data.value.is_wished = event.want
-                candyProductAdapter.notifyItemChanged(data.index)
-                break
-            }
-        }
-    }
 
     override fun onLazyClick(v: View) {
         when (v.id) {
-            R.id.allProductBtn -> {
-                startActivity<CandyMallActivity>()
-            }
+
             R.id.btnBack -> {
                 finish()
-            }
-            R.id.candyRecordBtn -> { //交易记录
-                startActivity<CandyRecordActivity>()
-                candyNewRecord.isVisible = false
             }
             R.id.rechargeCandy -> {//充值
                 CommonFunction.gotoCandyRecharge(this)
