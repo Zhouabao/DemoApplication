@@ -219,16 +219,5 @@
     <!--        android:id="@+id/main_frag_content"-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="match_parent" />-->
-    <TextView
-        android:id="@+id/totalNearOnlineTv"
-        android:layout_width="196dp"
-        android:layout_height="96dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/icon_guide_near_people"
-        android:gravity="center"
-        android:text="你身边有105个女性在线\n最近的离你只有102m"
-        android:textColor="#fff17413"
-        android:textSize="13sp"
-        android:visibility="gone" />
 
 </FrameLayout>

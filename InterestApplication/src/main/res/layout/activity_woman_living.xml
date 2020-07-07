@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="认证仅为判断你是真实用户\n不会对其他用户公开"
+        android:text="认证仅为判断你是真实用户\n请保持正脸在取景框中并根据引导完成识别"
         android:textColor="#ff4c4c4c"
         android:textSize="14sp"
         android:visibility="visible"
@@ -86,18 +86,32 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/livingBg" />
 
+
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="认证仅供审核不会对其他用户公开"
+        android:textColor="#FFFF6318"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/t6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t3" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/t6"
         android:id="@+id/beginLivingBtn"
         android:layout_width="298dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/shape_rectangle_orange_24dp"
         android:gravity="center"
         android:text="开始识别"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -55,7 +55,6 @@ class MainPresenter : BasePresenter<MainView>() {
             .startupRecord(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<NearCountBean?>>(mView) {
                 override fun onNext(t: BaseResp<NearCountBean?>) {
-                    mView.startupRecordResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {

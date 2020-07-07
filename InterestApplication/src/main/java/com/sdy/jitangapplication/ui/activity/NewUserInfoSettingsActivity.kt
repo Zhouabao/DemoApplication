@@ -251,6 +251,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
     private var choosePosition = -1
+
     /**
      * 填写数据
      */
@@ -427,11 +428,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         dialog.makeAvator.onClick {
             if (position != 0) {
-                if (adapter.data[position].has_face != 2) {
-                    CommonFunction.toast(getString(R.string.real_avator_tip))
-                    dialog.dismiss()
-                    return@onClick
-                }
                 Collections.swap(photos, position, 0)
                 Collections.swap(adapter.data, position, 0)
                 adapter.notifyDataSetChanged()
@@ -490,19 +486,15 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
         dialog.lldelete.onClick {
-            if ((position == 0 && adapter.data[1].has_face == 2) || position != 0) {
-                isChange = true
-                checkSaveEnable()
-                adapter.data.removeAt(position)
-                photos.removeAt(position)
-                adapter.notifyDataSetChanged()
-                refreshLayout()
-                setScroeProgress(-data!!.score_rule!!.photo)
-                dialog.dismiss()
-            } else {
-                CommonFunction.toast(getString(R.string.real_avator_tip))
-                dialog.dismiss()
-            }
+            isChange = true
+            checkSaveEnable()
+            adapter.data.removeAt(position)
+            photos.removeAt(position)
+            adapter.notifyDataSetChanged()
+            refreshLayout()
+            setScroeProgress(-data!!.score_rule!!.photo)
+            dialog.dismiss()
+
         }
 
         dialog.cancelDelete.onClick {
@@ -527,29 +519,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
     override fun onItemDragEnd(holder: RecyclerView.ViewHolder?, position: Int) {
         toPos = position
-        if (toPos == 0 || fromPos == 0) {//from 大于 to
-            if (adapter.data[if (toPos == 0) {
-                    toPos
-                } else {
-                    fromPos
-                }].has_face != 2
-            ) {
-                val data = adapter.data[toPos]
-                adapter.data.removeAt(toPos)
-                adapter.data.add(fromPos, data)
-                adapter.notifyDataSetChanged()
-
-//                Collections.swap(adapter.data, toPos, fromPos)
-//                adapter.notifyDataSetChanged()
-                CommonFunction.toast(getString(R.string.real_avator_tip))
-            } else {
-                isChange = true
-                val data = photos[fromPos]
-                photos.removeAt(fromPos)
-                photos.add(toPos, data)
-                adapter.notifyDataSetChanged()
-            }
-        } else if (fromPos != toPos && fromPos != -1 && toPos != -1) {
+        if (fromPos != toPos && fromPos != -1 && toPos != -1) {
             isChange = true
             val data = photos[fromPos]
             photos.removeAt(fromPos)
@@ -672,13 +642,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         checkSaveEnable()
         result.type = MyPhotoBean.PHOTO
         if (replaceAvator) {
-            if (result.has_face == 2) {//有人脸
-                adapter.setData(0, result)
-                photos[0] = result
-                refreshLayout()
-            } else {
-                CommonFunction.toast(getString(R.string.real_avator_tip))
-            }
+            adapter.setData(0, result)
+            photos[0] = result
+            refreshLayout()
         } else {
             adapter.data.add(adapter.data.size - 1, result)
             photos.add(result)
@@ -734,9 +700,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      */
     private fun uploadPicture(replaceAvator: Boolean = false, path: String) {
         val userProfile =
-            "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME).getString(
-                "accid"
-            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+            "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME)
+                .getString(
+                    "accid"
+                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
             )}"
         UriUtils.getLubanBuilder(this)
@@ -920,8 +887,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         //如果已经换了头像,并且要求强制替换头像
         Log.d("OKhttp", "${UserManager.getAvator().contains(adapter.data[0].url)}")
-        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
-            && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()
+        if (adapter.data.isNotEmpty() && !UserManager.getAvator()
+                .contains(Constants.DEFAULT_EMPTY_AVATAR)
+            && !UserManager.getAvator()
+                .contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()
         ) {
             UserManager.saveForceChangeAvator(true)
         }
@@ -957,7 +926,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else {
             setResult(Activity.RESULT_OK)
             finish()
-            if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
+            if (adapter.data.isNotEmpty() && !UserManager.getAvator()
+                    .contains(Constants.DEFAULT_EMPTY_AVATAR)
                 && !UserManager.getAvator().contains(adapter.data[0].url)
                 && (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass())
             ) { //账号异常

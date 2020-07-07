@@ -156,10 +156,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 if (position == 1 && UserManager.touristMode) {
                     TouristDialog(activity!!).show()
                     vpIndex.currentItem = 0
-                } else {
-                    if (position == 0) {
-                        EventBus.getDefault().post(ShowNearCountEvent())
-                    }
                 }
             }
         })

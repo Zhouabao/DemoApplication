@@ -510,32 +510,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    private var canShowNear = false
-    override fun startupRecordResult(data: NearCountBean?) {
-        if (data != null && data.nearly_tips_cnt > 0) {
-            canShowNear = true
-            totalNearOnlineTv.text = SpanUtils.with(totalNearOnlineTv)
-                .append("你身边有")
-                .append("${data.nearly_tips_cnt}")
-                .setFontSize(15, true)
-                .setForegroundColor(Color.parseColor("#FD4417"))
-                .append(
-                    "个${if (UserManager.getGender() == 1) {
-                        "女"
-                    } else {
-                        "男"
-                    }}性在线\n最近的离你只有"
-                )
-                .append("${data.nearly_tips_str}")
-                .setFontSize(15, true)
-                .setForegroundColor(Color.parseColor("#FD4417"))
-                .create()
-        } else {
-            canShowNear = false
-        }
-    }
-
-
     /**
      * 消息接收观察者
      */
@@ -568,69 +542,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
             }
-        }
-    }
-
-
-    private var showNear = false
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onShowNearCountEvent(event: ShowNearCountEvent) {
-        if (canShowNear && !showNear) {
-            showNear = true
-            totalNearOnlineTv.isVisible = true
-            val animatorSet = AnimatorSet()
-            animatorSet.duration = 300L
-            animatorSet.playTogether(
-                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleX", 0.45f, 1F),
-                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleY", 0.45f, 1F),
-                ObjectAnimator.ofFloat(totalNearOnlineTv, "alpha", 0F, 1F)
-            )
-            animatorSet.start()
-
-            val trans = ObjectAnimator.ofFloat(
-                totalNearOnlineTv,
-                "translationY",
-                SizeUtils.dp2px(-5F).toFloat(),
-                SizeUtils.dp2px(0F).toFloat(),
-                SizeUtils.dp2px(-5F).toFloat()
-            )
-            trans.duration = 750
-            trans.repeatCount = 4
-            trans.interpolator = LinearInterpolator()
-            trans.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {
-
-                }
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    totalNearOnlineTv.isVisible = false
-                }
-
-                override fun onAnimationCancel(animation: Animator?) {
-                }
-
-                override fun onAnimationStart(animation: Animator?) {
-                }
-
-            })
-
-            animatorSet.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {
-
-                }
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    trans.start()
-                }
-
-                override fun onAnimationCancel(animation: Animator?) {
-                }
-
-                override fun onAnimationStart(animation: Animator?) {
-                }
-
-            })
         }
     }
 

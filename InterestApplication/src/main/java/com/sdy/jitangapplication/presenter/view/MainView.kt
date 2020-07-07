@@ -14,6 +14,4 @@ interface MainView : BaseView {
 
     fun onMsgListResult(allMsgCount: AllMsgCount?)
 
-
-    fun startupRecordResult(data: NearCountBean?)
 }
