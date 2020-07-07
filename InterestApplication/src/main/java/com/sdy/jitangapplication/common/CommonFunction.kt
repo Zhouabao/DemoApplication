@@ -435,7 +435,9 @@ object CommonFunction {
         compress: Boolean = false,
         showCamera: Boolean = true,
         rotateEnable: Boolean = false,
-        cropEnable: Boolean = false
+        cropEnable: Boolean = false,
+        minSeconds: Int = -1,
+        maxSeconds: Int = -1
     ) {
         PictureSelector.create(context as Activity)
             .openGallery(chooseMode)
@@ -456,6 +458,8 @@ object CommonFunction {
             .enableCrop(cropEnable)
             .compressSavePath(UriUtils.getCacheDir(context))
             .compress(compress)
+            .videoMaxSecond(maxSeconds)
+            .videoMinSecond(minSeconds)
             .minimumCompressSize(100)
             .scaleEnabled(true)
 //            .showCropGrid(true)

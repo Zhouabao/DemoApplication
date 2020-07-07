@@ -35,7 +35,6 @@ public class ChatPickImageAction extends ChatBaseAction {
         onTakePhoto();
     }
 
-
     /**
      * * 打开图片选择器
      * 拍照或者选取照片
@@ -43,10 +42,10 @@ public class ChatPickImageAction extends ChatBaseAction {
     private void onTakePhoto() {
         int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
 
-        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true, false, false);
+        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode,
+                PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true, false, false, -1, -1);
 
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -55,7 +54,7 @@ public class ChatPickImageAction extends ChatBaseAction {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {
                     LocalMedia media = selectList.get(i);
-                    if (PictureMimeType.eqImage(media.getMimeType())) {//发送图片
+                    if (PictureMimeType.eqImage(media.getMimeType())) {// 发送图片
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
                                 sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
@@ -63,12 +62,14 @@ public class ChatPickImageAction extends ChatBaseAction {
                                 sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
-                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
+                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {// 发送视频
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
-                                sendVideo(new File(media.getAndroidQToPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                                sendVideo(new File(media.getAndroidQToPath()),
+                                        MD5.getStreamMD5(media.getAndroidQToPath()));
                             else
-                                sendVideo(new File(Uri.parse(media.getPath()).getPath()), MD5.getStreamMD5(media.getPath()));
+                                sendVideo(new File(Uri.parse(media.getPath()).getPath()),
+                                        MD5.getStreamMD5(media.getPath()));
                         else
                             sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                     }
@@ -116,7 +117,8 @@ public class ChatPickImageAction extends ChatBaseAction {
         long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
         int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
         int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-        IMMessage message = MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
+        IMMessage message =
+                MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
         sendMessage(message);
     }
 

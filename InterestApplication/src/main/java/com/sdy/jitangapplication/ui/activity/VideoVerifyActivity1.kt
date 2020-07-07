@@ -376,12 +376,22 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                 filterDialog.show()
             }
             R.id.chooseVideoBtn -> {
-                CommonFunction.onTakePhoto(
-                    this,
-                    1,
-                    RESULT_CODE_CHOOSE_VIDEO,
-                    PictureMimeType.ofVideo()
-                )
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                    CommonFunction.onTakePhoto(
+                        this,
+                        1,
+                        RESULT_CODE_CHOOSE_VIDEO,
+                        PictureMimeType.ofVideo(),
+                        minSeconds = RECORD_MIN_TIME,
+                        maxSeconds = RECORD_MAX_TIME
+                    )
+                } else
+                    CommonFunction.onTakePhoto(
+                        this,
+                        1,
+                        RESULT_CODE_CHOOSE_VIDEO,
+                        PictureMimeType.ofVideo()
+                    )
             }
             R.id.captureButton -> {
                 if (!isRecording) {
@@ -420,7 +430,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
             }
         } else if (requestCode == RESULT_CODE_CHOOSE_VIDEO) {//视频选择成功
             if (resultCode == Activity.RESULT_OK) {
-                var path =
+                videoSavePath =
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
                             data
                         )[0].androidQToPath.isNullOrEmpty()
@@ -429,8 +439,18 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                     } else {
                         PictureSelector.obtainMultipleResult(data)[0].path
                     }
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                    startActivityForResult<VideoVerifyConfirmActivity>(
+                        VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
+                        "ratio" to RATIO,
+                        "path" to videoSavePath,
+                        "duration" to PictureSelector.obtainMultipleResult(data)[0].duration
+                    )
+                else
+                    VideoTrimmerActivity.start(this, videoSavePath)
 
-                VideoTrimmerActivity.start(this, path)
+//
+
             }
         }
     }
