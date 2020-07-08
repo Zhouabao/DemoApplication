@@ -9,7 +9,7 @@
     android:fitsSystemWindows="false"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="content"
+    app:msv_viewState="loading"
     tools:context=".ui.activity.MyCandyActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,8 +46,6 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
-
 
 
         </RelativeLayout>
@@ -109,16 +107,17 @@
             android:id="@+id/rechargeCandy"
             android:layout_width="108dp"
             android:layout_height="38dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/rectangle_white_19dp"
             android:gravity="center"
             android:text="充值"
             android:textColor="@color/colorOrange"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/withdrawCandy"
             app:layout_constraintLeft_toRightOf="@id/withdrawCandy"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/withdrawCandy" />
+            app:layout_constraintTop_toBottomOf="@id/candyCount" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -154,9 +153,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recordRv"
-                    android:overScrollMode="never"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
 
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
