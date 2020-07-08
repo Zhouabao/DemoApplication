@@ -3,8 +3,10 @@ package com.sdy.jitangapplication.ui.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -244,12 +246,16 @@ class ConfirmSendGiftDialog(
                 override fun onSuccess(param: Void?) {
                     //更新消息列表
                     EventBus.getDefault().post(UpdateSendGiftEvent(message))
-                    //关闭自己的弹窗
-                    dismiss()
                     //关闭礼物弹窗
                     EventBus.getDefault().post(CloseDialogEvent())
                     //发送搭讪礼物tip消息
                     CommonFunction.sendAccostTip(account)
+                    //关闭自己的弹窗
+                    dismiss()
+                    //跳转聊天界面
+                    Handler().postDelayed({
+                        ChatActivity.start(ActivityUtils.getTopActivity(), account)
+                    }, 500L)
                 }
 
                 override fun onFailed(code: Int) {

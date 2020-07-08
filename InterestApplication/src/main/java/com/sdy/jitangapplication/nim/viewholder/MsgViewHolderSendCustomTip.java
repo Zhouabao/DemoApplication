@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
 
@@ -106,21 +105,6 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).create());
             break;
         case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_HAS_GIFT:// 男方 双方聊天数>设定聊天条数 女方有心愿礼物 5
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("你们聊的还不错，")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("看看Ta喜欢什么东西吧！")
-                    .setClickSpan(new ClickableSpan() {
-                        @Override
-                        public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(Color.parseColor("#FF6796FA"));
-                            ds.setUnderlineText(false);
-                        }
-
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
-                        }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).create());
-            break;
         case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_NOT_HAS_GIFT:// 男方 双方聊天数>设定聊天条数 女方没有心愿礼物 6
             notificationTextView.setText(SpanUtils.with(notificationTextView).append("你们聊的好像还不错，要不")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("送个礼物").setClickSpan(new ClickableSpan() {
@@ -142,24 +126,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
             break;
         case SendCustomTipAttachment.CUSTOME_TIP_RECEIVED_GIFT:// 已领取对方赠送的糖果礼物，可直接用于兑换商品和提现 7
             notificationTextView.setText(SpanUtils.with(notificationTextView).append("已领取对方赠送的糖果礼物，可直接用于")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("兑换商品").setClickSpan(new ClickableSpan() {
-                        @Override
-                        public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(Color.parseColor("#FF6796FA"));
-                            ds.setUnderlineText(false);
-                        }
-
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            Intent intent = new Intent(context, MyCandyActivity.class);
-                            context.startActivity(intent);
-                        }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("和提现")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
-            break;
-        case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_PRODUCT:// 已满足兑换所需糖果，立即兑换 8
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("已满足兑换所需糖果，")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("立即兑换").setClickSpan(new ClickableSpan() {
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("提现").setClickSpan(new ClickableSpan() {
                         @Override
                         public void updateDrawState(@NonNull TextPaint ds) {
                             ds.setColor(Color.parseColor("#FF6796FA"));
@@ -172,6 +139,8 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                             context.startActivity(intent);
                         }
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).create());
+            break;
+        case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_PRODUCT:// 已满足兑换所需糖果，立即兑换 8
             break;
         case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT:// 小助手发聊天糖果退回警告 9
             StringTokenizer tokenizer = new StringTokenizer(attachment.getContent(), "立即认证");

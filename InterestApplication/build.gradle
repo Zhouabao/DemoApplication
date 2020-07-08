@@ -34,8 +34,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 25
-        versionName "2.2.1"
+        versionCode 26
+        versionName "2.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -111,7 +111,6 @@ android {
         Xiaomi {}//投放小米市场
         M360 {}//投放360市场
         Sougou {}//投放搜狗市场
-        Wandoujia {}//投放豌豆荚市场
         Meizu {}//投放魅族市场
         Lenovo {}//投放联想市场
         Anzhi {}//投放安卓智能市场
@@ -119,7 +118,6 @@ android {
         PP {}//投放PP助手市场
         Tencent {}//投放应用宝市场
         Yingyonghui {}//投放应用汇市场
-        Smartisan {}//投放锤子市场
         Samsung {}//投放三星市场
         Advertisement {}//运营投放渠道
 

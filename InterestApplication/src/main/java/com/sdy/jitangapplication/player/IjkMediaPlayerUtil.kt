@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.player
 import android.content.Context
 import android.media.AudioManager
 import android.net.Uri
+import android.util.Log
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
@@ -72,10 +73,14 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
 
 
     public fun resumePlay() {
-        pause = false
-        mediaPlayer?.start()
-        onPlayingListener.onPlay(position)
-        currentState = MEDIA_PLAY
+        try {
+            pause = false
+            mediaPlayer?.start()
+            onPlayingListener.onPlay(position)
+            currentState = MEDIA_PLAY
+        } catch (e: IllegalStateException) {
+            Log.e(this::class.java.simpleName,"${e.toString()}")
+        }
     }
 
     public fun resetMedia() {
