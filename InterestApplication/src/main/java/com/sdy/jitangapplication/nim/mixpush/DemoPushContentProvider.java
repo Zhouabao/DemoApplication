@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.nim.mixpush;
 
-import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.api.model.main.CustomPushContentProvider;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -8,10 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.DemoCache;
-import com.netease.nim.uikit.api.NimUIKit;
-import com.netease.nim.uikit.api.model.contact.ContactChangedObserver;
-import com.netease.nim.uikit.common.util.log.LogUtil;
-import com.netease.nim.uikit.common.util.sys.NetworkUtil;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.*;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
@@ -23,6 +19,10 @@ import com.netease.nimlib.sdk.event.model.NimOnlineStateEvent;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
+import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.NetworkUtil;
 
 import java.util.*;
 

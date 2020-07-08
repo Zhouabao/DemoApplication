@@ -4,11 +4,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 
 /**
  * author : ZFM

@@ -2,7 +2,7 @@ package com.sdy.jitangapplication.nim.event;
 
 import android.text.TextUtils;
 import com.sdy.jitangapplication.nim.DemoCache;
-import com.netease.nim.uikit.api.model.main.OnlineStateContentProvider;
+import com.sdy.jitangapplication.nim.uikit.api.model.main.OnlineStateContentProvider;
 
 /**
  * Created by hzchenkang on 2017/3/31.

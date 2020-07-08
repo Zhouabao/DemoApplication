@@ -8,15 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.sdy.jitangapplication.R;
-import com.netease.nim.uikit.business.session.emoji.MoonUtil;
-import com.netease.nim.uikit.business.team.helper.TeamHelper;
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
-import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
-import com.netease.nim.uikit.common.util.sys.TimeUtil;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.uikit.business.session.emoji.MoonUtil;
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper;
+import com.sdy.jitangapplication.nim.uikit.common.ui.imageview.HeadImageView;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil;
 
 import java.util.List;
 
@@ -78,7 +77,6 @@ public class SearchMessageAdapter extends BaseAdapter {
         private TextView tvDatetime;
         private ImageView imgMsgStatus;
 
-
         public TextSearchResultViewHolder(View view) {
             this.imgHead = (HeadImageView) view.findViewById(R.id.img_head);
 
@@ -101,25 +99,22 @@ public class SearchMessageAdapter extends BaseAdapter {
             // 减去固定的头像和时间宽度
             labelWidth -= ScreenUtil.dip2px(70 + 70);
             tvNickname.setMaxWidth(labelWidth);
-            if (message.getSessionType() == SessionTypeEnum.Team) {
-                tvNickname.setText(TeamHelper.getTeamMemberDisplayName(message.getSessionId(), message.getFromAccount()));
-            } else {
-                tvNickname.setText(UserInfoHelper.getUserDisplayName(message.getFromAccount()));
-            }
+            tvNickname.setText(UserInfoHelper.getUserDisplayName(message.getFromAccount()));
         }
 
         private void refreshContent(IMMessage message) {
-            MoonUtil.identifyFaceExpressionAndTags(context, tvMessage, message.getContent(), ImageSpan.ALIGN_BOTTOM, 0.45f);
-//            SpanUtil.makeKeywordSpan(context, tvMessage, keyword);
+            MoonUtil.identifyFaceExpressionAndTags(context, tvMessage, message.getContent(), ImageSpan.ALIGN_BOTTOM,
+                    0.45f);
+            // SpanUtil.makeKeywordSpan(context, tvMessage, keyword);
 
             switch (message.getStatus()) {
-                case fail:
-                    imgMsgStatus.setImageResource(R.drawable.nim_g_ic_failed_small);
-                    imgMsgStatus.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    imgMsgStatus.setVisibility(View.GONE);
-                    break;
+            case fail:
+                imgMsgStatus.setImageResource(R.drawable.nim_g_ic_failed_small);
+                imgMsgStatus.setVisibility(View.VISIBLE);
+                break;
+            default:
+                imgMsgStatus.setVisibility(View.GONE);
+                break;
             }
         }
 

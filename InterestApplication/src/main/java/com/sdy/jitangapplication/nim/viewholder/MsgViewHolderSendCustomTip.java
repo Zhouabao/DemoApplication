@@ -10,13 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.SpanUtils;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
@@ -46,7 +46,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
     @Override
     protected void inflateContentView() {
         // 初始化数据
-        notificationTextView = view.findViewById(com.netease.nim.uikit.R.id.message_item_notification_label);
+        notificationTextView = view.findViewById(R.id.message_item_notification_label);
     }
 
     @Override

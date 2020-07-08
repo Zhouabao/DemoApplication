@@ -9,12 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.SpanUtils;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
-import com.netease.nim.uikit.common.util.sys.ClipboardUtil;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil;
 
 /**
  * author : ZFM

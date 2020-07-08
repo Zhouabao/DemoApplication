@@ -10,13 +10,13 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nim.uikit.common.util.sys.ClipboardUtil
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil
 import com.sdy.jitangapplication.presenter.ShareFriendsPresenter
 import com.sdy.jitangapplication.presenter.view.ShareFriendsView
 import com.sdy.jitangapplication.ui.adapter.ShareFriendsAdapter

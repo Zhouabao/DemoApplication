@@ -3,7 +3,7 @@ package com.sdy.jitangapplication.nim.view;
 import androidx.annotation.LayoutRes;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.model.Tag;
-import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 
 import java.util.List;
 

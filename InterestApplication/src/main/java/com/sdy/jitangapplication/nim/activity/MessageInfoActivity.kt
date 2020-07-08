@@ -13,11 +13,6 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.rx.BaseSubscriber
-import com.netease.nim.uikit.api.NimUIKit
-import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
-import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper
-import com.netease.nim.uikit.common.activity.UI
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.RequestCallback
@@ -36,6 +31,11 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.StarEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.nim.DemoCache
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
+import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver
+import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageListPanelHelper
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.ReportReasonActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
@@ -91,8 +91,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
         account = intent.getStringExtra(EXTRA_ACCOUNT)
         initView()
-        registerObserver(true)
-
     }
 
 
@@ -197,46 +195,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
     }
 
 
-    internal var muteListChangedNotifyObserver: Observer<MuteListChangedNotify> =
-        Observer { notify -> friendNoBother.isChecked = notify.isMute }
-
-
-    internal var friendDataChangedObserver: ContactChangedObserver =
-        object : ContactChangedObserver {
-            override fun onAddedOrUpdatedFriends(account: List<String>) {
-                updateUserOperatorView()
-            }
-
-            override fun onDeletedFriends(account: List<String>) {
-                updateUserOperatorView()
-            }
-
-            override fun onAddUserToBlackList(account: List<String>) {
-                updateUserOperatorView()
-            }
-
-            override fun onRemoveUserFromBlackList(account: List<String>) {
-                updateUserOperatorView()
-            }
-        }
-
-    private fun updateUserOperatorView() {
-        if (isfriend) {
-            friendDelete.visibility = View.VISIBLE
-            deleteTv.text = "删除好友"
-        } else {
-            friendDelete.visibility = View.GONE
-        }
-    }
-
-    /*// 以不接收testAccount帐号消息为例
-    NIMClient.getService(FriendService.class).setMessageNotify("testAccount", false).setCallback(new RequestCallback<Void>() {});*/
-
-    private fun registerObserver(register: Boolean) {
-//        NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
-//        NIMClient.getService(FriendServiceObserve::class.java).observeMuteListChangedNotify(muteListChangedNotifyObserver, register)
-    }
-
     private fun updateUserInfo() {
         if (NimUIKit.getUserInfoProvider().getUserInfo(account) != null) {
             updateUserInfoView()
@@ -273,7 +231,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        registerObserver(false)
         EventBus.getDefault().unregister(this)
         AppManager.instance.finishActivity(this)
 

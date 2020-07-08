@@ -8,14 +8,12 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.SdkVersionUtils;
-import com.netease.nim.uikit.business.session.constant.RequestCode;
-import com.netease.nim.uikit.common.util.string.MD5;
-import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.RequestCode;
+import com.sdy.jitangapplication.nim.uikit.common.util.string.MD5;
 
 import java.io.File;
 import java.util.List;
@@ -35,7 +33,6 @@ public class ChatTakeImageAction extends ChatBaseAction {
         openCamera();
     }
 
-
     /**
      * 拍摄
      */
@@ -45,7 +42,6 @@ public class ChatTakeImageAction extends ChatBaseAction {
         CommonFunction.INSTANCE.openCamera(getActivity(), requestCode, PictureMimeType.ofImage(), true, false, false);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCode.TAKE_IMAGE) {
@@ -53,7 +49,7 @@ public class ChatTakeImageAction extends ChatBaseAction {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {
                     LocalMedia media = selectList.get(i);
-                    if (PictureMimeType.eqImage(media.getMimeType())) {//发送图片
+                    if (PictureMimeType.eqImage(media.getMimeType())) {// 发送图片
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
                                 sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
@@ -61,7 +57,7 @@ public class ChatTakeImageAction extends ChatBaseAction {
                                 sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
-                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
+                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {// 发送视频
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
                                 sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
@@ -79,12 +75,7 @@ public class ChatTakeImageAction extends ChatBaseAction {
      * 发送图片
      */
     private void sendImageAfterSelfImagePicker(File file) {
-        IMMessage message;
-        if (getContainer() != null && getContainer().sessionType == SessionTypeEnum.ChatRoom) {
-            message = ChatRoomMessageBuilder.createChatRoomImageMessage(getAccount(), file, file.getName());
-        } else {
-            message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
-        }
+        IMMessage message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
         sendMessage(message);
     }
 
@@ -114,7 +105,8 @@ public class ChatTakeImageAction extends ChatBaseAction {
         long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
         int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
         int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-        IMMessage message = MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
+        IMMessage message =
+                MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
         sendMessage(message);
     }
 

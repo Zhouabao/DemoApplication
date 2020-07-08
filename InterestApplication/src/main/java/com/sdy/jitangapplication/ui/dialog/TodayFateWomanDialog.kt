@@ -11,7 +11,6 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
-import com.netease.nim.uikit.common.ui.recyclerview.util.RecyclerViewUtil
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -25,6 +24,7 @@ import com.sdy.jitangapplication.model.BatchGreetBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.model.TodayFateBean
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.util.RecyclerViewUtil
 import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_today_fate_woman.*

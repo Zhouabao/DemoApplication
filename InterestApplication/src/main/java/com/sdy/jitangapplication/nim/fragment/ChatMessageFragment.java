@@ -19,16 +19,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
-import com.netease.nim.uikit.api.UIKitOptions;
-import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
-import com.netease.nim.uikit.api.model.session.SessionCustomization;
-import com.netease.nim.uikit.business.ait.AitManager;
-import com.netease.nim.uikit.business.session.constant.Extras;
-import com.netease.nim.uikit.business.session.module.Container;
-import com.netease.nim.uikit.business.session.module.ModuleProxy;
-import com.netease.nim.uikit.common.CommonUtil;
-import com.netease.nim.uikit.common.fragment.TFragment;
-import com.netease.nim.uikit.impl.NimUIKitImpl;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -41,11 +31,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.netease.nimlib.sdk.msg.model.MemberPushOption;
 import com.netease.nimlib.sdk.msg.model.MessageReceipt;
-import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
-import com.netease.nimlib.sdk.robot.model.RobotAttachment;
-import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
@@ -66,6 +52,14 @@ import com.sdy.jitangapplication.nim.session.ChatContactAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
+import com.sdy.jitangapplication.nim.uikit.api.model.main.CustomPushContentProvider;
+import com.sdy.jitangapplication.nim.uikit.api.model.session.SessionCustomization;
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.Extras;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.ModuleProxy;
+import com.sdy.jitangapplication.nim.uikit.common.CommonUtil;
+import com.sdy.jitangapplication.nim.uikit.common.fragment.TFragment;
+import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
@@ -111,8 +105,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     // modules
     protected ChatInputPanel inputPanel;
     protected ChatMessageListPanelEx messageListPanel;
-
-    protected AitManager aitManager;
 
     private View rootView;
     private TextView leftChatTimes, gotoVerifyBtn;
@@ -192,9 +184,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (inputPanel != null) {
             inputPanel.onDestroy();
         }
-        if (aitManager != null) {
-            aitManager.reset();
-        }
+
     }
 
     public boolean onBackPressed() {
@@ -223,9 +213,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             inputPanel.reload(container, customization);
         }
 
-        // initAitManager();
-
-        inputPanel.switchRobotMode(NimUIKitImpl.getRobotInfoProvider().getRobotByAccount(sessionId) != null);
 
         registerObservers(true);
 
@@ -249,17 +236,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
             dialog.setOnDismissListener(dialog1 -> UserManager.INSTANCE.saveShowGuideGiftProtocol(true));
-        }
-    }
-
-    private void initAitManager() {
-        UIKitOptions options = NimUIKitImpl.getOptions();
-        if (options.aitEnable) {
-            aitManager = new AitManager(getContext(),
-                    options.aitTeamMember && sessionType == SessionTypeEnum.Team ? sessionId : null,
-                    options.aitIMRobot);
-            inputPanel.addAitTextWatcher(aitManager);
-            aitManager.setTextChangeListener(inputPanel);
         }
     }
 
@@ -399,54 +375,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         }
     }
 
-    private void appendTeamMemberPush(IMMessage message) {
-        if (aitManager == null) {
-            return;
-        }
-        if (sessionType == SessionTypeEnum.Team) {
-            List<String> pushList = aitManager.getAitTeamMember();
-            if (pushList == null || pushList.isEmpty()) {
-                return;
-            }
-            MemberPushOption memberPushOption = new MemberPushOption();
-            memberPushOption.setForcePush(true);
-            memberPushOption.setForcePushContent(message.getContent());
-            memberPushOption.setForcePushList(pushList);
-            message.setMemberPushOption(memberPushOption);
-        }
-    }
 
-    private IMMessage changeToRobotMsg(IMMessage message) {
-        if (aitManager == null) {
-            return message;
-        }
-        if (message.getMsgType() == MsgTypeEnum.robot) {
-            return message;
-        }
-        if (isChatWithRobot()) {
-            if (message.getMsgType() == MsgTypeEnum.text && message.getContent() != null) {
-                String content = message.getContent().equals("") ? " " : message.getContent();
-                message = MessageBuilder.createRobotMessage(message.getSessionId(), message.getSessionType(),
-                        message.getSessionId(), content, RobotMsgType.TEXT, content, null, null);
-            }
-        } else {
-            String robotAccount = aitManager.getAitRobot();
-            if (TextUtils.isEmpty(robotAccount)) {
-                return message;
-            }
-            String text = message.getContent();
-            String content = aitManager.removeRobotAitString(text, robotAccount);
-            content = content.equals("") ? " " : content;
-            message = MessageBuilder.createRobotMessage(message.getSessionId(), message.getSessionType(), robotAccount,
-                    text, RobotMsgType.TEXT, content, null, null);
 
-        }
-        return message;
-    }
-
-    private boolean isChatWithRobot() {
-        return NimUIKitImpl.getRobotInfoProvider().getRobotByAccount(sessionId) != null;
-    }
 
     private void appendPushConfig(IMMessage message) {
         CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
@@ -483,25 +413,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     @Override
     public void onItemFooterClick(IMMessage message) {
-        if (aitManager == null) {
-            return;
-        }
-        if (messageListPanel.isSessionMode()) {
-            RobotAttachment attachment = (RobotAttachment) message.getAttachment();
-            NimRobotInfo robot =
-                    NimUIKitImpl.getRobotInfoProvider().getRobotByAccount(attachment.getFromRobotAccount());
-            aitManager.insertAitRobot(robot.getAccount(), robot.getName(), inputPanel.getEditSelectionStart());
-        }
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (aitManager != null) {
-            aitManager.onActivityResult(requestCode, resultCode, data);
-        }
         inputPanel.onActivityResult(requestCode, resultCode, data);
-        messageListPanel.onActivityResult(requestCode, resultCode, data);
     }
 
     // 操作面板集合

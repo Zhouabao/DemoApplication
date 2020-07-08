@@ -13,13 +13,13 @@ import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase;
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper;
 import com.sdy.jitangapplication.R;
 import com.kotlin.base.common.AppManager;
-import com.netease.nim.uikit.business.session.module.Container;
-import com.netease.nim.uikit.business.session.module.ModuleProxy;
-import com.netease.nim.uikit.business.session.module.list.MessageListPanelEx;
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
-import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.ModuleProxy;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.list.MessageListPanelEx;
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper;
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
 
 /**
  * 搜索结果消息列表界面

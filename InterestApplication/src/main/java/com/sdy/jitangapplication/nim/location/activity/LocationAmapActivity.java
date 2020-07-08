@@ -14,14 +14,14 @@ import android.widget.TextView;
 import com.amap.api.maps.*;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.netease.nim.uikit.api.model.location.LocationProvider;
-import com.netease.nim.uikit.api.wrapper.NimToolBarOptions;
-import com.netease.nim.uikit.common.activity.ToolBarOptions;
-import com.netease.nim.uikit.common.activity.UI;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
 import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
+import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
+import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimToolBarOptions;
+import com.sdy.jitangapplication.nim.uikit.common.activity.ToolBarOptions;
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
 
 public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListener, OnClickListener
         , NimLocationManager.NimLocationListener {

@@ -2,9 +2,9 @@ package com.sdy.jitangapplication.nim.session;
 
 import android.app.Activity;
 import android.content.Intent;
-import com.netease.nim.uikit.business.session.module.Container;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;

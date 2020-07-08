@@ -7,9 +7,10 @@ import com.sdy.jitangapplication.nim.location.activity.LocationAmapActivity;
 import com.sdy.jitangapplication.nim.location.activity.LocationExtras;
 import com.sdy.jitangapplication.nim.location.activity.NavigationAmapActivity;
 import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
-import com.netease.nim.uikit.api.model.location.LocationProvider;
-import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialog;
-import com.netease.nim.uikit.common.util.log.LogUtil;
+import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.EasyAlertDialog;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
+
 
 /**
  * Created by zhoujianghua on 2015/8/11.

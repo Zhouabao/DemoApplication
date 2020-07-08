@@ -17,8 +17,6 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.ui.activity.BaseActivity
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -30,6 +28,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.ResidueCountBean
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container
+import com.sdy.jitangapplication.nim.uikit.business.session.module.ModuleProxy
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 

@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.event.OnlineStateEventManager;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
-import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.NimStrings;
 import com.netease.nimlib.sdk.Observer;
@@ -18,6 +17,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.team.constant.TeamFieldEnum;
 import com.netease.nimlib.sdk.team.model.IMMessageFilter;
 import com.netease.nimlib.sdk.team.model.UpdateTeamAttachment;
+import com.sdy.jitangapplication.nim.uikit.common.ToastHelper;
 
 import java.util.Map;
 

@@ -6,16 +6,16 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.netease.nim.uikit.business.recent.RecentContactsFragment
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper
-import com.netease.nim.uikit.common.CommonUtil
-import com.netease.nim.uikit.common.util.sys.TimeUtil
-import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MessageGiftBean
 import com.sdy.jitangapplication.nim.attachment.*
+import com.sdy.jitangapplication.nim.uikit.business.recent.RecentContactsFragment
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
+import com.sdy.jitangapplication.nim.uikit.common.CommonUtil
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil
+import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
 

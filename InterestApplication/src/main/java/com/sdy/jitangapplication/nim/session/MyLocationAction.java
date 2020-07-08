@@ -1,10 +1,10 @@
 package com.sdy.jitangapplication.nim.session;
 
 import com.sdy.jitangapplication.R;
-import com.netease.nim.uikit.api.model.location.LocationProvider;
-import com.netease.nim.uikit.impl.NimUIKitImpl;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
+import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 
 /**
  * Created by hzxuwen on 2015/6/12.

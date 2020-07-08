@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.netease.nim.uikit.api.wrapper.MessageRevokeTip;
-import com.netease.nim.uikit.api.wrapper.NimUserInfoProvider;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderThumbBase;
 import com.netease.nimlib.sdk.NosTokenSceneConfig;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.ServerAddresses;
@@ -22,6 +19,9 @@ import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
+import com.sdy.jitangapplication.nim.uikit.api.wrapper.MessageRevokeTip;
+import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimUserInfoProvider;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderThumbBase;
 import com.sdy.jitangapplication.ui.activity.MainActivity;
 
 import java.io.IOException;

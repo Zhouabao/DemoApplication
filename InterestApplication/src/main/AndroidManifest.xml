@@ -222,6 +222,51 @@
         <activity
             android:name=".ui.activity.IDVerifyActivity"
             android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.ui.ImageGridActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/LightBaseTheme"/>
+
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.ui.ImageCropActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.ui.ImagePreviewActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.ui.ImagePreviewRetakeActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.ui.ImageTakeActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.video.GLVideoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/VideoTheme"/>
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.video.GLVideoConfirmActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/VideoTheme"/>
+
+        <activity
+            android:name=".nim.uikit.common.media.imagepicker.camera.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+
         <activity
             android:name=".nim.activity.DisplayMessageActivity"
             android:screenOrientation="portrait" />
@@ -549,6 +594,14 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+
+
+
+
+
+
+
+
     </application>
 
 </manifest>

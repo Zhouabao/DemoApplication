@@ -1,10 +1,10 @@
 package com.sdy.jitangapplication.nim.session;
 
-import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nimlib.sdk.uinfo.constant.GenderEnum;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
 
 /**
  * 联系方式

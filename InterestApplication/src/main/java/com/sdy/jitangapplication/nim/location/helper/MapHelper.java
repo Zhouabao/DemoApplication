@@ -7,8 +7,9 @@ import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
-import com.netease.nim.uikit.common.ToastHelper;
-import com.netease.nim.uikit.common.util.log.LogUtil;
+import com.sdy.jitangapplication.nim.uikit.common.ToastHelper;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
+
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;

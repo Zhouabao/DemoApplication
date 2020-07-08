@@ -6,13 +6,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import com.sdy.jitangapplication.nim.DemoCache;
-import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nimlib.sdk.NimIntent;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.mixpush.MixPushMessageHandler;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Map;

@@ -104,7 +104,7 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/icon_video_verify_start" />
 
-            <com.netease.nim.uikit.common.media.imagepicker.camera.CircleProgressView
+            <com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.CircleProgressView
                 android:id="@+id/mProgressView"
                 android:layout_width="@dimen/dp_size_125"
                 android:layout_height="@dimen/dp_size_125"

@@ -11,8 +11,12 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
-import com.netease.nim.uikit.common.framework.infra.*;
-import com.netease.nim.uikit.common.util.log.LogUtil;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.DefaultTaskManager;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.DefaultTaskWorker;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.ManagedTask;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.TaskExecutor;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.TaskManager;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
 
 import java.io.IOException;
 import java.util.*;

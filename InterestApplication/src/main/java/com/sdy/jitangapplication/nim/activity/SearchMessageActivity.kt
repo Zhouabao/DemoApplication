@@ -14,9 +14,6 @@ import androidx.appcompat.widget.SearchView
 import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper
-import com.netease.nim.uikit.common.activity.UI
-import com.netease.nim.uikit.common.ui.listview.AutoRefreshListView
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallbackWrapper
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -28,6 +25,9 @@ import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI
+import com.sdy.jitangapplication.nim.uikit.common.ui.listview.AutoRefreshListView
 import kotlinx.android.synthetic.main.activity_search_message.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity

@@ -1,1 +1,1 @@
-include ':InterestApplication', ':BaseLibrary', 'SwipeBackLibrary', ':NIM_Android_UIKit-master', ':faceplatform', ':faceplatform-ui'
+include ':InterestApplication', ':BaseLibrary', 'SwipeBackLibrary', ':faceplatform', ':faceplatform-ui'

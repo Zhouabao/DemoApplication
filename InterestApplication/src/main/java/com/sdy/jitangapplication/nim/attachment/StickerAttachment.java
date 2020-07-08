@@ -2,7 +2,7 @@ package com.sdy.jitangapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sdy.jitangapplication.nim.extension.CustomAttachmentType;
-import com.netease.nim.uikit.common.util.file.FileUtil;
+import com.sdy.jitangapplication.nim.uikit.common.util.file.FileUtil;
 
 /**
  * Created by zhoujianghua on 2015/7/8.

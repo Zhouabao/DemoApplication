@@ -24,9 +24,6 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.utils.NetWorkUtils
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
-import com.netease.nim.uikit.common.ToastHelper
-import com.netease.nim.uikit.common.media.imagepicker.camera.ConfirmationDialog
-import com.netease.nim.uikit.common.media.imagepicker.camera.ErrorDialog
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
@@ -43,6 +40,9 @@ import com.sdy.jitangapplication.event.UpdateApproveEvent
 import com.sdy.jitangapplication.event.VideoTrimmerEvent
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
+import com.sdy.jitangapplication.nim.uikit.common.ToastHelper
+import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.ConfirmationDialog
+import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.ErrorDialog
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog

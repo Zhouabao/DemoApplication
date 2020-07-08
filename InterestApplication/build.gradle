@@ -34,8 +34,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 26
-        versionName "2.2.2"
+        versionCode 27
+        versionName "2.2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -208,7 +208,7 @@ dependencies {
 //    implementation 'com.netease.nimlib:basesdk:6.1.1'
 
     //云信UI库
-    implementation project(path: ':NIM_Android_UIKit-master')
+//    implementation project(path: ':NIM_Android_UIKit-master')
     // 云信推送
 //    implementation 'com.netease.nimlib:push:6.8.0'
 //    implementation 'com.huawei.android.hms:push:2.6.3.301'
@@ -219,6 +219,10 @@ dependencies {
     implementation files('libs\\com.coloros.mcssdk.jar')
     implementation files('libs\\pushsdk_v2.3.4.jar')
     implementation 'com.meizu.flyme.internet:push-internal:3.6.3@aar'
+
+    implementation 'me.everything:overscroll-decor-android:1.0.4'
+    implementation "me.leolin:ShortcutBadger:1.1.17@aar"
+
     //数美黑产防范
     implementation files('libs\\smantifraud.aar')
 
@@ -254,8 +258,6 @@ dependencies {
     implementation 'com.github.iknow4:android-utils-sdk:1.1.2'
     implementation 'nl.bravobit:android-ffmpeg:1.1.7'
 //        implementation project(path: ':android-ffmpeg')
-
-
     implementation 'org.wysaid:gpuimage-plus:2.5.1'
 
 

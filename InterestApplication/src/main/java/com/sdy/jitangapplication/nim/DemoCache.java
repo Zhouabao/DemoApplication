@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.nim;
 
 import android.content.Context;
-import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
 
 /**
  * Created by jezhee on 2/20/15.

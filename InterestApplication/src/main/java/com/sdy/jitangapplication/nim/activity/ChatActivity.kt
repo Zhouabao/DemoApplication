@@ -14,15 +14,6 @@ import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
-import com.netease.nim.uikit.api.NimUIKit
-import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
-import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
-import com.netease.nim.uikit.api.model.session.SessionCustomization
-import com.netease.nim.uikit.api.model.user.UserInfoObserver
-import com.netease.nim.uikit.business.session.constant.Extras
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper
-import com.netease.nim.uikit.impl.NimUIKitImpl
-import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
@@ -39,6 +30,15 @@ import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
+import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver
+import com.sdy.jitangapplication.nim.uikit.api.model.main.OnlineStateChangeObserver
+import com.sdy.jitangapplication.nim.uikit.api.model.session.SessionCustomization
+import com.sdy.jitangapplication.nim.uikit.api.model.user.UserInfoObserver
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.Extras
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
+import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl
+import com.sdy.jitangapplication.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
@@ -107,8 +107,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 命令消息接收观察者
      */
-    private
-    val commandObserver = Observer<CustomNotification> { message ->
+    private val commandObserver = Observer<CustomNotification> { message ->
         if (sessionId != message.sessionId || message.sessionType != SessionTypeEnum.P2P) {
             return@Observer
         }

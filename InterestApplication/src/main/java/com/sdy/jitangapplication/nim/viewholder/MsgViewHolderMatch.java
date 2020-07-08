@@ -5,12 +5,12 @@ import android.widget.FrameLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.flexbox.*;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
 import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter;
 import de.hdodenhof.circleimageview.CircleImageView;
 

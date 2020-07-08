@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.video.GLVideoPlaceholder xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="center"
+        android:src="@drawable/white_back_icon"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/retake"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="start|bottom"
+        android:layout_marginLeft="82dp"
+        android:layout_marginBottom="@dimen/dp_size_60"
+        android:src="@drawable/icon_video_verify_revert" />
+
+    <ImageView
+        android:id="@+id/confirm"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="82dp"
+        android:layout_marginBottom="@dimen/dp_size_60"
+        android:src="@drawable/icon_video_verify_choose" />
+
+</FrameLayout>

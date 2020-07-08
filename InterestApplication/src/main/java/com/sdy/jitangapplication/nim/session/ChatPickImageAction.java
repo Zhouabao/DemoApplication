@@ -8,14 +8,12 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.SdkVersionUtils;
-import com.netease.nim.uikit.business.session.constant.RequestCode;
-import com.netease.nim.uikit.common.util.string.MD5;
-import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.RequestCode;
+import com.sdy.jitangapplication.nim.uikit.common.util.string.MD5;
 
 import java.io.File;
 import java.util.List;
@@ -82,12 +80,7 @@ public class ChatPickImageAction extends ChatBaseAction {
      * 发送图片
      */
     private void sendImageAfterSelfImagePicker(File file) {
-        IMMessage message;
-        if (getContainer() != null && getContainer().sessionType == SessionTypeEnum.ChatRoom) {
-            message = ChatRoomMessageBuilder.createChatRoomImageMessage(getAccount(), file, file.getName());
-        } else {
-            message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
-        }
+        IMMessage message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
         sendMessage(message);
     }
 

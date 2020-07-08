@@ -20,7 +20,7 @@ public class ChatActionsPanel {
         final ChatActionsGridviewAdapter  adapter = new ChatActionsGridviewAdapter(view.getContext(), actions);
         gridView.setAdapter(adapter);
         gridView.setNumColumns(5);
-        gridView.setSelector(com.netease.nim.uikit.R.color.transparent);
+        gridView.setSelector(R.color.transparent);
         gridView.setHorizontalSpacing(0);
         gridView.setVerticalSpacing(0);
         gridView.setGravity(Gravity.CENTER);

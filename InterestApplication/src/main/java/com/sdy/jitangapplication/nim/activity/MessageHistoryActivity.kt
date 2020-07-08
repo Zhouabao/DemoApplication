@@ -6,10 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
-import com.netease.nim.uikit.business.session.module.list.MessageListPanelEx
-import com.netease.nim.uikit.common.activity.UI
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
@@ -17,6 +13,10 @@ import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container
+import com.sdy.jitangapplication.nim.uikit.business.session.module.ModuleProxy
+import com.sdy.jitangapplication.nim.uikit.business.session.module.list.MessageListPanelEx
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 

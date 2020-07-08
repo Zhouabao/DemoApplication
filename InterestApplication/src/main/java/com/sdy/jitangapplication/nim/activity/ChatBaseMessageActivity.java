@@ -16,13 +16,13 @@ import android.widget.LinearLayout;
 import androidx.appcompat.widget.Toolbar;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment;
-import com.netease.nim.uikit.api.model.session.SessionCustomization;
-import com.netease.nim.uikit.business.preference.UserPreferences;
-import com.netease.nim.uikit.business.session.audio.MessageAudioControl;
-import com.netease.nim.uikit.business.session.constant.Extras;
-import com.netease.nim.uikit.common.CommonUtil;
-import com.netease.nim.uikit.common.activity.UI;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
+import com.sdy.jitangapplication.nim.uikit.api.model.session.SessionCustomization;
+import com.sdy.jitangapplication.nim.uikit.business.preference.UserPreferences;
+import com.sdy.jitangapplication.nim.uikit.business.session.audio.MessageAudioControl;
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.Extras;
+import com.sdy.jitangapplication.nim.uikit.common.CommonUtil;
+import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
 
 import java.util.List;
 

@@ -1,8 +1,5 @@
 package com.sdy.jitangapplication.nim.extension;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
@@ -20,35 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.SizeUtils;
-import com.netease.nim.uikit.R;
-import com.netease.nim.uikit.api.NimUIKit;
-import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
-import com.netease.nim.uikit.api.model.user.UserInfoObserver;
-import com.netease.nim.uikit.business.contact.selector.activity.ContactSelectActivity;
-import com.netease.nim.uikit.business.preference.UserPreferences;
-import com.netease.nim.uikit.business.robot.parser.elements.group.LinkElement;
-import com.netease.nim.uikit.business.session.activity.VoiceTrans;
-import com.netease.nim.uikit.business.session.audio.MessageAudioControl;
-import com.netease.nim.uikit.business.session.helper.MessageHelper;
-import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper;
-import com.netease.nim.uikit.business.session.module.Container;
-import com.netease.nim.uikit.business.session.module.list.IncomingMsgPrompt;
-import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
-import com.netease.nim.uikit.business.session.viewholder.robot.RobotLinkView;
-import com.netease.nim.uikit.common.CommonUtil;
-import com.netease.nim.uikit.common.ToastHelper;
-import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
-import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialog;
-import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseFetchLoadAdapter;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.IRecyclerView;
-import com.netease.nim.uikit.common.ui.recyclerview.listener.OnItemClickListener;
-import com.netease.nim.uikit.common.ui.recyclerview.loadmore.MsgListFetchLoadMoreView;
-import com.netease.nim.uikit.common.util.media.BitmapDecoder;
-import com.netease.nim.uikit.common.util.sys.ClipboardUtil;
-import com.netease.nim.uikit.common.util.sys.NetworkUtil;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
-import com.netease.nim.uikit.impl.NimUIKitImpl;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.NIMSDK;
 import com.netease.nimlib.sdk.Observer;
@@ -71,10 +39,8 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.msg.model.RevokeMsgNotification;
 import com.netease.nimlib.sdk.msg.model.TeamMessageReceipt;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
-import com.netease.nimlib.sdk.robot.model.RobotMsgType;
-import com.netease.nimlib.sdk.team.constant.TeamMemberType;
-import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.RefreshCandyMessageEvent;
 import com.sdy.jitangapplication.model.ChatGiftStateBean;
@@ -85,6 +51,30 @@ import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
+import com.sdy.jitangapplication.nim.uikit.api.model.main.CustomPushContentProvider;
+import com.sdy.jitangapplication.nim.uikit.api.model.user.UserInfoObserver;
+import com.sdy.jitangapplication.nim.uikit.business.preference.UserPreferences;
+import com.sdy.jitangapplication.nim.uikit.business.session.activity.VoiceTrans;
+import com.sdy.jitangapplication.nim.uikit.business.session.audio.MessageAudioControl;
+import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageHelper;
+import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageListPanelHelper;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.list.IncomingMsgPrompt;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.list.MsgAdapter;
+import com.sdy.jitangapplication.nim.uikit.common.ToastHelper;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.CustomAlertDialog;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.EasyAlertDialog;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseFetchLoadAdapter;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.IRecyclerView;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.listener.OnItemClickListener;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.loadmore.MsgListFetchLoadMoreView;
+import com.sdy.jitangapplication.nim.uikit.common.util.media.BitmapDecoder;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.NetworkUtil;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
+import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
@@ -106,7 +96,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * 基于RecyclerView的消息收发模块
  * Created by huangjun on 2016/12/27.
@@ -124,7 +113,6 @@ public class ChatMessageListPanelEx {
     // message list view
     private RecyclerView messageListView;
 
-
     public List<IMMessage> getItems() {
         return items;
     }
@@ -132,7 +120,6 @@ public class ChatMessageListPanelEx {
     private List<IMMessage> items;
     private MsgAdapter adapter;
     private ImageView ivBackground;
-
 
     // 新消息到达提醒
     private IncomingMsgPrompt incomingMsgPrompt;
@@ -152,12 +139,12 @@ public class ChatMessageListPanelEx {
     // 背景图片缓存
     private static Pair<String, Bitmap> background;
 
-    //如果在发需要拍照 的消息时，拍照回来时页面可能会销毁重建，重建时会在MessageLoader 的构造方法中调一次 loadFromLocal
-    //而在发送消息后，list 需要滚动到底部，又会通过RequestFetchMoreListener 调用一次 loadFromLocal
-    //所以消息会重复
+    // 如果在发需要拍照 的消息时，拍照回来时页面可能会销毁重建，重建时会在MessageLoader 的构造方法中调一次 loadFromLocal
+    // 而在发送消息后，list 需要滚动到底部，又会通过RequestFetchMoreListener 调用一次 loadFromLocal
+    // 所以消息会重复
     private boolean mIsInitFetchingLocal;
 
-    //頭部數據
+    // 頭部數據
     private TextView targetUserDetail;
     private FrameLayout avatorFl;
     private ImageView targetUserAvator;
@@ -172,7 +159,8 @@ public class ChatMessageListPanelEx {
         this(container, rootView, null, recordOnly, remote);
     }
 
-    public ChatMessageListPanelEx(Container container, View rootView, IMMessage anchor, boolean recordOnly, boolean remote) {
+    public ChatMessageListPanelEx(Container container, View rootView, IMMessage anchor, boolean recordOnly,
+            boolean remote) {
         this.container = container;
         this.rootView = rootView;
         this.recordOnly = recordOnly;
@@ -219,7 +207,8 @@ public class ChatMessageListPanelEx {
 
         this.uiHandler = new Handler();
         if (!recordOnly) {
-            incomingMsgPrompt = new IncomingMsgPrompt(container.activity, rootView, messageListView, adapter, uiHandler);
+            incomingMsgPrompt =
+                    new IncomingMsgPrompt(container.activity, rootView, messageListView, adapter, uiHandler);
         }
 
         registerObservers(true);
@@ -228,7 +217,6 @@ public class ChatMessageListPanelEx {
     private void initListView(IMMessage anchor) {
 
         ivBackground = rootView.findViewById(R.id.message_activity_background);
-
 
         // RecyclerView
         messageListView = rootView.findViewById(R.id.messageListView);
@@ -257,7 +245,6 @@ public class ChatMessageListPanelEx {
 
     }
 
-
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClick(IRecyclerView adapter, View view, int position) {
@@ -271,42 +258,6 @@ public class ChatMessageListPanelEx {
         @Override
         public void onItemChildClick(IRecyclerView adapter2, View view, int position) {
 
-            if (!isSessionMode() || !(view instanceof RobotLinkView)) {
-                return;
-            }
-
-            RobotLinkView robotLinkView = (RobotLinkView) view;
-            LinkElement element = robotLinkView.getElement();
-            if (element == null) {
-                return;
-            }
-            if (LinkElement.TYPE_URL.equals(element.getType())) {
-                Intent intent = new Intent();
-                intent.setAction("android.intent.action.VIEW");
-                Uri content_url = Uri.parse(element.getTarget());
-                intent.setData(content_url);
-                try {
-                    container.activity.startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    ToastHelper.showToast(container.activity, "路径错误");
-                }
-
-            } else if (LinkElement.TYPE_BLOCK.equals(element.getType())) {
-                // 发送点击的block
-                IMMessage message = adapter.getItem(position);
-                if (message != null) {
-                    String robotAccount = ((RobotAttachment) message.getAttachment()).getFromRobotAccount();
-                    IMMessage robotMsg = MessageBuilder.createRobotMessage(message.getSessionId(),
-                            message.getSessionType(),
-                            robotAccount,
-                            robotLinkView.getShowContent(),
-                            RobotMsgType.LINK,
-                            "",
-                            element.getTarget(),
-                            element.getParams());
-                    container.proxy.sendMessage(robotMsg);
-                }
-            }
         }
     };
 
@@ -351,7 +302,7 @@ public class ChatMessageListPanelEx {
 
     public void onIncomingMessage(List<IMMessage> messages) {
         try {
-            //首先剔除自定义的tip消息 以及自己发送出去的
+            // 首先剔除自定义的tip消息 以及自己发送出去的
             Iterator iterator = messages.iterator();
             while (iterator.hasNext()) {
                 IMMessage message = (IMMessage) iterator.next();
@@ -359,7 +310,8 @@ public class ChatMessageListPanelEx {
                 if ((message.getAttachment() instanceof SendCustomTipAttachment
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
-                        || (message.getAttachment() instanceof ContactAttachment && message.getDirect() == MsgDirectionEnum.Out)) {
+                        || (message.getAttachment() instanceof ContactAttachment
+                                && message.getDirect() == MsgDirectionEnum.Out)) {
                     NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                     iterator.remove();
                 }
@@ -403,7 +355,8 @@ public class ChatMessageListPanelEx {
         if ((message.getAttachment() instanceof SendCustomTipAttachment
                 && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
                 && !((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow())
-                || (message.getAttachment() instanceof ContactAttachment && message.getDirect() == MsgDirectionEnum.Out)) {
+                || (message.getAttachment() instanceof ContactAttachment
+                        && message.getDirect() == MsgDirectionEnum.Out)) {
             return;
         }
 
@@ -510,23 +463,24 @@ public class ChatMessageListPanelEx {
     /**
      * 本地消息接收观察者
      */
-    private MessageListPanelHelper.LocalMessageObserver incomingLocalMessageObserver = new MessageListPanelHelper.LocalMessageObserver() {
-        @Override
-        public void onAddMessage(IMMessage message) {
-            if (message == null || !container.account.equals(message.getSessionId())) {
-                return;
-            }
-            onMsgSend(message);
-        }
+    private MessageListPanelHelper.LocalMessageObserver incomingLocalMessageObserver =
+            new MessageListPanelHelper.LocalMessageObserver() {
+                @Override
+                public void onAddMessage(IMMessage message) {
+                    if (message == null || !container.account.equals(message.getSessionId())) {
+                        return;
+                    }
+                    onMsgSend(message);
+                }
 
-        @Override
-        public void onClearMessages(String account) {
-            items.clear();
-//            refreshMessageList();
-            adapter.notifyDataSetChanged();
-            adapter.fetchMoreEnd(null, true);
-        }
-    };
+                @Override
+                public void onClearMessages(String account) {
+                    items.clear();
+                    // refreshMessageList();
+                    adapter.notifyDataSetChanged();
+                    adapter.fetchMoreEnd(null, true);
+                }
+            };
 
     /**
      * ************************* 观察者 ********************************
@@ -542,20 +496,19 @@ public class ChatMessageListPanelEx {
         MessageListPanelHelper.getInstance().registerObserver(incomingLocalMessageObserver, register);
     }
 
-
     private void onMessageStatusChange(IMMessage message) {
         int index = getItemIndex(message.getUuid());
         if (index >= 0 && index < items.size()) {
-//            IMMessage item = items.get(index);
-//            item.setStatus(message.getStatus());
-//            item.setAttachStatus(message.getAttachStatus());
-//            // 处理语音、音视频通话
-//            if (item.getMsgType() == MsgTypeEnum.audio || item.getMsgType() == MsgTypeEnum.avchat) {
-//                item.setAttachment(message.getAttachment()); // 附件可能更新了
-//            }
-//
+            // IMMessage item = items.get(index);
+            // item.setStatus(message.getStatus());
+            // item.setAttachStatus(message.getAttachStatus());
+            // // 处理语音、音视频通话
+            // if (item.getMsgType() == MsgTypeEnum.audio || item.getMsgType() == MsgTypeEnum.avchat) {
+            // item.setAttachment(message.getAttachment()); // 附件可能更新了
+            // }
+            //
             items.set(index, message);
-//            // resend的的情况，可能时间已经变化了，这里要重新检查是否要显示时间
+            // // resend的的情况，可能时间已经变化了，这里要重新检查是否要显示时间
             List<IMMessage> msgList = new ArrayList<>(1);
             msgList.add(message);
             adapter.updateShowTimeItem(msgList, false, true);
@@ -574,8 +527,7 @@ public class ChatMessageListPanelEx {
     }
 
     public boolean isMyMessage(IMMessage message) {
-        return message.getSessionType() == container.sessionType
-                && message.getSessionId() != null
+        return message.getSessionType() == container.sessionType && message.getSessionId() != null
                 && message.getSessionId().equals(container.account);
     }
 
@@ -630,7 +582,8 @@ public class ChatMessageListPanelEx {
     /**
      * ***************************************** 数据加载 *********************************************
      */
-    private class MessageLoader implements BaseFetchLoadAdapter.RequestLoadMoreListener, BaseFetchLoadAdapter.RequestFetchMoreListener {
+    private class MessageLoader
+            implements BaseFetchLoadAdapter.RequestLoadMoreListener, BaseFetchLoadAdapter.RequestFetchMoreListener {
 
         private int loadMsgCount = NimUIKitImpl.getOptions().messageCountLoadOnce;
 
@@ -676,12 +629,12 @@ public class ChatMessageListPanelEx {
                         while (iterator.hasNext()) {
                             IMMessage message = (IMMessage) iterator.next();
                             boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
-                            //消息的来源是发送方 并且是发送显示就不剔除 反之则反
+                            // 消息的来源是发送方 并且是发送显示就不剔除 反之则反
                             if ((message.getAttachment() instanceof SendCustomTipAttachment
                                     && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
-                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
-                                    || (message.getAttachment() instanceof ContactAttachment && isSend)
-                            ) {
+                                    && ((SendCustomTipAttachment) message.getAttachment())
+                                            .getIfSendUserShow() != isSend)
+                                    || (message.getAttachment() instanceof ContactAttachment && isSend)) {
                                 NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                                 iterator.remove();
                             }
@@ -698,8 +651,7 @@ public class ChatMessageListPanelEx {
         private void loadAnchorContext() {
             // query new, auto load old
             direction = QueryDirectionEnum.QUERY_NEW;
-            NIMClient.getService(MsgService.class)
-                    .queryMessageListEx(anchor(), direction, loadMsgCount, true)
+            NIMClient.getService(MsgService.class).queryMessageListEx(anchor(), direction, loadMsgCount, true)
                     .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
                         @Override
                         public void onResult(int code, List<IMMessage> messages, Throwable exception) {
@@ -716,21 +668,20 @@ public class ChatMessageListPanelEx {
                 return;
             }
             this.direction = direction;
-            NIMClient.getService(MsgService.class)
-                    .queryMessageListEx(anchor(), direction, loadMsgCount, true)
+            NIMClient.getService(MsgService.class).queryMessageListEx(anchor(), direction, loadMsgCount, true)
                     .setCallback(callback);
         }
 
         private void loadFromRemote() {
             this.direction = QueryDirectionEnum.QUERY_OLD;
-            NIMClient.getService(MsgService.class)
-                    .pullMessageHistory(anchor(), loadMsgCount, true)
+            NIMClient.getService(MsgService.class).pullMessageHistory(anchor(), loadMsgCount, true)
                     .setCallback(callback);
         }
 
         private IMMessage anchor() {
             if (items.size() == 0) {
-                return anchor == null ? MessageBuilder.createEmptyMessage(container.account, container.sessionType, 0) : anchor;
+                return anchor == null ? MessageBuilder.createEmptyMessage(container.account, container.sessionType, 0)
+                        : anchor;
             } else {
                 int index = (direction == QueryDirectionEnum.QUERY_NEW ? items.size() - 1 : 0);
                 return items.get(index);
@@ -748,7 +699,6 @@ public class ChatMessageListPanelEx {
             if (remote) {
                 Collections.reverse(messages);
             }
-
 
             // 在第一次加载的过程中又收到了新消息，做一下去重
             if (firstLoad && items.size() > 0) {
@@ -871,8 +821,7 @@ public class ChatMessageListPanelEx {
                 } else {
                     if (message.getAttachment() instanceof FileAttachment) {
                         FileAttachment attachment = (FileAttachment) message.getAttachment();
-                        if (TextUtils.isEmpty(attachment.getPath())
-                                && TextUtils.isEmpty(attachment.getThumbPath())) {
+                        if (TextUtils.isEmpty(attachment.getPath()) && TextUtils.isEmpty(attachment.getThumbPath())) {
                             showReDownloadConfirmDlg(message);
                         }
                     } else {
@@ -973,33 +922,29 @@ public class ChatMessageListPanelEx {
             if (enableRevokeButton(selectedItem)) {
                 longClickRevokeMsg(selectedItem, alertDialog);
             }
-            //5 举报 (文本、图片、视频、音频)
-            if (selectedItem.getDirect() == MsgDirectionEnum.In
-                    && (selectedItem.getMsgType() == MsgTypeEnum.audio || selectedItem.getMsgType() == MsgTypeEnum.video
-                    || selectedItem.getMsgType() == MsgTypeEnum.image || selectedItem.getMsgType() == MsgTypeEnum.text))
+            // 5 举报 (文本、图片、视频、音频)
+            if (selectedItem.getDirect() == MsgDirectionEnum.In && (selectedItem.getMsgType() == MsgTypeEnum.audio
+                    || selectedItem.getMsgType() == MsgTypeEnum.video || selectedItem.getMsgType() == MsgTypeEnum.image
+                    || selectedItem.getMsgType() == MsgTypeEnum.text))
                 longClickReportContent(selectedItem, alertDialog);
             // 5 trans 语音转文字
-//            longClickItemVoidToText(selectedItem, alertDialog, msgType);
+            // longClickItemVoidToText(selectedItem, alertDialog, msgType);
 
-//            if (!NimUIKitImpl.getMsgForwardFilter().shouldIgnore(selectedItem) && !recordOnly) {
+            // if (!NimUIKitImpl.getMsgForwardFilter().shouldIgnore(selectedItem) && !recordOnly) {
             // 6 forward to person
-//                longClickItemForwardToPerson(selectedItem, alertDialog);
+            // longClickItemForwardToPerson(selectedItem, alertDialog);
             // 7 forward to team
-//                longClickItemForwardToTeam(selectedItem, alertDialog);
-//            }
+            // longClickItemForwardToTeam(selectedItem, alertDialog);
+            // }
             // 7 cancel upload attachment
             longClickItemCancelUpload(selectedItem, alertDialog);
         }
 
         private boolean enableRevokeButton(IMMessage selectedItem) {
             if (selectedItem.getStatus() == MsgStatusEnum.success
-                    && !NimUIKitImpl.getMsgRevokeFilter().shouldIgnore(selectedItem)
-                    && !recordOnly) {
+                    && !NimUIKitImpl.getMsgRevokeFilter().shouldIgnore(selectedItem) && !recordOnly) {
                 if (selectedItem.getDirect() == MsgDirectionEnum.Out) {
                     return true;
-                } else if (NimUIKit.getOptions().enableTeamManagerRevokeMsg && selectedItem.getSessionType() == SessionTypeEnum.Team) {
-                    TeamMember member = NimUIKit.getTeamProvider().getTeamMember(selectedItem.getSessionId(), NimUIKit.getAccount());
-                    return member != null && member.getType() == TeamMemberType.Owner || member.getType() == TeamMemberType.Manager;
                 }
             }
             return false;
@@ -1010,12 +955,13 @@ public class ChatMessageListPanelEx {
             if (item.getStatus() != MsgStatusEnum.fail) {
                 return;
             }
-            alertDialog.addItem(container.activity.getString(R.string.repeat_send_has_blank), new CustomAlertDialog.onSeparateItemClickListener() {
-                @Override
-                public void onClick() {
-                    onResendMessageItem(item);
-                }
-            });
+            alertDialog.addItem(container.activity.getString(R.string.repeat_send_has_blank),
+                    new CustomAlertDialog.onSeparateItemClickListener() {
+                        @Override
+                        public void onClick() {
+                            onResendMessageItem(item);
+                        }
+                    });
         }
 
         private void onResendMessageItem(IMMessage message) {
@@ -1025,23 +971,14 @@ public class ChatMessageListPanelEx {
             }
         }
 
-
         private void showResendAlert(IMMessage item) {
-            new CommonAlertDialog.Builder(container.activity)
-                    .setContent("确认重新发送该条消息")
-                    .setTitle("重新发送")
-                    .setCancelText("取消")
-                    .setConfirmText("重新发送")
-                    .setCancelIconIsVisibility(true)
+            new CommonAlertDialog.Builder(container.activity).setContent("确认重新发送该条消息").setTitle("重新发送")
+                    .setCancelText("取消").setConfirmText("重新发送").setCancelIconIsVisibility(true)
                     .setOnConfirmListener(dialog -> {
                         resendMessage(item); // 重发确认
                         dialog.dismiss();
-                    })
-                    .setOnCancelListener(dialog -> dialog.dismiss())
-                    .create()
-                    .show();
+                    }).setOnCancelListener(dialog -> dialog.dismiss()).create().show();
         }
-
 
         private void showResendConfirm(final IMMessage message) {
             EasyAlertDialogHelper.OnDialogActionListener listener = new EasyAlertDialogHelper.OnDialogActionListener() {
@@ -1061,14 +998,15 @@ public class ChatMessageListPanelEx {
 
         // 长按菜单项--复制
         private void longClickItemCopy(final IMMessage item, CustomAlertDialog alertDialog, MsgTypeEnum msgType) {
-            if (msgType == MsgTypeEnum.text
-                    || (msgType == MsgTypeEnum.robot && item.getAttachment() != null && !((RobotAttachment) item.getAttachment()).isRobotSend())) {
-                alertDialog.addItem(container.activity.getString(R.string.copy_has_blank), new CustomAlertDialog.onSeparateItemClickListener() {
-                    @Override
-                    public void onClick() {
-                        onCopyMessageItem(item);
-                    }
-                });
+            if (msgType == MsgTypeEnum.text || (msgType == MsgTypeEnum.robot && item.getAttachment() != null
+                    && !((RobotAttachment) item.getAttachment()).isRobotSend())) {
+                alertDialog.addItem(container.activity.getString(R.string.copy_has_blank),
+                        new CustomAlertDialog.onSeparateItemClickListener() {
+                            @Override
+                            public void onClick() {
+                                onCopyMessageItem(item);
+                            }
+                        });
             }
         }
 
@@ -1081,31 +1019,34 @@ public class ChatMessageListPanelEx {
             if (recordOnly) {
                 return;
             }
-            alertDialog.addItem(container.activity.getString(R.string.delete_has_blank), new CustomAlertDialog.onSeparateItemClickListener() {
+            alertDialog.addItem(container.activity.getString(R.string.delete_has_blank),
+                    new CustomAlertDialog.onSeparateItemClickListener() {
 
-                @Override
-                public void onClick() {
-                    deleteItem(selectedItem, true);
-                }
-            });
+                        @Override
+                        public void onClick() {
+                            deleteItem(selectedItem, true);
+                        }
+                    });
         }
 
         // 长按菜单项 -- 音频转文字
         private void longClickItemVoidToText(final IMMessage item, CustomAlertDialog alertDialog, MsgTypeEnum msgType) {
-            if (msgType != MsgTypeEnum.audio) return;
+            if (msgType != MsgTypeEnum.audio)
+                return;
 
             if (item.getDirect() == MsgDirectionEnum.In && item.getAttachStatus() != AttachStatusEnum.transferred)
                 return;
             if (item.getDirect() == MsgDirectionEnum.Out && item.getAttachStatus() != AttachStatusEnum.transferred)
                 return;
 
-            alertDialog.addItem(container.activity.getString(R.string.voice_to_text), new CustomAlertDialog.onSeparateItemClickListener() {
+            alertDialog.addItem(container.activity.getString(R.string.voice_to_text),
+                    new CustomAlertDialog.onSeparateItemClickListener() {
 
-                @Override
-                public void onClick() {
-                    onVoiceToText(item);
-                }
-            });
+                        @Override
+                        public void onClick() {
+                            onVoiceToText(item);
+                        }
+                    });
         }
 
         // 语音转文字
@@ -1138,57 +1079,20 @@ public class ChatMessageListPanelEx {
             });
         }
 
-        // 长按菜单项 -- 转发到个人
-        private void longClickItemForwardToPerson(final IMMessage item, CustomAlertDialog alertDialog) {
-            alertDialog.addItem(container.activity.getString(R.string.forward_to_person), new CustomAlertDialog.onSeparateItemClickListener() {
-
-                @Override
-                public void onClick() {
-                    forwardMessage = item;
-                    ContactSelectActivity.Option option = new ContactSelectActivity.Option();
-                    option.title = "选择转发的人";
-                    option.type = ContactSelectActivity.ContactSelectType.BUDDY;
-                    option.multi = false;
-                    option.maxSelectNum = 1;
-                    NimUIKit.startContactSelector(container.activity, option, REQUEST_CODE_FORWARD_PERSON);
-                }
-            });
-        }
-
-        // 长按菜单项 -- 转发到群组
-        private void longClickItemForwardToTeam(final IMMessage item, CustomAlertDialog alertDialog) {
-            alertDialog.addItem(container.activity.getString(R.string.forward_to_team), new CustomAlertDialog.onSeparateItemClickListener() {
-
-                @Override
-                public void onClick() {
-                    forwardMessage = item;
-                    ContactSelectActivity.Option option = new ContactSelectActivity.Option();
-                    option.title = "选择转发的群";
-                    option.type = ContactSelectActivity.ContactSelectType.TEAM;
-                    option.multi = false;
-                    option.maxSelectNum = 1;
-                    NimUIKit.startContactSelector(container.activity, option, REQUEST_CODE_FORWARD_TEAM);
-                }
-            });
-        }
-
         // 长按菜单项 -- 撤回消息
         private void longClickRevokeMsg(final IMMessage item, CustomAlertDialog alertDialog) {
-            alertDialog.addItem(container.activity.getString(R.string.withdrawn_msg), new CustomAlertDialog.onSeparateItemClickListener() {
-                @Override
-                public void onClick() {
-                    showRevokeAlert(item);
-                }
-            });
+            alertDialog.addItem(container.activity.getString(R.string.withdrawn_msg),
+                    new CustomAlertDialog.onSeparateItemClickListener() {
+                        @Override
+                        public void onClick() {
+                            showRevokeAlert(item);
+                        }
+                    });
         }
 
-
         private void showRevokeAlert(IMMessage item) {
-            new CommonAlertDialog.Builder(container.activity)
-                    .setContent("是否撤回此条消息")
-                    .setTitle("撤回")
-                    .setCancelIconIsVisibility(true)
-                    .setOnConfirmListener(dialog -> {
+            new CommonAlertDialog.Builder(container.activity).setContent("是否撤回此条消息").setTitle("撤回")
+                    .setCancelIconIsVisibility(true).setOnConfirmListener(dialog -> {
                         if (!NetworkUtil.isNetAvailable(container.activity)) {
                             ToastHelper.showToast(container.activity, R.string.network_is_not_available);
                             return;
@@ -1199,34 +1103,32 @@ public class ChatMessageListPanelEx {
                         if (customConfig != null) {
                             payload = customConfig.getPushPayload(item);
                         }
-                        NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload).setCallback(new RequestCallback<Void>() {
-                            @Override
-                            public void onSuccess(Void param) {
-                                deleteItem(item, false);
-                                MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
-                            }
+                        NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload)
+                                .setCallback(new RequestCallback<Void>() {
+                                    @Override
+                                    public void onSuccess(Void param) {
+                                        deleteItem(item, false);
+                                        MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
+                                    }
 
-                            @Override
-                            public void onFailed(int code) {
-                                if (code == ResponseCode.RES_OVERDUE) {
-                                    ToastHelper.showToast(container.activity, R.string.revoke_failed);
-                                } else {
-                                    ToastHelper.showToast(container.activity, "revoke msg failed, code:" + code);
-                                }
-                            }
+                                    @Override
+                                    public void onFailed(int code) {
+                                        if (code == ResponseCode.RES_OVERDUE) {
+                                            ToastHelper.showToast(container.activity, R.string.revoke_failed);
+                                        } else {
+                                            ToastHelper.showToast(container.activity,
+                                                    "revoke msg failed, code:" + code);
+                                        }
+                                    }
 
-                            @Override
-                            public void onException(Throwable exception) {
+                                    @Override
+                                    public void onException(Throwable exception) {
 
-                            }
-                        });
+                                    }
+                                });
                         dialog.dismiss();
-                    })
-                    .setOnCancelListener(dialog -> dialog.dismiss())
-                    .create()
-                    .show();
+                    }).setOnCancelListener(dialog -> dialog.dismiss()).create().show();
         }
-
 
         // 长按-取消上传附件
         private void longClickItemCancelUpload(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
@@ -1237,7 +1139,8 @@ public class ChatMessageListPanelEx {
             if (msgAttachment == null || !(msgAttachment instanceof FileAttachment)) {
                 return;
             }
-            if (selectedItem.getAttachStatus() != AttachStatusEnum.transferring || selectedItem.getStatus() != MsgStatusEnum.sending) {
+            if (selectedItem.getAttachStatus() != AttachStatusEnum.transferring
+                    || selectedItem.getStatus() != MsgStatusEnum.sending) {
                 return;
             }
 
@@ -1249,18 +1152,17 @@ public class ChatMessageListPanelEx {
             });
         }
 
-        //长按-举报聊天内容
+        // 长按-举报聊天内容
         private void longClickReportContent(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
             alertDialog.addItem("举报", new CustomAlertDialog.onSeparateItemClickListener() {
                 @Override
                 public void onClick() {
-                    //举报聊天内容
+                    // 举报聊天内容
                     new ReportChatContentDialog(container.activity, selectedItem).show();
                 }
             });
         }
     }
-
 
     private void setEarPhoneMode(boolean earPhoneMode, boolean update) {
         if (update) {
@@ -1295,7 +1197,6 @@ public class ChatMessageListPanelEx {
         return bitmap;
     }
 
-
     /**
      * 收到已读回执（更新VH的已读label）
      */
@@ -1315,11 +1216,8 @@ public class ChatMessageListPanelEx {
     }
 
     private boolean receiveReceiptCheck(final IMMessage msg) {
-        return msg != null
-                && msg.getSessionType() == SessionTypeEnum.P2P
-                && msg.getDirect() == MsgDirectionEnum.Out
-                && msg.getMsgType() != MsgTypeEnum.tip
-                && msg.getMsgType() != MsgTypeEnum.notification
+        return msg != null && msg.getSessionType() == SessionTypeEnum.P2P && msg.getDirect() == MsgDirectionEnum.Out
+                && msg.getMsgType() != MsgTypeEnum.tip && msg.getMsgType() != MsgTypeEnum.notification
                 && !(msg.getAttachment() instanceof SendCustomTipAttachment)
                 && !(msg.getAttachment() instanceof ContactAttachment && msg.getDirect() == MsgDirectionEnum.Out)
                 && msg.isRemoteRead();
@@ -1362,9 +1260,8 @@ public class ChatMessageListPanelEx {
 
     private boolean sendReceiptCheck(final IMMessage msg) {
 
-        return msg != null
-                && msg.getDirect() == MsgDirectionEnum.In
-//                && msg.getMsgType() != MsgTypeEnum.tip
+        return msg != null && msg.getDirect() == MsgDirectionEnum.In
+        // && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification;
     }
 
@@ -1380,25 +1277,6 @@ public class ChatMessageListPanelEx {
         }
         updateReceipt(messages);
         adapter.deleteItem(messageItem, isRelocateTime);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
-        if (CommonUtil.isEmpty(selected)) {
-            return;
-        }
-        switch (requestCode) {
-            case REQUEST_CODE_FORWARD_TEAM:
-                doForwardMessage(selected.get(0), SessionTypeEnum.Team);
-                break;
-            case REQUEST_CODE_FORWARD_PERSON:
-                doForwardMessage(selected.get(0), SessionTypeEnum.P2P);
-                break;
-        }
-
     }
 
     // 转发消息
@@ -1436,7 +1314,6 @@ public class ChatMessageListPanelEx {
         return null;
     }
 
-
     /**
      * 时间倒计时
      * 招呼头布局
@@ -1456,7 +1333,8 @@ public class ChatMessageListPanelEx {
     public void refreshCandyMessageEvent(RefreshCandyMessageEvent event) {
         for (int i = items.size() - 1; i >= 0; i--) {
             IMMessage lastMessage = items.get(i);
-            if (lastMessage.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) lastMessage.getAttachment()).getId() == event.getOrderId()) {
+            if (lastMessage.getAttachment() instanceof SendGiftAttachment
+                    && ((SendGiftAttachment) lastMessage.getAttachment()).getId() == event.getOrderId()) {
                 ((SendGiftAttachment) lastMessage.getAttachment()).setGiftStatus(event.getState());
                 items.set(i, lastMessage);
                 refreshViewHolderByIndex(i);
@@ -1464,13 +1342,12 @@ public class ChatMessageListPanelEx {
             }
         }
 
-
     }
 
-
     private View initHeadView(boolean showLetftCardtimes) {
-        headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
-        //初始化数据
+        headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head,
+                messageListView, false);
+        // 初始化数据
         avatorFl = headView.findViewById(com.sdy.jitangapplication.R.id.avatorFl);
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) avatorFl.getLayoutParams();
         if (showLetftCardtimes) {
@@ -1485,21 +1362,23 @@ public class ChatMessageListPanelEx {
         myAvator = headView.findViewById(com.sdy.jitangapplication.R.id.myAvator);
         targetSquare = headView.findViewById(com.sdy.jitangapplication.R.id.targetSquare);
         targetCl = headView.findViewById(com.sdy.jitangapplication.R.id.targetCl);
-        targetUserDetail.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
+        targetUserDetail
+                .setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
 
         LinearLayoutManager manager = new LinearLayoutManager(container.activity, RecyclerView.HORIZONTAL, false);
         targetSquare.setLayoutManager(manager);
-        targetSquare.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.VERTICAL_LIST, SizeUtils.dp2px(5F), container.activity.getResources().getColor(R.color.white)));
+        targetSquare
+                .addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.VERTICAL_LIST,
+                        SizeUtils.dp2px(5F), container.activity.getResources().getColor(R.color.white)));
         targetSquareAdapter = new ChatTaregetSquareAdapter();
         targetSquare.setAdapter(targetSquareAdapter);
-        targetSquareAdapter.setOnItemClickListener((adapter, view, position) ->
-                SquareCommentDetailActivity.Companion.start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), -1));
+        targetSquareAdapter.setOnItemClickListener((adapter, view, position) -> SquareCommentDetailActivity.Companion
+                .start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), -1));
         return headView;
     }
 
-
     public void setHeadData(NimBean nimBean) {
-        //头像
+        // 头像
         GlideUtil.loadAvatorImg(container.activity, nimBean.getAvatar(), targetUserAvator);
         GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
         if (nimBean.getMatching_content().isEmpty()) {
@@ -1508,7 +1387,7 @@ public class ChatMessageListPanelEx {
             targetBothInterest.setVisibility(View.VISIBLE);
             targetBothInterest.setText(nimBean.getMatching_content());
         }
-        //用户广场
+        // 用户广场
         targetSquareAdapter.setDataSize(nimBean.getSquare().size());
         if (nimBean.getSquare().size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {
             targetSquareAdapter.setNewData(nimBean.getSquare().subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
@@ -1516,19 +1395,22 @@ public class ChatMessageListPanelEx {
             targetSquareAdapter.setNewData(nimBean.getSquare());
         }
 
-        //both_gift_list
+        // both_gift_list
         for (ChatGiftStateBean stateBean : nimBean.getBoth_gift_list()) {
             for (int i = items.size() - 1; i >= 0; i--) {
                 IMMessage message = items.get(i);
-                if (message.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
+                if (message.getAttachment() instanceof SendGiftAttachment
+                        && ((SendGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
                     ((SendGiftAttachment) message.getAttachment()).setGiftStatus(stateBean.getState());
                     items.set(i, message);
                     refreshViewHolderByIndex(i);
-                } else if (message.getAttachment() instanceof WishHelpAttachment && ((WishHelpAttachment) message.getAttachment()).getOrderId() == stateBean.getId()) {
+                } else if (message.getAttachment() instanceof WishHelpAttachment
+                        && ((WishHelpAttachment) message.getAttachment()).getOrderId() == stateBean.getId()) {
                     ((WishHelpAttachment) message.getAttachment()).setWishHelpStatus(stateBean.getState());
                     items.set(i, message);
                     refreshViewHolderByIndex(i);
-                } else if (message.getAttachment() instanceof AccostGiftAttachment && ((AccostGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
+                } else if (message.getAttachment() instanceof AccostGiftAttachment
+                        && ((AccostGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
                     ((AccostGiftAttachment) message.getAttachment()).setGiftStatus(stateBean.getState());
                     items.set(i, message);
                     refreshViewHolderByIndex(i);

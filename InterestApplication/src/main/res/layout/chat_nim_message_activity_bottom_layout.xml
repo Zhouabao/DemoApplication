@@ -10,11 +10,11 @@
     <include layout="@layout/chat_nim_message_activity_text_layout" />
 
 
-    <!--    <com.netease.nim.uikit.business.session.emoji.EmoticonPickerView-->
-    <!--        android:id="@+id/emoticon_picker_view"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:visibility="gone" />-->
+        <!--<com.sdy.jitangapplication.nim.uikit.business.session.emoji.EmoticonPickerView
+            android:id="@+id/emoticon_picker_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />-->
 
     <FrameLayout
         android:id="@+id/emoticon_picker_view1"

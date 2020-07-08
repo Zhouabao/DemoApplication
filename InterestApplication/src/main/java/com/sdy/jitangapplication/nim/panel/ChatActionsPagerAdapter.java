@@ -9,8 +9,8 @@ import android.widget.GridView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.blankj.utilcode.util.SizeUtils;
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
-import com.netease.nim.uikit.R;
 
 import java.util.ArrayList;
 import java.util.List;

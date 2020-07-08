@@ -16,8 +16,6 @@ import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
-import com.netease.nim.uikit.api.NimUIKit
-import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.mixpush.NIMPushClient
@@ -39,6 +37,8 @@ import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
+import com.sdy.jitangapplication.nim.uikit.api.UIKitOptions
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog

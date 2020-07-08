@@ -1,9 +1,9 @@
 package com.sdy.jitangapplication.nim.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
-import com.netease.nim.uikit.business.session.module.Container;
-import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.Container;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.list.MsgAdapter;
 
 import java.util.List;
 

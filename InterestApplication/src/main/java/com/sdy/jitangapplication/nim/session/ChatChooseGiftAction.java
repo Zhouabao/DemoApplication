@@ -8,14 +8,13 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.SdkVersionUtils;
-import com.netease.nim.uikit.business.session.constant.RequestCode;
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
-import com.netease.nim.uikit.common.util.string.MD5;
-import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.uikit.business.session.constant.RequestCode;
+import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper;
+import com.sdy.jitangapplication.nim.uikit.common.util.string.MD5;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
 
 import java.io.File;
@@ -34,13 +33,10 @@ public class ChatChooseGiftAction extends ChatBaseAction {
     @Override
     public void onClick() {
         new ChatSendGiftDialog(UserInfoHelper.getUserTitleName(getAccount(), SessionTypeEnum.P2P),
-                UserInfoHelper.getAvatar(getAccount()),
-                getAccount(),
-                getActivity()).show();
+                UserInfoHelper.getAvatar(getAccount()), getAccount(), getActivity()).show();
 
-//        CommonFunction.INSTANCE.toast("礼物正在开发中");
+        // CommonFunction.INSTANCE.toast("礼物正在开发中");
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -49,7 +45,7 @@ public class ChatChooseGiftAction extends ChatBaseAction {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {
                     LocalMedia media = selectList.get(i);
-                    if (PictureMimeType.eqImage(media.getMimeType())) {//发送图片
+                    if (PictureMimeType.eqImage(media.getMimeType())) {// 发送图片
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
                                 sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
@@ -57,12 +53,14 @@ public class ChatChooseGiftAction extends ChatBaseAction {
                                 sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
-                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
+                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {// 发送视频
                         if (SdkVersionUtils.checkedAndroid_Q())
                             if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
-                                sendVideo(new File(media.getAndroidQToPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                                sendVideo(new File(media.getAndroidQToPath()),
+                                        MD5.getStreamMD5(media.getAndroidQToPath()));
                             else
-                                sendVideo(new File(Uri.parse(media.getPath()).getPath()), MD5.getStreamMD5(media.getPath()));
+                                sendVideo(new File(Uri.parse(media.getPath()).getPath()),
+                                        MD5.getStreamMD5(media.getPath()));
                         else
                             sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                     }
@@ -75,12 +73,7 @@ public class ChatChooseGiftAction extends ChatBaseAction {
      * 发送图片
      */
     private void sendImageAfterSelfImagePicker(File file) {
-        IMMessage message;
-        if (getContainer() != null && getContainer().sessionType == SessionTypeEnum.ChatRoom) {
-            message = ChatRoomMessageBuilder.createChatRoomImageMessage(getAccount(), file, file.getName());
-        } else {
-            message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
-        }
+        IMMessage message = MessageBuilder.createImageMessage(getAccount(), getSessionType(), file, file.getName());
         sendMessage(message);
     }
 
@@ -110,7 +103,8 @@ public class ChatChooseGiftAction extends ChatBaseAction {
         long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
         int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
         int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-        IMMessage message = MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
+        IMMessage message =
+                MessageBuilder.createVideoMessage(getAccount(), getSessionType(), file, duration, width, height, md5);
         sendMessage(message);
     }
 

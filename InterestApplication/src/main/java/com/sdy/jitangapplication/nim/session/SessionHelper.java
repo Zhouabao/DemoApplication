@@ -7,21 +7,6 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.netease.nim.uikit.api.NimUIKit;
-import com.netease.nim.uikit.api.model.recent.RecentCustomization;
-import com.netease.nim.uikit.api.model.session.SessionCustomization;
-import com.netease.nim.uikit.api.model.session.SessionEventListener;
-import com.netease.nim.uikit.api.wrapper.NimMessageRevokeObserver;
-import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper;
-import com.netease.nim.uikit.business.session.module.MsgForwardFilter;
-import com.netease.nim.uikit.business.session.module.MsgRevokeFilter;
-import com.netease.nim.uikit.business.team.model.TeamExtras;
-import com.netease.nim.uikit.business.team.model.TeamRequestCode;
-import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
-import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
-import com.netease.nim.uikit.common.ui.popupmenu.NIMPopupMenu;
-import com.netease.nim.uikit.common.ui.popupmenu.PopupMenuItem;
-import com.netease.nim.uikit.impl.customization.DefaultRecentCustomization;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
@@ -49,6 +34,19 @@ import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
+import com.sdy.jitangapplication.nim.uikit.api.model.recent.RecentCustomization;
+import com.sdy.jitangapplication.nim.uikit.api.model.session.SessionCustomization;
+import com.sdy.jitangapplication.nim.uikit.api.model.session.SessionEventListener;
+import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimMessageRevokeObserver;
+import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageListPanelHelper;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.MsgForwardFilter;
+import com.sdy.jitangapplication.nim.uikit.business.session.module.MsgRevokeFilter;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.CustomAlertDialog;
+import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
+import com.sdy.jitangapplication.nim.uikit.common.ui.popupmenu.NIMPopupMenu;
+import com.sdy.jitangapplication.nim.uikit.common.ui.popupmenu.PopupMenuItem;
+import com.sdy.jitangapplication.nim.uikit.impl.customization.DefaultRecentCustomization;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderAccostGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContact;
@@ -106,21 +104,7 @@ public class SessionHelper {
         NimUIKit.setRecentCustomization(getRecentCustomization());
     }
 
-    public static void startP2PSession(Context context, String account) {
-        startP2PSession(context, account, null);
-    }
 
-    public static void startP2PSession(Context context, String account, IMMessage anchor) {
-        if (!DemoCache.getAccount().equals(account)) {
-            if (NimUIKit.getRobotInfoProvider().getRobotByAccount(account) != null) {
-                return;
-            } else {
-                NimUIKit.startP2PSession(context, account, anchor);
-            }
-        } else {
-            NimUIKit.startChatting(context, account, SessionTypeEnum.P2P, getMyP2pCustomization(), anchor);
-        }
-    }
 
     // 定制化单聊界面。如果使用默认界面，返回null即可
     private static SessionCustomization getP2pCustomization() {
@@ -180,50 +164,6 @@ public class SessionHelper {
         return p2pCustomization;
     }
 
-    private static SessionCustomization getMyP2pCustomization() {
-        if (myP2pCustomization == null) {
-            myP2pCustomization = new SessionCustomization() {
-
-                // 由于需要Activity Result， 所以重载该函数。
-                @Override
-                public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-                    if (requestCode == TeamRequestCode.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                        String result = data.getStringExtra(TeamExtras.RESULT_EXTRA_REASON);
-                        if (result == null) {
-                            return;
-                        }
-                        if (result.equals(TeamExtras.RESULT_EXTRA_REASON_CREATE)) {
-                            String tid = data.getStringExtra(TeamExtras.RESULT_EXTRA_DATA);
-                            if (TextUtils.isEmpty(tid)) {
-                                return;
-                            }
-                            activity.finish();
-                        }
-                    }
-                }
-
-                @Override
-                public boolean isAllowSendMessage(IMMessage message) {
-                    return checkLocalAntiSpam(message);
-                }
-
-                @Override
-                public MsgAttachment createStickerAttachment(String category, String item) {
-                    return new StickerAttachment(category, item);
-                }
-            };
-            // 定制加号点开后可以包含的操作， 默认已经有图片，视频等消息了
-            ArrayList<ChatBaseAction> actions = new ArrayList<>();
-            actions.add(new RecordAction());
-            actions.add(new EmojAction());
-            // myP2pCustomization.actions = actions;
-            myP2pCustomization.withSticker = true;
-            // 定制ActionBar右边的按钮，可以加多个
-            ArrayList<SessionCustomization.OptionsButton> buttons = new ArrayList<>();
-            myP2pCustomization.buttons = buttons;
-        }
-        return myP2pCustomization;
-    }
 
     private static boolean checkLocalAntiSpam(IMMessage message) {
         if (!USE_LOCAL_ANTISPAM) {
@@ -340,7 +280,7 @@ public class SessionHelper {
             @Override
             public boolean isShowGiftIcon(IMMessage message) {
                 // todo 根据服务器返回的字段来设置消息是否要消耗糖果
-                // 男的发的并且是(女的收的或者男方自己)  并且控制时间与显示与否
+                // 男的发的并且是(女的收的或者男方自己) 并且控制时间与显示与否
                 // && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
                 // || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
                 if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {

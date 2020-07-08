@@ -11,9 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.SpanUtils;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
@@ -34,25 +35,23 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return com.netease.nim.uikit.R.layout.nim_message_item_notification;
+        return R.layout.nim_message_item_notification;
     }
 
     @Override
     protected void inflateContentView() {
-        notificationTextView = (TextView) view.findViewById(com.netease.nim.uikit.R.id.message_item_notification_label);
+        notificationTextView = (TextView) view.findViewById(R.id.message_item_notification_label);
     }
 
     @Override
     protected void bindContentView() {
         String text = "未知通知提醒";
         Map<String, Object> content = message.getRemoteExtension();
-//        Map<String, Object> content = message.getLocalExtension();
+        // Map<String, Object> content = message.getLocalExtension();
         if (content != null && !content.isEmpty()) {
             text = (String) content.get("content");
-            notificationTextView.setText(SpanUtils.with(notificationTextView)
-                    .append((String) content.get("head"))
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                    .append((String) content.get("footer"))
+            notificationTextView.setText(SpanUtils.with(notificationTextView).append((String) content.get("head"))
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append((String) content.get("footer"))
                     .setClickSpan(new ClickableSpan() {
                         @Override
                         public void updateDrawState(@NonNull TextPaint ds) {
@@ -68,27 +67,26 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
                                     Intent intent = new Intent(context, MyCandyActivity.class);
                                     context.startActivity(intent);
                                 } else if (type == 2) {
-                                    CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL,-1);
-                                }  else if (type == 4) {
+                                    CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL,
+                                            -1);
+                                } else if (type == 4) {
                                     MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
                                 }
                             }
                         }
-                    })
-                    .setForegroundColor(Color.parseColor("#FF6796FA"))
-                    .create());
+                    }).setForegroundColor(Color.parseColor("#FF6796FA")).create());
         } else {
             text = message.getContent();
             notificationTextView.setText(Html.fromHtml(text));
         }
 
-//        handleTextNotification(text);
+        // handleTextNotification(text);
     }
 
     private void handleTextNotification(String text) {
         notificationTextView.setText(Html.fromHtml(text));
-//        MoonUtil.identifyFaceExpressionAndATags(context, notificationTextView, text, ImageSpan.ALIGN_BOTTOM);
-//        notificationTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        // MoonUtil.identifyFaceExpressionAndATags(context, notificationTextView, text, ImageSpan.ALIGN_BOTTOM);
+        // notificationTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -100,6 +98,5 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     protected boolean isMiddleItem() {
         return true;
     }
-
 
 }

@@ -6,7 +6,6 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.AppManager
-import com.netease.nim.uikit.common.util.string.MD5
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
@@ -17,6 +16,7 @@ import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
+import com.sdy.jitangapplication.nim.uikit.common.util.string.MD5
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
 import org.greenrobot.eventbus.EventBus

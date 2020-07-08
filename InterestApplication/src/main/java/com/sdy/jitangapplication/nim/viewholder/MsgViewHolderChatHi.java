@@ -9,10 +9,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
 import com.sdy.jitangapplication.utils.UserManager;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 
 /**
  * author : ZFM

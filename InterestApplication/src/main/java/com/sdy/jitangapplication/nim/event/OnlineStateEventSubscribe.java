@@ -1,11 +1,10 @@
 package com.sdy.jitangapplication.nim.event;
 
 import android.os.Handler;
+
+import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
-import com.netease.nim.uikit.api.NimUIKit;
-import com.netease.nim.uikit.common.framework.infra.Handlers;
-import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -15,6 +14,9 @@ import com.netease.nimlib.sdk.event.model.NimOnlineStateEvent;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
+import com.sdy.jitangapplication.nim.uikit.common.framework.infra.Handlers;
+import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +74,6 @@ public class OnlineStateEventSubscribe {
         subscribeAllOnlineStateEvent();
     }
 
-
     private static long getSubsTimeInterval() {
         if (lastSubsTime < 0) {
             lastSubsTime = UserPreferences.getOnlineStateSubsTime();
@@ -85,38 +86,37 @@ public class OnlineStateEventSubscribe {
         UserPreferences.setOnlineStateSubsTime(lastSubsTime);
     }
 
-
     /**
      * 订阅好友、最近联系人的在线状态事件
      */
     public static void subscribeAllOnlineStateEvent() {
         final List<String> accounts = NimUIKit.getContactProvider().getUserInfoOfMyFriends();
         filter(accounts);
-        NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(new RequestCallbackWrapper<List<RecentContact>>() {
-            @Override
-            public void onResult(int code, List<RecentContact> result, Throwable exception) {
-                if (result != null && !result.isEmpty()) {
-                    for (RecentContact recentContact : result) {
-                        if (recentContact.getSessionType() == SessionTypeEnum.Team) {
-                            continue;
+        NIMClient.getService(MsgService.class).queryRecentContacts()
+                .setCallback(new RequestCallbackWrapper<List<RecentContact>>() {
+                    @Override
+                    public void onResult(int code, List<RecentContact> result, Throwable exception) {
+                        if (result != null && !result.isEmpty()) {
+                            for (RecentContact recentContact : result) {
+                                if (recentContact.getSessionType() == SessionTypeEnum.Team) {
+                                    continue;
+                                }
+                                String id = recentContact.getContactId();
+                                if (!NimUIKit.getContactProvider().isMyFriend(id)) {
+                                    accounts.add(id);
+                                }
+                            }
                         }
-                        String id = recentContact.getContactId();
-                        if (!NimUIKit.getContactProvider().isMyFriend(id)) {
-                            accounts.add(id);
+                        initSubsFinished = true;
+                        if (accounts.isEmpty()) {
+                            return;
                         }
+                        LogUtil.ui("subscribe friends and recentContact " + accounts);
+
+                        subscribeOnlineStateEvent(accounts, SUBSCRIBE_EXPIRY);
                     }
-                }
-                initSubsFinished = true;
-                if (accounts.isEmpty()) {
-                    return;
-                }
-                LogUtil.ui("subscribe friends and recentContact " + accounts);
-
-                subscribeOnlineStateEvent(accounts, SUBSCRIBE_EXPIRY);
-            }
-        });
+                });
     }
-
 
     /**
      * 订阅指定账号的在线状态事件
@@ -138,22 +138,23 @@ public class OnlineStateEventSubscribe {
         OnlineStateEventCache.addSubsAccounts(accounts);
 
         updateLastSubsTime();
-        NIMClient.getService(EventSubscribeService.class).subscribeEvent(eventSubscribeRequest).setCallback(new RequestCallbackWrapper<List<String>>() {
-            @Override
-            public void onResult(int code, List<String> result, Throwable exception) {
-                if (code == ResponseCode.RES_SUCCESS) {
-                    // 可能网络比较慢，所以再更新一把时间
-                    updateLastSubsTime();
-                    SubscribeExpiryManager.subscribeSuccess();
-                    if (result != null) {
-                        // 部分订阅失败的账号。。。
-                        OnlineStateEventCache.removeSubsAccounts(result);
+        NIMClient.getService(EventSubscribeService.class).subscribeEvent(eventSubscribeRequest)
+                .setCallback(new RequestCallbackWrapper<List<String>>() {
+                    @Override
+                    public void onResult(int code, List<String> result, Throwable exception) {
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            // 可能网络比较慢，所以再更新一把时间
+                            updateLastSubsTime();
+                            SubscribeExpiryManager.subscribeSuccess();
+                            if (result != null) {
+                                // 部分订阅失败的账号。。。
+                                OnlineStateEventCache.removeSubsAccounts(result);
+                            }
+                        } else {
+                            OnlineStateEventCache.removeSubsAccounts(accounts);
+                        }
                     }
-                } else {
-                    OnlineStateEventCache.removeSubsAccounts(accounts);
-                }
-            }
-        });
+                });
     }
 
     private static void filter(final List<String> accounts) {
@@ -168,7 +169,7 @@ public class OnlineStateEventSubscribe {
 
     // 机器人账号不订阅
     public static boolean subscribeFilter(String account) {
-        return NimUIKit.getRobotInfoProvider().getRobotByAccount(account) != null;
+        return account.equals(Constants.ASSISTANT_ACCID);
     }
 
     /**
