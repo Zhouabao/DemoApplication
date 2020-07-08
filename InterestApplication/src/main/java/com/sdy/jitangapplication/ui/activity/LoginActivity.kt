@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.app.Application
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +37,7 @@ import java.lang.ref.WeakReference
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
-class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
+class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener {
 
     private val syCode by lazy { intent.getIntExtra("syCode", 0) }
 
@@ -108,8 +109,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
                 wechatLoginBtn.isVisible = true
             }
         }
-
-
 
 
 //        StatusBarUtil.immersive(this)
@@ -246,6 +245,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         videoPreview.setOnCompletionListener {
             videoPreview.start()
         }
+        videoPreview.setOnErrorListener(this)
+
 
         videoPreview.start()
     }
@@ -312,6 +313,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
             isOpenAuth = false
             OneKeyLoginManager.getInstance().setLoadingVisibility(false)
         }
+    }
+
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        Log.d("what", "$what,$extra")
+        return true
     }
 
 

@@ -127,7 +127,7 @@ public class DemoPrivatizationConfig {
         }
         ServerAddresses addresses = new ServerAddresses();
         try {
-//            addresses.publicKey = jsonObject.getString(KEY_MODULE);
+            addresses.publicKey = jsonObject.getString(KEY_MODULE);
             addresses.publicKeyVersion = jsonObject.getInt(KEY_VERSION);
             addresses.lbs = jsonObject.getString(KEY_LBS);
             addresses.defaultLink = jsonObject.getString(KEY_LINK);
