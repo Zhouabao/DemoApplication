@@ -215,12 +215,14 @@ dependencies {
     // 云信推送
     implementation 'com.huawei.hms:push:4.0.4.301'
     implementation files('libs\\MiPush_SDK_Client_3_7_6.jar')
-    implementation files('libs\\nim-push-7.7.2.jar')
+//    implementation files('libs\\nim-push-7.7.2.jar')
+    implementation 'com.netease.nimlib:push:7.7.2'
 //    implementation files('libs\\com.coloros.mcssdk.jar')
     implementation files('libs\\vivo_pushsdk-v2.9.0.0.aar')
+    //oppo推送
     implementation files('libs\\com.heytap.msp-push-2.1.0.aar')
-    implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
 //    implementation 'com.heytap.mcssdk:mcssdk:2.0.2'
+    implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
     //数美黑产防范
     implementation files('libs\\smantifraud.aar')
 
