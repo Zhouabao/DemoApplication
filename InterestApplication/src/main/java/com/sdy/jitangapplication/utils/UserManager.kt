@@ -463,7 +463,6 @@ object UserManager {
     }
 
 
-
     /**
      * 是否展示引导喜欢我的
      */
@@ -486,7 +485,6 @@ object UserManager {
     fun saveShowGuideMarkLike(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideMarkLike", isShow)
     }
-
 
 
     /**
@@ -571,8 +569,14 @@ object UserManager {
 
 
     fun startToPersonalInfoActivity(context: Context, nothing: LoginInfo?, data: LoginBean?) {
-
         touristMode = false//登录成功清空游客模式
+        registerFileBean = RegisterFileBean(
+            data?.extra_data?.people_amount ?: 0,
+            data?.extra_data?.supplement ?: 0,
+            data?.extra_data?.threshold ?: false,
+            data?.extra_data?.living_btn ?: false,
+            data?.extra_data?.tourists ?: false
+        )
 
         SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
         SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
@@ -588,12 +592,7 @@ object UserManager {
         DemoCache.setAccount(nothing?.account)
         //初始化消息提醒配置
         initNotificationConfig()
-
-        //昵称 生日 性别 头像 个签
-//        || data.userinfo.nickname.isNullOrEmpty()
-//            || data.userinfo.birth == 0
-//            || data.userinfo.avatar.isNullOrEmpty()
-//            || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)
+        //昵称 生日 性别 头像
         if (data?.userinfo == null || data.userinfo.gender == 0) {
             context.startActivity<RigisterGenderActivity>()
             return

@@ -154,10 +154,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 //    implementation fileTree(dir: 'libs', include: ['*.aar'])
     implementation project(path: ':BaseLibrary')
-//    implementation files('libs\\MiPush_SDK_Client_3_7_0.jar')
-//    implementation files('libs\\nim-push-7.7.2.jar')
-//    implementation files('libs\\com.coloros.mcssdk.jar')
-//    implementation files('libs\\vivo_pushsdk_v2.3.4.jar')
+    //人脸认证
+    implementation project(path: ':faceplatform-ui')
     //闪验
     implementation files('libs\\shanyan_sdk_v2.3.1.5.aar')
     // 支付宝支付
@@ -170,7 +168,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-//    implementation project(path: ':camerafilter')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -183,10 +180,10 @@ dependencies {
     //标签控件
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     //弹窗工具
-    implementation 'com.github.cazaea:sweet-alert-dialog:1.0.0'
+//    implementation 'com.github.cazaea:sweet-alert-dialog:1.0.0'
     //animation集合
-    implementation 'com.daimajia.easing:library:2.0@aar'
-    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+//    implementation 'com.daimajia.easing:library:2.0@aar'
+//    implementation 'com.daimajia.androidanimations:library:2.3@aar'
     //recyclerview的animation
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     //GreenDao
@@ -211,22 +208,11 @@ dependencies {
     implementation 'com.github.385841539:MarqueeView:1.0.0'
     //日历控件
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-
     //带索引的通讯录
     implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
-//    compile 'com.github.nanchen2251:WaveSideBar:1.0.6'
-    // 添加依赖。注意，版本号必须一致。
-    // 基础功能 (必需)
-//    implementation 'com.netease.nimlib:basesdk:6.1.1'
-
-    //云信UI库
-//    implementation project(path: ':NIM_Android_UIKit-master')
     // 云信推送
     implementation 'com.huawei.hms:push:4.0.4.301'
     implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
-
-    //人脸认证
-    implementation project(path: ':faceplatform-ui')
 
     implementation 'me.everything:overscroll-decor-android:1.0.4'
     implementation "me.leolin:ShortcutBadger:1.1.17@aar"
@@ -246,7 +232,7 @@ dependencies {
     //联动选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     //仿京东选址器
-    implementation 'liji.library.dev:citypickerview:5.2.1'
+//    implementation 'liji.library.dev:citypickerview:5.2.1'
     //高斯模糊背景
     implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
