@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.nim.mixpush
 
+import com.huawei.hms.push.HmsMessageService
+
 //import com.huawei.hms.push.HmsMessageService
 //
 ///**
@@ -8,10 +10,10 @@ package com.sdy.jitangapplication.nim.mixpush
 // *    desc   :
 // *    version: 1.0
 // */
-//class MyHmsService : HmsMessageService() {
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//    }
-//
-//}
+class MyHmsService : HmsMessageService() {
+
+    override fun onCreate() {
+        super.onCreate()
+    }
+
+}
