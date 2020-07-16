@@ -36,10 +36,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
 import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.model.MoreMatchBean
-import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.HumanVerfiyDialog
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -330,10 +327,12 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                 override fun onNext(t: BaseResp<Any?>) {
                     loadingDialog.dismiss()
                     if (type == TYPE_LIVE_CAPTURE) {
-                        UserManager.startToFlow(
+                        OpenVipDialog(
                             this@IDVerifyActivity,
-                            intent.getSerializableExtra("morematchbean") as MoreMatchBean?
-                        )
+                            intent.getSerializableExtra("morematchbean") as MoreMatchBean?,
+                            OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                        ).show()
+
                     } else
                         when (t.code) {
                             200 -> {

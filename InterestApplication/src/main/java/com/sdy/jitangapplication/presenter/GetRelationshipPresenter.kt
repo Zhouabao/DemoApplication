@@ -59,14 +59,19 @@ class GetRelationshipPresenter : BasePresenter<GetRelationshipView>() {
         RetrofitFactory.instance.create(Api::class.java)
             .addWant(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MoreMatchBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
                 override fun onNext(t: BaseResp<MoreMatchBean?>) {
                     super.onNext(t)
-
+                    loading.dismiss()
                     mView.onAddWant(t.code == 200,t.data)
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
+                    loading.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     }

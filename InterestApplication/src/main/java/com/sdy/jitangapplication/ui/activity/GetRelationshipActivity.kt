@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.presenter.view.GetRelationshipView
 import com.sdy.jitangapplication.ui.adapter.GetRelationshipVpAdapter
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
 import kotlinx.android.synthetic.main.activity_get_relationship.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 寻求什么关系
@@ -129,12 +130,16 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
     override fun onAddWant(b: Boolean, data: MoreMatchBean?) {
         if (b) {
             val moreMatchBean = intent.getSerializableExtra("moreMatch") as MoreMatchBean?
-            moreMatchBean?.people_amount = data?.people_amount ?: 0
-            OpenVipDialog(
-                this,
-                moreMatchBean,
-                OpenVipDialog.FROM_REGISTER_OPEN_VIP
-            ).show()
+            if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
+                startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
+            } else {
+                moreMatchBean?.people_amount = data?.people_amount ?: 0
+                OpenVipDialog(
+                    this,
+                    moreMatchBean,
+                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
+                ).show()
+            }
 
 
         }

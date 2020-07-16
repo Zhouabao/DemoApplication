@@ -45,7 +45,6 @@ import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_register_info.*
 import kotlinx.android.synthetic.main.dialog_upload_avator.*
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import top.zibin.luban.OnCompressListener
 import java.io.File
@@ -615,13 +614,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
         moreMatchBean: MoreMatchBean?
     ) {
         if (uploadResult) {
-            SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
-//            startActivity<RegisterInfoActivity>()
-
-            if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
-                startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
-            } else
-                UserManager.startToFlow(this, moreMatchBean)
+            UserManager.startToFlow(this, moreMatchBean)
         } else {
             CommonFunction.toast(msg ?: "")
         }

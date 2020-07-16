@@ -68,7 +68,7 @@ object CommonFunction {
      * 222 （铂金会元/已经解锁视频 返回isnew_friend true是新好友 false 不是新建立 mv_url 视频地址 ）
      * 200 amount 糖果数 isplatinumvip 是否铂金会员
      */
-    fun checkUnlockIntroduceVideo(context: Context, target_accid: String, gender: Int) {
+    fun checkUnlockIntroduceVideo(context: Context, target_accid: String) {
         val loading = LoadingDialog(context)
         RetrofitFactory.instance.create(Api::class.java)
             .checkUnlockMv(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))

@@ -638,17 +638,17 @@ object UserManager {
                 || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)
             ) {
                 context.startActivity<RegisterInfoActivity>()
-            } else if (data?.extra_data?.living_btn == true) {
-                context.startActivity<WomanLivingActivity>(
-                    "morematchbean" to MoreMatchBean(
+            } else if (data?.extra_data?.want_steps != true) {
+                context.startActivity<GetMoreMatchActivity>(
+                    "moreMatch" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
                         data?.extra_data?.people_amount ?: 0
                     )
                 )
-            } else if (data?.extra_data?.want_steps != true) {
-                context.startActivity<GetMoreMatchActivity>(
-                    "moreMatch" to MoreMatchBean(
+            } else if (data?.extra_data?.living_btn == true) {
+                context.startActivity<WomanLivingActivity>(
+                    "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
                         data?.extra_data?.people_amount ?: 0
@@ -672,11 +672,10 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
             SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
-            SPUtils.getInstance(Constants.SPNAME)
-                .put("people_amount", moreMatchBean?.people_amount ?: 0)
+            SPUtils.getInstance(Constants.SPNAME).put("people_amount", moreMatchBean?.people_amount ?: 0)
             context.startActivity<MainActivity>()
         } else {
-            context.startActivity<GetMoreMatchActivity>("moreMatch" to moreMatchBean)
+            context.startActivity<GetMoreMatchActivity>("morematchbean" to moreMatchBean)
         }
     }
 
