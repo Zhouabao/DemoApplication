@@ -17,7 +17,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -589,6 +589,12 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
+
+            <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+                android:id="@+id/matchUserVideo"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="match_parent" />
         </FrameLayout>
 
 

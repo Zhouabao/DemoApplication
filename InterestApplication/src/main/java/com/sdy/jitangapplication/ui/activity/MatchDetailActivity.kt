@@ -40,6 +40,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.MatchByWishHelpEvent
 import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.event.UpdateBlackEvent
@@ -51,6 +52,7 @@ import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_match_detail.*
@@ -159,6 +161,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
+
+
 //        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //
 //            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -215,6 +219,19 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getUserDetailInfo(params)
 
+        }
+
+        //
+        userVideoPlayBtn.clickWithTrigger {
+            //初始化url
+            matchUserVideo.isVisible = true
+            CommonFunction.initVideo(this, matchUserVideo, matchBean!!.mv_url)
+            matchUserVideo.startPlayLogic()
+        }
+
+        matchUserVideo.backButton.clickWithTrigger {
+            matchUserVideo.isVisible = false
+            GSYVideoManager.releaseAllVideos()
         }
 
     }
@@ -441,7 +458,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         photos.addAll(matchBean!!.photos ?: mutableListOf())
         photosAdapter.notifyDataSetChanged()
         setViewpagerAndIndicator()
-
 
     }
 
@@ -809,6 +825,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+    }
+
+    override fun onBackPressed() {
+        if (matchUserVideo.isVisible) {
+            matchUserVideo.isVisible = false
+            GSYVideoManager.releaseAllVideos()
+        } else {
+            super.onBackPressed()
+        }
     }
 
 
