@@ -21,7 +21,6 @@ import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -80,7 +79,6 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.labelPurchase -> {
-                    ChargeLabelDialog(this, adapter.data[position].tag_id).show()
                 }
                 R.id.labelDelete -> {
                     // 删除兴趣
