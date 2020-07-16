@@ -37,19 +37,16 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.UserInfoBean
-import com.sdy.jitangapplication.model.VipDescr
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
-import kotlinx.android.synthetic.main.item_marquee_power.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -266,6 +263,14 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
     private fun initData() {
+        if (UserManager.getGender() == 1) {
+            femalePowerLl.isVisible = false
+            malePowerLl.isVisible = true
+        } else {
+            femalePowerLl.isVisible = true
+            malePowerLl.isVisible = false
+        }
+
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
 
@@ -281,7 +286,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         userName1.text = userInfoBean?.userinfo?.nickname ?: ""
         userSign.text = userInfoBean?.sign ?: ""
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
-        UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: false)
+        UserManager.saveUserVip(userInfoBean?.userinfo?.isplatinum ?: false)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
         checkVerify()
@@ -290,7 +295,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
 
 
-        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
+        if (UserManager.getGender() == 1 && !UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
 
         EventBus.getDefault()
@@ -313,9 +318,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         } else {
             userVerifyIv.setImageResource(R.drawable.icon_female_verify_no_small)
         }
+        contactWayMan.isVisible = UserManager.getGender() == 1
         if (userInfoBean?.userinfo?.contact_way == 0) {
             contactWayIv.setImageResource(R.drawable.icon_female_contact_no_small)
+            contactWayMan.setImageResource(R.drawable.icon_female_contact_no_small)
         } else {
+            contactWayMan.setImageResource(R.drawable.icon_female_contact_open_small)
             contactWayIv.setImageResource(R.drawable.icon_female_contact_open_small)
         }
     }
@@ -323,94 +331,42 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
-        if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-            userVerify.imageAssetsFolder = "images_verify"
-            userVerify.setAnimation("data_verify.json")
-            userVerify.playAnimation()
-            verifyState.text = "已认证"
-            verifyState.textColor = resources.getColor(R.color.colorWhite)
-            verifyState.setBackgroundResource(R.drawable.gradient_blue_11dp)
-        } else if (userInfoBean?.userinfo?.isfaced == 2) { //审核中
-            userVerify.setImageResource(R.drawable.icon_verify_not)
-            verifyState.text = "审核中"
-            verifyState.textColor = Color.parseColor("#FFC5C6C8")
-            verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
+        if (UserManager.getGender() == 2) {
+            userVerify.isVisible = false
+            verifyState.isVisible = false
         } else {
-            userVerify.setImageResource(R.drawable.icon_verify_not)
-            verifyState.text = "立即认证"
-            verifyState.textColor = Color.parseColor("#FFC5C6C8")
-            verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
+            userVerify.isVisible = true
+            verifyState.isVisible = true
+            if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
+                userVerify.imageAssetsFolder = "images_verify"
+                userVerify.setAnimation("data_verify.json")
+                userVerify.playAnimation()
+                verifyState.text = "已认证"
+                verifyState.textColor = resources.getColor(R.color.colorWhite)
+                verifyState.setBackgroundResource(R.drawable.gradient_blue_11dp)
+            } else if (userInfoBean?.userinfo?.isfaced == 2) { //审核中
+                userVerify.setImageResource(R.drawable.icon_verify_not)
+                verifyState.text = "审核中"
+                verifyState.textColor = Color.parseColor("#FFC5C6C8")
+                verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
+            } else {
+                userVerify.setImageResource(R.drawable.icon_verify_not)
+                verifyState.text = "立即认证"
+                verifyState.textColor = Color.parseColor("#FFC5C6C8")
+                verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
+            }
         }
 
     }
 
     //是否认证
     private fun checkVip() {
-        //有门槛 普通会员  升级钻石会员(灰色)
-        //有门槛 钻石会员  会员权益(灰色)
-        //无门槛 会员 会员权益(灰色)
-        //无门槛 非会员 开通会员(灰色)
-        //有门槛 非会员 开通会员(黄色)
-        userVip.isVisible =
-            (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == true)
-                    || (userInfoBean?.threshold_btn == false && userInfoBean?.userinfo?.isplatinum == true)
-
-        if (userInfoBean?.threshold_btn == true) {
-            if (userInfoBean?.userinfo?.isvip == false) {
-                isVipPowerBtn.text = "开通会员"
-            } else if (userInfoBean?.userinfo?.isvip == true && userInfoBean?.userinfo?.isplatinum == false) {
-                EventBus.getDefault().post(UpdateSameCityVipEvent())
-                isVipPowerBtn.text = "升级钻石会员"
-                userVip.setImageResource(R.drawable.icon_vip)
-            } else {
-                EventBus.getDefault().post(UpdateSameCityVipEvent())
-                isVipPowerBtn.text = "会员权益"
-                userVip.setImageResource(R.drawable.icon_pt_vip)
-            }
+        if (userInfoBean?.userinfo?.isplatinum == false) {
+            isVipPowerBtn.text = "升级会员"
         } else {
-            if (userInfoBean?.userinfo?.isplatinum == false) {
-                isVipPowerBtn.text = "开通会员"
-                userVip.setImageResource(R.drawable.icon_vip)
-            } else {
-                EventBus.getDefault().post(UpdateSameCityVipEvent())
-                isVipPowerBtn.text = "会员权益"
-                userVip.setImageResource(R.drawable.icon_pt_vip)
-
-            }
+            EventBus.getDefault().post(UpdateSameCityVipEvent())
+            isVipPowerBtn.text = "续费会员"
         }
-
-        if (userInfoBean?.userinfo?.isvip == false && userInfoBean?.threshold_btn == true) {
-            vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
-            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_vip_quanyi_bg)
-            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_orange_10dp)
-            for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
-                marqueeVipPower.addView(getMarqueeView(data, false))
-
-        } else {
-            for (data in userInfoBean?.platinum_vip_descr ?: mutableListOf<VipDescr>())
-                marqueeVipPower.addView(
-                    getMarqueeView(
-                        data,
-                        userInfoBean?.userinfo?.isplatinum ?: false
-                    )
-                )
-            vipLevelLogo.setImageResource(R.drawable.icon_pt_vip_me)
-            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_pt_vip_quanyi_bg)
-            vipPowerLl.setBackgroundResource(R.drawable.shape_rectangle_light_gray_10dp)
-        }
-
-    }
-
-
-    private fun getMarqueeView(content: VipDescr, isPtVip: Boolean): View {
-        val view = layoutInflater.inflate(R.layout.item_marquee_power, null, false)
-        if (isPtVip) {
-            view.powerContent.setTextColor(Color.parseColor("#FF5E6473"))
-        } else {
-            view.powerContent.setTextColor(Color.parseColor("#FF936F3F"))
-        }
-        view.powerContent.text = content.title
-        return view
     }
 
 
@@ -461,22 +417,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             }
             //会员权益
             R.id.isVipPowerBtn -> {
-                //有门槛 普通会员  升级钻石会员(灰色)
-                //有门槛 钻石会员  会员权益(灰色)
-                //无门槛 会员 会员权益(灰色)
                 //无门槛 非会员 开通会员(灰色)
-                //有门槛 非会员 开通会员(黄色)
-                if (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == false) {
-                    ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
-                } else {
-                    startActivity<VipPowerActivity>(
-                        "type" to if (userInfoBean?.threshold_btn == true && userInfoBean?.userinfo?.isvip == false) {
-                            VipPowerBean.TYPE_NORMAL_VIP
-                        } else {
-                            VipPowerBean.TYPE_PT_VIP
-                        }
-                    )
-                }
+                startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
             }
             //我的兴趣
             R.id.publishCl -> {
@@ -489,7 +431,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             //我的来访
             R.id.userVisit -> {
                 startActivity<MyVisitActivity>(
-                    "isVip" to (userInfoBean?.userinfo?.isvip ?: false),
+                    "isVip" to (userInfoBean?.userinfo?.isplatinum ?: false),
                     "today" to userInfoBean?.userinfo?.todayvisit,
                     "all" to userInfoBean?.userinfo?.allvisit,
                     "freeShow" to userInfoBean?.free_show
@@ -577,7 +519,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             videoIntroduceIv.setImageResource(R.drawable.icon_female_video_no_small)
         }
     }
-
 
 
     override fun onPause() {

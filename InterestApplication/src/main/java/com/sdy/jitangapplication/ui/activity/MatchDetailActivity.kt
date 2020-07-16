@@ -1,19 +1,15 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +23,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.SpanUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -37,6 +34,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -53,8 +51,8 @@ import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.umeng.socialize.UMShareAPI
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.empty_layout_block.view.*
@@ -145,10 +143,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
         notifyAddTagBtn.setOnClickListener(this)
-        contactNumber.setOnClickListener(this)
-        videoIntroduce.setOnClickListener(this)
+        contactCl.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
-
 
 
         //用户详细信息列表
@@ -314,40 +310,51 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
         when (matchBean!!.contact_way) {
             1 -> {
-                contactTip.text = "获取${if (matchBean!!.gender == 1) {
-                    "他"
-                } else {
-                    "她"
-                }}的手机号，让关系更亲密"
-                contactNumber.text = "查看电话"
                 contactCl.isVisible = true
+                contactCl.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_phone_white),
+                    null,
+                    null,
+                    null
+                )
             }
             2 -> {
-                contactTip.text = "添加${if (matchBean!!.gender == 1) {
-                    "他"
-                } else {
-                    "她"
-                }}的微信，让关系更亲密"
-                contactNumber.text = "查看微信"
                 contactCl.isVisible = true
+                contactCl.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_wechat_white),
+                    null,
+                    null,
+                    null
+                )
             }
             3 -> {
-                contactTip.text = "添加${if (matchBean!!.gender == 1) {
-                    "他"
-                } else {
-                    "她"
-                }}的QQ，让关系更亲密"
-
-                contactNumber.text = "查看QQ"
                 contactCl.isVisible = true
+                contactCl.setCompoundDrawablesWithIntrinsicBounds(
+                    resources.getDrawable(R.drawable.icon_qq_white),
+                    null,
+                    null,
+                    null
+                )
             }
             else -> {
+                val params = detailUserChatBtn.layoutParams as LinearLayout.LayoutParams
+                params.width = SizeUtils.dp2px(260F)
+                detailUserChatBtn.layoutParams = params
                 contactCl.isVisible = false
             }
         }
 
-        uservideoCl.isVisible = matchBean!!.mv_btn
+        userVideoCl.isVisible = matchBean!!.mv_btn
 
+        if (UserManager.isUserVip())
+            GlideUtil.loadImg(this, UserManager.getAvator(), userVideoCover)
+        else
+            Glide.with(this)
+                .load(UserManager.getAvator())
+                .thumbnail(0.5F)
+                .priority(Priority.NORMAL)
+                .transform(BlurTransformation(25))
+                .into(userVideoCover)
         if (matchBean!!.intention_title.isNullOrEmpty()) {
             detailUserIntention1.isVisible = false
         } else {
@@ -378,16 +385,25 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserOnline.text = matchBean!!.online_time
             detailUserOnline.isVisible = true
         }
-        val left = resources.getDrawable(
-            if (matchBean!!.gender == 1) {
-                R.drawable.icon_gender_man_gray_userdetail
-            } else {
-                R.drawable.icon_gender_woman_gray_userdetail
-            }
-        )
-        detailUserInfoAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
-        detailUserInfoAge.text = "${matchBean!!.age}"
-        detailUserConstellation.text = "${matchBean!!.constellation}"
+
+        detailUserGenderAndAge.text = "${matchBean!!.age}"
+        if (matchBean!!.gender == 1) {
+            detailUserGenderAndAge.setBackgroundResource(R.drawable.rectangle_orange_9dp)
+            detailUserGenderAndAge.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(R.drawable.icon_gender_boy_detail),
+                null,
+                null,
+                null
+            )
+        } else {
+            detailUserGenderAndAge.setBackgroundResource(R.drawable.rectangle_rosepink_9dp)
+            detailUserGenderAndAge.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(R.drawable.icon_gender_girl_detail),
+                null,
+                null,
+                null
+            )
+        }
         detailUserDistance.isVisible = !matchBean!!.distance.isNullOrEmpty()
         detailUserDistance.text = "${matchBean!!.distance}"
         detailUserOnline.isVisible = !matchBean!!.online_time.isNullOrEmpty()
@@ -397,16 +413,22 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             isVisible = !(matchBean!!.sign.isNullOrBlank())
         }
 
-        detailUserVip.visibility = if (matchBean!!.isvip == 1 || matchBean!!.isplatinumvip) {
+        detailUserVip.visibility = if (matchBean!!.isplatinumvip) {
             View.VISIBLE
         } else {
             View.GONE
         }
         if (matchBean!!.isplatinumvip) {
             detailUserVip.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            detailUserVip.setImageResource(R.drawable.icon_vip)
         }
+
+
+        //TODO 修改文案
+        //认证用户, 所见即所得
+        //认证女神,快去撩她吧
+        //真人验证,可放心聊天
+        //认证用户,保证真实
+        //认证男神,快撩他吧
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
 
@@ -692,20 +714,20 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 mPresenter.needNotice(hashMapOf<String, Any>("target_accid" to matchBean!!.accid))
                 notifyAddTagBtn.isEnabled = false
             }
-            R.id.contactNumber -> {//获取联系方式
+            R.id.contactCl -> {//获取联系方式
                 CommonFunction.checkUnlockContact(
                     this,
                     matchBean!!.accid,
                     matchBean!!.gender ?: 1
                 )
             }
-            R.id.videoIntroduce -> {//获取认证视频
-                CommonFunction.checkUnlockIntroduceVideo(
-                    this,
-                    matchBean!!.accid,
-                    matchBean!!.gender ?: 1
-                )
-            }
+//            R.id.videoIntroduce -> {//获取认证视频
+//                CommonFunction.checkUnlockIntroduceVideo(
+//                    this,
+//                    matchBean!!.accid,
+//                    matchBean!!.gender ?: 1
+//                )
+//            }
         }
 
     }

@@ -29,7 +29,6 @@ import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
-import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.dialog_open_pt_vip.*
@@ -65,8 +64,6 @@ class OpenPtVipDialog(
         setContentView(R.layout.dialog_open_pt_vip)
         initWindow()
         initView()
-        if (!isPlatniumVip)
-            productLists()
         EventBus.getDefault().register(this)
     }
 
@@ -282,54 +279,6 @@ class OpenPtVipDialog(
             })
     }
 
-
-    /**
-     * 请求支付方式
-     */
-    fun productLists() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getThreshold(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
-                override fun onNext(it: BaseResp<ChargeWayBeans?>) {
-                    if (it.code == 200) {
-                        if (it.data != null) {
-                            chargeWayBeans = it.data
-                            setPurchaseType()
-                            payways.addAll(chargeWayBeans!!.paylist ?: mutableListOf())
-                        }
-                    } else {
-                        CommonFunction.toast(it.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e != null && e is BaseException) {
-                        TickDialog(context).show()
-                    }
-                }
-            })
-    }
-
-
-    private var chargeWayBeans: ChargeWayBeans? = null
-    private var payways: MutableList<PaywayBean> = mutableListOf()
-
-
-    private val vipChargeAdapter by lazy { VipChargeAdapter() }
-    private fun setPurchaseType() {
-        //判断是否有选中推荐的，没有的话就默认选中第一个价格。
-        var ispromote = false
-        for (charge in chargeWayBeans!!.list ?: mutableListOf()) {
-            if (charge.is_promote) {
-                ispromote = true
-                break
-            }
-        }
-        if (!ispromote && (chargeWayBeans!!.list ?: mutableListOf()).isNotEmpty()) {
-            chargeWayBeans!!.list!![0].is_promote = true
-        }
-        vipChargeAdapter.setNewData(chargeWayBeans!!.list)
-    }
 
 
     override fun show() {

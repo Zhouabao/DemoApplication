@@ -218,6 +218,10 @@ class MyApplication : BaseApplication() {
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
                     }
+                    //门槛支付成功
+                    106 -> {
+
+                    }
                     SnackBarFragment.SOMEONE_LIKE_YOU,
                     SnackBarFragment.SOMEONE_MATCH_SUCCESS,
                     SnackBarFragment.GREET_SUCCESS,

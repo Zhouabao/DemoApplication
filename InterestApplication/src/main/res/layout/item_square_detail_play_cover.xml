@@ -28,7 +28,7 @@
 
         <ImageView
                 android:id="@+id/detailPlayUserVipIv"
-                android:src="@drawable/icon_vip"
+                android:src="@drawable/icon_pt_vip"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 app:layout_constraintEnd_toEndOf="@id/detailPlayUserAvatar"

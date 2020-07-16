@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.netease.nimlib.sdk.NIMClient;
@@ -28,6 +27,7 @@ import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
+import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
@@ -50,6 +50,7 @@ import com.sdy.jitangapplication.nim.uikit.impl.customization.DefaultRecentCusto
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderAccostGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContact;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContactCandy;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendCustomTip;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
@@ -207,6 +208,9 @@ public class SessionHelper {
                         } else if (((ChatHiAttachment) recent.getAttachment())
                                 .getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
                             return "『意向匹配』";
+                        } else if (((ChatHiAttachment) recent.getAttachment())
+                                .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND) {
+                            return "『搭讪匹配』";
                         }
 
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
@@ -220,6 +224,8 @@ public class SessionHelper {
                         return "『搭讪』";
                     } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
                         return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
+                    } else if (recent.getAttachment() instanceof ContactCandyAttachment) {
+                        return "『糖果礼物』";
                     }
                     return super.getDefaultDigest(recent);
                 }
@@ -232,6 +238,7 @@ public class SessionHelper {
     private static void registerViewHolders() {
         // NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
         NimUIKit.registerMsgItemViewHolder(AccostGiftAttachment.class, MsgViewHolderAccostGift.class);
+        NimUIKit.registerMsgItemViewHolder(ContactCandyAttachment.class, MsgViewHolderContactCandy.class);
         NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
         NimUIKit.registerMsgItemViewHolder(WishHelpAttachment.class, MsgViewHolderWishHelp.class);
         NimUIKit.registerMsgItemViewHolder(SendCustomTipAttachment.class, MsgViewHolderSendCustomTip.class);

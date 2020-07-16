@@ -7,14 +7,58 @@
     android:background="@color/colorDivider1"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/unlockContactLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="3dp">
+
+        <ImageView
+            android:id="@+id/contactIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_wechat_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="她担心你找不到她，给你留下了联系方式"
+            android:textColor="#ff191919"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/unlockContactBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_rectangle_green_15"
+            android:paddingLeft="14dp"
+            android:paddingTop="3dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="3dp"
+            android:text="查看"
+            android:textColor="#ffffffff"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
     <include layout="@layout/chat_nim_message_activity_text_layout" />
 
 
-        <!--<com.sdy.jitangapplication.nim.uikit.business.session.emoji.EmoticonPickerView
-            android:id="@+id/emoticon_picker_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />-->
+    <!--<com.sdy.jitangapplication.nim.uikit.business.session.emoji.EmoticonPickerView
+        android:id="@+id/emoticon_picker_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />-->
 
     <FrameLayout
         android:id="@+id/emoticon_picker_view1"

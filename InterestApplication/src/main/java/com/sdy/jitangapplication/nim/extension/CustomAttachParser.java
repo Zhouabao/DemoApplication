@@ -45,6 +45,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.AccostGift:
                     attachment = new AccostGiftAttachment();
                     break;
+                    case CustomAttachmentType.ChatContactCandy:
+                    attachment = new ContactCandyAttachment();
+                    break;
                 default:
                     attachment = new DefaultCustomAttachment();
                     break;

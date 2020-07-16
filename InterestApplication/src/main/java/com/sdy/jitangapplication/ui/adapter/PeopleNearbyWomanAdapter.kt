@@ -47,11 +47,9 @@ class PeopleNearbyWomanAdapter() :
         }}·${item.constellation}·${item.distance}"
 
         itemView.userVerify.isVisible = item.isfaced == 1
-        itemView.userVip.isVisible = item.isvip || item.isplatinumvip
+        itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            itemView.userVip.setImageResource(R.drawable.icon_vip)
         }
 
         itemView.userOnline.text = "${if (!item.online_time.isNullOrEmpty()) {

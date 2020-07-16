@@ -332,7 +332,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //保存是否上传过视频介绍
             UserManager.my_mv_url = nearBean.my_mv_url
             //保存 VIP信息
-            UserManager.saveUserVip(nearBean.isvip)
+            UserManager.saveUserVip(nearBean.isplatinum)
             //保存认证信息
             UserManager.saveUserVerify(nearBean.isfaced)
             //保存是否进行过人脸验证

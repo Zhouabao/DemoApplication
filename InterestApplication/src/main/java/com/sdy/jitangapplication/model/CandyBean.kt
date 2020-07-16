@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.umeng.socialize.utils.UmengText
 import java.io.Serializable
 
 /**
@@ -272,5 +273,20 @@ data class SendTipBean(
     var content: String = "",
     var ifSendUserShow: Boolean = false,
     var showType: Int = 0
+)
+
+data class ChatUpBean(
+    var chat_amount: Int = 0,
+    var plat_cnt: Int = 0,
+    var online: Boolean = false,
+
+    var contact_amount: Int = 0,
+    var contact: String = "",
+    var contact_way: Int = 0,//联系方式 int 0 没有 1 手机 2微信 3 qq
+    var avatar: String,
+    var isplatinum: Boolean = false
+
+
+
 )
 

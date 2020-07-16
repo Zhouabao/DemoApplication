@@ -240,14 +240,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
         squareUserName1.text = "${squareBean!!.nickname}"
         headSquareUserName1.text = "${squareBean!!.nickname}"
-        squareUserVipIv1.isVisible = squareBean!!.isvip == 1 || squareBean!!.isplatinumvip
-        headSquareUserVipIv1.isVisible = squareBean!!.isvip == 1 || squareBean!!.isplatinumvip
+        squareUserVipIv1.isVisible = squareBean!!.isplatinumvip
+        headSquareUserVipIv1.isVisible = squareBean!!.isplatinumvip
         if (squareBean!!.isplatinumvip) {
             squareUserVipIv1.setImageResource(R.drawable.icon_pt_vip)
             headSquareUserVipIv1.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            squareUserVipIv1.setImageResource(R.drawable.icon_vip)
-            headSquareUserVipIv1.setImageResource(R.drawable.icon_vip)
         }
 
         if (squareBean!!.isfriend) {
@@ -861,6 +858,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     lateinit var moreActionDialog: MoreActionNewDialog
+
     /**
      * 展示更多操作对话框
      */
@@ -961,6 +959,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     var commentActionDialog: CommentActionDialog? = null
+
     //判断当前是添加评论还是回复评论
     private var reply = false
     private var reply_id = 0

@@ -69,11 +69,9 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
         itemView.userVerify.isVisible = item.isfaced == 1
         itemView.userIntroduceVideoBtn.isVisible = item.mv_btn
 
-        itemView.userVip.isVisible = item.isvip || item.isplatinumvip
+        itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            itemView.userVip.setImageResource(R.drawable.icon_vip)
         }
         if (item.intention_title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false
@@ -149,7 +147,7 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
                 if (UserManager.touristMode)
                     TouristDialog(mContext).show()
                 else
-                    CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid, item.gender)
+                    CommonFunction.checkUnlockIntroduceVideo(mContext, item.accid)
             }
 
             itemView.clickWithTrigger {

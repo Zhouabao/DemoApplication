@@ -316,8 +316,8 @@ interface Api {
      * 验证解锁联系方式
      */
     @FormUrlEncoded
-    @POST("Candy/checkUnlockContact${Constants.END_BASE_URL}")
-    fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockCheckBean?>>
+    @POST("Home/checkContact${Constants.END_BASE_URL}")
+    fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
 
     /**
      * 验证解锁视频介绍
@@ -331,8 +331,16 @@ interface Api {
      * 解锁联系方式
      */
     @FormUrlEncoded
-    @POST("Candy/unlockContact${Constants.END_BASE_URL}")
+    @POST("Home/unlockContact${Constants.END_BASE_URL}")
     fun unlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockBean?>>
+
+
+    /**
+     * 解锁聊天
+     */
+    @FormUrlEncoded
+    @POST("Home/unlockChat${Constants.END_BASE_URL}")
+    fun unlockChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockBean?>>
 
 
     /**
@@ -1175,7 +1183,7 @@ interface Api {
      * 推荐10个
      */
     @FormUrlEncoded
-    @POST("Home/indexTop${Constants.END_BASE_URL}")
+    @POST("Home/topList${Constants.END_BASE_URL}")
     fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<IndexListBean?>>
 
     /**
@@ -1217,6 +1225,16 @@ interface Api {
     @FormUrlEncoded
     @POST("Ticket/lockChatup${Constants.END_BASE_URL}")
     fun lockChatup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     *
+     * 验证解锁聊天
+     *
+     */
+    @FormUrlEncoded
+    @POST("Home/checkChat${Constants.END_BASE_URL}")
+    fun checkChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
+
 
     /**
      *

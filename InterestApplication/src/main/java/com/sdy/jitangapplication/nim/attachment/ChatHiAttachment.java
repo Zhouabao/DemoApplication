@@ -17,6 +17,7 @@ public class ChatHiAttachment extends CustomAttachment {
     public static int CHATHI_OUTTIME = 4;
     public static int CHATHI_WISH_HELP = 5;
     public static int CHATHI_WANT_MATCH = 6;//意向匹配成狗
+    public static int CHATHI_CHATUP_FRIEND = 7;//意向匹配成狗
 
     private final String KEY_TAG = "matchTag"; //匹配下的兴趣
     private final String KEY_SHOWTYPE = "showType";//是什么方式  1.匹配  2.招呼 3.好友 4.过期

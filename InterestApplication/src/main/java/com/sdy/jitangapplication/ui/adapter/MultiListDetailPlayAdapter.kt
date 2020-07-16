@@ -75,13 +75,7 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
 
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
-        holder.itemView.detailPlayUserVipIv.isVisible = item.isvip == 1||item.isplatinumvip
-        if (item.isplatinumvip) {
-            holder.itemView.detailPlayUserVipIv.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            holder.itemView.detailPlayUserVipIv.setImageResource(R.drawable.icon_vip)
-        }
-
+        holder.itemView.detailPlayUserVipIv.isVisible = item.isplatinumvip
         val drawable1 =
             context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示

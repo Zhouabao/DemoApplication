@@ -8,30 +8,36 @@ import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alipay.sdk.app.PayTask
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SnackbarUtils
+import com.google.android.flexbox.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.presenter.VipPowerPresenter
 import com.sdy.jitangapplication.presenter.view.VipPowerView
-import com.sdy.jitangapplication.ui.adapter.AllVipPowerAdapter
-import com.sdy.baselibrary.utils.StatusBarUtil
+import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
+import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
@@ -40,8 +46,8 @@ import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 class VipPowerActivity() :
-    BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
-    val currentPosition: Int by lazy { intent.getIntExtra("type", VipPowerBean.TYPE_NORMAL_VIP) }
+    BaseMvpActivity<VipPowerPresenter>(), VipPowerView, OnLazyClickListener {
+    val currentPosition: Int by lazy { intent.getIntExtra("type", VipPowerBean.TYPE_PT_VIP) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vip_power1)
@@ -57,62 +63,19 @@ class VipPowerActivity() :
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundColor(Color.TRANSPARENT)
 //        llTitle.setBackgroundColor(Color.parseColor("#FF1D1F21"))
-        btnBack.setImageResource(R.drawable.icon_back_white)
         divider.isVisible = false
-        hotT1.setTextColor(resources.getColor(R.color.colorWhite))
         hotT1.text = "会员权益"
         btnBack.onClick { finish() }
-
-        initVp2()
-    }
-
-    private val adapter by lazy { AllVipPowerAdapter() }
-    private fun initVp2() {
-        vpPower.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        LinearSnapHelper().attachToRecyclerView(vpPower)
-        vpPower.adapter = adapter
-        adapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.wechatPayBtn -> {
-                    createOrder(position, PAY_WECHAT)
-                }
-
-                R.id.zhiPayBtn -> {
-                    createOrder(position, PAY_ALI)
-                }
-            }
-        }
+        wechatPayBtn.setOnClickListener(this)
+        zhiPayBtn.setOnClickListener(this)
 
     }
 
 
+    private var data: ChargeWayBeans? = null
+    private val datas by lazy { mutableListOf<VipPowerBean>() }
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         if (data != null) {
-            adapter.threshold_btn = data?.threshold_btn?:false
-            if (!data.list.isNullOrEmpty()) {
-                //判断是否有选中推荐的，没有的话就默认选中第一个价格。
-                var ispromote = false
-                for (charge in data.list) {
-                    if (charge.is_promote) {
-                        ispromote = true
-                        break
-                    }
-                }
-                if (!ispromote && !data.list.isNullOrEmpty()) {
-                    data.list[0].is_promote = true
-                }
-
-                adapter.addData(
-                    VipPowerBean(
-                        data.list,
-                        data.icon_list,
-                        data.isvip,
-                        data.vip_express,
-                        data.paylist,
-                        VipPowerBean.TYPE_NORMAL_VIP
-                    )
-                )
-            }
             if (!data.pt_list.isNullOrEmpty()) {
                 //判断是否有选中推荐的，没有的话就默认选中第一个价格。
                 var ispromote = false
@@ -125,7 +88,7 @@ class VipPowerActivity() :
                 if (!ispromote && !data.pt_list.isNullOrEmpty()) {
                     data.pt_list[0].is_promote = true
                 }
-                adapter.addData(
+                datas.add(
                     VipPowerBean(
                         data.pt_list,
                         data.pt_icon_list,
@@ -136,11 +99,66 @@ class VipPowerActivity() :
                     )
                 )
             }
-            if (adapter.data.size > currentPosition)
-                vpPower.postDelayed({
-                    vpPower.scrollToPosition(currentPosition)
-                }, 200L)
+
+            this.data = data
+            initData()
         }
+    }
+
+    private fun initData() {
+        GlideUtil.loadCircleImg(this, UserManager.getAvator(), vipPowerAvator)
+        vipPowerNickname.text = SPUtils.getInstance(Constants.SPNAME).getString("nickname")
+
+        //支付价格
+        val vipChargeAdapter = VipChargeAdapter()
+        vipChargeRv.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+//            GridLayoutManager(this, 3,RecyclerView.HORIZONTAL, false)
+        vipChargeRv.adapter = vipChargeAdapter
+        vipChargeAdapter.setOnItemClickListener { _, _, position ->
+            for (data in vipChargeAdapter.data.withIndex()) {
+                data.value.is_promote = data.index == position
+            }
+            vipChargeAdapter.notifyDataSetChanged()
+//            setupPrice()
+        }
+
+        val vipPowerAdapter = VipPowerAdapter(VipPowerBean.TYPE_PT_VIP)
+        val manager = FlexboxLayoutManager(this!!, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.CENTER
+        manager.justifyContent = JustifyContent.CENTER
+        vipPowerRv.layoutManager = manager
+        vipPowerRv.adapter = vipPowerAdapter
+
+        if (data!!.isvip)
+            vipOutTime.text = "${data!!.vip_express}到期"
+        else
+            vipOutTime.text = "立即升级享受更多特权"
+
+        vipChargeAdapter.setNewData(data?.pt_list)
+        vipPowerAdapter.setNewData(data?.pt_icon_list)
+        for (payway in data!!.paylist ?: mutableListOf()) {
+            if (payway.payment_type == 1) {
+                zhiPayBtn.visibility = View.VISIBLE
+            } else if (payway.payment_type == 2) {
+                wechatPayBtn.visibility = View.VISIBLE
+            }
+        }
+
+        vipChargeRv.isVisible = true
+        zhiPayBtn.isVisible = true
+        wechatPayBtn.isVisible = true
+        zhiPayPrice.text = if (data!!.isvip) {
+            "立即续费"
+        } else {
+            "支付宝支付"
+        }
+        wechatPayPrice.text = if (data!!.isvip) {
+            "立即续费"
+        } else {
+            "微信支付"
+        }
+
     }
 
     private val mHandler by lazy {
@@ -150,6 +168,7 @@ class VipPowerActivity() :
                     SDK_PAY_FLAG -> {
                         run {
                             val payResult = PayResult(msg.obj as Map<String, String>)
+
                             /**
                              * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                              */
@@ -182,15 +201,15 @@ class VipPowerActivity() :
     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
     private val PAY_ALI = 1 //支付宝支付
     private val PAY_WECHAT = 2//微信支付
-    private fun createOrder(position: Int, payment_type: Int) {
+    private fun createOrder(payment_type: Int) {
         val params = hashMapOf<String, Any>()
-        for (payway in adapter.data[position].paylist ?: mutableListOf()) {
+        for (payway in data?.paylist ?: mutableListOf()) {
             if (payway.payment_type == payment_type) {
                 params["pay_id"] = payway.id
                 break
             }
         }
-        for (charge in adapter.data[position].list ?: mutableListOf()) {
+        for (charge in data?.pt_list ?: mutableListOf()) {
             if (charge.is_promote) {
                 params["product_id"] = charge.id
                 break
@@ -277,6 +296,19 @@ class VipPowerActivity() :
             })
             .create()
             .show()
+    }
+
+    override fun onLazyClick(v: View) {
+        when (v.id) {
+            R.id.wechatPayBtn -> {
+                createOrder(PAY_WECHAT)
+            }
+
+            R.id.zhiPayBtn -> {
+                createOrder(PAY_ALI)
+            }
+        }
+
     }
 
 

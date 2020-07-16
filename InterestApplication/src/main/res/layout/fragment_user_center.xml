@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="loading">
+    app:msv_viewState="content">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,7 +122,7 @@
                             app:layout_constraintBottom_toTopOf="@id/userSign"
                             app:layout_constraintLeft_toRightOf="@id/userAvator"
                             app:layout_constraintTop_toTopOf="@id/userAvator"
-                            tools:text="哈哈哈哈哈哈哈哈哈哈" />
+                            tools:text="哈哈" />
 
                         <TextView
                             android:id="@+id/userSign"
@@ -134,64 +134,19 @@
                             android:maxLines="1"
                             android:textColor="#ff888d92"
                             android:textSize="12sp"
-                            android:visibility="invisible"
+                            android:visibility="visible"
                             app:layout_constraintBottom_toBottomOf="@id/userAvator"
                             app:layout_constraintLeft_toLeftOf="@id/userName"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/userName"
                             tools:text="不要给失败找理由，要为成功找方向" />
 
-                        <LinearLayout
-                            android:id="@+id/femalePowerLl"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_rectangle_gray_white_13dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:visibility="invisible"
-                            android:paddingRight="2dp"
-                            app:layout_constraintBottom_toBottomOf="@id/userSign"
-                            app:layout_constraintLeft_toLeftOf="@id/userName"
-                            app:layout_constraintTop_toTopOf="@id/userSign">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableRight="@drawable/icon_more_right_gray"
-                                android:text="个人权益"
-                                android:layout_gravity="center"
-                                android:textColor="#ff191919"
-                                android:textSize="12sp" />
-
-                            <ImageView
-                                android:id="@+id/contactWayIv"
-                                android:layout_width="21dp"
-                                android:layout_height="21dp"
-                                android:layout_marginLeft="15dp"
-                                android:src="@drawable/icon_female_contact_no" />
-
-                            <ImageView
-                                android:id="@+id/userVerifyIv"
-                                android:layout_width="21dp"
-                                android:layout_height="21dp"
-                                android:layout_marginLeft="4dp"
-                                android:src="@drawable/icon_female_verify_no" />
-
-                            <ImageView
-                                android:id="@+id/videoIntroduceIv"
-                                android:layout_width="21dp"
-                                android:layout_height="21dp"
-                                android:layout_marginLeft="4dp"
-                                android:src="@drawable/icon_female_video_no" />
-                        </LinearLayout>
-
                         <ImageView
-                            android:id="@+id/userVip"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_marginLeft="8dp"
-                            android:src="@drawable/icon_vip"
+                            android:id="@+id/contactWayMan"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/icon_female_contact_no"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
                             app:layout_constraintLeft_toRightOf="@id/userName"
                             app:layout_constraintTop_toTopOf="@id/userName" />
@@ -219,21 +174,85 @@
                             android:layout_marginLeft="8dp"
                             android:src="@drawable/icon_verify_not"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
-                            app:layout_constraintLeft_toRightOf="@id/userVip"
+                            app:layout_constraintLeft_toRightOf="@id/contactWayMan"
                             app:layout_constraintTop_toTopOf="@id/userName" />
 
+
                         <LinearLayout
-                            android:id="@+id/vipPowerLl"
+                            android:id="@+id/femalePowerLl"
                             android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
                             android:layout_marginRight="15dp"
-                            android:background="@drawable/shape_rectangle_light_orange_10dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
+                            android:background="@drawable/shape_rectangle_gray_white_13dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="10dp"
+                            android:visibility="visible"
                             app:layout_constraintLeft_toLeftOf="@id/userAvator"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/userAvator">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="个人权益"
+                                android:textColor="#ff191919"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/contactWayIv"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/icon_female_contact_no" />
+
+                            <ImageView
+                                android:id="@+id/userVerifyIv"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/icon_female_verify_no" />
+
+                            <ImageView
+                                android:id="@+id/videoIntroduceIv"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/icon_female_video_no" />
+
+
+                            <TextView
+                                android:id="@+id/addPowerBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="right|center_vertical"
+                                android:layout_weight="1"
+                                android:drawableRight="@drawable/icon_more_right_gray"
+                                android:drawablePadding="5dp"
+                                android:gravity="center_vertical|right"
+                                android:text="增加曝光权益"
+                                android:textColor="#ff888d92"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/malePowerLl"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/icon_pt_vip_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="visible"
+                            app:layout_constraintLeft_toLeftOf="@id/userAvator"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/femalePowerLl">
 
                             <ImageView
                                 android:id="@+id/vipLevelLogo"
@@ -241,18 +260,17 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="12dp"
-                                android:src="@drawable/icon_vip_me" />
+                                android:src="@drawable/icon_pt_vip_me" />
 
-
-                            <ViewFlipper
-                                android:id="@+id/marqueeVipPower"
+                            <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
                                 android:layout_weight="1"
-                                android:autoStart="true"
-                                android:flipInterval="3000"
-                                android:inAnimation="@anim/push_up_in"
-                                android:outAnimation="@anim/push_up_out" />
+                                android:text="钻石会员丨已为你节省300个糖果"
+                                android:textColor="#ff5e6473"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
 
                             <TextView
@@ -260,13 +278,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="15dp"
-                                android:background="@drawable/gradient_is_vip_quanyi_bg"
+                                android:background="@drawable/gradient_is_pt_vip_quanyi_bg"
                                 android:gravity="center"
                                 android:paddingLeft="11dp"
                                 android:paddingTop="4dp"
                                 android:paddingRight="11dp"
                                 android:paddingBottom="4dp"
-                                android:text="会员权益"
+                                android:text="升级会员"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="12sp"
                                 android:visibility="visible" />
@@ -282,7 +300,7 @@
                             android:background="@drawable/icon_shadow_usercenter_10"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@id/userVisit"
-                            app:layout_constraintTop_toBottomOf="@id/vipPowerLl">
+                            app:layout_constraintTop_toBottomOf="@id/malePowerLl">
 
                             <TextView
                                 android:id="@+id/tvCandy"
@@ -330,7 +348,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:drawableLeft="@drawable/icon_foot_me"
+                                android:drawableLeft="@drawable/icon_see_me"
                                 android:drawablePadding="6dp"
                                 android:text="看过我的"
                                 android:textColor="#ff191919"
@@ -402,19 +420,12 @@
                     android:background="@color/colorWhite" />
             </com.google.android.material.appbar.AppBarLayout>
 
-            <!--        <androidx.core.widget.NestedScrollView-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="match_parent"-->
-            <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vpMySquareAndTag"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-            <!--        </androidx.core.widget.NestedScrollView>-->
 
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

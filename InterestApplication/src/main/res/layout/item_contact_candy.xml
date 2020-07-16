@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="238dp"
+    android:layout_height="106dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/giftStatusBg"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/gradient_orange_0_18_18_0"
+        android:maxWidth="240dp">
+
+        <TextView
+            android:id="@+id/giftTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/giftImg"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="解锁联系方式"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+       />
+
+        <TextView
+            android:id="@+id/giftAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/giftTitle"
+            android:layout_alignLeft="@id/giftTitle"
+            android:layout_marginTop="5dp"
+            android:text="200糖果"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/giftImg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_contact_send_gift" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@id/giftImg"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="14dp"
+        android:gravity="center_vertical"
+        android:text="糖果礼物"
+        android:textColor="#ffd2d3d5"
+        android:textSize="12sp" />
+</LinearLayout>

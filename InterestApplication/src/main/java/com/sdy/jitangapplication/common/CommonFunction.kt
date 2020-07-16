@@ -19,7 +19,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -33,6 +32,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.model.GiftStateBean
 import com.sdy.jitangapplication.model.SendTipBean
 import com.sdy.jitangapplication.model.UnlockCheckBean
@@ -91,13 +91,14 @@ object CommonFunction {
                             ChargeVipDialog(ChargeVipDialog.LOOK_VIDEO, context).show()
                         }
                         200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
-                            OpenPtVipDialog(
-                                context,
-                                OpenPtVipDialog.FROM_VIDEO_INTRODUCE,
-                                t.data?.isplatinumvip == true,
-                                t.data?.amount ?: 0,
-                                target_accid, gender
-                            ).show()
+                            VideoOpenPtVipDialog(context).show()
+//                            OpenPtVipDialog(
+//                                context,
+//                                OpenPtVipDialog.FROM_VIDEO_INTRODUCE,
+//                                t.data?.isplatinumvip == true,
+//                                t.data?.amount ?: 0,
+//                                target_accid, gender
+//                            ).show()
                         }
                         else -> {
                             toast(t.msg)
@@ -125,33 +126,31 @@ object CommonFunction {
      * 	201 拉起充值会员 206 是好友进聊天 200 拉起礼物列表
      */
     fun checkSendGift(context1: Context, target_accid: String) {
-        val loadingDialog = LoadingDialog(context1)
+        val loading = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
-            .checkSendCandy(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>() {
+            .checkChat(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
+            .excute(object : BaseSubscriber<BaseResp<ChatUpBean?>>() {
                 override fun onStart() {
                     super.onStart()
-                    loadingDialog.show()
+                    loading.show()
                 }
 
-                override fun onCompleted() {
-                    super.onCompleted()
-                    loadingDialog.dismiss()
-                }
-
-                override fun onNext(t: BaseResp<Any?>) {
+                override fun onNext(t: BaseResp<ChatUpBean?>) {
                     super.onNext(t)
                     when (t.code) {
                         200 -> {
-                            SendGiftBeFriendDialog(target_accid, context1).show()
+                            if (t.data != null)
+                                ChatUpOpenPtVipDialog(
+                                    context1,
+                                    target_accid,
+                                    ChatUpOpenPtVipDialog.TYPE_CHAT,
+                                    t.data!!
+                                ).show()
                         }
-                        201 -> {//需要充值会员
-                            ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context1).show()
-                        }
-                        206 -> {//已经是好友了
+                        206 -> {
                             ChatActivity.start(context1, target_accid)
                         }
-                        207 -> {//女性对男性搭讪
+                        207 -> { //女性对男性搭讪
                             //随机发送一条招呼文本消息
                             val msg = MessageBuilder.createTextMessage(
                                 target_accid,
@@ -178,83 +177,63 @@ object CommonFunction {
                             VerifyThenChatDialog(context1).show()
                         }
                     }
+
+                    loading.dismiss()
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
-                    loadingDialog.dismiss()
-                    if (e is BaseException) {
-                        TickDialog(context1).show()
-                    }
+                    loading.dismiss()
                 }
             })
     }
 
+
     /**
-     * 验证糖果解锁
-     * 		400 toast错误
-     * 		201 会员充值
-     * 		222 （铂金会员解锁成功/已经解锁过了 isnew_friend 是否新好友）
-     * 		200 amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+     * 验证联系方式解锁
+     * 	400 toast错误
+     * 	202 钻石会员充值
+     * 	222 （已经解锁过了）
+     * 	200 amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+     *
      */
     fun checkUnlockContact(context: Context, target_accid: String, gender: Int) {
-        if (!UserManager.isUserVip()) {
-            ChargeVipDialog(ChargeVipDialog.GET_CONTACT, context).show()
-        } else {
-            val loading = LoadingDialog(context)
-            RetrofitFactory.instance.create(Api::class.java)
-                .checkUnlockContact(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
-                .excute(object : BaseSubscriber<BaseResp<UnlockCheckBean?>>() {
-                    override fun onStart() {
-                        super.onStart()
-                        loading.show()
-                    }
+        val loading = LoadingDialog(context)
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkUnlockContact(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
+            .excute(object : BaseSubscriber<BaseResp<ChatUpBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
 
-                    override fun onNext(t: BaseResp<UnlockCheckBean?>) {
-                        super.onNext(t)
-                        when (t.code) {
-                            201 -> {
-                                ChargeVipDialog(
-                                    ChargeVipDialog.INFINITE_CHAT,
-                                    context
-                                ).show()
-                            }
-                            222 -> {//铂金会员解锁成功/已经解锁过了 isnew_friend 是否新好友
-//                                if (t.data?.isnew_friend == true) {
-//                                    sendMatchFriendMessage(target_accid)
-//                                } else {
-                                Handler().postDelayed({
-                                    ChatActivity.start(context, target_accid)
-                                }, 500L)
-
-//                            }
-                            }
-                            200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
-                                OpenPtVipDialog(
-                                    context,
-                                    OpenPtVipDialog.FROM_CONTACT,
-                                    t.data?.isplatinumvip == true,
-                                    t.data?.amount ?: 0,
-                                    target_accid, gender
-                                ).show()
-                            }
-                            else -> {
-                                toast(t.msg)
-                            }
+                override fun onNext(t: BaseResp<ChatUpBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+                            ChatUpOpenPtVipDialog(
+                                context,
+                                target_accid,
+                                ChatUpOpenPtVipDialog.TYPE_CONTACT,
+                                t.data!!
+                            ).show()
+                        }
+                        else -> {
+                            toast(t.msg)
                         }
                     }
+                }
 
-                    override fun onCompleted() {
-                        super.onCompleted()
-                        loading.dismiss()
-                    }
+                override fun onCompleted() {
+                    super.onCompleted()
+                    loading.dismiss()
+                }
 
-                    override fun onError(e: Throwable?) {
-                        super.onError(e)
-                        loading.dismiss()
-                    }
-                })
-        }
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loading.dismiss()
+                }
+            })
     }
 
     fun sendAccostTip(target_accid: String, tipContent: String = "回复对方消息自动领取搭讪礼物") {
@@ -549,7 +528,7 @@ object CommonFunction {
             || ActivityUtils.getTopActivity() is VerifyCodeActivity
         ) {//注册界面支付会员进入首页
             EventBus.getDefault().post(CloseDialogEvent())
-        }  else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
+        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
             EventBus.getDefault().post(PayLabelResultEvent(true))
         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())

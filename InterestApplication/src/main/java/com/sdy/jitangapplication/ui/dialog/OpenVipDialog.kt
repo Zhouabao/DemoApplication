@@ -34,7 +34,6 @@ import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
 import com.sdy.jitangapplication.ui.activity.ShareFriendsActivity
-import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_forever_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -288,8 +287,6 @@ class OpenVipDialog(
     private var chargeWayBeans: MutableList<ChargeWayBean> = mutableListOf()
     private var payways: MutableList<PaywayBean> = mutableListOf()
 
-
-    private val vipChargeAdapter by lazy { VipChargeAdapter() }
     private fun setPurchaseType() {
         if (chargeWayBeans.isNotEmpty()) {
             SpanUtils.with(originalPrice)

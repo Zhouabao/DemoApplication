@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
+import com.sdy.jitangapplication.model.ChatUpBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.model.SendTipBean;
@@ -62,11 +64,11 @@ import com.sdy.jitangapplication.nim.uikit.common.fragment.TFragment;
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
+import com.sdy.jitangapplication.ui.dialog.ChatUpOpenPtVipDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
-import com.sdy.jitangapplication.ui.dialog.UnlockChatWithCandyDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
 import com.sdy.jitangapplication.utils.UserManager;
@@ -107,9 +109,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     protected ChatMessageListPanelEx messageListPanel;
 
     private View rootView;
-    private TextView leftChatTimes, gotoVerifyBtn;
-    private LinearLayout messageActivityBottomLayout, verifyLl;
+    private TextView leftChatTimes, gotoVerifyBtn, unlockContactBtn;
+    private LinearLayout messageActivityBottomLayout, verifyLl, unlockContactLl;
     private FrameLayout unlockChatLl;
+    private ImageView contactIv;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -127,6 +130,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
         unlockChatLl = rootView.findViewById(R.id.unlockChatLl);
         verifyLl = rootView.findViewById(R.id.verifyLl);
+        unlockContactLl = rootView.findViewById(R.id.unlockContactLl);
+        unlockContactBtn = rootView.findViewById(R.id.unlockContactBtn);
+        contactIv = rootView.findViewById(R.id.contactIv);
 
         // 去认证
         gotoVerifyBtn.setOnClickListener(v -> {
@@ -138,7 +144,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         // 糖果门槛消费聊天
         unlockChatLl.setOnClickListener(v -> {
-            new UnlockChatWithCandyDialog(getActivity(), nimBean.getChatup_amount(), sessionId).show();
+            new ChatUpOpenPtVipDialog(getActivity(), sessionId, ChatUpOpenPtVipDialog.TYPE_LOCK_CHATUP,
+                    new ChatUpBean(nimBean.getChatup_amount(), nimBean.getPlat_cnt(), false, 0, "", 0,
+                            nimBean.getAvatar(), nimBean.getIsplatinum())).show();
+        });
+
+        // 解锁联系方式
+        unlockContactBtn.setOnClickListener(v -> {
+            CommonFunction.INSTANCE.checkUnlockContact(getActivity(), sessionId, 1);
         });
         return rootView;
     }
@@ -212,7 +225,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else {
             inputPanel.reload(container, customization);
         }
-
 
         registerObservers(true);
 
@@ -375,9 +387,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         }
     }
 
-
-
-
     private void appendPushConfig(IMMessage message) {
         CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
         if (customConfig == null) {
@@ -524,6 +533,24 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             unlockChatLl.setVisibility(View.VISIBLE);
         } else {
             unlockChatLl.setVisibility(View.GONE);
+        }
+
+        // 显示解锁联系方式
+        // 0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
+        if (nimBean.getHasContact() != 0 && !nimBean.isLockedContact()) {
+            unlockContactLl.setVisibility(View.VISIBLE);
+            if (nimBean.getHasContact() == 1) {
+                contactIv.setImageResource(R.drawable.icon_phone_circle);
+                unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_15dp);
+            } else if (nimBean.getHasContact() == 2) {
+                contactIv.setImageResource(R.drawable.icon_wechat_circle);
+                unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_green_15);
+            } else if (nimBean.getHasContact() == 3) {
+                contactIv.setImageResource(R.drawable.icon_qq_circle);
+                unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_15);
+            }
+        } else {
+            unlockContactLl.setVisibility(View.GONE);
         }
 
         EventBus.getDefault().post(new NimHeadEvent(nimBean, nimBean.getMy_gender() == 2 && !nimBean.getMy_isfaced()));

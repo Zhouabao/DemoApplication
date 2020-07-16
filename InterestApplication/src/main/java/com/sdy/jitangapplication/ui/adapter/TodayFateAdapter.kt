@@ -36,11 +36,9 @@ class TodayFateAdapter :
         itemView.userVerify.isVisible = item.isfaced == 1
         itemView.userIntroduceVideoBtn.isVisible = item.mv_btn
 
-        itemView.userVip.isVisible = item.isvip || item.isplatinumvip
+        itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            itemView.userVip.setImageResource(R.drawable.icon_vip)
         }
         if (item.intention_title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false
