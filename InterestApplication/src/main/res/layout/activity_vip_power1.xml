@@ -25,7 +25,7 @@
         android:layout_height="0dp"
         android:focusableInTouchMode="true"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/seemoreBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llTitle">
@@ -100,12 +100,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    tools:text="可为你节省200糖果，约合100元"
                     android:textColor="#ffffffff"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/vipPowerAvator"
                     app:layout_constraintLeft_toLeftOf="@id/vipPowerNickname"
-                    app:layout_constraintTop_toBottomOf="@id/vipPowerNickname" />
+                    app:layout_constraintTop_toBottomOf="@id/vipPowerNickname"
+                    tools:text="可为你节省200糖果，约合100元" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -184,7 +184,6 @@
                 android:id="@+id/vipPowerRv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:overScrollMode="never"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -192,8 +191,22 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/wechatPayBtn" />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/seemoreBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:drawableLeft="@drawable/icon_more_blue_down"
+        android:text="往下滑动查看更多"
+        android:textColor="#ffb0b2b6"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -140,8 +140,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 val total = linearLayoutManager.itemCount
                 if (lastVisible >= total - 5 && dy > 0) {
                     if (!isLoadingMore) {
-                        onLoadMore(refreshPeopleNearby)
-                        isLoadingMore = true
+                        if (adapter.data.size == Constants.PAGESIZE * page) {
+                            onLoadMore(refreshPeopleNearby)
+                            isLoadingMore = true
+                        } else {
+                            refreshPeopleNearby.finishLoadMoreWithNoMoreData()
+                        }
                     }
                 }
             }

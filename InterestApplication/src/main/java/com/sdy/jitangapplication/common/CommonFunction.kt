@@ -528,10 +528,6 @@ object CommonFunction {
             || ActivityUtils.getTopActivity() is VerifyCodeActivity
         ) {//注册界面支付会员进入首页
             EventBus.getDefault().post(CloseDialogEvent())
-        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
-            EventBus.getDefault().post(PayLabelResultEvent(true))
-        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
-            EventBus.getDefault().post(UpdateMyLabelEvent())
         } else if (ActivityUtils.getTopActivity() is IndexChoicenessActivity) {//购买置顶券
             EventBus.getDefault().post(UpdateTicketDataEvent())
         } else if (ActivityUtils.getTopActivity() is MainActivity) {

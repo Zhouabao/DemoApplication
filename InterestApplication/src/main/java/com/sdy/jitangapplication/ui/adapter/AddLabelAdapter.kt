@@ -10,7 +10,6 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.CorrectDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
@@ -38,9 +37,11 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             for (decoration in 0 until helper.itemView.labelTypeRv.itemDecorationCount) {
                 helper.itemView.labelTypeRv.removeItemDecorationAt(decoration)
             }
-            helper.itemView.labelTypeRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+            helper.itemView.labelTypeRv.layoutManager =
+                LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         } else {
-            helper.itemView.labelTypeRv.layoutManager = GridLayoutManager(mContext, 3, RecyclerView.VERTICAL, false)
+            helper.itemView.labelTypeRv.layoutManager =
+                GridLayoutManager(mContext, 3, RecyclerView.VERTICAL, false)
         }
         helper.itemView.labelTypeRv.adapter = labelAdapter
         labelAdapter.setNewData(item.son)
@@ -77,21 +78,15 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 return@setOnItemClickListener
             }
 
-            if (data.state == 4 || data.state == 7 || data.state == 9) {
-                parentPosition = helper.layoutPosition
-                childPosition = position
-                purchaseId = labelAdapter.data[position].id
-                ChargeLabelDialog(mContext, labelAdapter.data[position].id).show()
-            } else {//1 3 5 6 8  2 10
-                labelAdapter.data[position].checked = !labelAdapter.data[position].checked
-                for (index in 0 until mData.size) {
-                    for (tdata1 in mData[index].son) {
-                        if (tdata1.id == labelAdapter.data[position].id) {
-                            tdata1.checked = labelAdapter.data[position].checked
-                        }
+            //1 3 5 6 8  2 10
+            labelAdapter.data[position].checked = !labelAdapter.data[position].checked
+            for (index in 0 until mData.size) {
+                for (tdata1 in mData[index].son) {
+                    if (tdata1.id == labelAdapter.data[position].id) {
+                        tdata1.checked = labelAdapter.data[position].checked
                     }
-                    notifyDataSetChanged()
                 }
+                notifyDataSetChanged()
             }
         }
     }

@@ -346,12 +346,12 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                                         TYPE_ACCOUNT_NORMAL
                                     ) == TYPE_ACCOUNT_DANGER
                                 ) {
-                                }
-                                EventBus.getDefault().postSticky(
-                                    AccountDangerEvent(
-                                        AccountDangerDialog.VERIFY_ING
+                                    EventBus.getDefault().postSticky(
+                                        AccountDangerEvent(
+                                            AccountDangerDialog.VERIFY_ING
+                                        )
                                     )
-                                )
+                                }
                             }
                             403 -> UserManager.startToLogin(context as Activity)
                             else -> {

@@ -13,7 +13,6 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.PayLabelResultEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
@@ -239,28 +238,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPayLabelResultEvent(event: PayLabelResultEvent) {
-        if (event.success) {
-            //1.无需付费.未添加  3.无需付费.已删除
-            //5.无需付费.男性付费
-            //6.无需付费.女性付费
-            //8.需要付费.(已删除,未加入).未过期限
-            //2无需付费.已经添加  10.需要付费.已经添加
-            //4需要付费.付费进入   9.需要付费.已删除.过期   7.需要付费.已过期
-
-            for (data in labelListAdapter.data) {
-                for (data1 in data.son) {
-                    if (data1.id == labelListAdapter.purchaseId) {
-                        data1.checked = event.success
-                        data1.state = 8
-                    }
-                }
-            }
-            labelListAdapter.notifyDataSetChanged()
-        }
-//            labelListAdapter.data
-    }
 
 
 }

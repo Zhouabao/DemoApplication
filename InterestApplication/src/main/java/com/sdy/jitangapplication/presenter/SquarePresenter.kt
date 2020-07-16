@@ -9,7 +9,6 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.presenter.view.SquareView
-import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -43,13 +42,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
                         super.onNext(t)
                         if (t.code == 200) {
                             mView.onGetSquareListResult(t.data, true, isRefresh)
-                        } else if (t.code == 410) {
-                            ChargeLabelDialog(
-                                context,
-                                params["tag_id"] as Int,
-                                ChargeLabelDialog.FROM_SQUARE
-                            ).show()
-                            mView.onGetSquareListResult(t.data, true, isRefresh)
                         } else {
                             mView.onGetSquareListResult(t.data, false, isRefresh)
                         }
@@ -76,13 +68,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     override fun onNext(t: BaseResp<SquareListBean?>) {
                         super.onNext(t)
                         if (t.code == 200) {
-                            mView.onGetSquareListResult(t.data, true, isRefresh)
-                        } else if (t.code == 410) {
-                            ChargeLabelDialog(
-                                context,
-                                params["tag_id"] as Int,
-                                ChargeLabelDialog.FROM_SQUARE
-                            ).show()
                             mView.onGetSquareListResult(t.data, true, isRefresh)
                         } else {
                             mView.onGetSquareListResult(t.data, false, isRefresh)

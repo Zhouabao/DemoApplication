@@ -17,7 +17,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -114,14 +114,16 @@
                                 android:layout_height="match_parent"
                                 app:borderRadius="10dp"
                                 app:type="round" />
+
                             <com.github.mmin18.widget.RealtimeBlurView
                                 android:id="@+id/userVideoCoverBg"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/shape_transparent_10dp"
                                 android:visibility="gone"
                                 app:realtimeBlurRadius="10dp"
-                                android:background="@drawable/shape_transparent_10dp"
                                 app:realtimeOverlayColor="#26000000" />
+
                             <ImageView
                                 android:id="@+id/userVideoPlayBtn"
                                 android:layout_width="wrap_content"
@@ -562,39 +564,30 @@
                     android:drawableLeft="@drawable/icon_wechat_detail"
                     android:gravity="center"
                     android:paddingLeft="36dp"
-                    android:paddingTop="15dp"
                     android:paddingRight="36dp"
+                    android:paddingTop="15dp"
                     android:paddingBottom="15dp"
                     android:text="联系方式"
                     android:textColor="#ffffffff"
                     android:textSize="16sp"
                     android:visibility="visible" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/detailUserChatBtn"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
-                    android:background="@drawable/gradient_rectangle_orange_27dp"
-                    android:drawableLeft="@drawable/icon_chat_detail"
-                    android:gravity="center"
-                    android:paddingLeft="36dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="36dp"
-                    android:paddingBottom="15dp"
-                    android:text="私聊"
-                    android:textColor="#ffffffff"
-                    android:textSize="16sp" />
+                    android:src="@drawable/icon_match_chat_small" />
 
             </LinearLayout>
 
             <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
                 android:id="@+id/matchUserVideo"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="gone" />
         </FrameLayout>
 
 

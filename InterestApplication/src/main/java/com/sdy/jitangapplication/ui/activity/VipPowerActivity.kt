@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alipay.sdk.app.PayTask
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SnackbarUtils
-import com.google.android.flexbox.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -69,6 +68,23 @@ class VipPowerActivity() :
         wechatPayBtn.setOnClickListener(this)
         zhiPayBtn.setOnClickListener(this)
 
+        vipPowerRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                //滑动的数目小于总数时，显示下滑更多
+                val layoutManager = vipChargeRv.layoutManager as GridLayoutManager
+                val total = layoutManager.findLastCompletelyVisibleItemPosition()
+                val visibleCount = layoutManager.findFirstVisibleItemPosition()
+                seemoreBtn.isVisible = visibleCount < total
+
+            }
+
+        })
     }
 
 
@@ -124,9 +140,10 @@ class VipPowerActivity() :
         }
 
         val vipPowerAdapter = VipPowerAdapter(VipPowerBean.TYPE_PT_VIP)
-        val manager = FlexboxLayoutManager(this!!, FlexDirection.ROW, FlexWrap.WRAP)
-        manager.alignItems = AlignItems.CENTER
-        manager.justifyContent = JustifyContent.CENTER
+        val manager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
+//        val manager = FlexboxLayoutManager(this!!, FlexDirection.ROW, FlexWrap.WRAP)
+//        manager.alignItems = AlignItems.CENTER
+//        manager.justifyContent = JustifyContent.CENTER
         vipPowerRv.layoutManager = manager
         vipPowerRv.adapter = vipPowerAdapter
 

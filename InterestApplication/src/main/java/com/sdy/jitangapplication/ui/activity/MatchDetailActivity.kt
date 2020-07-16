@@ -334,6 +334,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     null,
                     null
                 )
+                detailUserChatBtn.setImageResource(R.drawable.icon_match_chat_small)
             }
             2 -> {
                 contactCl.isVisible = true
@@ -343,6 +344,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     null,
                     null
                 )
+                detailUserChatBtn.setImageResource(R.drawable.icon_match_chat_small)
             }
             3 -> {
                 contactCl.isVisible = true
@@ -352,12 +354,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     null,
                     null
                 )
+                detailUserChatBtn.setImageResource(R.drawable.icon_match_chat_small)
             }
             else -> {
-                val params = detailUserChatBtn.layoutParams as LinearLayout.LayoutParams
-                params.width = SizeUtils.dp2px(260F)
-                detailUserChatBtn.layoutParams = params
                 contactCl.isVisible = false
+                detailUserChatBtn.setImageResource(R.drawable.icon_match_chat_big)
             }
         }
 
@@ -447,6 +448,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //认证用户,保证真实
         //认证男神,快撩他吧
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
+        detailUserVerify.setCompoundDrawablesWithIntrinsicBounds(
+            resources.getDrawable(
+                if (matchBean!!.gender == 1) {
+                    R.drawable.icon_gender_man_detail
+                } else {
+                    R.drawable.icon_gender_woman_detail
+                }
+            ), null, null, null
+        )
 
 
         //用户照片

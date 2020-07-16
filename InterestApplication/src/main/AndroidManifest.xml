@@ -88,39 +88,71 @@
 
     <uses-permission android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE" /> <!-- oppo推送配置权限 -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
-    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
+
     <application
         android:name=".common.MyApplication"
         android:allowBackup="true"
+        android:extractNativeLibs="true"
         android:icon="@drawable/icon_logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:resizeableActivity="false"
         android:roundIcon="@drawable/icon_logo"
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
-        android:requestLegacyExternalStorage="true"
-        android:extractNativeLibs="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.WomanLivingActivity"></activity>
-        <activity android:name=".ui.activity.RigisterGenderActivity" />
-        <activity android:name=".ui.activity.VideoTrimmerActivity" />
-        <activity android:name=".ui.activity.ShareFriendsActivity" />
-        <activity android:name=".ui.activity.CandyRechargeActivity" />
-        <activity android:name=".ui.activity.IndexChoicenessActivity" />
-        <activity android:name=".ui.activity.VideoVerifyConfirmActivity" />
-        <activity android:name=".ui.activity.AccostListActivity" />
-        <activity android:name=".ui.activity.ForeverVipActivity" />
-        <activity android:name=".ui.activity.FemalePowerActivity" />
-        <activity android:name=".ui.activity.QuickSignActivity" />
-        <activity android:name=".ui.activity.ChangeUserContactActivity" />
+        <activity
+            android:name=".ui.activity.WomanLivingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.RigisterGenderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VideoTrimmerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ShareFriendsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CandyRechargeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.IndexChoicenessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VideoVerifyConfirmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AccostListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ForeverVipActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FemalePowerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.QuickSignActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChangeUserContactActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.GetRelationshipActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ui.activity.GetMoreMatchActivity" />
-        <activity android:name=".ui.activity.RegisterInfoActivity" />
-        <activity android:name=".ui.activity.SomeoneGetGiftActivity" />
+        <activity
+            android:name=".ui.activity.GetMoreMatchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.RegisterInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SomeoneGetGiftActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.BindAlipayAccountActivity"
             android:screenOrientation="portrait" />
@@ -236,43 +268,43 @@
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/LightBaseTheme"/>
+            android:theme="@style/LightBaseTheme" />
 
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+            android:theme="@style/ImagePickerTheme.BlackStatusBar" />
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+            android:theme="@style/ImagePickerTheme.BlackStatusBar" />
 
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImagePreviewRetakeActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+            android:theme="@style/ImagePickerTheme.BlackStatusBar" />
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageTakeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/ImagePickerTheme.BlackStatusBar"/>
+            android:theme="@style/ImagePickerTheme.BlackStatusBar" />
         <activity
             android:name=".nim.uikit.common.media.imagepicker.video.GLVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/VideoTheme"/>
+            android:theme="@style/VideoTheme" />
         <activity
             android:name=".nim.uikit.common.media.imagepicker.video.GLVideoConfirmActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/VideoTheme"/>
+            android:theme="@style/VideoTheme" />
 
         <activity
             android:name=".nim.uikit.common.media.imagepicker.camera.CaptureActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 
         <activity
@@ -579,7 +611,7 @@
             android:name="com.netease.nimlib.mixpush.oppo.OppoAppPushService"
             android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
 
@@ -607,12 +639,6 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
-
-
-
-
-
-
 
 
     </application>
