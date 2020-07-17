@@ -17,7 +17,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -390,8 +390,9 @@
                             android:textColor="#ff789eff"
                             android:textSize="14sp"
                             android:visibility="gone"
+                            android:layout_marginRight="15dp"
                             app:layout_constraintBottom_toBottomOf="@id/tag1"
-                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tag1" />
 
                         <androidx.recyclerview.widget.RecyclerView

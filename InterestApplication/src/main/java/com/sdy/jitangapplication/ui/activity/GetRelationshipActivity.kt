@@ -134,11 +134,11 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
                 startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
             } else {
                 moreMatchBean?.people_amount = data?.people_amount ?: 0
-                OpenVipDialog(
+                OpenVipActivity.start(
                     this,
                     moreMatchBean,
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                ).show()
+                    OpenVipActivity.FROM_REGISTER_OPEN_VIP
+                )
             }
 
 

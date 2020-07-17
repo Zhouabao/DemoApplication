@@ -84,7 +84,7 @@ class PurchaseIndexChoicenessDialog(val context1: Context, val ticket: Ticket?) 
                         dismiss()
                         EventBus.getDefault().post(UpdateMyTicketEvent(1))
                     } else if (t.code == 201) {
-                        OpenVipDialog(context1).show()
+                        OpenVipActivity.start(context1)
                     } else if (t.code == 419) {
                         AlertCandyEnoughDialog(
                             context1,

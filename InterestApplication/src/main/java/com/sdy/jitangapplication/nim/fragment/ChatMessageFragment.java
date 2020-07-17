@@ -67,7 +67,7 @@ import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.ChatUpOpenPtVipDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
-import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
+import com.sdy.jitangapplication.ui.dialog.OpenVipActivity;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
@@ -341,7 +341,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else if (canSendMsg()) {
             // 男性,非会员 弹充值界面
             if (nimBean.getForce_isvip()) {
-                new OpenVipDialog(getActivity(), null, OpenVipDialog.FROM_P2P_CHAT, -1).show();
+                OpenVipActivity.Companion.start(getActivity(), null, OpenVipActivity.FROM_P2P_CHAT, -1);
             } else {
                 // if (message.getMsgType() == MsgTypeEnum.text) {
                 sendMsgRequest(message, sessionId);

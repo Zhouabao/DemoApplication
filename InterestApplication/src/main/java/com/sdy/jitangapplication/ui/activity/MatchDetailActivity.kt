@@ -469,6 +469,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         photosAdapter.notifyDataSetChanged()
         setViewpagerAndIndicator()
 
+
     }
 
     /**

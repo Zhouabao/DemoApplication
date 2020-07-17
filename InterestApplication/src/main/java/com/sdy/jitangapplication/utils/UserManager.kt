@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.nim.uikit.common.util.string.MD5
 import com.sdy.jitangapplication.ui.activity.*
-import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
+import com.sdy.jitangapplication.ui.dialog.OpenVipActivity
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.util.*
@@ -607,15 +607,15 @@ object UserManager {
                     )
                 )
             } else if (data.extra_data?.want_steps && registerFileBean?.threshold == true && !data.extra_data?.isvip) {//门槛付费
-                OpenVipDialog(
+                OpenVipActivity.start(
                     context, MoreMatchBean(
                         data?.extra_data?.city_name,
                         data?.extra_data?.gender_str,
                         data?.extra_data?.people_amount,
                         share_btn = data?.extra_data?.share_btn
                     ),
-                    OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                ).show()
+                    OpenVipActivity.FROM_REGISTER_OPEN_VIP
+                )
             } else if (data.userinfo.nickname.isNullOrEmpty()
                 || data.userinfo.birth == 0
                 || data.userinfo.avatar.isNullOrEmpty()

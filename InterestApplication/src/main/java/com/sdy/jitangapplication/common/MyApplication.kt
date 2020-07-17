@@ -19,6 +19,9 @@ import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.StatusCode
+import com.netease.nimlib.sdk.auth.AuthServiceObserver
+import com.netease.nimlib.sdk.auth.OnlineClient
 import com.netease.nimlib.sdk.mixpush.NIMPushClient
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.model.CustomNotification
@@ -46,6 +49,7 @@ import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.ui.dialog.ContactNotPassDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
@@ -94,6 +98,22 @@ class MyApplication : BaseApplication() {
 
     }
 
+    private val onLineClient: Observer<List<OnlineClient>> = Observer {
+        if (it == null || it.isEmpty()) {
+            return@Observer
+        } else {
+            TickDialog(applicationContext).show()
+        }
+
+    }
+
+    private val userStatusObserver: Observer<StatusCode> by lazy {
+        Observer<StatusCode> {
+            if (it.wontAutoLogin()) {
+                TickDialog(ActivityUtils.getTopActivity()).show()
+            }
+        }
+    }
 
     /**
      * 系统通知监听
@@ -235,6 +255,9 @@ class MyApplication : BaseApplication() {
                                 SnackBarFragment(customerMsgBean),
                                 android.R.id.content
                             )
+
+                    }
+                    106 -> {//门槛支付成功
 
                     }
 
@@ -431,6 +454,12 @@ class MyApplication : BaseApplication() {
             //自定义通知监听
             NIMClient.getService(MsgServiceObserve::class.java)
                 .observeCustomNotification(customNotificationObserver, true)
+            //多端互踢
+            NIMClient.getService(AuthServiceObserver::class.java)
+                .observeOtherClients(onLineClient, true)
+            //在线状态
+            NIMClient.getService(AuthServiceObserver::class.java)
+                .observeOnlineStatus(userStatusObserver, true)
             //云信相关业务初始化
             NIMInitManager.getInstance().init(true)
 
