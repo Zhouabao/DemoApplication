@@ -327,11 +327,11 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                 override fun onNext(t: BaseResp<Any?>) {
                     loadingDialog.dismiss()
                     if (type == TYPE_LIVE_CAPTURE) {
-                        OpenVipDialog(
+                        OpenVipActivity.start(
                             this@IDVerifyActivity,
                             intent.getSerializableExtra("morematchbean") as MoreMatchBean?,
-                            OpenVipDialog.FROM_REGISTER_OPEN_VIP
-                        ).show()
+                            OpenVipActivity.FROM_REGISTER_OPEN_VIP
+                        )
 
                     } else
                         when (t.code) {

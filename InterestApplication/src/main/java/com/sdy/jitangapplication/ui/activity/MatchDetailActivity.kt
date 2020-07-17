@@ -221,12 +221,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         }
 
-        //
+        //点击播放视频
         userVideoPlayBtn.clickWithTrigger {
-            //初始化url
-            matchUserVideo.isVisible = true
-            CommonFunction.initVideo(this, matchUserVideo, matchBean!!.mv_url)
-            matchUserVideo.startPlayLogic()
+            CommonFunction.checkUnlockIntroduceVideo(this, matchBean!!.accid)
         }
 
         matchUserVideo.backButton.clickWithTrigger {
@@ -363,8 +360,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
         userVideoCl.isVisible = matchBean!!.mv_btn
-
-        if (UserManager.isUserVip())
+        if (matchBean!!.myisplatinumvip)
             GlideUtil.loadImg(this, UserManager.getAvator(), userVideoCover)
         else
             Glide.with(this)

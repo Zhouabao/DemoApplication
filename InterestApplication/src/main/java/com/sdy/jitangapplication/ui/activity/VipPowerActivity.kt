@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -68,23 +69,20 @@ class VipPowerActivity() :
         wechatPayBtn.setOnClickListener(this)
         zhiPayBtn.setOnClickListener(this)
 
-        vipPowerRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
+        rvVipPower.setOnScrollChangeListener { v: NestedScrollView, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            val childAt = v.getChildAt(0)
+            val childHeight = childAt.height
+            val myHeight = v.height
+            if (scrollY + myHeight < childHeight) {
+                seemoreBtn.visibility = View.VISIBLE
+            } else {
+                seemoreBtn.visibility = View.INVISIBLE
             }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                //滑动的数目小于总数时，显示下滑更多
-                val layoutManager = vipChargeRv.layoutManager as GridLayoutManager
-                val total = layoutManager.findLastCompletelyVisibleItemPosition()
-                val visibleCount = layoutManager.findFirstVisibleItemPosition()
-                seemoreBtn.isVisible = visibleCount < total
-
-            }
-
-        })
+            Log.d(
+                "rvVipPower",
+                "====childHeight=${childHeight},====scrollY=${scrollY},====myHeight=${myHeight}"
+            )
+        }
     }
 
 

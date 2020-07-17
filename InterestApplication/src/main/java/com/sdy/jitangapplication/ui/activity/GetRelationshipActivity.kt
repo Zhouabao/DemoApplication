@@ -13,7 +13,7 @@ import com.sdy.jitangapplication.model.MyTapsBean
 import com.sdy.jitangapplication.presenter.GetRelationshipPresenter
 import com.sdy.jitangapplication.presenter.view.GetRelationshipView
 import com.sdy.jitangapplication.ui.adapter.GetRelationshipVpAdapter
-import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
+import com.sdy.jitangapplication.ui.dialog.OpenVipActivity
 import kotlinx.android.synthetic.main.activity_get_relationship.*
 import org.jetbrains.anko.startActivity
 

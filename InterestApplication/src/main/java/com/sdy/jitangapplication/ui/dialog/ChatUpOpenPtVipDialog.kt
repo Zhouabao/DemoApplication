@@ -440,7 +440,7 @@ class ChatUpOpenPtVipDialog(
                     super.onNext(t)
                     if (t.code == 201) {
                         loading.dismiss()
-                        OpenVipDialog(context1, null).show()
+                        OpenVipActivity.start(context1, null)
                     } else if (t.code == 200) {
                         if (ActivityUtils.getTopActivity() is MatchDetailActivity) {
                             EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
@@ -493,7 +493,7 @@ class ChatUpOpenPtVipDialog(
                         EventBus.getDefault().post(UpdateHiEvent())
                         dismiss()
                     } else if (t.code == 201) {
-                        OpenVipDialog(context1).show()
+                        OpenVipActivity.start(context1)
                         dismiss()
                     } else if (t.code == 419) {
                         AlertCandyEnoughDialog(

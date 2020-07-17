@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="content">
+    app:msv_viewState="loading">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -143,29 +143,14 @@
 
                         <ImageView
                             android:id="@+id/contactWayMan"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_marginLeft="5dp"
                             android:src="@drawable/icon_female_contact_no"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
                             app:layout_constraintLeft_toRightOf="@id/userName"
                             app:layout_constraintTop_toTopOf="@id/userName" />
 
-
-                        <TextView
-                            android:id="@+id/verifyState"
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:background="@drawable/shape_rectangle_gray_divider_11dp"
-                            android:gravity="center"
-                            android:paddingLeft="22dp"
-                            android:paddingRight="6dp"
-                            android:text="立即认证"
-                            android:textColor="#ffc5c6c8"
-                            android:textSize="10sp"
-                            app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                            app:layout_constraintLeft_toLeftOf="@id/userVerify"
-                            app:layout_constraintTop_toTopOf="@id/userVerify" />
 
                         <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/userVerify"
@@ -263,6 +248,7 @@
                                 android:src="@drawable/icon_pt_vip_me" />
 
                             <TextView
+                                android:id="@+id/vipLevelSaveCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"

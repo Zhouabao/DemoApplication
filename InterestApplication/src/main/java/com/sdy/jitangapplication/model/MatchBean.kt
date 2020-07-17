@@ -47,6 +47,7 @@ data class MatchBean(
     var intention_icon: String = "",
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
+    var myisplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
     var age: Int? = 0,

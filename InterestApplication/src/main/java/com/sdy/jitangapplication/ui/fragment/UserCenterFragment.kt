@@ -59,7 +59,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.startActivityForResult
-import org.jetbrains.anko.textColor
 import java.util.*
 import kotlin.math.abs
 
@@ -119,7 +118,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
-        verifyState.setOnClickListener(this)
         femalePowerLl.setOnClickListener(this)
         candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
 
@@ -153,14 +151,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             userSign.visibility = View.VISIBLE
 
             userVerify.isVisible = true
-            verifyState.isVisible = true
 
         } else {
             femalePowerLl.isVisible = true
             userSign.visibility = View.INVISIBLE
 
             userVerify.isVisible = false
-            verifyState.isVisible = false
         }
 
         initFragment()
@@ -333,39 +329,33 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     private fun checkVerify() {
         if (UserManager.getGender() == 2) {
             userVerify.isVisible = false
-            verifyState.isVisible = false
         } else {
             userVerify.isVisible = true
-            verifyState.isVisible = true
             if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
                 userVerify.imageAssetsFolder = "images_verify"
+                userVerify.setImageResource(R.drawable.icon_verify_pass)
                 userVerify.setAnimation("data_verify.json")
                 userVerify.playAnimation()
-                verifyState.text = "已认证"
-                verifyState.textColor = resources.getColor(R.color.colorWhite)
-                verifyState.setBackgroundResource(R.drawable.gradient_blue_11dp)
             } else if (userInfoBean?.userinfo?.isfaced == 2) { //审核中
                 userVerify.setImageResource(R.drawable.icon_verify_not)
-                verifyState.text = "审核中"
-                verifyState.textColor = Color.parseColor("#FFC5C6C8")
-                verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
             } else {
                 userVerify.setImageResource(R.drawable.icon_verify_not)
-                verifyState.text = "立即认证"
-                verifyState.textColor = Color.parseColor("#FFC5C6C8")
-                verifyState.setBackgroundResource(R.drawable.shape_rectangle_gray_divider_11dp)
             }
         }
 
     }
 
     //是否认证
+    //todo 开通节省多少糖果
     private fun checkVip() {
         if (userInfoBean?.userinfo?.isplatinum == false) {
             isVipPowerBtn.text = "升级会员"
+            vipLevelSaveCount.text = "钻石会员丨开通节省300个糖果"
         } else {
             EventBus.getDefault().post(UpdateSameCityVipEvent())
             isVipPowerBtn.text = "续费会员"
+            vipLevelSaveCount.text = "钻石会员丨已为你节省300个糖果"
+
         }
     }
 
@@ -439,7 +429,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             }
             //认证中心
             ////0 未认证且无视频 1 已认证的 2 认证中 3 认证被拒绝 需要更换头像认证
-            R.id.userVerify, R.id.verifyState -> {
+            R.id.userVerify -> {
                 when (userInfoBean?.userinfo?.isfaced) {
                     1 -> {
                         CommonFunction.toast("您已通过认证")
