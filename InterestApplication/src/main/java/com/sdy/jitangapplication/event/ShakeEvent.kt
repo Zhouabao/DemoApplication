@@ -10,6 +10,8 @@ class UpdateMyCandyAmountEvent(val reduceAmout: Int)
 
 class CloseDialogEvent()
 
+class CloseRegVipEvent()
+
 //更新首页兴趣列表数据
 class UpdateFindByTagEvent()
 

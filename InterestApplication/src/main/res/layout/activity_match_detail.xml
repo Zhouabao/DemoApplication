@@ -248,6 +248,7 @@
                             android:layout_width="0dp"
                             android:layout_height="22dp"
                             android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
                             android:drawableLeft="@drawable/icon_online_state"
                             android:drawablePadding="3dp"
                             android:ellipsize="end"
@@ -256,7 +257,7 @@
                             android:textColor="#FF696E73"
                             android:textSize="13sp"
                             app:layout_constraintLeft_toRightOf="@id/detailUserDistance"
-                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
                             tools:text="十分钟前在线" />
 
@@ -265,8 +266,9 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="20dp"
+                            android:layout_marginRight="15dp"
                             android:background="@drawable/rectangle_transparent_contact"
-                            app:layout_constraintEnd_toEndOf="@id/detailUserSign"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@id/detailUserName"
                             app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge">
 
@@ -307,8 +309,9 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="20dp"
+                            android:layout_marginRight="15dp"
                             android:background="@drawable/rectangle_transparent_contact"
-                            app:layout_constraintEnd_toEndOf="@id/detailUserSign"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@id/detailUserName"
                             app:layout_constraintTop_toBottomOf="@id/contactCl">
 
@@ -370,7 +373,6 @@
                             tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。" />
 
 
-
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/detailUserInformationRv"
                             android:layout_width="0dp"
@@ -405,8 +407,9 @@
                             android:textColor="#ff789eff"
                             android:textSize="14sp"
                             android:visibility="gone"
+                            android:layout_marginRight="15dp"
                             app:layout_constraintBottom_toBottomOf="@id/tag1"
-                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tag1" />
 
                         <androidx.recyclerview.widget.RecyclerView

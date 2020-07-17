@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -18,7 +19,7 @@ import org.jetbrains.anko.toast
 /**
  * 手机登录界面
  */
-class PhoneActivity : BaseActivity(), View.OnClickListener {
+class PhoneActivity : BaseActivity(), OnLazyClickListener {
 
     private var wxcode: String = ""
     private var login_type: String = "1"
@@ -112,7 +113,7 @@ class PhoneActivity : BaseActivity(), View.OnClickListener {
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.btnBack -> {
                 finish()
@@ -136,5 +137,4 @@ class PhoneActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
 }

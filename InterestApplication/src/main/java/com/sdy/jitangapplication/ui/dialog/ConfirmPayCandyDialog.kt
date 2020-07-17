@@ -67,6 +67,8 @@ class ConfirmPayCandyDialog(
         params?.windowAnimations = R.style.MyDialogCenterAnimation
 
         window?.attributes = params
+
+        setCanceledOnTouchOutside(false)
     }
 
 
@@ -108,6 +110,7 @@ class ConfirmPayCandyDialog(
     //product_id 	是	购买产品id	展开
     //order_id		是	非必串参数。例如同一商品切换支付方式就需要传
     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
+    private val loadingDialog by lazy { LoadingDialog(myContext) }
     private fun createOrder(payment_type: Int) {
         val params = hashMapOf<String, Any>()
         for (payway in payways) {
@@ -120,7 +123,12 @@ class ConfirmPayCandyDialog(
         RetrofitFactory.instance.create(Api::class.java)
             .createOrder(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<PayBean>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
                 override fun onNext(t: BaseResp<PayBean>) {
+                    loadingDialog.dismiss()
                     if (t.code == 200) {
                         //发起微信
                         start2Pay(payment_type, t.data)
@@ -130,6 +138,7 @@ class ConfirmPayCandyDialog(
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     CommonFunction.toast(CommonFunction.getErrorMsg(myContext))
                 }
             })

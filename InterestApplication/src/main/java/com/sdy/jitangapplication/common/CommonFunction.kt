@@ -544,12 +544,9 @@ object CommonFunction {
     }
 
     fun payResultNotify(context: Context) {
-        if (ActivityUtils.getTopActivity() is RegisterInfoActivity
-            || ActivityUtils.getTopActivity() is GetRelationshipActivity
-            || ActivityUtils.getTopActivity() is VerifyCodeActivity
-        ) {//注册界面支付会员进入首页
-            EventBus.getDefault().post(CloseDialogEvent())
-        }  else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
+        if (ActivityUtils.getTopActivity() is OpenVipActivity) {//注册界面支付会员进入首页
+            EventBus.getDefault().post(CloseRegVipEvent())
+        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
             EventBus.getDefault().post(PayLabelResultEvent(true))
         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())
@@ -562,11 +559,7 @@ object CommonFunction {
                 context.startActivity<MainActivity>()
             }
         }
-        if (
-            ActivityUtils.getTopActivity() !is RegisterInfoActivity
-            && ActivityUtils.getTopActivity() !is GetRelationshipActivity
-            && ActivityUtils.getTopActivity() !is VerifyCodeActivity
-        ) {
+        if (ActivityUtils.getTopActivity() !is OpenVipActivity) {
             EventBus.getDefault().postSticky(RefreshEvent(true))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
             EventBus.getDefault().post(CloseDialogEvent())

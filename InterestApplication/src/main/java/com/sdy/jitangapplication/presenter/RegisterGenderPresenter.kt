@@ -32,13 +32,9 @@ class RegisterGenderPresenter : BasePresenter<RegisterGenderView>() {
                     loadingDialg.show()
                 }
 
-                override fun onCompleted() {
-                    super.onCompleted()
-                    loadingDialg.dismiss()
-                }
-
                 override fun onNext(t: BaseResp<MoreMatchBean?>) {
                     super.onNext(t)
+                    loadingDialg.dismiss()
                     if (t.code == 200) {
                         mView.onUploadUserInfoResult(true, t.data)
                     } else {

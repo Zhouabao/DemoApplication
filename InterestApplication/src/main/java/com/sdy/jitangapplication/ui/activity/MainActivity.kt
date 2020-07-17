@@ -152,10 +152,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java)
             .observeReceiveMessage(incomingMessageObserver, true)
-        NIMClient.getService(AuthServiceObserver::class.java)
-            .observeOnlineStatus(userStatusObserver, true)
-
-
         //首页禁止滑动
         setSwipeBackEnable(false)
         labelAddBtn.setOnClickListener(this)
@@ -455,8 +451,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         EventBus.getDefault().unregister(this)
         NIMClient.getService(MsgServiceObserve::class.java)
             .observeReceiveMessage(incomingMessageObserver, false)
-        NIMClient.getService(AuthServiceObserver::class.java)
-            .observeOnlineStatus(userStatusObserver, false)
+
     }
 
 
@@ -517,13 +512,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.msgList()
     }
 
-    private val userStatusObserver: Observer<StatusCode> by lazy {
-        Observer<StatusCode> {
-            if (it.wontAutoLogin()) {
-                TickDialog(ActivityUtils.getTopActivity()).show()
-            }
-        }
-    }
+
 
     companion object {
         const val REQUEST_LABEL_CODE = 2000

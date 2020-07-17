@@ -372,12 +372,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             })
             matchAimIv.playAnimation()
         }
-        if (matchBean!!.online_time.isNullOrEmpty()) {
-            detailUserOnline.isVisible = false
-        } else {
-            detailUserOnline.text = matchBean!!.online_time
-            detailUserOnline.isVisible = true
-        }
         val left = resources.getDrawable(
             if (matchBean!!.gender == 1) {
                 R.drawable.icon_gender_man_gray_userdetail

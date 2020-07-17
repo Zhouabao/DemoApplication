@@ -13,7 +13,7 @@ import com.sdy.jitangapplication.model.MyTapsBean
 import com.sdy.jitangapplication.presenter.GetRelationshipPresenter
 import com.sdy.jitangapplication.presenter.view.GetRelationshipView
 import com.sdy.jitangapplication.ui.adapter.GetRelationshipVpAdapter
-import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
+import com.sdy.jitangapplication.ui.dialog.OpenVipActivity
 import kotlinx.android.synthetic.main.activity_get_relationship.*
 
 /**
@@ -130,11 +130,17 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
         if (b) {
             val moreMatchBean = intent.getSerializableExtra("moreMatch") as MoreMatchBean?
             moreMatchBean?.people_amount = data?.people_amount ?: 0
-            OpenVipDialog(
+
+            OpenVipActivity.start(
                 this,
                 moreMatchBean,
-                OpenVipDialog.FROM_REGISTER_OPEN_VIP
-            ).show()
+                OpenVipActivity.FROM_REGISTER_OPEN_VIP
+            )
+//            OpenVipDialog(
+//                this,
+//                moreMatchBean,
+//                OpenVipDialog.FROM_REGISTER_OPEN_VIP
+//            ).show()
 
 
         }

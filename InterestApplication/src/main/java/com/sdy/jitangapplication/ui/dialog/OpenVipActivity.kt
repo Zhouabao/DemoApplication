@@ -2,7 +2,7 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.app.Dialog
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
@@ -20,21 +20,20 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.CloseRegVipEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.model.PaywayBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
 import com.sdy.jitangapplication.ui.activity.ShareFriendsActivity
-import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_forever_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -48,18 +47,32 @@ import org.jetbrains.anko.startActivity
  *    desc   :
  *    version: 1.0
  */
-class OpenVipDialog(
-    val context1: Context,
-    var moreMatch: MoreMatchBean? = null,
-    var from: Int = FROM_REGISTER_OPEN_VIP,
-    var peopleAmount: Int = -1
-) :
-    Dialog(context1, R.style.MyDialog) {
-
+class OpenVipActivity : BaseActivity() {
+    val moreMatch by lazy { intent.getSerializableExtra("moreMatch") as MoreMatchBean? }
+    val from by lazy { intent.getIntExtra("from", FROM_REGISTER_OPEN_VIP) }
+    val peopleAmount by lazy { intent.getIntExtra("peopleAmount", -1) }
 
     companion object {
         const val FROM_REGISTER_OPEN_VIP = 1//注册开通vip页面
         const val FROM_P2P_CHAT = 3 //详细聊天页面
+
+        //    val context1: Context,
+//    var moreMatch: MoreMatchBean? = null,
+//    var from: Int = FROM_REGISTER_OPEN_VIP,
+//    var peopleAmount: Int = -1
+        fun start(
+            context: Context,
+            moreMatchBean: MoreMatchBean? = null,
+            from: Int = FROM_REGISTER_OPEN_VIP,
+            peopleAmount: Int = -1
+        ) {
+            context.startActivity<OpenVipActivity>(
+                "moreMatch" to moreMatchBean,
+                "from" to from,
+                "peopleAmount" to peopleAmount
+            )
+            (context as Activity).finish()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,18 +82,17 @@ class OpenVipDialog(
         initView()
         productLists()
         EventBus.getDefault().register(this)
+        setSwipeBackEnable(from != FROM_REGISTER_OPEN_VIP)
 
     }
 
     private fun initView() {
-        setCancelable(from != FROM_REGISTER_OPEN_VIP)
-        setCanceledOnTouchOutside(from != FROM_REGISTER_OPEN_VIP)
         refuseBtn.isVisible = from != FROM_REGISTER_OPEN_VIP
                 || UserManager?.registerFileBean?.threshold != true
                 || UserManager.getGender() != 1
         //状态栏透明和间距处理
 //        StatusBarUtil.immersive(context1 as Activity)
-        nowPrice.typeface = Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf")
+        nowPrice.typeface = Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
         val params = pictureBg.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth()
         params.height = (285 / 375F * params.width).toInt()
@@ -194,33 +206,29 @@ class OpenVipDialog(
             if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {//门槛开启（成为会员）
                 if (chargeWayBeans.isNotEmpty()) {
                     ConfirmPayCandyDialog(
-                        context1,
+                        this,
                         chargeWayBeans[0],
                         payways
                     ).show()
                 }
             } else {//门槛关闭（立即加入）
                 if (UserManager.getGender() == 1) {
-                    context1.startActivity<RegisterInfoActivity>()
+                    startActivity<RegisterInfoActivity>()
                 } else
-                    context1.startActivity<MainActivity>()
+                    startActivity<MainActivity>()
             }
         }
 
 
         //取消支付
         refuseBtn.clickWithTrigger {
-            if (context1 !is MainActivity && context1 !is ChatActivity) {
-                context1.startActivity<MainActivity>()
-            } else {
-                dismiss()
-            }
+            finish()
         }
 
 
         //分享给好友
         shareFriendsBtn.clickWithTrigger {
-            context1.startActivity<ShareFriendsActivity>(
+            startActivity<ShareFriendsActivity>(
                 "chargeWayBeans" to chargeWayBeans,
                 "payways" to payways
             )
@@ -263,7 +271,7 @@ class OpenVipDialog(
 
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
-                        TickDialog(context1).show()
+                        TickDialog(this@OpenVipActivity).show()
                     }
                 }
             })
@@ -305,20 +313,24 @@ class OpenVipDialog(
         EventBus.getDefault().unregister(this)
     }
 
-    override fun dismiss() {
-        super.dismiss()
+    override fun onBackPressed() {
+        if (from != FROM_REGISTER_OPEN_VIP) {
+            super.onBackPressed()
+        }
+    }
+
+    override fun finish() {
+        super.finish()
         if (LoginActivity.weakrefrece != null && LoginActivity.weakrefrece!!.get() != null) {
             (LoginActivity.weakrefrece!!.get() as LoginActivity).finish()
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCloseDialogEvent(event: CloseDialogEvent) {
+    fun onCloseDialogEvent(event: CloseRegVipEvent) {
         if (from == FROM_REGISTER_OPEN_VIP) {
-            context1.startActivity<RegisterInfoActivity>()
-        } else
-            if (isShowing) {
-                dismiss()
-            }
+            startActivity<RegisterInfoActivity>()
+        }
+        finish()
     }
 }
