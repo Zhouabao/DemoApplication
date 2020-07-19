@@ -85,8 +85,8 @@ class ChargeVipDialog(
         const val PURCHASE_VIP = 100//VIP购买
         const val PURCHASE_GREET_COUNT = 200//招呼次数购买
         const val PURCHASE_RENEW_VIP = 300//vip续费
-        const val PURCHASE_PT_VIP = 400//钻石会员购买
-        const val PURCHASE_RENEW_PT_VIP = 500//钻石会员续费
+        const val PURCHASE_PT_VIP = 400//高级会员购买
+        const val PURCHASE_RENEW_PT_VIP = 500//高级会员续费
     }
 
 

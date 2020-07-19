@@ -62,6 +62,7 @@ class MessageListAdapter :
                     ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
                     ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
                     ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
                     else -> ""
                 }
             is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
@@ -239,7 +240,6 @@ class MessageListAdapter :
                 holder.itemView.text.text =
                     "『糖果礼物』"
             }
-
             is SendCustomTipAttachment -> holder.itemView.text.text =
                 (item.attachment as SendCustomTipAttachment).content
             else -> holder.itemView.text.text = item.content

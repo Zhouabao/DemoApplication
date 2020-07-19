@@ -17,7 +17,7 @@ import org.jetbrains.anko.startActivity
 /**
  *    author : ZFM
  *    date   : 2019/9/2316:45
- *    desc   : 置顶卡片（钻石会员功能）
+ *    desc   : 置顶卡片（高级会员功能）
  *    version: 1.0
  */
 class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
@@ -31,8 +31,8 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
     private fun initView() {
 
          if (UserManager.getGender() == 1) {
-             text.text ="成为钻石会员\n将你的卡片置于顶部，获取更多联系"
-             tobePtVipBtn.text = "成为钻石会员"
+             text.text ="成为高级会员\n将你的卡片置于顶部，获取更多联系"
+             tobePtVipBtn.text = "成为高级会员"
              tobePtVipBtn.clickWithTrigger {
                  context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
                  dismiss()

@@ -49,7 +49,7 @@ class PeopleNearbyWomanAdapter() :
         itemView.userVerify.isVisible = item.isfaced == 1
         itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
-            itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
+            itemView.userVip.setImageResource(R.drawable.icon_vip)
         }
 
         itemView.userOnline.text = "${if (!item.online_time.isNullOrEmpty()) {

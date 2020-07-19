@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="loading">
+    app:msv_viewState="content">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -245,7 +245,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="12dp"
-                                android:src="@drawable/icon_pt_vip_me" />
+                                android:src="@drawable/icon_vip_me" />
 
                             <TextView
                                 android:id="@+id/vipLevelSaveCount"
@@ -253,7 +253,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_weight="1"
-                                android:text="钻石会员丨已为你节省300个糖果"
+                                android:text="高级会员丨已为你节省300个糖果"
                                 android:textColor="#ff5e6473"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />

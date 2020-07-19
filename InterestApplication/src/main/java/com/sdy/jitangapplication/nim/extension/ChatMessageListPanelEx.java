@@ -47,7 +47,6 @@ import com.sdy.jitangapplication.model.ChatGiftStateBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
@@ -312,11 +311,7 @@ public class ChatMessageListPanelEx {
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
                         || (message.getAttachment() instanceof ContactAttachment
-                                && message.getDirect() == MsgDirectionEnum.Out)
-                        || (message.getAttachment() instanceof ChatHiAttachment
-                                && ((ChatHiAttachment) message.getAttachment())
-                                        .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND
-                                && !isSend)) {
+                                && message.getDirect() == MsgDirectionEnum.Out)) {
                     NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                     iterator.remove();
                 }
@@ -639,11 +634,7 @@ public class ChatMessageListPanelEx {
                                     && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
                                     && ((SendCustomTipAttachment) message.getAttachment())
                                             .getIfSendUserShow() != isSend)
-                                    || (message.getAttachment() instanceof ContactAttachment && isSend)
-                                    || (message.getAttachment() instanceof ChatHiAttachment
-                                            && ((ChatHiAttachment) message.getAttachment())
-                                                    .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND
-                                            && !isSend)) {
+                                    || (message.getAttachment() instanceof ContactAttachment && isSend)) {
                                 NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                                 iterator.remove();
                             }

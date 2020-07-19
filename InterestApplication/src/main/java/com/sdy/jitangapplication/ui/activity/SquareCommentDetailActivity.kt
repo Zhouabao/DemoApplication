@@ -243,8 +243,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         squareUserVipIv1.isVisible = squareBean!!.isplatinumvip
         headSquareUserVipIv1.isVisible = squareBean!!.isplatinumvip
         if (squareBean!!.isplatinumvip) {
-            squareUserVipIv1.setImageResource(R.drawable.icon_pt_vip)
-            headSquareUserVipIv1.setImageResource(R.drawable.icon_pt_vip)
+            squareUserVipIv1.setImageResource(R.drawable.icon_vip)
+            headSquareUserVipIv1.setImageResource(R.drawable.icon_vip)
         }
 
         if (squareBean!!.isfriend) {

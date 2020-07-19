@@ -209,7 +209,7 @@ public class SessionHelper {
                             return "『意向匹配』";
                         } else if (((ChatHiAttachment) recent.getAttachment())
                                 .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND) {
-                            return "『搭讪匹配』";
+                            return "『聊天已解锁』";
                         }
 
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {

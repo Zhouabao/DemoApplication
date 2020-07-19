@@ -38,7 +38,7 @@ class TodayFateAdapter :
 
         itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
-            itemView.userVip.setImageResource(R.drawable.icon_pt_vip)
+            itemView.userVip.setImageResource(R.drawable.icon_vip)
         }
         if (item.intention_title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false

@@ -57,7 +57,7 @@
         android:layout_height="56dp"
         android:background="@drawable/gradient_pt_vip"
         android:gravity="center"
-        android:text="成为钻石会员"
+        android:text="成为高级会员"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold"

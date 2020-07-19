@@ -34,7 +34,7 @@
 
     <ImageView
             android:id="@+id/visitVip"
-            android:src="@drawable/icon_pt_vip"
+            android:src="@drawable/icon_vip"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginLeft="5dp"

@@ -71,7 +71,7 @@ class OpenPtVipDialog(
         setCanceledOnTouchOutside(true)
         if (from == FROM_CONTACT) {
             openPtvipLogo.setImageResource(R.drawable.icon_vip_pt_contact)
-            openPtVipTitle.text = "查看对方联系方式需要\n成为钻石会员或糖果解锁"
+            openPtVipTitle.text = "查看对方联系方式需要\n成为高级会员或糖果解锁"
         } else {
             openPtvipLogo.setImageResource(R.drawable.icon_vip_pt_video)
             openPtVipTitle.text = "查看对方的真人视频介绍需要\n成为会员或糖果解锁"

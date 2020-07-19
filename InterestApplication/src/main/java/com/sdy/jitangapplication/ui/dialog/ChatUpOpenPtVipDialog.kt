@@ -47,13 +47,13 @@ import org.jetbrains.anko.startActivity
  *    author : ZFM
  *    date   : 2020/5/99:45
  *    desc   :解锁聊天界面
- *    1.钻石会员：
+ *    1.高级会员：
  *      1.1有无微信
  *      1.2有无次数
  *      1.3有无上线
 
  *
- *    2.非钻石会员：
+ *    2.非高级会员：
  *      2.1.有无微信
  *      2.2.有无上线
  *
@@ -181,7 +181,7 @@ class ChatUpOpenPtVipDialog(
                     }
                 } else {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
-                    openPtVipBtn.text = "成为钻石会员，免费开启聊天"
+                    openPtVipBtn.text = "成为高级会员，免费开启聊天"
                     chatupUnlockChat.text = "解锁聊天   （${chatUpBean.chat_amount}糖果）"
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()
@@ -193,13 +193,13 @@ class ChatUpOpenPtVipDialog(
 
                     if (chatUpBean.online) {
                         chatupTitle.text = "获得聊天机会"
-                        chatupContent.text = "成为钻石会员，免费无限次聊天"
+                        chatupContent.text = "成为高级会员，免费无限次聊天"
                         chatupContact.isVisible = false
                     } else {
                         chatupContact.isVisible = chatUpBean.contact_way != 0
                         chatupContact.text = chatUpBean.contact
                         chatupTitle.text = "她今天没有上线哦"
-                        chatupContent.text = "你可以直接解锁她的联系方式找到她\n成为钻石会员，免费开启聊天和解锁她的联系方式"
+                        chatupContent.text = "你可以直接解锁她的联系方式找到她\n成为高级会员，免费开启聊天和解锁她的联系方式"
                     }
                 }
             }
@@ -217,8 +217,8 @@ class ChatUpOpenPtVipDialog(
                     }
                 } else {  //解锁搭讪消息
                     chatupTitle.text = "解锁心仪的她"
-                    chatupContent.text = "联系方式是钻石会员独享功能\n成为钻石会员，免费开启聊天和解锁她的联系方式"
-                    openPtVipBtn.text = "成为钻石会员，立即解锁她的聊天方式"
+                    chatupContent.text = "联系方式是高级会员独享功能\n成为高级会员，免费开启聊天和解锁她的联系方式"
+                    openPtVipBtn.text = "成为高级会员，立即解锁她的聊天方式"
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                     // 去充值会员
                     openPtVipBtn.clickWithTrigger {
@@ -254,7 +254,7 @@ class ChatUpOpenPtVipDialog(
                     chatupUnlockChat.isVisible = true
                     chatupTitle.text = "是否要解锁聊天"
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
-                    openPtVipBtn.text = "成为钻石会员，免费开启聊天"
+                    openPtVipBtn.text = "成为高级会员，免费开启聊天"
                     chatupUnlockChat.text = "解锁聊天   （${chatUpBean.chat_amount}糖果）"
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()

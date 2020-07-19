@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="每日免费聊天"
-        android:textColor="#ff000000"
+        android:textColor="#FFFAC66F"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:text="每天10个免费聊天机会"
-        android:textColor="#ffb0b2b6"
+        android:textColor="#FF9E9688"
         android:textSize="12sp" />
 
 

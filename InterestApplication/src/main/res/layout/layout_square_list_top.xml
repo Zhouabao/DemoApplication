@@ -39,7 +39,7 @@
         <ImageView
                 android:id="@+id/squareUserVipIv1"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/icon_pt_vip"
+                android:src="@drawable/icon_vip"
                 android:layout_width="17dp"
                 android:layout_height="17dp"
                 android:visibility="gone"

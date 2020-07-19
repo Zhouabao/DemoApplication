@@ -63,7 +63,9 @@ class VipPowerActivity() :
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundColor(Color.TRANSPARENT)
 //        llTitle.setBackgroundColor(Color.parseColor("#FF1D1F21"))
+        btnBack.setImageResource(R.drawable.icon_back_white)
         divider.isVisible = false
+        hotT1.setTextColor(resources.getColor(R.color.colorWhite))
         hotT1.text = "会员权益"
         btnBack.onClick { finish() }
         wechatPayBtn.setOnClickListener(this)
@@ -146,7 +148,7 @@ class VipPowerActivity() :
         vipPowerRv.adapter = vipPowerAdapter
         seemoreBtn.isVisible = !data?.pt_icon_list.isNullOrEmpty() && data?.pt_icon_list!!.size > 2
 
-        if (data!!.isvip) {
+        if (!data!!.platinum_vip_express.isNullOrEmpty()) {
             vipOutTime.text = "${data!!.platinum_vip_express}到期"
         } else {
             vipOutTime.text = "立即升级享受更多特权"

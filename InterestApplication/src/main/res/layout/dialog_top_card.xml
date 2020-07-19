@@ -36,7 +36,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="成为钻石会员\n将你的卡片置于顶部，获取等多联系"
+        android:text="成为高级会员\n将你的卡片置于顶部，获取等多联系"
         android:textColor="#ff191919"
         android:textSize="16sp" />
 
@@ -46,8 +46,8 @@
         android:layout_height="56dp"
         android:gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@drawable/gradient_pt_vip_bottom_15dp"
-        android:text="成为钻石会员"
+        android:background="@drawable/gradient_pt_vip"
+        android:text="成为高级会员"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold" />

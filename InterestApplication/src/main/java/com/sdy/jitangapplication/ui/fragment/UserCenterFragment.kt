@@ -148,14 +148,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
         if (UserManager.getGender() == 1) {
             femalePowerLl.isVisible = false
-            userSign.visibility = View.VISIBLE
-
             userVerify.isVisible = true
 
         } else {
             femalePowerLl.isVisible = true
-            userSign.visibility = View.INVISIBLE
-
             userVerify.isVisible = false
         }
 
@@ -280,7 +276,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             userName.textSize = 22F
         }
         userName1.text = userInfoBean?.userinfo?.nickname ?: ""
-        userSign.text = userInfoBean?.sign ?: ""
+        if (!userInfoBean?.sign.isNullOrEmpty()) {
+            userSign.isVisible = true
+            userSign.text = userInfoBean?.sign ?: ""
+        } else {
+            userSign.visibility = View.INVISIBLE
+        }
         vipLevelSaveCount.text = "${userInfoBean?.platinum_vip_str}"
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isplatinum ?: false)
@@ -351,10 +352,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     private fun checkVip() {
         if (userInfoBean?.userinfo?.isplatinum == false) {
             isVipPowerBtn.text = "升级会员"
-            vipLevelSaveCount.text = "钻石会员丨开通节省300个糖果"
+            vipLevelSaveCount.text = "高级会员丨开通节省300个糖果"
         } else {
             isVipPowerBtn.text = "续费会员"
-            vipLevelSaveCount.text = "钻石会员丨已为你节省300个糖果"
+            vipLevelSaveCount.text = "高级会员丨已为你节省300个糖果"
 
         }
     }

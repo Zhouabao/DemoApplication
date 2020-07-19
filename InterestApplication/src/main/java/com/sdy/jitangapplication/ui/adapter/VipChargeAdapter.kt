@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
 import android.graphics.Typeface
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -18,16 +19,11 @@ import java.math.BigDecimal
  *    desc   : 会员支付购买时间适配器
  *    version: 1.0
  */
-class VipChargeAdapter() :
-    BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
+class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
 
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        params.leftMargin = if (holder.layoutPosition == 0) {
-            SizeUtils.dp2px(13F)
-        } else {
-            0
-        }
+        params.leftMargin = SizeUtils.dp2px(15F)
         params.rightMargin = if (holder.layoutPosition == mData.size - 1) {
             SizeUtils.dp2px(13F)
         } else {
@@ -63,13 +59,21 @@ class VipChargeAdapter() :
         holder.itemView.vipLong.text = item.ename ?: ""
 
         //todo ≈好多钱每天
-        holder.itemView.vipEachDayPrice.text = "≈${item.unit_price}元/天"
+        holder.itemView.vipEachDayPrice.text = item.unit_price
 
         if (item.is_promote) {
-            holder.itemView.purchaseCl.setBackgroundResource(R.drawable.shape_rectangle_blue_stroke_10dp)
+            holder.itemView.vipLong.setTextColor(Color.parseColor("#FFF2B769"))
+            holder.itemView.vipNowPrice.setTextColor(Color.parseColor("#FFF2B769"))
+            holder.itemView.vipEachDayPrice.setTextColor(Color.parseColor("#FFF2B769"))
+            holder.itemView.vipSendCandy.setTextColor(Color.parseColor("#FF1D1F21"))
+            holder.itemView.purchaseCl.setBackgroundResource(R.drawable.shape_rectangle_dark_blue_stroke_10dp)
             holder.itemView.vipSendCandy.setBackgroundResource(R.drawable.shape_rectangle_dark_blue_bottom_10_corners_bg)
         } else {
-            holder.itemView.purchaseCl.setBackgroundResource(R.drawable.rectangle_white_10dp)
+            holder.itemView.vipLong.setTextColor(Color.WHITE)
+            holder.itemView.vipNowPrice.setTextColor(Color.WHITE)
+            holder.itemView.vipEachDayPrice.setTextColor(Color.parseColor("#FFB0B2B6"))
+            holder.itemView.vipSendCandy.setTextColor(Color.WHITE)
+            holder.itemView.purchaseCl.setBackgroundResource(R.drawable.shape_rectangle_light_blue_stroke_10dp)
             holder.itemView.vipSendCandy.setBackgroundResource(R.drawable.shape_rectangle_light_blue_bottom_10_corners_bg)
         }
 

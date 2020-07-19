@@ -182,7 +182,7 @@ object CommonFunction {
     /**
      * 验证联系方式解锁
      * 	400 toast错误
-     * 	202 钻石会员充值
+     * 	202 高级会员充值
      * 	222 （已经解锁过了）
      * 	200 amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
      *

@@ -24,7 +24,7 @@ import org.jetbrains.anko.startActivity
 /**
  *    author : ZFM
  *    date   : 2020/5/99:45
- *    desc   :钻石会员评论
+ *    desc   :高级会员评论
  *    version: 1.0
  */
 class CommentPtVipDialog(

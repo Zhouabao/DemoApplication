@@ -157,18 +157,18 @@ class IndexChoicenessActivity : BaseActivity() {
                         }
 
 
-                        // 判断男性用户是否是钻石会员，女性用户是否上传视频介绍
+                        // 判断男性用户是否是高级会员，女性用户是否上传视频介绍
                         //立即获取
                         if (t?.data?.gender == 1) {
                             tobeChoicenessCount.text =
-                                "获取钻石会员，每月获得${t?.data?.platinum_free_cnt ?: 0}次置顶"
+                                "获取高级会员，每月获得${t?.data?.platinum_free_cnt ?: 0}次置顶"
                             if (t?.data?.isplatinum == true) {
                                 tobeChoicenessBtn.text = "已获取"
                                 tobeChoicenessIv.setImageResource(R.drawable.icon_choicess_power_man_bg)
                                 tobeChoicenessBtn.isEnabled = false
                                 tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn_unable)
                             } else {
-                                //男性置顶充值钻石会员
+                                //男性置顶充值高级会员
                                 tobeChoicenessBtn.text = "立即获取"
                                 tobeChoicenessIv.setImageResource(R.drawable.icon_choicess_power_man_bg)
                                 tobeChoicenessBtn.isEnabled = true

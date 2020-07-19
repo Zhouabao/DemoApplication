@@ -3,34 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="154dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center">
 
 
-    <ImageView
-        android:id="@+id/purchaseBg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_charge_vip_shadow" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/purchaseCl"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_width="match_parent"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_rectangle_blue_stroke_10dp">
+        android:background="@drawable/shape_rectangle_light_blue_stroke_10dp">
 
 
         <TextView
             android:id="@+id/vipLong"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:gravity="center"
             android:text="1个月"
-            android:textColor="#ffb0b2b6"
+            android:textColor="@color/colorWhite"
             android:textSize="12sp"
             android:textStyle="normal"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -39,11 +32,11 @@
 
         <TextView
             android:id="@+id/vipNowPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textColor="@color/colorBlack4a"
+            android:textColor="@color/colorWhite"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -53,11 +46,12 @@
 
         <TextView
             android:id="@+id/vipEachDayPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:gravity="center"
             android:text="≈6元/天"
-            android:textColor="#ffb0b2b6"
+            android:textColor="#FFB0B2B6"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -68,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="@drawable/shape_rectangle_dark_blue_bottom_10_corners_bg"
+            android:background="@drawable/shape_rectangle_light_blue_bottom_10_corners_bg"
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"

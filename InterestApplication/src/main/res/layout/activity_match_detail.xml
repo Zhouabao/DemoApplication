@@ -17,7 +17,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -204,7 +204,7 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_marginLeft="5dp"
-                            android:src="@drawable/icon_pt_vip"
+                            android:src="@drawable/icon_vip"
                             android:visibility="visible"
                             app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                             app:layout_constraintLeft_toRightOf="@id/detailUserName"

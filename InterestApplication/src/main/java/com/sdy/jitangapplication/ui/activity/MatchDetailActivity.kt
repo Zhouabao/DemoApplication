@@ -409,7 +409,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             View.GONE
         }
         if (matchBean!!.isplatinumvip) {
-            detailUserVip.setImageResource(R.drawable.icon_pt_vip)
+            detailUserVip.setImageResource(R.drawable.icon_vip)
         }
 
 

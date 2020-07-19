@@ -11,8 +11,6 @@ import android.os.Parcelable
  */
 
 data class ChargeWayBeans(
-    val greet_icon_list: MutableList<VipDescr>? = mutableListOf(),
-    val greet_list: MutableList<ChargeWayBean>? = mutableListOf(),//招呼次数购买
     val icon_list: MutableList<VipDescr>? = mutableListOf(),
     val list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val pt_icon_list: MutableList<VipDescr>? = mutableListOf(),
@@ -55,7 +53,7 @@ data class ChargeWayBean(
     val giving_amount: Int = 0,
     val descr: String? = "",//限时折扣文案
     var type: Int?,//	1 原价售卖 2折扣价售卖 3限时折扣
-    var unit_price: Double = 0.0,//单价(显示)
+    var unit_price: String = "",//单价(显示)
     var amount: Int = 0,
     var isfirst: Boolean = false,//是否首充  true  首充   false  常规
     var product_id: String = "",
@@ -73,7 +71,7 @@ data class ChargeWayBean(
         parcel.readInt(),
         parcel.readString(),
         parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readDouble(),
+        parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readByte() != 0.toByte(),
         parcel.readString() ?: "",
@@ -93,7 +91,7 @@ data class ChargeWayBean(
         parcel.writeInt(giving_amount)
         parcel.writeString(descr)
         parcel.writeValue(type)
-        parcel.writeDouble(unit_price)
+        parcel.writeString(unit_price)
         parcel.writeInt(amount)
         parcel.writeByte(if (isfirst) 1 else 0)
         parcel.writeString(product_id)
