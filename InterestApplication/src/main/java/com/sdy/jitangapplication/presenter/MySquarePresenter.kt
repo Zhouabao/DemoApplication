@@ -1,29 +1,19 @@
 package com.sdy.jitangapplication.presenter
 
 import android.app.Activity
-import android.util.Log
-import com.blankj.utilcode.util.SPUtils
-import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
-import com.qiniu.android.storage.UpProgressHandler
-import com.qiniu.android.storage.UploadOptions
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.presenter.view.MySquareView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
-import org.greenrobot.eventbus.EventBus
-import java.io.File
 
 /**
  *    author : ZFM

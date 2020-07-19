@@ -11,8 +11,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseActivity
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -53,6 +53,7 @@ import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_message_list.*
 import kotlinx.android.synthetic.main.headerview_like_me.view.*
 import kotlinx.android.synthetic.main.headview_message_all.view.*
@@ -111,8 +112,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         mPresenter.mView = this
         mPresenter.context = activity!!
 
-        retryBtn.onClick {
-            setViewState(BaseActivity.LOADING)
+        stateMessageList.retryBtn.onClick {
+            stateMessageList.viewState = MultiStateView.VIEW_STATE_LOADING
             //获取最近消息
             mPresenter.messageCensus(params)
         }
@@ -298,7 +299,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
-        setViewState(BaseActivity.CONTENT)
+        stateMessageList.viewState = MultiStateView.VIEW_STATE_CONTENT
 
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
@@ -507,13 +508,14 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
 
     private val TAG = MessageListFragment::class.java.simpleName
+
     /**
      * 已读回执观察者
      */
     private val messageReceiptObserver = Observer<List<MessageReceipt>> {
         //收到已读回执,调用接口,改变此时招呼或者消息的状态
         Log.d(TAG, "======已读回执=====")
-        mPresenter.messageCensus(params)
+//        mPresenter.messageCensus(params)
     }
 
     private fun getItemIndex(uuid: String): Int {
@@ -538,7 +540,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
     }
 
     override fun onError(text: String) {
-        setViewState(BaseActivity.ERROR)
+        stateMessageList.viewState = MultiStateView.VIEW_STATE_ERROR
         errorMsg.text = CommonFunction.getErrorMsg(activity!!)
 
     }
@@ -553,25 +555,4 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         }
     }
 
-
-    private fun setViewState(state: Int) {
-        when (state) {
-            BaseActivity.LOADING -> {
-                loadingLayout.isVisible = true
-                messageContentLl.isVisible = false
-                errorLayout.isVisible = false
-            }
-            BaseActivity.CONTENT -> {
-                messageContentLl.isVisible = true
-                loadingLayout.isVisible = false
-                errorLayout.isVisible = false
-            }
-            BaseActivity.ERROR -> {
-                errorLayout.isVisible = true
-                messageContentLl.isVisible = false
-                loadingLayout.isVisible = false
-            }
-        }
-
-    }
 }

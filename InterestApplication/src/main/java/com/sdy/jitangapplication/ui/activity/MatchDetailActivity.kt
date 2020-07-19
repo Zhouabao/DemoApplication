@@ -162,32 +162,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
 
-
-//        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    val manager = (listSquareRv.layoutManager as StaggeredGridLayoutManager)
-//                    var positions = manager.findLastCompletelyVisibleItemPositions(intArrayOf(0, 0))
-//
-//                    if (adapter.itemCount >= page * Constants.PAGESIZE) {
-//                        if (positions.isNotEmpty()) {
-//                            val pos = positions[0].coerceAtLeast(positions[1])
-//                            if (pos > manager.itemCount - 5) {
-//                                page += 1
-//                                params1["page"] = page
-//                                mPresenter.getSomeoneSquare(params1)
-//                            }
-//                        }
-//                    } else {
-//                        adapter.loadMoreEnd()
-//                    }
-//                }
-//            }
-//        })
-
-
         //用户兴趣
         detailRvTag.layoutManager = GridLayoutManager(this, 2)
         detailRvTag.adapter = userTagAdapter
@@ -360,12 +334,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
         userVideoCl.isVisible = matchBean!!.mv_btn
-        if (matchBean!!.myisplatinumvip)
-            GlideUtil.loadImg(this, UserManager.getAvator(), userVideoCover)
+        //钻石或者女性可以免费看
+        if (matchBean!!.myisplatinumvip )
+            GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
         else
             Glide.with(this)
-                .load(UserManager.getAvator())
+                .load(matchBean!!.mv_url)
                 .thumbnail(0.5F)
+                .placeholder(R.drawable.default_image_10dp)
                 .priority(Priority.NORMAL)
                 .transform(BlurTransformation(25))
                 .into(userVideoCover)
@@ -437,22 +413,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
-        //TODO 修改文案
-        //认证用户, 所见即所得
-        //认证女神,快去撩她吧
-        //真人验证,可放心聊天
-        //认证用户,保证真实
-        //认证男神,快撩他吧
-        detailUserVerify.isVisible = matchBean!!.isfaced == 1
-        detailUserVerify.setCompoundDrawablesWithIntrinsicBounds(
-            resources.getDrawable(
-                if (matchBean!!.gender == 1) {
-                    R.drawable.icon_gender_man_detail
-                } else {
-                    R.drawable.icon_gender_woman_detail
-                }
-            ), null, null, null
-        )
+        if (matchBean!!.isfaced == 1) {
+            detailUserVerify.isVisible = true
+            detailUserVerify.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(
+                    if (matchBean!!.gender == 1) {
+                        R.drawable.icon_gender_man_detail
+                    } else {
+                        R.drawable.icon_gender_woman_detail
+                    }
+                ), null, null, null
+            )
+            detailUserVerify.text = matchBean!!.face_str
+        } else {
+            detailUserVerify.isVisible = false
+        }
 
 
         //用户照片

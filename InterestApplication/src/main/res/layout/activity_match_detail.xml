@@ -113,6 +113,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 app:borderRadius="10dp"
+                                android:background="@drawable/default_image_10dp"
                                 app:type="round" />
 
                             <com.github.mmin18.widget.RealtimeBlurView

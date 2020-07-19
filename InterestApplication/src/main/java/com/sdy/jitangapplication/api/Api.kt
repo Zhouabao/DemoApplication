@@ -502,7 +502,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("MemberInfo/myInfoCandyV201${Constants.END_BASE_URL}")
+    @POST("MemberInfo/myInfoCandyV223${Constants.END_BASE_URL}")
     fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
 
@@ -1183,7 +1183,7 @@ interface Api {
      * 推荐10个
      */
     @FormUrlEncoded
-    @POST("Home/topList${Constants.END_BASE_URL}")
+    @POST("Home/indexTop${Constants.END_BASE_URL}")
     fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<IndexListBean?>>
 
     /**
@@ -1244,6 +1244,18 @@ interface Api {
     @FormUrlEncoded
     @POST("Share/myInvite${Constants.END_BASE_URL}")
     fun myInvite(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyInviteBean?>>
+
+
+
+    /**
+     *
+     *  标记获取过我的联系方式 弹出过了框
+     * Home/tagUnlockPopup
+     *
+     */
+    @FormUrlEncoded
+    @POST("Home/tagUnlockPopup${Constants.END_BASE_URL}")
+    fun tagUnlockPopup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
 }

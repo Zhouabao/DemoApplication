@@ -625,8 +625,6 @@ object UserManager {
             } else {//完成注册
                 //跳到主页
                 //保存个人信息
-                SPUtils.getInstance(Constants.SPNAME)
-                    .put("people_amount", data?.extra_data?.people_amount)
                 saveUserInfo(data)
                 context.startActivity<MainActivity>()
             }
@@ -656,9 +654,6 @@ object UserManager {
                 )
             } else {
                 //跳到主页
-                //保存个人信息
-                SPUtils.getInstance(Constants.SPNAME)
-                    .put("people_amount", data?.extra_data?.people_amount ?: 0)
                 saveUserInfo(data)
                 context.startActivity<MainActivity>()
             }
@@ -666,11 +661,10 @@ object UserManager {
     }
 
     fun startToFlow(context: Context, moreMatchBean: MoreMatchBean?) {
+        SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
         if (getGender() == 1) {
             //跳到主页
-            //保存个人信息
             SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
-            SPUtils.getInstance(Constants.SPNAME).put("avatar", moreMatchBean?.avatar)
             SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
             SPUtils.getInstance(Constants.SPNAME).put("people_amount", moreMatchBean?.people_amount ?: 0)
             context.startActivity<MainActivity>()

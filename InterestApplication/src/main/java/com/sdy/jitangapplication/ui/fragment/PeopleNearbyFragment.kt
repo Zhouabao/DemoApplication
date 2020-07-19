@@ -163,104 +163,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     }
 
-    private fun showOpenVipCl(isvip: Boolean) {
-        if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
-            openVipCl.isVisible = true
-            t2.text = if (UserManager.getGender() == 1) {
-                "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
-                    "people_amount",
-                    0
-                )}名糖宝女孩\n满足你的需求"
-            } else {
-                "${UserManager.getCity()}的${SPUtils.getInstance(Constants.SPNAME).getInt(
-                    "people_amount",
-                    0
-                )}位${if (UserManager.getGender() == 1) {
-                    "女"
-                } else {
-                    "男"
-                }}性正等待你联络"
-            }
-
-            openVipBtn.text = if (UserManager.getGender() == 1) {
-                "开通会员联系她们"
-            } else {
-                "开通会员"
-            }
-            GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), myAvator)
-            openVipBtn.clickWithTrigger {
-                ChargeVipDialog(ChargeVipDialog.LOOK_SAME_CITY, activity!!).show()
-            }
-            if (UserManager.getGender() == 1) {
-                lottieMoreMatch.imageAssetsFolder = "images_boy"
-                lottieMoreMatch.setAnimation("data_boy_more_match.json")
-            } else {
-                lottieMoreMatch.imageAssetsFolder = "images_girl"
-                lottieMoreMatch.setAnimation("data_girl_more_match.json")
-            }
-
-
-            val scaleAnimationX = ObjectAnimator.ofFloat(myAvator, "scaleX", 0F, 1F)
-            val scaleAnimationY = ObjectAnimator.ofFloat(myAvator, "scaleY", 0F, 1F)
-            val alphaAnimation = ObjectAnimator.ofFloat(myAvator, "alpha", 0F, 1F)
-            val animationSet = AnimatorSet()
-            animationSet.duration = 500
-            animationSet.playTogether(scaleAnimationX, scaleAnimationY, alphaAnimation)
-            animationSet.start()
-
-            animationSet.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {
-
-                }
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    lottieMoreMatch.playAnimation()
-                }
-
-                override fun onAnimationCancel(animation: Animator?) {
-                }
-
-                override fun onAnimationStart(animation: Animator?) {
-                }
-
-            })
-
-
-            lottieMoreMatch.addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {
-                }
-
-                override fun onAnimationEnd(animation: Animator?) {
-                    lottieMoreMatchRipple1.postDelayed({
-                        try {
-                            lottieMoreMatchRipple1.playAnimation()
-                        } catch (e: Exception) {
-                        }
-                    }, 2000L)
-
-                    lottieMoreMatchRipple2.postDelayed({
-                        try {
-                            lottieMoreMatchRipple2.playAnimation()
-                        } catch (e: Exception) {
-                        }
-                    }, 4000L)
-
-
-                }
-
-                override fun onAnimationCancel(animation: Animator?) {
-                }
-
-                override fun onAnimationStart(animation: Animator?) {
-                    lottieMoreMatchRipple.playAnimation()
-                }
-
-            })
-
-        } else {
-            openVipCl.isVisible = false
-        }
-    }
 
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -286,7 +188,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日缘分
             //是否今日意向
             //资料完善度
-            showOpenVipCl(nearBean?.isvip ?: false)
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
@@ -341,7 +242,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             UserManager.saveUserVerify(nearBean.isfaced)
             //保存是否进行过人脸验证
             UserManager.saveHasFaceUrl(nearBean.has_face_url)
-            onUpdateSameCityVipEvent(UpdateSameCityVipEvent())
             //第一次加载的时候就显示顶部提示条
             if (firstLoad) {
                 if (ranking_level == 2) {//2 真人提示
@@ -417,13 +317,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         //取消recycleview的滑动
         rvPeopleNearby.setHasFixedSize(true);
         rvPeopleNearby.isNestedScrollingEnabled = event.enable;
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
-        if (type == TYPE_SAMECITY)
-            showOpenVipCl(true)
     }
 
 

@@ -87,18 +87,8 @@ object CommonFunction {
 //                            }
                             PlayVideoDialog(context, t.data?.mv_url ?: "").show()
                         }
-                        201 -> {
-                            ChargeVipDialog(ChargeVipDialog.LOOK_VIDEO, context).show()
-                        }
                         200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
                             VideoOpenPtVipDialog(context).show()
-//                            OpenPtVipDialog(
-//                                context,
-//                                OpenPtVipDialog.FROM_VIDEO_INTRODUCE,
-//                                t.data?.isplatinumvip == true,
-//                                t.data?.amount ?: 0,
-//                                target_accid, gender
-//                            ).show()
                         }
                         else -> {
                             toast(t.msg)
@@ -217,6 +207,12 @@ object CommonFunction {
                                 ChatUpOpenPtVipDialog.TYPE_CONTACT,
                                 t.data!!
                             ).show()
+                        }
+
+                        222 -> {
+                            Handler().postDelayed({
+                                ChatActivity.start(context, target_accid)
+                            }, 500L)
                         }
                         else -> {
                             toast(t.msg)

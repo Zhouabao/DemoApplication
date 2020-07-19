@@ -4,7 +4,6 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.StatusBean
 
 /**
  *    author : ZFM

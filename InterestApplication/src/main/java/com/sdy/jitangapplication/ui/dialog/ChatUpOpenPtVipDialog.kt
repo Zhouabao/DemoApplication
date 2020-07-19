@@ -186,7 +186,7 @@ class ChatUpOpenPtVipDialog(
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()
                     }
-                    //TODO 解锁聊天
+                    // 解锁聊天
                     chatupUnlockChat.clickWithTrigger {
                         unlockChat()
                     }
@@ -211,7 +211,7 @@ class ChatUpOpenPtVipDialog(
                     chatupContent.text = "解锁联系方式同时会解锁与她的聊天"
                     openPtVipBtn.text = "解锁联系方式  （${chatUpBean.contact_amount}糖果）"
                     openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
-                    //todo 解锁联系方式
+                    // 解锁联系方式
                     openPtVipBtn.clickWithTrigger {
                         unlockContact()
                     }
@@ -220,7 +220,7 @@ class ChatUpOpenPtVipDialog(
                     chatupContent.text = "联系方式是钻石会员独享功能\n成为钻石会员，免费开启聊天和解锁她的联系方式"
                     openPtVipBtn.text = "成为钻石会员，立即解锁她的聊天方式"
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
-                    //todo 去充值会员
+                    // 去充值会员
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()
                     }
@@ -236,16 +236,16 @@ class ChatUpOpenPtVipDialog(
                         chatupContent.text = "今日还可以免费解锁${chatUpBean.plat_cnt}次聊天"
                         openPtVipBtn.text = "解锁聊天"
                         openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
-                        //todo 解锁搭讪聊天
+                        // 解锁搭讪聊天
                         openPtVipBtn.clickWithTrigger {
                             lockChatup()
                         }
-                    } else { //todo 差一个次数用尽
+                    } else { //差一个次数用尽
                         chatupTitle.text = "是否要解锁聊天"
                         chatupContent.text = "今日免费解锁次数已用完"
                         openPtVipBtn.text = "解锁聊天  ${chatUpBean.chat_amount}糖果"
                         openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
-                        //todo 解锁搭讪聊天
+                        // 解锁搭讪聊天
                         openPtVipBtn.clickWithTrigger {
                             lockChatup()
                         }
@@ -301,8 +301,7 @@ class ChatUpOpenPtVipDialog(
             .setCallback(object : RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
                     if (ActivityUtils.getTopActivity() is MatchDetailActivity)
-                        EventBus.getDefault()
-                            .post(MatchByWishHelpEvent(true, target_accid))
+                        EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
                     if (ActivityUtils.getTopActivity() !is ChatActivity) {
                         Handler().postDelayed({
                             loadingDialog.dismiss()
@@ -349,6 +348,7 @@ class ChatUpOpenPtVipDialog(
                         Handler().postDelayed({
                             loadingDialog.dismiss()
                             ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+                            dismiss()
                         }, 250L)
                     } else {
                         loadingDialog.dismiss()
@@ -400,7 +400,17 @@ class ChatUpOpenPtVipDialog(
                 override fun onNext(t: BaseResp<UnlockBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
-                        sendContactCandyMessage(loading)
+                        if (ActivityUtils.getTopActivity() is MatchDetailActivity)
+                            EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+                        if (ActivityUtils.getTopActivity() !is ChatActivity) {
+                            Handler().postDelayed({
+                                loading.dismiss()
+                                ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+                                dismiss()
+                            }, 250L)
+                        } else {
+                            loading.dismiss()
+                        }
                     } else if (t.code == 419) {
                         loading.dismiss()
                         CommonFunction.gotoCandyRecharge(context1)
@@ -442,12 +452,6 @@ class ChatUpOpenPtVipDialog(
                         loading.dismiss()
                         OpenVipActivity.start(context1, null)
                     } else if (t.code == 200) {
-                        if (ActivityUtils.getTopActivity() is MatchDetailActivity) {
-                            EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
-                        }
-                        if (ActivityUtils.getTopActivity() !is ChatActivity) {
-                            ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
-                        }
                         sendMatchFriendMessage(loading)
                     } else if (t.code == 206) {
                         loading.dismiss()

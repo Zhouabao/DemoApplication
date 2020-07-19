@@ -25,7 +25,7 @@ import org.jetbrains.anko.startActivity
 class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMatchView,
     OnLazyClickListener {
 
-    private val moreMatch by lazy { intent.getSerializableExtra("moreMatch") as MoreMatchBean? }
+    private val moreMatch by lazy { intent.getSerializableExtra("morematchbean") as MoreMatchBean? }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_get_more_match)
@@ -129,7 +129,7 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
         when (v.id) {
             R.id.nextStep -> {
                 startActivity<GetRelationshipActivity>(
-                    "moreMatch" to moreMatch
+                    "morematchbean" to moreMatch
                 )
                 finish()
             }

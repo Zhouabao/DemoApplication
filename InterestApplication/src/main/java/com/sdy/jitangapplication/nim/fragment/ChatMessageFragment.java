@@ -65,6 +65,7 @@ import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.ChatUpOpenPtVipDialog;
+import com.sdy.jitangapplication.ui.dialog.ContactCandyReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.OpenVipActivity;
@@ -537,15 +538,15 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         // 显示解锁联系方式
         // 0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
-        if (nimBean.getHasContact() != 0 && !nimBean.isLockedContact()) {
+        if (nimBean.getUnlock_contact_way() != 0 && !nimBean.is_unlock_contact()) {
             unlockContactLl.setVisibility(View.VISIBLE);
-            if (nimBean.getHasContact() == 1) {
+            if (nimBean.getUnlock_contact_way() == 1) {
                 contactIv.setImageResource(R.drawable.icon_phone_circle);
                 unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_15dp);
-            } else if (nimBean.getHasContact() == 2) {
+            } else if (nimBean.getUnlock_contact_way() == 2) {
                 contactIv.setImageResource(R.drawable.icon_wechat_circle);
                 unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_green_15);
-            } else if (nimBean.getHasContact() == 3) {
+            } else if (nimBean.getUnlock_contact_way() == 3) {
                 contactIv.setImageResource(R.drawable.icon_qq_circle);
                 unlockContactBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_15);
             }
@@ -557,6 +558,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         EventBus.getDefault().postSticky(new StarEvent(nimBean.getStared()));
         messageListPanel.refreshMessageList();
         // inputPanel.checkIsSendMsg();
+
+        if (nimBean.is_unlocked_popup() > 0) {
+            new ContactCandyReceiveDialog(sessionId, nimBean.is_unlocked_popup(), getActivity()).show();
+        }
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid) {

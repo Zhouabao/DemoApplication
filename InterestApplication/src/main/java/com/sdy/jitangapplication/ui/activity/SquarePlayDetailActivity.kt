@@ -220,12 +220,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 squareBean!!.like_cnt
             }}"
         detailPlayUserVipIv.isVisible = squareBean.isplatinumvip
-
-        if (squareBean!!.isplatinumvip) {
-            detailPlayUserVipIv.setImageResource(R.drawable.icon_pt_vip)
-        } else {
-            detailPlayUserVipIv.setImageResource(R.drawable.icon_vip)
-        }
     }
 
 

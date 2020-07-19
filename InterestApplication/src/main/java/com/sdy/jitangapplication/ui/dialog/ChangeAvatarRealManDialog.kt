@@ -16,7 +16,6 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.change_avator_real_man_dialog_layout.*
@@ -32,7 +31,6 @@ class ChangeAvatarRealManDialog(
     val context1: Context,
     var status: Int = VERIFY_NEED_REAL_MAN,
     var avator: String = "",
-    var matchBean: MatchBean? = null,
     var view1: View? = null
 ) :
     Dialog(context1, R.style.MyDialog) {

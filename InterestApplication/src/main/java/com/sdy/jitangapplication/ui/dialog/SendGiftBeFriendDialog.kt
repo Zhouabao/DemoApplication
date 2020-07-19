@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.dialog_send_gift_be_friend.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM

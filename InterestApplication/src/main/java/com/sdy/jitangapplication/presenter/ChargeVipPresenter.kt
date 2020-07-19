@@ -7,7 +7,6 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.ChargeWayBeans
-import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.presenter.view.ChargeVipView
 import com.sdy.jitangapplication.utils.UserManager
 

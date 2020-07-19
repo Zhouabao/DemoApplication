@@ -35,8 +35,9 @@ data class NimBean(
     var chat_expend_time: Long = 0L,
     var plat_cnt: Int = 0,//剩余的搭讪的次数
     var isplatinum: Boolean = false,
-    var hasContact: Int = 0, //是否有联系方式
-    var isLockedContact: Boolean = false//是否解锁过联系方式
+    var unlock_contact_way: Int = 0, //是否有联系方式
+    var is_unlocked_popup: Int = 0, //	我是否被别人解锁弹框 大于0 弹框显示糖果数目
+    var is_unlock_contact: Boolean = false//是否解锁过联系方式
 ) : Serializable
 
 data class ChatGiftStateBean(

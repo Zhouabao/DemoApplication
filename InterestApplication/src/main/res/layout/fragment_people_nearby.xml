@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.fragment.PeopleNearbyFragment">
 
         <FrameLayout
@@ -86,115 +86,4 @@
 
     </com.kennyc.view.MultiStateView>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/openVipCl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        android:visibility="gone">
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieMoreMatch"
-            android:layout_width="314dp"
-            android:layout_height="314dp"
-            android:layout_marginTop="40dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="false"
-            app:lottie_loop="false" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieMoreMatchRipple"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/lottieMoreMatch"
-            app:layout_constraintLeft_toLeftOf="@id/lottieMoreMatch"
-            app:layout_constraintRight_toRightOf="@id/lottieMoreMatch"
-            app:layout_constraintTop_toTopOf="@id/lottieMoreMatch"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="data_ripple.json"
-            app:lottie_loop="true"
-            app:lottie_repeatCount="-1" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieMoreMatchRipple1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/lottieMoreMatch"
-            app:layout_constraintLeft_toLeftOf="@id/lottieMoreMatch"
-            app:layout_constraintRight_toRightOf="@id/lottieMoreMatch"
-            app:layout_constraintTop_toTopOf="@id/lottieMoreMatch"
-            app:lottie_autoPlay="false"
-            app:lottie_fileName="data_ripple.json"
-            app:lottie_loop="true"
-            app:lottie_repeatCount="-1" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieMoreMatchRipple2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/lottieMoreMatch"
-            app:layout_constraintLeft_toLeftOf="@id/lottieMoreMatch"
-            app:layout_constraintRight_toRightOf="@id/lottieMoreMatch"
-            app:layout_constraintTop_toTopOf="@id/lottieMoreMatch"
-            app:lottie_autoPlay="false"
-            app:lottie_fileName="data_ripple.json"
-            app:lottie_loop="true"
-            app:lottie_repeatCount="-1" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/lottieMoreMatch"
-            app:layout_constraintLeft_toLeftOf="@id/lottieMoreMatch"
-            app:layout_constraintRight_toRightOf="@id/lottieMoreMatch"
-            app:layout_constraintTop_toTopOf="@id/lottieMoreMatch"
-            app:lottie_autoPlay="false"
-            app:lottie_fileName="data_ripple.json"
-            app:lottie_loop="true"
-            app:lottie_repeatCount="-1" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/myAvator"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            app:civ_border_color="@color/colorOrange"
-            app:civ_border_width="1dp"
-            app:layout_constraintBottom_toBottomOf="@id/lottieMoreMatch"
-            app:layout_constraintLeft_toLeftOf="@id/lottieMoreMatch"
-            app:layout_constraintRight_toRightOf="@id/lottieMoreMatch"
-            app:layout_constraintTop_toTopOf="@id/lottieMoreMatch" />
-
-
-        <TextView
-            android:id="@+id/t2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="在成都为你精选出9999位女性用户\n
-            立即成为会员，获取心仪女孩的联系方式吧"
-            android:textColor="#ff191919"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lottieMoreMatch" />
-
-        <TextView
-            android:id="@+id/openVipBtn"
-            android:layout_width="232dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/gradient_light_orange_24dp"
-            android:gravity="center"
-            android:text="成为会员"
-            android:textColor="#ffffffff"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t2" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/stateMessageList"
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_viewState="loading"
     tools:context=".ui.fragment.MessageListFragment">
 
     <LinearLayout
@@ -89,14 +93,14 @@
     </LinearLayout>
 
 
-    <include
-        android:id="@+id/loadingLayout"
-        layout="@layout/loading_layout"
-        android:visibility="visible" />
+<!--    <include-->
+<!--        android:id="@+id/loadingLayout"-->
+<!--        layout="@layout/loading_layout"-->
+<!--        android:visibility="visible" />-->
 
-    <include
-        android:id="@+id/errorLayout"
-        layout="@layout/error_layout"
-        android:visibility="gone" />
+<!--    <include-->
+<!--        android:id="@+id/errorLayout"-->
+<!--        layout="@layout/error_layout"-->
+<!--        android:visibility="visible" />-->
 
-</FrameLayout>
+</com.kennyc.view.MultiStateView>

@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.dialog_chat_send_gift.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM

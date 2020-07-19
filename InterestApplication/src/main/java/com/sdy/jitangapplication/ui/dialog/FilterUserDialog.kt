@@ -16,9 +16,11 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -67,11 +69,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         switchOnLine.isVisible = UserManager.isUserVip()
         switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
-//        switchSameCity.isVisible = UserManager.isUserVip()
-//        btnGoVip.isVisible = !UserManager.isUserVip()
-//        switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
-//        btnGoVip.isVisible = false
-//        switchSameCity.isVisible = true
+
 
         if (UserManager.isUserVerify() == 1) {
             btnVerify.visibility = View.GONE
@@ -89,10 +87,10 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
         btnGoVip.onClick {
-            ChargeVipDialog(ChargeVipDialog.FILTER_LOCAL_CITY, context1).show()
+            context1.startActivity<VipPowerActivity>()
         }
         btnGoVip1.onClick {
-            ChargeVipDialog(ChargeVipDialog.FILTER_ONLINE, context1).show()
+            context1.startActivity<VipPowerActivity>()
         }
         btnVerify.onClick {
             if (UserManager.isUserVerify() == 2) {

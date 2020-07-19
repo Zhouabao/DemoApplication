@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager

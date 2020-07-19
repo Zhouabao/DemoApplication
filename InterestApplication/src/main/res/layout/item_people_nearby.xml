@@ -125,7 +125,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginLeft="5dp"
-        android:src="@drawable/icon_vip"
+        android:src="@drawable/icon_pt_vip"
         app:layout_constraintBottom_toBottomOf="@id/userNameAge"
         app:layout_constraintLeft_toRightOf="@id/userNameAge"
         app:layout_constraintTop_toTopOf="@id/userNameAge" />

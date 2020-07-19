@@ -18,7 +18,6 @@ import android.widget.RadioButton
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.alipay.sdk.app.PayTask
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.data.net.RetrofitFactory
@@ -34,7 +33,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.*
-import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -45,7 +43,6 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -272,6 +269,7 @@ class ChargeVipDialog(
                     CommonFunction.toast(CommonFunction.getErrorMsg(context1))
                 }
             })
+
     }
 
     @SuppressLint("HandlerLeak")

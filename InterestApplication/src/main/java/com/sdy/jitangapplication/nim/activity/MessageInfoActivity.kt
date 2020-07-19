@@ -14,10 +14,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.friend.FriendService
-import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.baselibrary.glide.GlideUtil
@@ -32,7 +30,6 @@ import com.sdy.jitangapplication.event.StarEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
-import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver
 import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageListPanelHelper
 import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
 import com.sdy.jitangapplication.nim.uikit.common.activity.UI

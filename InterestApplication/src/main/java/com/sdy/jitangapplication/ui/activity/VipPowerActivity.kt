@@ -122,7 +122,7 @@ class VipPowerActivity() :
     private fun initData() {
         GlideUtil.loadCircleImg(this, UserManager.getAvator(), vipPowerAvator)
         vipPowerNickname.text = SPUtils.getInstance(Constants.SPNAME).getString("nickname")
-
+        vipSaveAmount.text = data?.platinum_save_str
         //支付价格
         val vipChargeAdapter = VipChargeAdapter()
         vipChargeRv.layoutManager =
@@ -144,11 +144,13 @@ class VipPowerActivity() :
 //        manager.justifyContent = JustifyContent.CENTER
         vipPowerRv.layoutManager = manager
         vipPowerRv.adapter = vipPowerAdapter
+        seemoreBtn.isVisible = !data?.pt_icon_list.isNullOrEmpty() && data?.pt_icon_list!!.size > 2
 
-        if (data!!.isvip)
-            vipOutTime.text = "${data!!.vip_express}到期"
-        else
+        if (data!!.isvip) {
+            vipOutTime.text = "${data!!.platinum_vip_express}到期"
+        } else {
             vipOutTime.text = "立即升级享受更多特权"
+        }
 
         vipChargeAdapter.setNewData(data?.pt_list)
         vipPowerAdapter.setNewData(data?.pt_icon_list)

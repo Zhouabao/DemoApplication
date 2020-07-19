@@ -323,26 +323,6 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
             avatarLeft.setOnClickListener(portraitListener);
             avatarRight.setOnClickListener(portraitListener);
         }
-        // 已读回执响应事件
-        if (NimUIKitImpl.getSessionListener() != null) {
-            ackMsgTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NimUIKitImpl.getSessionListener().onAckMsgClicked(context, message);
-                }
-            });
-        }
-
-        // 获取已读回执响应事件
-        if (NimUIKitImpl.getSessionListener() != null) {
-            readReceiptTextViewBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NimUIKitImpl.getSessionListener().onGetReceivcedMsgClicked(context, message);
-                }
-            });
-        }
-
     }
 
     /**

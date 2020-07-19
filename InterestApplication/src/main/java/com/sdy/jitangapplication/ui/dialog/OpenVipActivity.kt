@@ -48,7 +48,7 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class OpenVipActivity : BaseActivity() {
-    val moreMatch by lazy { intent.getSerializableExtra("moreMatch") as MoreMatchBean? }
+    val moreMatch by lazy { intent.getSerializableExtra("morematchbean") as MoreMatchBean? }
     val from by lazy { intent.getIntExtra("from", FROM_REGISTER_OPEN_VIP) }
     val peopleAmount by lazy { intent.getIntExtra("peopleAmount", -1) }
 
@@ -67,7 +67,7 @@ class OpenVipActivity : BaseActivity() {
             peopleAmount: Int = -1
         ) {
             context.startActivity<OpenVipActivity>(
-                "moreMatch" to moreMatchBean,
+                "morematchbean" to moreMatchBean,
                 "from" to from,
                 "peopleAmount" to peopleAmount
             )

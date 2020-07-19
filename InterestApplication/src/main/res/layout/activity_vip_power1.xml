@@ -155,7 +155,7 @@
             <RelativeLayout
                 android:id="@+id/wechatPayBtn"
                 android:layout_width="0dp"
-                android:layout_height="47dp"
+                android:layout_height="46dp"
                 android:layout_marginLeft="27dp"
                 android:layout_marginTop="13dp"
                 android:layout_marginRight="27dp"
@@ -205,7 +205,7 @@
         android:textColor="#ffb0b2b6"
         android:textSize="14sp"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

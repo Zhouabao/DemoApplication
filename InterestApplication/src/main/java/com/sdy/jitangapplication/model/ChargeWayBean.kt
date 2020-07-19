@@ -24,6 +24,7 @@ data class ChargeWayBeans(
     val first_recharge: String = "",
     val isplatinum: Boolean = false,
     val threshold_btn: Boolean = false,
+    val platinum_save_str: String = "",
     val platinum_vip_express: String = ""
 )
 

@@ -15,12 +15,12 @@ import com.sdy.jitangapplication.model.VisitorBean
 import com.sdy.jitangapplication.presenter.MyVisitPresenter
 import com.sdy.jitangapplication.presenter.view.MyVisitView
 import com.sdy.jitangapplication.ui.adapter.MyVisitAdater
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_visit.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_visit_headview.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 我的访客
@@ -72,7 +72,7 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            ChargeVipDialog(ChargeVipDialog.LOOKED_ME, this).show()
+            startActivity<VipPowerActivity>()
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

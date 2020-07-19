@@ -63,7 +63,7 @@ class VipChargeAdapter() :
         holder.itemView.vipLong.text = item.ename ?: ""
 
         //todo ≈好多钱每天
-        holder.itemView.vipEachDayPrice.text = item.ename ?: ""
+        holder.itemView.vipEachDayPrice.text = "≈${item.unit_price}元/天"
 
         if (item.is_promote) {
             holder.itemView.purchaseCl.setBackgroundResource(R.drawable.shape_rectangle_blue_stroke_10dp)

@@ -2,12 +2,10 @@ package com.sdy.jitangapplication.nim.viewholder;
 
 import android.widget.TextView;
 
-import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment;
 import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
-import com.sdy.jitangapplication.ui.dialog.ContactCandyReceiveDialog;
 
 /**
  * author : ZFM
@@ -68,7 +66,7 @@ public class MsgViewHolderContactCandy extends MsgViewHolderBase {
 
     @Override
     protected void onItemClick() {
-        if (message.getDirect() == MsgDirectionEnum.In)
-            new ContactCandyReceiveDialog(attachment.getContactCandy(), context).show();
+//        if (message.getDirect() == MsgDirectionEnum.In)
+
     }
 }

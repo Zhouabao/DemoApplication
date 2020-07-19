@@ -281,6 +281,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         }
         userName1.text = userInfoBean?.userinfo?.nickname ?: ""
         userSign.text = userInfoBean?.sign ?: ""
+        vipLevelSaveCount.text = "${userInfoBean?.platinum_vip_str}"
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isplatinum ?: false)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
@@ -352,7 +353,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             isVipPowerBtn.text = "升级会员"
             vipLevelSaveCount.text = "钻石会员丨开通节省300个糖果"
         } else {
-            EventBus.getDefault().post(UpdateSameCityVipEvent())
             isVipPowerBtn.text = "续费会员"
             vipLevelSaveCount.text = "钻石会员丨已为你节省300个糖果"
 

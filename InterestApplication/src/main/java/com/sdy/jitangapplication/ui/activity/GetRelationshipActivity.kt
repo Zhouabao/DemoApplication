@@ -129,7 +129,7 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
     override fun onAddWant(b: Boolean, data: MoreMatchBean?) {
         if (b) {
-            val moreMatchBean = intent.getSerializableExtra("moreMatch") as MoreMatchBean?
+            val moreMatchBean = intent.getSerializableExtra("morematchbean") as MoreMatchBean?
             if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
                 startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
             } else {

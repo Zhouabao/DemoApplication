@@ -26,8 +26,8 @@ import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
-import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment;
+import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
@@ -57,7 +57,6 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderWishHelp;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 
 import java.util.ArrayList;
@@ -265,18 +264,6 @@ public class SessionHelper {
             @Override
             public void onAvatarLongClicked(Context context, IMMessage message) {
                 // 一般用于群组@功能，或者弹出菜单，做拉黑，加好友等功能
-            }
-
-            @Override
-            public void onAckMsgClicked(Context context, IMMessage message) {
-                // 已读回执事件处理，用于群组的已读回执事件的响应，弹出消息已读详情
-            }
-
-            @Override
-            public void onGetReceivcedMsgClicked(Context context, IMMessage message) {
-                // 获取已读回执，用于弹出会员详情
-                if (!UserManager.INSTANCE.isUserVip())
-                    new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
             }
 
             @Override
