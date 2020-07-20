@@ -7,6 +7,12 @@
     android:background="@color/colorDivider1"
     android:orientation="vertical">
 
+    <View
+        android:background="#F4F4F4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+
     <LinearLayout
         android:id="@+id/unlockContactLl"
         android:layout_width="match_parent"
@@ -30,7 +36,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="她担心你找不到她，给你留下了联系方式"
+            android:text="她给你留下了联系方式"
             android:textColor="#ff191919"
             android:textSize="13sp" />
 
@@ -39,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/shape_rectangle_green_15"
             android:paddingLeft="14dp"
             android:paddingTop="3dp"
@@ -48,6 +54,14 @@
             android:text="查看"
             android:textColor="#ffffffff"
             android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/closeContactBtn"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_close_chat"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

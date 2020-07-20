@@ -25,10 +25,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.event.MatchByWishHelpEvent
-import com.sdy.jitangapplication.event.UpdateApproveEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.model.UnlockBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -138,6 +135,7 @@ class ChatUpOpenPtVipDialog(
 
         when (type) {
             TYPE_CHAT -> { //解锁聊天
+                //是否钻石 是否联系方式  是否在线
                 if (chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                     chatupContact.isVisible = chatUpBean.contact_way != 0
@@ -151,6 +149,7 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.clickWithTrigger {
                             unlockChat()
                         }
+
                     } else {
                         openPtVipBtn.text = "解锁聊天"
                         chatupUnlockChat.isVisible = false
@@ -159,7 +158,7 @@ class ChatUpOpenPtVipDialog(
                         }
                     }
 
-                    if (chatUpBean.online) {
+                    if (chatUpBean.online || !chatupContact.isVisible) {
                         if (chatUpBean.plat_cnt > 0) {
                             chatupTitle.text = "要给她打个招呼吗"
                             chatupContent.text = "今日还可免费解锁${chatUpBean.plat_cnt}次聊天"
@@ -168,8 +167,8 @@ class ChatUpOpenPtVipDialog(
                             chatupTitle.text = "今日免费次数已用完"
                             chatupContent.text = "今日免费聊天次数已用完"
                             chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                            openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                         }
-
                     } else {
                         chatupTitle.text = "她今天没上线哦"
                         chatupContent.text = "她今天没有在线\n你可以直接解锁她的联系方式找到她"
@@ -243,7 +242,7 @@ class ChatUpOpenPtVipDialog(
                     } else { //差一个次数用尽
                         chatupTitle.text = "是否要解锁聊天"
                         chatupContent.text = "今日免费解锁次数已用完"
-                        openPtVipBtn.text = "解锁聊天  ${chatUpBean.chat_amount}糖果"
+                        openPtVipBtn.text = "解锁聊天  （${chatUpBean.chat_amount}糖果）"
                         openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                         // 解锁搭讪聊天
                         openPtVipBtn.clickWithTrigger {
@@ -276,6 +275,7 @@ class ChatUpOpenPtVipDialog(
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
         window?.attributes = params
         setCancelable(true)
         setCanceledOnTouchOutside(true)
@@ -306,10 +306,11 @@ class ChatUpOpenPtVipDialog(
                         Handler().postDelayed({
                             loadingDialog.dismiss()
                             ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
-                        }, 250L)
+                        }, 400L)
                     } else {
                         loadingDialog.dismiss()
                     }
+                    dismiss()
 //                    sendContactMessage(contactContent, contactWay)
                 }
 
@@ -409,6 +410,7 @@ class ChatUpOpenPtVipDialog(
                                 dismiss()
                             }, 250L)
                         } else {
+                            EventBus.getDefault().post(HideContactLlEvent())
                             loading.dismiss()
                         }
                     } else if (t.code == 419) {
@@ -418,7 +420,7 @@ class ChatUpOpenPtVipDialog(
                         loading.dismiss()
                         CommonFunction.toast(t.msg)
                     }
-
+                    dismiss()
                 }
 
                 override fun onError(e: Throwable?) {
@@ -463,7 +465,7 @@ class ChatUpOpenPtVipDialog(
                         loading.dismiss()
                         CommonFunction.toast(t.msg)
                     }
-
+                    dismiss()
                 }
 
                 override fun onError(e: Throwable?) {

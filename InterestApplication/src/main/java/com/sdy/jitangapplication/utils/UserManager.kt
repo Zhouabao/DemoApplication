@@ -195,7 +195,6 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { saveGender(it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-            saveUserVip(data.extra_data?.isvip ?: false)
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)

@@ -143,6 +143,8 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
 
 //            是隐藏就开，默认不隐藏
             switchShowContact.isChecked = data.contact_way_hide == 2
+            getCandy.isVisible = !data.contact_way_str.isNullOrEmpty()
+            getCandy.text = data.contact_way_str
         }
 
     }

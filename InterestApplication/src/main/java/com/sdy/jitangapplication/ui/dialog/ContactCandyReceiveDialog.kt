@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.dialog_contact_candy_receive.*
  */
 class ContactCandyReceiveDialog(
     var target_accid: String,
-    var get_help_amount: Int, context: Context
+    var get_help_amount: String, context: Context
 ) :
     Dialog(context, R.style.MyDialog) {
 
@@ -36,7 +36,7 @@ class ContactCandyReceiveDialog(
     }
 
     private fun initView() {
-        t2.text = "获得${get_help_amount}糖果"
+        t2.text = get_help_amount
         okBtn.clickWithTrigger { dismiss() }
     }
 

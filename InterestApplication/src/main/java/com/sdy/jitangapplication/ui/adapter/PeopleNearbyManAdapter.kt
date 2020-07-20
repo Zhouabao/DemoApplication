@@ -130,7 +130,7 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
                 if (UserManager.touristMode)
                     TouristDialog(mContext).show()
                 else
-                    CommonFunction.checkSendGift(mContext, item.accid)
+                    CommonFunction.checkChat(mContext, item.accid)
             }
             //获取联系方式
             itemView.userContactBtn.clickWithTrigger {

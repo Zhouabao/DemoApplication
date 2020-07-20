@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
+import com.sdy.jitangapplication.event.HideContactLlEvent;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
@@ -113,7 +114,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private TextView leftChatTimes, gotoVerifyBtn, unlockContactBtn;
     private LinearLayout messageActivityBottomLayout, verifyLl, unlockContactLl;
     private FrameLayout unlockChatLl;
-    private ImageView contactIv;
+    private ImageView contactIv, closeContactBtn;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -134,6 +135,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         unlockContactLl = rootView.findViewById(R.id.unlockContactLl);
         unlockContactBtn = rootView.findViewById(R.id.unlockContactBtn);
         contactIv = rootView.findViewById(R.id.contactIv);
+        closeContactBtn = rootView.findViewById(R.id.closeContactBtn);
 
         // 去认证
         gotoVerifyBtn.setOnClickListener(v -> {
@@ -153,6 +155,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         // 解锁联系方式
         unlockContactBtn.setOnClickListener(v -> {
             CommonFunction.INSTANCE.checkUnlockContact(getActivity(), sessionId, 1);
+        });
+
+        // 关系解锁联系方式
+        closeContactBtn.setOnClickListener(v -> {
+            unlockContactLl.setVisibility(View.GONE);
         });
         return rootView;
     }
@@ -260,6 +267,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateApproveEvent(UpdateSendGiftEvent event) {
         messageListPanel.onMsgSend(event.getMessage());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void hideContactLlEvent(HideContactLlEvent event) {
+        unlockContactLl.setVisibility(View.GONE);
+        nimBean.set_unlock_contact(true);
+
     }
 
     /**
@@ -559,8 +573,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         messageListPanel.refreshMessageList();
         // inputPanel.checkIsSendMsg();
 
-        if (nimBean.is_unlocked_popup() > 0) {
-            new ContactCandyReceiveDialog(sessionId, nimBean.is_unlocked_popup(), getActivity()).show();
+        if (!nimBean.getUnlock_popup_str().isEmpty()) {
+            new ContactCandyReceiveDialog(sessionId, nimBean.getUnlock_popup_str(), getActivity()).show();
+            nimBean.setUnlock_popup_str("");
         }
     }
 

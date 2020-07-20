@@ -26,16 +26,17 @@ import java.io.File
 
 class ContentPresenter : BasePresenter<ContentView>() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(context) }
+
     /**
      * 获取广场列表
      */
     fun checkBlock() {
-
         RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
-                    if (!loadingDialog.isShowing) loadingDialog.show()
+                    if (!loadingDialog.isShowing)
+                        loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {

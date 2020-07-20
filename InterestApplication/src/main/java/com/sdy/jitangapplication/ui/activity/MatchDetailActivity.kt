@@ -335,7 +335,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         userVideoCl.isVisible = matchBean!!.mv_btn
         //钻石或者女性可以免费看
-        if (matchBean!!.myisplatinumvip )
+        if (matchBean!!.myisplatinumvip)
             GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
         else
             Glide.with(this)
@@ -424,7 +424,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                 ), null, null, null
             )
-            detailUserVerify.text = matchBean!!.face_str
+            if (matchBean!!.face_str.isNullOrEmpty()) {
+                detailUserVerify.text = "已认证"
+            } else {
+                detailUserVerify.text = matchBean!!.face_str
+            }
         } else {
             detailUserVerify.isVisible = false
         }
@@ -688,7 +692,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {
                 if (matchBean != null)
-                    CommonFunction.checkSendGift(this, matchBean!!.accid)
+                    CommonFunction.checkChat(this, matchBean!!.accid)
             }
 
             R.id.backBtn1, R.id.btnBack2,

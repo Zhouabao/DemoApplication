@@ -115,7 +115,7 @@ object CommonFunction {
      * 是好友就直接跳聊天界面
      * 	201 拉起充值会员 206 是好友进聊天 200 拉起礼物列表
      */
-    fun checkSendGift(context1: Context, target_accid: String) {
+    fun checkChat(context1: Context, target_accid: String) {
         val loading = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
             .checkChat(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
@@ -213,6 +213,36 @@ object CommonFunction {
                             Handler().postDelayed({
                                 ChatActivity.start(context, target_accid)
                             }, 500L)
+                        }
+
+                        207 -> { //女性解锁男性聊天方式
+                            if (t.msg.isNullOrEmpty()) {
+                                Handler().postDelayed({
+                                    ChatActivity.start(context, target_accid)
+                                }, 500L)
+                            } else {
+                                val msg = MessageBuilder.createTextMessage(
+                                    target_accid,
+                                    SessionTypeEnum.P2P,
+                                    t.msg
+                                )
+                                NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
+                                    .setCallback(object : RequestCallback<Void> {
+                                        override fun onSuccess(p0: Void?) {
+                                            Handler().postDelayed({
+                                                ChatActivity.start(context, target_accid)
+                                            }, 500L)
+                                        }
+
+                                        override fun onFailed(p0: Int) {
+                                        }
+
+                                        override fun onException(p0: Throwable?) {
+                                        }
+
+                                    })
+                            }
+
                         }
                         else -> {
                             toast(t.msg)

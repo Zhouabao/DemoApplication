@@ -238,7 +238,7 @@ class MessageListAdapter :
             }
             is ContactCandyAttachment->{
                 holder.itemView.text.text =
-                    "『糖果礼物』"
+                    "『解锁聊天方式』"
             }
             is SendCustomTipAttachment -> holder.itemView.text.text =
                 (item.attachment as SendCustomTipAttachment).content

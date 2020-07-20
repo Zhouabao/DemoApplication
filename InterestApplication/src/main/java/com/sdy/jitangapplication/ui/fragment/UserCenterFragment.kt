@@ -58,7 +58,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.startActivityForResult
 import java.util.*
 import kotlin.math.abs
 
@@ -403,7 +402,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             //个人信息设置
             R.id.userAvator,
             R.id.userInfoSettingBtn -> {
-                startActivityForResult<NewUserInfoSettingsActivity>(REQUEST_INFO_SETTING)
+                startActivity<NewUserInfoSettingsActivity>()
 
             }
             //会员权益

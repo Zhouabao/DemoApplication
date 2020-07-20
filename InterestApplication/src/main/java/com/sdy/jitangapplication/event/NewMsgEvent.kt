@@ -33,6 +33,9 @@ class ShowNearCountEvent()
 
 class UpdateApproveEvent()
 
+
+class HideContactLlEvent()
+
 /**
  * 更新发送礼物的事件
  */

@@ -122,8 +122,8 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
             .excute(object : BaseSubscriber<BaseResp<TodayFateBean?>>() {
                 override fun onStart() {
                     super.onStart()
-                    if (firstLoad)
-                        loadingDialog.show()
+//                    if (firstLoad)
+//                        loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<TodayFateBean?>) {

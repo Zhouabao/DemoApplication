@@ -194,6 +194,7 @@ data class A(
 
 data class ContactWayBean(
     var contact_way: Int = 0,
+    var contact_way_str: String = "",
     var contact_way_content: String = "",
     var contact_way_hide: Int = 0
 )

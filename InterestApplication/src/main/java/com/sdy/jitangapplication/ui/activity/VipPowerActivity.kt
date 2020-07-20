@@ -167,12 +167,12 @@ class VipPowerActivity() :
         vipChargeRv.isVisible = true
         zhiPayBtn.isVisible = true
         wechatPayBtn.isVisible = true
-        zhiPayPrice.text = if (data!!.isvip) {
+        zhiPayPrice.text = if (data!!.isplatinum) {
             "立即续费"
         } else {
             "支付宝支付"
         }
-        wechatPayPrice.text = if (data!!.isvip) {
+        wechatPayPrice.text = if (data!!.isplatinum) {
             "立即续费"
         } else {
             "微信支付"

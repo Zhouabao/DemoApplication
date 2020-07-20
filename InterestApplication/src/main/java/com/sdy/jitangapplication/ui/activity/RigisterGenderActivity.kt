@@ -91,7 +91,7 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
             UserManager.saveGender(gender)
             //男性跳转更多配对，女性跳转个人信息
             if (gender == 1) {
-                startActivity<GetMoreMatchActivity>("moreMatch" to moreMatchBean)
+                startActivity<GetMoreMatchActivity>("morematchbean" to moreMatchBean)
             } else {
                 startActivity<RegisterInfoActivity>()
             }

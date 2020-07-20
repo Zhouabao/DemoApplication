@@ -205,7 +205,7 @@ class MultiListSquareAdapter(
                 if (UserManager.touristMode) {
                     TouristDialog(mContext).show()
                 } else
-                    CommonFunction.checkSendGift(mContext, item.accid)
+                    CommonFunction.checkChat(mContext, item.accid)
 
             }
 

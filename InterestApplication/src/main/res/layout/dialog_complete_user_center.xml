@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -11,13 +10,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="300dp"
-        android:layout_height="398dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:orientation="vertical">
 
 
-        <ImageView
+        <com.sdy.jitangapplication.widgets.RoundTopImageView
             android:id="@+id/accountDangerLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +25,8 @@
             android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:topRadius="10dp" />
 
         <ImageView
             android:id="@+id/closeBtn"
@@ -73,12 +73,14 @@
             android:layout_width="232dp"
             android:layout_height="40dp"
             android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/shape_rectangle_orange_24dp"
             android:gravity="center"
             android:text="去完善"
             android:textColor="#ffffffff"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/t2" />

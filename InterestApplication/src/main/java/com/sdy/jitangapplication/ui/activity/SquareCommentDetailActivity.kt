@@ -826,7 +826,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 showMoreDialog()
             }
             R.id.squareChatBtn1, R.id.headSquareChatBtn1 -> {
-                CommonFunction.checkSendGift(this, squareBean?.accid ?: "")
+                CommonFunction.checkChat(this, squareBean?.accid ?: "")
             }
             R.id.squareUserIv1, R.id.headSquareUserIv1 -> {
                 if ((squareBean?.accid ?: "") != UserManager.getAccid())

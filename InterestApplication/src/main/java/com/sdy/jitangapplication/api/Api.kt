@@ -775,7 +775,7 @@ interface Api {
      * 门槛支付列表
      */
     @FormUrlEncoded
-    @POST("PayOrder/getThreshold${Constants.END_BASE_URL}")
+    @POST("PayOrder/getThresholdV223${Constants.END_BASE_URL}")
     fun getThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 
@@ -1254,7 +1254,7 @@ interface Api {
      *
      */
     @FormUrlEncoded
-    @POST("Home/tagUnlockPopup${Constants.END_BASE_URL}")
+    @POST("MemberInfo/tagUnlockPopup${Constants.END_BASE_URL}")
     fun tagUnlockPopup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
