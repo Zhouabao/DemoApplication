@@ -22,7 +22,8 @@ class VipPowerAdapter(val type: Int) :
     BaseQuickAdapter<VipDescr, BaseViewHolder>(R.layout.item_vip_power) {
     override fun convert(helper: BaseViewHolder, item: VipDescr) {
         GlideUtil.loadCircleImg(mContext, item.icon_vip, helper.itemView.powerImg)
-        helper.itemView.powerContent.text = item.title ?: ""
+        helper.itemView.powerTitle.text = item.title ?: ""
+        helper.itemView.powerContent.text = item.rule ?: ""
         if (type == VipPowerBean.TYPE_NORMAL_VIP) {
             helper.itemView.powerContent.setTextColor(Color.parseColor("#ffcd7e14"))
         } else {

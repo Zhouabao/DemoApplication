@@ -47,10 +47,7 @@ import com.sdy.jitangapplication.ui.activity.GetMoreMatchActivity
 import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.ContactNotPassDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.ui.dialog.VerifyNormalResultDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -153,7 +150,10 @@ class MyApplication : BaseApplication() {
                             EventBus.getDefault()
                                 .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
-                            if (ActivityUtils.getTopActivity() !is GetMoreMatchActivity && ActivityUtils.getTopActivity() !is GetRelationshipActivity)
+                            if (ActivityUtils.getTopActivity() !is GetMoreMatchActivity
+                                && ActivityUtils.getTopActivity() !is GetRelationshipActivity
+                                && ActivityUtils.getTopActivity() !is OpenVipActivity
+                            )
                                 CommonFunction.startToFace(
                                     ActivityUtils.getTopActivity(),
                                     IDVerifyActivity.TYPE_ACCOUNT_NORMAL

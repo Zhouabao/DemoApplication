@@ -23,6 +23,7 @@ class WomanLivingActivity : BaseActivity() {
                 "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
                 "morematchbean" to morematchbean
             )
+            finish()
         }
     }
 
