@@ -58,7 +58,6 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
 
         holder.itemView.vipLong.text = item.ename ?: ""
 
-        //todo ≈好多钱每天
         holder.itemView.vipEachDayPrice.text = item.unit_price
 
         if (item.is_promote) {
