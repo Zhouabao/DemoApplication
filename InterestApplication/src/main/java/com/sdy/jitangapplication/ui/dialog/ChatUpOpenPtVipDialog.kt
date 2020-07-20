@@ -139,7 +139,6 @@ class ChatUpOpenPtVipDialog(
                 if (chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                     chatupContact.isVisible = chatUpBean.contact_way != 0
-                    chatupContact.text = chatUpBean.contact
                     if (chatupContact.isVisible) {
                         openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
                         chatupUnlockChat.isVisible = true
@@ -177,11 +176,12 @@ class ChatUpOpenPtVipDialog(
                         } else {
                             chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                         }
+                        openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
                     }
                 } else {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                     openPtVipBtn.text = "成为高级会员，免费开启聊天"
-                    chatupUnlockChat.text = "解锁聊天   （${chatUpBean.chat_amount}糖果）"
+                    chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()
                     }
@@ -208,7 +208,7 @@ class ChatUpOpenPtVipDialog(
                 if (chatUpBean.isplatinum) {
                     chatupTitle.text = "要解锁她的联系方式吗"
                     chatupContent.text = "解锁联系方式同时会解锁与她的聊天"
-                    openPtVipBtn.text = "解锁联系方式  （${chatUpBean.contact_amount}糖果）"
+                    openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
                     openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                     // 解锁联系方式
                     openPtVipBtn.clickWithTrigger {
@@ -242,7 +242,7 @@ class ChatUpOpenPtVipDialog(
                     } else { //差一个次数用尽
                         chatupTitle.text = "是否要解锁聊天"
                         chatupContent.text = "今日免费解锁次数已用完"
-                        openPtVipBtn.text = "解锁聊天  （${chatUpBean.chat_amount}糖果）"
+                        openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                         openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                         // 解锁搭讪聊天
                         openPtVipBtn.clickWithTrigger {
@@ -254,7 +254,7 @@ class ChatUpOpenPtVipDialog(
                     chatupTitle.text = "是否要解锁聊天"
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                     openPtVipBtn.text = "成为高级会员，免费开启聊天"
-                    chatupUnlockChat.text = "解锁聊天   （${chatUpBean.chat_amount}糖果）"
+                    chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     openPtVipBtn.clickWithTrigger {
                         context1.startActivity<VipPowerActivity>()
                     }

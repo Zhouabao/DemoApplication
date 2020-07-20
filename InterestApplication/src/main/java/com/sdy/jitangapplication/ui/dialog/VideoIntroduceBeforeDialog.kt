@@ -87,6 +87,7 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
 //        params?.alpha = 0.5f
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.MATCH_PARENT
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)

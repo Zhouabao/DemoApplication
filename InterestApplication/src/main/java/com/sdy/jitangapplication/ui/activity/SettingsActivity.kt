@@ -8,7 +8,6 @@ import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kennyc.view.MultiStateView
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -74,6 +73,26 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
     }
 
+    private val dialog by lazy {
+        CommonAlertDialog.Builder(this)
+            .setTitle("退出登录")
+            .setContent("是否退出登录？\n退出后用户信息将在上次登录位置对其他用户持续可见")
+            .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+                override fun onClick(dialog: Dialog) {
+                    dialog.cancel()
+                }
+
+            })
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                override fun onClick(dialog: Dialog) {
+                    NIMClient.getService(AuthService::class.java).logout()
+                    UserManager.startToLogin(this@SettingsActivity)
+                }
+
+            })
+            .create()
+    }
+
     override fun onClick(view: View) {
         when (view.id) {
             //黑名单
@@ -109,25 +128,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
             //退出登录，同时退出IM和服务器
             R.id.loginOutBtn -> {
-                CommonAlertDialog.Builder(this)
-                    .setTitle("退出登录")
-                    .setContent("是否退出登录？\n退出后用户信息将在上次登录位置对其他用户持续可见")
-                    .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                        override fun onClick(dialog: Dialog) {
-                            dialog.cancel()
-                        }
-
-                    })
-                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                        override fun onClick(dialog: Dialog) {
-                            NIMClient.getService(AuthService::class.java).logout()
-                            UserManager.startToLogin(this@SettingsActivity)
-                        }
-
-                    })
-                    .create()
-                    .show()
-
+                if (!dialog.isShowing)
+                    dialog.show()
             }
             //返回
             R.id.btnBack -> {
@@ -207,14 +209,15 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     }
 
 
-
     private var settingsBean: SettingsBean? = null
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
             this.settingsBean = settingsBean
-            SPUtils.getInstance(Constants.SPNAME).put("switchDianzan", settingsBean?.notify_square_like_state?:true)
-            SPUtils.getInstance(Constants.SPNAME).put("switchComment", settingsBean?.notify_square_comment_state?:true)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("switchDianzan", settingsBean?.notify_square_like_state ?: true)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("switchComment", settingsBean?.notify_square_comment_state ?: true)
 
 
             stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT

@@ -310,6 +310,11 @@ class OpenVipActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         EventBus.getDefault().unregister(this)
     }
 

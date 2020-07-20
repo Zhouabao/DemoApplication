@@ -291,6 +291,11 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
 
 
     private fun checkConfirmEnable() {
+        if (userNickName.text.trim().isEmpty() || contactWayEt.text.trim().isEmpty()) {
+            nextBtn.isEnabled = false
+            return
+        }
+
         nextBtn.isEnabled =
 //            userGender.text.isNotEmpty() &&
             userBirth.text.isNotEmpty()

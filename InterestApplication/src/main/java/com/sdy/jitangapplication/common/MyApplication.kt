@@ -152,6 +152,7 @@ class MyApplication : BaseApplication() {
                         } else {
                             if (ActivityUtils.getTopActivity() !is GetMoreMatchActivity
                                 && ActivityUtils.getTopActivity() !is GetRelationshipActivity
+                                && ActivityUtils.getTopActivity() !is IDVerifyActivity
                                 && ActivityUtils.getTopActivity() !is OpenVipActivity
                             )
                                 CommonFunction.startToFace(
