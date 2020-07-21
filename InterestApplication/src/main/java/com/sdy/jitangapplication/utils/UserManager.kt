@@ -432,6 +432,7 @@ object UserManager {
         /**
          * 认证相关缓存清空
          */
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowSettingNew")
         SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideVerify")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         SPUtils.getInstance(Constants.SPNAME).remove("notice")
@@ -495,6 +496,15 @@ object UserManager {
 
     fun saveShowGuideVerify(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideVerify", isShow)
+    }
+
+
+    fun isShowSettingNew(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowSettingNew", false)
+    }
+
+    fun saveShowSettingNew(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowSettingNew", isShow)
     }
 
     /**

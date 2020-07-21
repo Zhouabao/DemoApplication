@@ -3,10 +3,13 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.NotificationUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.presenter.NotificationPresenter
 import com.sdy.jitangapplication.presenter.view.NotificationView
@@ -17,7 +20,7 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  * 通知提醒
  */
 class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), NotificationView,
-    CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+    CompoundButton.OnCheckedChangeListener, OnLazyClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,8 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
         tvSwitchComment.setOnClickListener(this)
         tvSwitchDianzan.setOnClickListener(this)
+        switchMessageBtn.setOnClickListener(this)
+        openPushBtn.setOnClickListener(this)
         //switchDianzan.setOnCheckedChangeListener(this)
         //switchComment.setOnCheckedChangeListener(this)
         switchReply.setOnCheckedChangeListener(this)
@@ -49,13 +54,17 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
         switchComment.isChecked = intent.getBooleanExtra("notify_square_comment_state", true)
         switchMusic.isChecked = DemoCache.getNotificationConfig().ring
         switchVibrator.isChecked = DemoCache.getNotificationConfig().vibrate
+
+        if (NotificationUtils.areNotificationsEnabled()) {
+            openPushStatus.text = "已开启"
+        } else {
+            openPushStatus.text = "未开启"
+        }
     }
 
 
     override fun onCheckedChanged(button: CompoundButton, check: Boolean) {
         when (button.id) {
-
-
             //回复提醒
             R.id.switchReply -> {
                 NIMClient.toggleNotification(check)
@@ -73,17 +82,25 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
                 NIMClient.updateStatusBarNotificationConfig(config)
 
             }
+
         }
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view) {
-            tvSwitchDianzan -> {    //点赞提醒
+            tvSwitchDianzan -> {//点赞提醒
                 mPresenter.squareNotifySwitch(1)
             }
-            tvSwitchComment -> {     //评论提醒
+            tvSwitchComment -> {//评论提醒
                 mPresenter.squareNotifySwitch(2)
+            }
+            switchMessageBtn -> {//短信通知开关
+                //todo 短信通知请求开关
+
+            }
+            openPushBtn -> { //开启推送通知,跳转到设置界面
+                AppUtils.launchAppDetailsSettings()
             }
         }
     }
@@ -91,7 +108,6 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
     //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论
     override fun onGreetApproveResult(type: Int, success: Boolean) {
-
         when (type) {
             1 -> {
                 switchDianzan.isChecked = !switchDianzan.isChecked
@@ -102,4 +118,5 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
         }
     }
+
 }

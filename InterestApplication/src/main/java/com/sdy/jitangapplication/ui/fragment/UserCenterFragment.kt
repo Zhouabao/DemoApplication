@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.fragment
 
 import android.animation.Animator
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
@@ -13,11 +12,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,7 +62,7 @@ import kotlin.math.abs
  * 我的用户中心
  */
 class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterView,
-    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
+    OnLazyClickListener {
 
     companion object {
         const val REQUEST_INFO_SETTING = 11
@@ -289,14 +286,44 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         checkVip()
         setUserPower()
 
-
-
-        if (UserManager.getGender() == 1 && !UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
-            userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
-
         EventBus.getDefault()
             .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
+
+        if (!UserManager.isShowGuideVerify()) {
+            noticeSettingIv.isVisible = true
+            val trans = ObjectAnimator.ofFloat(
+                noticeSettingIv,
+                "translationY",
+                SizeUtils.dp2px(-5F).toFloat(),
+                SizeUtils.dp2px(0F).toFloat(),
+                SizeUtils.dp2px(-5F).toFloat()
+            )
+            trans.duration = 500
+            trans.repeatCount = 4
+            trans.interpolator = LinearInterpolator()
+            trans.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    noticeSettingIv.isVisible = false
+                    UserManager.saveShowGuideVerify(true)
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+            trans.start()
+        } else {
+            noticeSettingIv.isVisible = false
+        }
+
     }
 
 
@@ -460,12 +487,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                     "url" to userInfoBean?.power_url
                 )
             }
-            //我的糖果
-            R.id.guideVerifyWindow -> {
-                guideVerifyWindow.isVisible = false
-                UserManager.saveShowGuideVerify(true)
-                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
-            }
+
         }
     }
 
@@ -512,83 +534,9 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         Log.d("onpause", "onpause=====")
     }
 
-    private var show = false
-    override fun onGlobalLayout() {
-        val width = userVerify.left
-        if (width > 0) {
-            if (userInfoBean?.userinfo?.isfaced != 1 && !show) {
-                (guideVerifyWindow.layoutParams as ConstraintLayout.LayoutParams).leftMargin =
-                    width + SizeUtils.dp2px(14F) - SizeUtils.dp2px(162F / 12 * guideContent.length)
-                guideVerifyWindow.isVisible = true
-                showAnimation()
-                show = true
-
-            } else {
-                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        }
-    }
-
-
-    fun showAnimation() {
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 300L
-        animatorSet.playTogether(
-            ObjectAnimator.ofFloat(guideVerifyWindow, "scaleX", 0.45f, 1F),
-            ObjectAnimator.ofFloat(guideVerifyWindow, "scaleY", 0.45f, 1F),
-            ObjectAnimator.ofFloat(guideVerifyWindow, "alpha", 0F, 1F)
-        )
-        animatorSet.start()
-
-        val trans = ObjectAnimator.ofFloat(
-            guideVerifyWindow,
-            "translationY",
-            SizeUtils.dp2px(-5F).toFloat(),
-            SizeUtils.dp2px(0F).toFloat(),
-            SizeUtils.dp2px(-5F).toFloat()
-        )
-        trans.duration = 750
-        trans.repeatCount = 4
-        trans.interpolator = LinearInterpolator()
-        trans.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                if (guideVerifyWindow != null)
-                    guideVerifyWindow.isVisible = false
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
-
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                trans.start()
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        guideVerifyWindow.clearAnimation()
     }
 }
 

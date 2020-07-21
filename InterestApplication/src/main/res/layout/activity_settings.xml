@@ -32,8 +32,8 @@
                 <TextView
                     android:id="@+id/t3"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:background="@color/colorDivider"
+                    android:layout_height="26dp"
+                    android:background="#FFF1F1F1"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:text="隐私设置"
@@ -62,20 +62,11 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="屏蔽通讯录"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="@id/switchContacts"
                     app:layout_constraintTop_toBottomOf="@id/t3" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/filterContacts" />
-
 
                 <Switch
                     android:id="@+id/switchDistance"
@@ -98,20 +89,54 @@
                     android:layout_marginTop="1dp"
                     android:gravity="center_vertical"
                     android:text="屏蔽距离"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="@id/switchDistance"
                     app:layout_constraintTop_toBottomOf="@id/filterContacts" />
 
 
-                <View
+                <TextView
+                    android:id="@+id/hideModeBtn"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:drawableRight="@drawable/icon_more_right"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15dp"
+                    android:text="隐身模式"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/filterDistance" />
+                    app:layout_constraintTop_toBottomOf="@id/filterDistance"
+                    app:layout_goneMarginTop="1dp" />
+
+
+                <TextView
+                    android:id="@+id/hideModeContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="37dp"
+                    android:textColor="#ffc8c8c8"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/hideModeBtn"
+                    tools:text="离线时隐身" />
+
+
+                <ImageView
+                    android:id="@+id/hideModeNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="74dp"
+                    android:visibility="gone"
+                    android:src="@drawable/icon_new"
+                    app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
+                    app:layout_constraintLeft_toLeftOf="@id/hideModeBtn"
+                    app:layout_constraintTop_toTopOf="@id/hideModeBtn" />
+
 
                 <TextView
                     android:id="@+id/blackListBtn"
@@ -122,25 +147,80 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="黑名单"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/filterDistance"
+                    app:layout_constraintTop_toBottomOf="@id/hideModeBtn"
                     app:layout_goneMarginTop="1dp" />
+
+
+                <TextView
+                    android:id="@+id/seeBlackListBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="37dp"
+                    android:textColor="#ffc8c8c8"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/blackListBtn"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/blackListBtn"
+                    tools:text="对所有用户" />
+
+                <TextView
+                    android:id="@+id/privacyPowerBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:drawableRight="@drawable/icon_more_right"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15dp"
+                    android:text="隐私权限"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/blackListBtn"
+                    app:layout_goneMarginTop="1dp" />
+
+
+                <ImageView
+                    android:id="@+id/privacyNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="74dp"
+                    android:visibility="gone"
+                    android:src="@drawable/icon_new"
+                    app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
+                    app:layout_constraintLeft_toLeftOf="@id/privacyPowerBtn"
+                    app:layout_constraintTop_toTopOf="@id/privacyPowerBtn" />
+
+
+                <TextView
+                    android:id="@+id/privacyPowerContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="37dp"
+                    android:textColor="#ffc8c8c8"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/privacyPowerBtn"
+                    tools:text="对所有用户" />
+
 
 
                 <TextView
                     android:id="@+id/t2"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:background="@color/colorDivider"
+                    android:layout_height="26dp"
+                    android:background="#FFF1F1F1"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:text="通用设置"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"
-                    app:layout_constraintTop_toBottomOf="@id/blackListBtn" />
+                    app:layout_constraintTop_toBottomOf="@id/privacyPowerBtn" />
 
                 <TextView
                     android:id="@+id/msgNotificate"
@@ -151,19 +231,22 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="消息提醒"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/t2" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/msgNotificate" />
+                <ImageView
+                    android:id="@+id/notificationNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="74dp"
+                    android:src="@drawable/icon_new"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/msgNotificate"
+                    app:layout_constraintLeft_toLeftOf="@id/msgNotificate"
+                    app:layout_constraintTop_toTopOf="@id/msgNotificate" />
 
 
                 <TextView
@@ -181,13 +264,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/msgNotificate" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/helpCenter" />
 
                 <TextView
                     android:id="@+id/aboutUs"
@@ -199,7 +275,7 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="关于"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -217,15 +293,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/aboutUs" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/aboutUs" />
-
-
                 <TextView
                     android:id="@+id/aboutAccount"
                     android:layout_width="0dp"
@@ -235,21 +302,13 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="账号相关"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/aboutUs" />
 
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/aboutAccount" />
 
                 <TextView
                     android:id="@+id/clearData"
@@ -260,7 +319,7 @@
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="清理缓存"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
