@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.model
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import java.io.Serializable
 
 /**
@@ -28,7 +29,6 @@ data class Ticket(
 )
 
 
-
 /**
  * 开屏页推荐
  */
@@ -40,7 +40,12 @@ data class IndexTopBean(
     var distance: String = "",
     var gender: Int = 0,
     var nickname: String = "",
-    var checked: Boolean = true
-) : Serializable
+    var type: Int = 1
+) :  MultiItemEntity,Serializable {
+    override fun getItemType(): Int {
+        return type
+    }
+}
+
 
 data class IndexListBean(var list: MutableList<IndexTopBean> = mutableListOf()) : Serializable

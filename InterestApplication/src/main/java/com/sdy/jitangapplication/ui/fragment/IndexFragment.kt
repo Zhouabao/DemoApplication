@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,16 +20,17 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.EnableRvScrollEvent
-import com.sdy.jitangapplication.event.ShowNearCountEvent
 import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.IndexListBean
+import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
+import com.sdy.jitangapplication.ui.dialog.ChoicenessOpenPtVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
@@ -55,9 +57,11 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("精选", "附近") }
+    private val titles by lazy { arrayOf("推荐", "附近") }
+
     //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
+
     //    private val findByTagFragment by lazy { FindByTagFragment() }
     private val sameCityFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_SAMECITY) }
 
@@ -111,11 +115,17 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         }
 
 
+        //todo 成为精选
+        tobeChoicessBtn.clickWithTrigger {
+            ChoicenessOpenPtVipDialog(activity!!).show()
+        }
+
     }
 
     private var taged = false
 
     private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
+
     //初始化顶部推荐数据
     private fun initHeadRecommendUser() {
         recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
@@ -177,7 +187,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 simplePagerTitleView.minScale = 0.66F
                 simplePagerTitleView.textSize = 24F
                 simplePagerTitleView.normalColor = Color.parseColor("#191919")
-                simplePagerTitleView.selectedColor = Color.parseColor("#FF6318")
+                simplePagerTitleView.selectedColor = Color.parseColor("#FF333333")
                 simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
                 simplePagerTitleView.onClick {
                     if (UserManager.touristMode && index == 1) {//游客模式不能查看附近的人
@@ -235,7 +245,22 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null && !data!!.list.isNullOrEmpty()) {
+            data?.list.add(0, IndexTopBean())
             peopleRecommendTopAdapter.setNewData(data?.list)
+        } else {
+            peopleRecommendTopAdapter.addData(IndexTopBean(type = 0))
+        }
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
+        if (UserManager.isUserVip() || UserManager.getGender() == 2) {
+            tobeChoicenessCl.isVisible = false
+        } else {
+            tobeChoicenessCl.isVisible = true
+            recommendUsers.scrollToPosition(1)
         }
     }
 }
