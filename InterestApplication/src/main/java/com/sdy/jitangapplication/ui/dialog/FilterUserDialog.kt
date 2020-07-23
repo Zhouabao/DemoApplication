@@ -87,10 +87,18 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
         btnGoVip.onClick {
-            context1.startActivity<VipPowerActivity>()
+            ChargePtVipDialog(
+                0,
+                context1,
+                ChargePtVipDialog.PURCHASE_PT_VIP
+            ).show()
         }
         btnGoVip1.onClick {
-            context1.startActivity<VipPowerActivity>()
+            ChargePtVipDialog(
+                0,
+                context1,
+                ChargePtVipDialog.PURCHASE_PT_VIP
+            ).show()
         }
         btnVerify.onClick {
             if (UserManager.isUserVerify() == 2) {

@@ -790,7 +790,7 @@ interface Api {
      * 门槛支付列表
      */
     @FormUrlEncoded
-    @POST("PayOrder/getThresholdV223${Constants.END_BASE_URL}")
+    @POST("PayOrder/getThresholdV23${Constants.END_BASE_URL}")
     fun getThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 

@@ -55,7 +55,7 @@ import org.greenrobot.eventbus.ThreadMode
 class ChargePtVipDialog(
     private var currentPos: Int,
     val context1: Context,
-    private var purchaseType: Int = PURCHASE_VIP
+    private var purchaseType: Int = PURCHASE_PT_VIP
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
@@ -85,7 +85,7 @@ class ChargePtVipDialog(
         const val FILTER = 8//已读功能
 
         //购买类型
-        const val PURCHASE_VIP = 100//VIP购买
+        const val PURCHASE_PT_VIP = 100//VIP购买
         const val PURCHASE_CONTACT_CARD = 200//购买联系方式直连卡
     }
 
@@ -107,8 +107,8 @@ class ChargePtVipDialog(
         val window = this.window
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.height = WindowManager.LayoutParams.MATCH_PARENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
 //        params?.y = SizeUtils.dp2px(20F)
 
@@ -121,7 +121,7 @@ class ChargePtVipDialog(
     /**
      * 设置VIP的权益广告栏
      */
-    private val vipBannerAdapter by lazy { VipBannerAdapter(PURCHASE_VIP) }
+    private val vipBannerAdapter by lazy { VipBannerAdapter() }
 
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
@@ -177,6 +177,7 @@ class ChargePtVipDialog(
             for (data in adapter.data.withIndex()) {
                 data.value.is_promote = data.index == position
             }
+            adapter.notifyDataSetChanged()
         }
 
 
@@ -194,24 +195,22 @@ class ChargePtVipDialog(
         refuseBtn.onClick {
             dismiss()
         }
-
         if (purchaseType == PURCHASE_CONTACT_CARD) {
             purchaseBg.setImageResource(R.drawable.icon_gradient_contact_card)
+            chargeTitle.text = "至尊直联卡"
         } else {
             purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
+            chargeTitle.text = "高级会员特权"
         }
     }
 
     /**
      * 设置购买的方式
      */
-    private fun setPurchaseType(chargeWayBeans: ChargeWayBeans) {
-        vipBannerAdapter.type = purchaseType
-        bannerIndicator.isVisible = true
-        purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
-        if (chargeWayBeans != null) {
-            initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
-        }
+    private fun setPurchaseType(chargeWayBeans: MutableList<VipDescr>) {
+        bannerIndicator.isVisible = chargeWayBeans.size > 1
+        purchaseBg.setImageResource(R.drawable.icon_gradient_contact_card)
+        initVipPowerData(chargeWayBeans)
     }
 
     //pay_id 	    是	支付方式id	展开
@@ -341,14 +340,13 @@ class ChargePtVipDialog(
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.data != null) {
-                        initChargeWayBeans(
-                            if (purchaseType == PURCHASE_VIP) {
-                                it.data?.pt_list ?: mutableListOf()
-                            } else {
-                                it.data?.direct_list ?: mutableListOf()
-                            }
-                        )
-                        setPurchaseType(it.data!!)
+                        if (purchaseType == PURCHASE_PT_VIP) {
+                            initChargeWayBeans(it.data?.pt_list ?: mutableListOf())
+                            setPurchaseType(it.data!!.pt_icon_list ?: mutableListOf())
+                        } else {
+                            initChargeWayBeans(it.data?.direct_list ?: mutableListOf())
+                            setPurchaseType(it.data!!.direct_icon_list ?: mutableListOf())
+                        }
                         payways.addAll(it.data?.paylist ?: mutableListOf())
                         initPayWay()
                         loading.isVisible = false

@@ -151,7 +151,7 @@ class ChargeVipDialog(
     /**
      * 设置VIP的权益广告栏
      */
-    private val vipBannerAdapter by lazy { VipBannerAdapter(PURCHASE_VIP) }
+    private val vipBannerAdapter by lazy { VipBannerAdapter() }
 
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
@@ -225,7 +225,6 @@ class ChargeVipDialog(
      * 设置购买的方式
      */
     private fun setPurchaseType(chargeWayBeans: ChargeWayBeans) {
-        vipBannerAdapter.type = purchaseType
         bannerIndicator.isVisible = true
         purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
         if (chargeWayBeans != null) {

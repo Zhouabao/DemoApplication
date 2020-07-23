@@ -70,7 +70,7 @@
 
     <TextView
         android:id="@+id/chatupUnlockChat"
-        android:layout_width="188dp"
+        android:layout_width="240dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/shape_rectangle_gray_20dp"

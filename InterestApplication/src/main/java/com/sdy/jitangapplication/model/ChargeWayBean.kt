@@ -14,6 +14,7 @@ data class ChargeWayBeans(
     val icon_list: MutableList<VipDescr>? = mutableListOf(),
     val list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val pt_icon_list: MutableList<VipDescr>? = mutableListOf(),
+    val direct_icon_list: MutableList<VipDescr>? = mutableListOf(),
     val pt_list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val direct_list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val paylist: MutableList<PaywayBean>? = mutableListOf(),

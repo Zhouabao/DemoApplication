@@ -20,7 +20,7 @@ import java.math.BigDecimal
  *    desc   : 会员支付购买时间适配器
  *    version: 1.0
  */
-class VipChargeAdapter(val type: Int = ChargePtVipDialog.PURCHASE_VIP) :
+class VipChargeAdapter(val type: Int = ChargePtVipDialog.PURCHASE_PT_VIP) :
     BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
@@ -59,7 +59,7 @@ class VipChargeAdapter(val type: Int = ChargePtVipDialog.PURCHASE_VIP) :
         }
 
 
-        if (type == ChargePtVipDialog.PURCHASE_VIP) {
+        if (type == ChargePtVipDialog.PURCHASE_PT_VIP) {
             if (item.is_promote) {
                 holder.itemView.vipLong.setTextColor(Color.parseColor("#FFF2B769"))
                 holder.itemView.monthPrice.setTextColor(Color.parseColor("#FFF2B769"))

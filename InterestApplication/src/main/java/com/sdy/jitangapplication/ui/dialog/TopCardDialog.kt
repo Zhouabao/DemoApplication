@@ -34,7 +34,11 @@ class TopCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
              text.text ="成为高级会员\n将你的卡片置于顶部，获取更多联系"
              tobePtVipBtn.text = "成为高级会员"
              tobePtVipBtn.clickWithTrigger {
-                 context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+                 ChargePtVipDialog(
+                     0,
+                     context1,
+                     ChargePtVipDialog.PURCHASE_PT_VIP
+                 ).show()
                  dismiss()
              }
 

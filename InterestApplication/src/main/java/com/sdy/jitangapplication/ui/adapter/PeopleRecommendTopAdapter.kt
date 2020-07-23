@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.ui.activity.MyVisitActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
+import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_people_recommend_top_content.view.*
 import kotlinx.android.synthetic.main.item_people_recommend_top_title.view.*
@@ -62,7 +63,11 @@ class PeopleRecommendTopAdapter :
                         itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
                         itemView.openVipBtn.text = "开通会员"
                         itemView.openVipBtn.clickWithTrigger {
-                            mContext.startActivity<VipPowerActivity>()
+                            ChargePtVipDialog(
+                                0,
+                                mContext,
+                                ChargePtVipDialog.PURCHASE_PT_VIP
+                            ).show()
                         }
                     } else {
                         itemView.openVipBtn.clickWithTrigger {

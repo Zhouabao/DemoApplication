@@ -45,7 +45,11 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             openPtVipBtn.text = "开通高级会员"
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
             openPtVipBtn.clickWithTrigger {
-                context1.startActivity<VipPowerActivity>()
+                ChargePtVipDialog(
+                    0,
+                    context1,
+                    ChargePtVipDialog.PURCHASE_PT_VIP
+                ).show()
             }
         } else {
             choicenessTitle.text = "成为精选用户"

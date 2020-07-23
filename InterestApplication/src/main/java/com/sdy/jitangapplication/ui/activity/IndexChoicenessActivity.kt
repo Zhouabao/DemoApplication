@@ -23,6 +23,7 @@ import com.sdy.jitangapplication.event.UpdateTicketDataEvent
 import com.sdy.jitangapplication.model.TicketBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
+import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.ui.dialog.ChooseChoicenessDialog
 import com.sdy.jitangapplication.ui.dialog.PurchaseIndexChoicenessDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -121,6 +122,7 @@ class IndexChoicenessActivity : BaseActivity() {
 
 
     private val peopleRecommendTopAdapter by lazy { PeopleRecommendTopAdapter() }
+
     //初始化榜首数据
     private fun initHeadRecommendUser() {
         indexChoicenessRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -174,7 +176,11 @@ class IndexChoicenessActivity : BaseActivity() {
                                 tobeChoicenessBtn.isEnabled = true
                                 tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn)
                                 tobeChoicenessBtn.clickWithTrigger {
-                                    startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+                                    ChargePtVipDialog(
+                                        0,
+                                        this@IndexChoicenessActivity,
+                                        ChargePtVipDialog.PURCHASE_PT_VIP
+                                    ).show()
                                 }
                             }
                         } else {

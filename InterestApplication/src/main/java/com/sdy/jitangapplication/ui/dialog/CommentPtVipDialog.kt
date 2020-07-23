@@ -45,7 +45,11 @@ class CommentPtVipDialog(
         setCanceledOnTouchOutside(true)
 
         openPtVipBtn.clickWithTrigger {
-            context1.startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+            ChargePtVipDialog(
+                0,
+                context1,
+                ChargePtVipDialog.PURCHASE_PT_VIP
+            ).show()
         }
 
     }

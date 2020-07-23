@@ -797,7 +797,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 //                userScore20.setImageResource(R.drawable.icon_twenty_click)
             }
             R.id.userScoreVip -> {
-                startActivity<VipPowerActivity>()
+                ChargePtVipDialog(
+                    0,
+                    this,
+                    ChargePtVipDialog.PURCHASE_PT_VIP
+                ).show()
+
             }
             R.id.userScore80 -> {
                 ReminderScoreDialog(
