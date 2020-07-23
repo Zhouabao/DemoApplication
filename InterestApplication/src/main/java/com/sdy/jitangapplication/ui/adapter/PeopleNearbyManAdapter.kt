@@ -67,7 +67,6 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
             .setFontSize(19, true)
             .append(" ${item.age}岁")
             .create()
-        itemView.userVerify.isVisible = item.isfaced == 1
 
         if (item!!.isfaced == 1) {
             itemView.userVerify.isVisible = true

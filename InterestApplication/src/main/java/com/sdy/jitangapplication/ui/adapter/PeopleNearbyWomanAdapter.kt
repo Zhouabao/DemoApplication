@@ -46,7 +46,25 @@ class PeopleNearbyWomanAdapter() :
             "女"
         }}·${item.constellation}·${item.distance}"
 
-        itemView.userVerify.isVisible = item.isfaced == 1
+        if (item!!.isfaced == 1) {
+            itemView.userVerify.isVisible = true
+            itemView.userVerify.setCompoundDrawablesWithIntrinsicBounds(
+                mContext.resources.getDrawable(
+                    if (item!!.gender == 1) {
+                        R.drawable.icon_gender_man_detail
+                    } else {
+                        R.drawable.icon_gender_woman_detail
+                    }
+                ), null, null, null
+            )
+            if (item!!.face_str.isNullOrEmpty()) {
+                itemView.userVerify.text = "已认证"
+            } else {
+                itemView.userVerify.text = item!!.face_str
+            }
+        } else {
+            itemView.userVerify.isVisible = false
+        }
         itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_vip)
