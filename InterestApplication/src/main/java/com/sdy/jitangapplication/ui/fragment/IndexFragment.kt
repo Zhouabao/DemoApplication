@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.EnableRvScrollEvent
@@ -114,7 +115,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 startActivity<IndexChoicenessActivity>()
         }
 
-
+        GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)
         //todo 成为精选
         tobeChoicessBtn.clickWithTrigger {
             ChoicenessOpenPtVipDialog(activity!!).show()

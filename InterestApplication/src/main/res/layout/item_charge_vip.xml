@@ -13,7 +13,7 @@
         android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_rectangle_light_blue_stroke_10dp">
+        android:background="@drawable/shape_rectangle_grayf9_10dp">
 
 
         <TextView
@@ -23,7 +23,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="1个月"
-            android:textColor="@color/colorWhite"
+            android:textColor="#FFB0B2B6"
             android:textSize="12sp"
             android:textStyle="normal"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -31,21 +31,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/vipNowPrice"
+            android:id="@+id/monthPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textColor="@color/colorWhite"
+            android:textColor="#FF666666"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vipLong"
-            tools:text="¥9.99" />
+            tools:text="9/月" />
 
         <TextView
-            android:id="@+id/vipEachDayPrice"
+            android:id="@+id/vipNowPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -55,24 +55,24 @@
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vipNowPrice" />
+            app:layout_constraintTop_toBottomOf="@id/monthPrice" />
 
         <TextView
             android:id="@+id/vipSendCandy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="@drawable/shape_rectangle_light_blue_bottom_10_corners_bg"
+            android:background="@drawable/shape_rectangle_light_gray_bottom_10_corners_bg"
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="最受欢迎"
-            android:textColor="#ffffffff"
+            android:textColor="#FF666666"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vipEachDayPrice" />
+            app:layout_constraintTop_toBottomOf="@id/vipNowPrice" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

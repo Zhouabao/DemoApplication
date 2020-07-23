@@ -35,6 +35,7 @@ data class NimBean(
     var chat_expend_time: Long = 0L,
     var plat_cnt: Int = 0,//剩余的搭讪的次数
     var isplatinum: Boolean = false,
+    var isdirect: Boolean = false,
     var unlock_contact_way: Int = 0, //是否有联系方式
     var unlock_popup_str: String = "", //	我是否被别人解锁弹框 大于0 弹框显示糖果数目
     var is_unlock_contact: Boolean = false//是否解锁过联系方式

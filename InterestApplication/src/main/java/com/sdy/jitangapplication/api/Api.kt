@@ -316,7 +316,7 @@ interface Api {
      * 验证解锁联系方式
      */
     @FormUrlEncoded
-    @POST("Home/checkContact${Constants.END_BASE_URL}")
+    @POST("Home/checkContactV23${Constants.END_BASE_URL}")
     fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
 
     /**

@@ -148,7 +148,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         unlockChatLl.setOnClickListener(v -> {
             new ChatUpOpenPtVipDialog(getActivity(), sessionId, ChatUpOpenPtVipDialog.TYPE_LOCK_CHATUP,
                     new ChatUpBean(nimBean.getChatup_amount(), nimBean.getPlat_cnt(), false, 0, "", 0,
-                            nimBean.getAvatar(), nimBean.getIsplatinum()),
+                            nimBean.getAvatar(), nimBean.getIsplatinum(),nimBean.getIsdirect()),
                     "").show();
         });
 
