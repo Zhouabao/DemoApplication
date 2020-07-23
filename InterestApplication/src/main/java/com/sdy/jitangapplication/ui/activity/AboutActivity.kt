@@ -6,6 +6,7 @@ import android.text.TextUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -32,7 +33,7 @@ class AboutActivity : BaseActivity() {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
         contactUs.onClick {
-            ChatActivity.start(this, com.sdy.jitangapplication.common.Constants.ASSISTANT_ACCID)
+            ChatActivity.start(this, Constants.ASSISTANT_ACCID)
         }
 
         versionTip.text = "for Android V${getAppVersionName(this)}"

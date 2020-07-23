@@ -1,7 +1,11 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.AccostBean
@@ -21,11 +25,15 @@ class MessageCenterAllAdapter :
             item.avatar,
             holder.itemView.accostUserIv
         )
-        GlideUtil.loadImg(
-            mContext,
-            item.icon,
-            holder.itemView.accostGiftIv
-        )
+        if (NIMClient.getService(MsgService::class.java)
+                .queryRecentContact(item.accid, SessionTypeEnum.P2P) != null
+            && NIMClient.getService(MsgService::class.java)
+                .queryRecentContact(item.accid, SessionTypeEnum.P2P).unreadCount > 0
+        ) {
+            holder.itemView.accostGiftIv.visibility = View.VISIBLE
+        } else
+            holder.itemView.accostGiftIv.visibility = View.INVISIBLE
+
     }
 
 }

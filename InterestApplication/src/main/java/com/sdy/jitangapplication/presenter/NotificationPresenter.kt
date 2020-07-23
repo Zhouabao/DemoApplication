@@ -40,4 +40,32 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
     }
 
 
+    /**
+     * type  1短信 2隐身 3私聊
+     * state  	短信(1开启 2关闭)
+     *          隐身（1 不隐身 2离线隐身 3一直隐身 ）
+     */
+    fun switchSet(type: Int, state: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .switchSet(UserManager.getSignParams(hashMapOf("type" to type, "state" to state)))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    CommonFunction.toast(t.msg)
+                    mView.onGreetApproveResult(3, t.code == 200)
+
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
+
+
+            })
+
+    }
 }

@@ -15,12 +15,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <View
         android:id="@+id/accostGiftIv"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="43dp"
-        android:src="@drawable/icon_gift"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="48dp"
+        android:visibility="invisible"
+        android:background="@drawable/shape_oval_orange_new_msg"
         app:layout_constraintLeft_toLeftOf="@id/accostUserIv"
         app:layout_constraintRight_toRightOf="@id/accostUserIv"
         app:layout_constraintTop_toTopOf="@id/accostUserIv" />

@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.ui.activity.MyVisitActivity
@@ -30,23 +31,45 @@ class PeopleRecommendTopAdapter :
         addItemType(1, R.layout.item_people_recommend_top_content)
     }
 
+    var isplatinum: Boolean = false
+    var free_show: Boolean = false
+    var mv_url: Boolean = false
+    var todayvisit: Int = 0
+    var todayExplosure: Int = 0
+    var total_exposure_cnt: Int = 0
+    var allvisit: Int = 0
+
 
     override fun convert(helper: BaseViewHolder, item: IndexTopBean) {
 
         when (helper.itemViewType) {
             0 -> {
                 val itemView = helper.itemView
-                if (UserManager.isUserVip() || UserManager.getGender() == 2) {
-                    itemView.choicenessCount.text = "${item.amount}人通过精选\n用户看到了你"
+                if ((UserManager.getGender() == 1 && isplatinum) || (UserManager.getGender() == 2 && !mv_url)) {
+                    itemView.choicenessCount.text = "${total_exposure_cnt}人通过精选\n用户看到了你"
                     itemView.openVipBtn.text = "谁看过我"
                     itemView.openVipBtn.clickWithTrigger {
-                        mContext.startActivity<MyVisitActivity>()
+                        mContext.startActivity<MyVisitActivity>(
+                            "today" to todayvisit,
+                            "todayExplosure" to todayExplosure,
+                            "all" to allvisit,
+                            "freeShow" to free_show,
+                            "from" to MyVisitActivity.FROM_TOP_RECOMMEND
+                        )
                     }
                 } else {
-                    itemView.choicenessCount.text = "成为“精选”用户 获取更多聊天"
-                    itemView.openVipBtn.text = "开通会员"
-                    itemView.openVipBtn.clickWithTrigger {
-                        mContext.startActivity<VipPowerActivity>()
+                    if (UserManager.getGender() == 1) {
+                        itemView.choicenessCount.text = "成为“精选”用户 获取更多聊天"
+                        itemView.openVipBtn.text = "开通会员"
+                        itemView.openVipBtn.clickWithTrigger {
+                            mContext.startActivity<VipPowerActivity>()
+                        }
+                    } else {
+                        itemView.openVipBtn.clickWithTrigger {
+                            itemView.choicenessCount.text = "成为“精选”用户 获取更多聊天"
+                            itemView.openVipBtn.text = "上传视频"
+                            CommonFunction.startToVideoIntroduce(mContext)
+                        }
                     }
                 }
             }

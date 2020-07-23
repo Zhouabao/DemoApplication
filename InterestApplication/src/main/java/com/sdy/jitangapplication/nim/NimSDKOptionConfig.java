@@ -14,7 +14,6 @@ import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
@@ -168,18 +167,7 @@ public class NimSDKOptionConfig {
 
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
-            if (message.getAttachment() instanceof ChatHiAttachment) {
-                switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
-                case 1:
-                    return "『匹配消息』";
-                case 3:
-                    return "『好友消息』";
-                case 4:
-                    return "『过期消息』";
-                default:
-                    return null;// 采用SDK默认文案
-                }
-            } else if (message.getAttachment() instanceof AccostGiftAttachment) {
+            if (message.getAttachment() instanceof AccostGiftAttachment) {
                 return "『搭讪礼物』";
             } else if (message.getAttachment() instanceof ShareSquareAttachment) {
                 return "『动态分享内容』";

@@ -537,6 +537,13 @@ interface Api {
     @POST("memberInfo/myVisitedList${Constants.END_BASE_URL}")
     fun myVisitedList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<VisitorBean>?>>
 
+    /**
+     * 来访记录
+     */
+    @FormUrlEncoded
+    @POST("UserSet/myVisitingList${Constants.END_BASE_URL}")
+    fun myVisitingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<VisitorBean>?>>
+
 
     /**
      * 我的评论
@@ -674,6 +681,14 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/mySettings${Constants.END_BASE_URL}")
     fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
+
+
+    /**
+     * 设置用户的短信/隐身/私聊接收状态
+     */
+    @FormUrlEncoded
+    @POST("UserSet/switchSet${Constants.END_BASE_URL}")
+    fun switchSet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -1183,7 +1198,7 @@ interface Api {
      * 推荐10个
      */
     @FormUrlEncoded
-    @POST("Home/indexTop${Constants.END_BASE_URL}")
+    @POST("Home/topList${Constants.END_BASE_URL}")
     fun indexTop(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<IndexListBean?>>
 
     /**
@@ -1232,7 +1247,7 @@ interface Api {
      *
      */
     @FormUrlEncoded
-    @POST("Home/checkChat${Constants.END_BASE_URL}")
+    @POST("Home/checkChatV23${Constants.END_BASE_URL}")
     fun checkChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
 
 

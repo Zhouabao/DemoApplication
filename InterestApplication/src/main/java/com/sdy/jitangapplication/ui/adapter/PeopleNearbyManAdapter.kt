@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
 
@@ -67,6 +68,31 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
             .append(" ${item.age}岁")
             .create()
         itemView.userVerify.isVisible = item.isfaced == 1
+
+        if (item!!.isfaced == 1) {
+            itemView.userVerify.isVisible = true
+            itemView.userVerify.setCompoundDrawablesWithIntrinsicBounds(
+                mContext.resources.getDrawable(
+                    if (item!!.gender == 1) {
+                        R.drawable.icon_gender_man_detail
+                    } else {
+                        R.drawable.icon_gender_woman_detail
+                    }
+                ), null, null, null
+            )
+            if (item!!.face_str.isNullOrEmpty()) {
+                itemView.userVerify.text = "已认证"
+            } else {
+                itemView.userVerify.text = item!!.face_str
+            }
+        } else {
+            itemView.userVerify.isVisible = false
+        }
+
+
+
+
+
         itemView.userIntroduceVideoBtn.isVisible = item.mv_btn
 
         itemView.userVip.isVisible = item.isplatinumvip

@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_accost_list.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 全部搭讪
@@ -45,8 +46,13 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         mPresenter.context = this
 
         hotT1.text = "搭讪列表"
+        rightBtn.text = "隐私权限"
         btnBack.clickWithTrigger {
             finish()
+        }
+
+        rightBtn.clickWithTrigger {
+            startActivity<SettingsActivity>()
         }
 
         retryBtn.clickWithTrigger {
@@ -59,7 +65,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         adapter.bindToRecyclerView(rvAccost)
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
-                R.id.content->{
+                R.id.content -> {
                     ChatActivity.start(this, adapter.data[position].accid)
                 }
             }

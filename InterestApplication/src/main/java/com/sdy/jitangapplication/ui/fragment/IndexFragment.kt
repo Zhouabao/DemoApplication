@@ -237,6 +237,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     /**
      * 刷新顶部推荐数据
+     *  //todo 发送通知 上传视频成功 或者充值高级会员，更新首页
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
@@ -244,23 +245,30 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     }
 
     override fun indexTopResult(data: IndexListBean?) {
-        if (data != null && !data!!.list.isNullOrEmpty()) {
-            data?.list.add(0, IndexTopBean())
+        if (data != null) {
+            if (data?.list.isNullOrEmpty()) {
+                data?.list = mutableListOf()
+            }
+            data?.list.add(0, IndexTopBean(type = 0))
             peopleRecommendTopAdapter.setNewData(data?.list)
-        } else {
-            peopleRecommendTopAdapter.addData(IndexTopBean(type = 0))
+
+            peopleRecommendTopAdapter.todayvisit = data!!.today_visit_cnt
+            peopleRecommendTopAdapter.todayExplosure = data!!.today_exposure_cnt
+            peopleRecommendTopAdapter.total_exposure_cnt = data!!.total_exposure_cnt
+            peopleRecommendTopAdapter.free_show = data!!.free_show
+            peopleRecommendTopAdapter.allvisit = data!!.total_visit_cnt
+            peopleRecommendTopAdapter.mv_url = data!!.mv_url
+            peopleRecommendTopAdapter.isplatinum = data!!.isplatinumvip
+
+            if ((data!!.gender == 1 && data!!.isplatinumvip) || (data.gender == 2 && data!!.mv_url)) {
+                tobeChoicenessCl.isVisible = false
+            } else {
+                tobeChoicenessCl.isVisible = true
+                recommendUsers.scrollToPosition(1)
+            }
         }
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        peopleRecommendTopAdapter.addData(IndexTopBean(avatar = UserManager.getAvator(), type = 1))
-        if (UserManager.isUserVip() || UserManager.getGender() == 2) {
-            tobeChoicenessCl.isVisible = false
-        } else {
-            tobeChoicenessCl.isVisible = true
-            recommendUsers.scrollToPosition(1)
-        }
+
     }
+
+
 }

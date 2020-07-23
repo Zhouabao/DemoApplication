@@ -19,14 +19,17 @@ import com.sdy.jitangapplication.utils.UserManager
  *    version: 1.0
  */
 class MyVisitPresenter : BasePresenter<MyVisitView>() {
+    /**
+     * 1 今日 2所有
+     */
     fun myVisitedList(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .myVisitedList(UserManager.getSignParams(params))
+            .myVisitingList(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<VisitorBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<VisitorBean>?>) {
                     if (t.code == 200) {
                         mView.onMyVisitResult(t.data)
-                    } else  {
+                    } else {
                         mView.onError(t.msg)
                     }
                 }

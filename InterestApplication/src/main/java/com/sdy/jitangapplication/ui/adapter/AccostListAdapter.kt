@@ -1,17 +1,17 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.graphics.Color
 import android.view.View
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
@@ -37,26 +37,27 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
             item.avatar,
             holder.itemView.msgIcon
         )
+        holder.itemView.text.text = NIMClient.getService(MsgService::class.java)
+            .queryRecentContact(item.accid, SessionTypeEnum.P2P).content
 
-
-        if (UserManager.getGender() == 1) {
-            holder.itemView.text.text = if (item.content.isNotEmpty()) {
-                item.content
-            } else {
-                "新的搭讪消息"
-            }
-        } else {
-            if (item.unreadCnt > 0) {
-                SpanUtils.with(holder.itemView.text)
-                    .append("[礼物]")
-                    .setForegroundColor(Color.parseColor("#FFFD4417"))
-                    .append("搭讪礼物待领取")
-                    .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-                    .create()
-            } else {
-                holder.itemView.text.text = "[礼物]搭讪礼物待领取"
-            }
-        }
+//        if (UserManager.getGender() == 1) {
+//            holder.itemView.text.text = if (item.content.isNotEmpty()) {
+//                item.content
+//            } else {
+//                "新的搭讪消息"
+//            }
+//        } else {
+//            if (item.unreadCnt > 0) {
+//                SpanUtils.with(holder.itemView.text)
+//                    .append("[礼物]")
+//                    .setForegroundColor(Color.parseColor("#FFFD4417"))
+//                    .append("搭讪礼物待领取")
+//                    .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+//                    .create()
+//            } else {
+//                holder.itemView.text.text = "[礼物]搭讪礼物待领取"
+//            }
+//        }
 
 
         holder.itemView.latelyTime.isVisible = item.time != 0L

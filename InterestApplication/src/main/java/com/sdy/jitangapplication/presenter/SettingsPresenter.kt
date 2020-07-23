@@ -28,7 +28,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**
      * 屏蔽通讯录
      */
-    fun blockedAddressBook(accid: String, token: String, content: MutableList<String?> = mutableListOf()) {
+    fun blockedAddressBook(
+        accid: String,
+        token: String,
+        content: MutableList<String?> = mutableListOf()
+    ) {
         val params = hashMapOf<String, Any>("content" to Gson().toJson(content))
         RetrofitFactory.instance.create(Api::class.java)
             .blockedAddressBook(UserManager.getSignParams(params))
@@ -93,7 +97,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
 
-
     /**
      * 获取我的设置
      */
@@ -122,6 +125,34 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
                 }
             })
+    }
+
+
+    /**
+     * type  1短信 2隐身 3私聊
+     * state  	短信(1开启 2关闭)
+     *          隐身（1 不隐身 2离线隐身 3一直隐身 ）
+     */
+    fun switchSet(type: Int, state: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .switchSet(UserManager.getSignParams(hashMapOf("type" to type, "state" to state)))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    CommonFunction.toast(t.msg)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
+
+
+            })
+
     }
 
 }

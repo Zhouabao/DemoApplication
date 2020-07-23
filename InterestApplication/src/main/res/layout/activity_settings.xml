@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/blackListBtn"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/blackListBtn"
-                    tools:text="对所有用户" />
+                    tools:text="查看所有" />
 
                 <TextView
                     android:id="@+id/privacyPowerBtn"

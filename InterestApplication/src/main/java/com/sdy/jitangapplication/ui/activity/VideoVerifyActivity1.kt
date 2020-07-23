@@ -36,6 +36,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.FemaleVideoEvent
+import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateApproveEvent
 import com.sdy.jitangapplication.event.VideoTrimmerEvent
 import com.sdy.jitangapplication.model.CopyMvBean
@@ -529,6 +530,9 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
 
                 //聊天页面刷新认证数据数据
                 EventBus.getDefault().post(UpdateApproveEvent())
+
+                //刷新顶部精选数据
+                EventBus.getDefault().post(TopCardEvent(true))
 
                 //更新录制视频介绍
                 UserManager.my_mv_url = true

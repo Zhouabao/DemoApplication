@@ -52,6 +52,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
         switchDianzan.isChecked = intent.getBooleanExtra("notify_square_like_state", true)
         switchComment.isChecked = intent.getBooleanExtra("notify_square_comment_state", true)
+        switchMessage.isChecked = intent.getBooleanExtra("sms_state", true)
         switchMusic.isChecked = DemoCache.getNotificationConfig().ring
         switchVibrator.isChecked = DemoCache.getNotificationConfig().vibrate
 
@@ -97,6 +98,13 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
             switchMessageBtn -> {//短信通知开关
                 //todo 短信通知请求开关
+                mPresenter.switchSet(
+                    1, if (switchMessage.isChecked) {
+                        2
+                    } else {
+                        1
+                    }
+                )
 
             }
             openPushBtn -> { //开启推送通知,跳转到设置界面
@@ -106,7 +114,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
     }
 
 
-    //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论
+    //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论  3短信提醒
     override fun onGreetApproveResult(type: Int, success: Boolean) {
         when (type) {
             1 -> {
@@ -114,7 +122,9 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
             2 -> {
                 switchComment.isChecked = !switchComment.isChecked
-
+            }
+            3->{
+                switchMessage.isChecked = !switchMessage.isChecked
             }
         }
     }

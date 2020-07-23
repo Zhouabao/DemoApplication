@@ -159,13 +159,13 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
     private fun initWindow() {
         val window = this.window
-        window?.setGravity(Gravity.TOP)
+        window?.setGravity(Gravity.BOTTOM)
         val params = window?.attributes
 //        params?.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
 
-        params?.windowAnimations = R.style.MyDialogTopAnimation
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
 //        params?.y = SizeUtils.dp2px(20F)
         window?.attributes = params
         //点击外部可取消

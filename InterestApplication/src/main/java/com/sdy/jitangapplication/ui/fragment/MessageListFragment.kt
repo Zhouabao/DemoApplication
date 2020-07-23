@@ -265,8 +265,9 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
-            adapter.headerLayout.moreChatUpBtn.isVisible =
-                (data?.chatup_list ?: mutableListOf()).size > 4
+            //todo 删除更多搭讪
+//            adapter.headerLayout.moreChatUpBtn.isVisible =
+//                (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false
@@ -304,12 +305,6 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass.msg = when (loadedRecent.attachment) {
-                    is ChatHiAttachment -> when ((loadedRecent.attachment as ChatHiAttachment).showType) {
-                        ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                        ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                        ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
-                        else -> ""
-                    }
                     is ShareSquareAttachment -> "『动态分享内容』"
                     is SendGiftAttachment -> "『礼物消息』"
                     is SendCustomTipAttachment -> (loadedRecent.attachment as SendCustomTipAttachment).content

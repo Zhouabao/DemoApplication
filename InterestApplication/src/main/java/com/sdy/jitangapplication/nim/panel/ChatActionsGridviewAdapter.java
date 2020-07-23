@@ -50,7 +50,7 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
             itemlayout = convertView;
         }
 
-        if (position != getCount() - 1) {
+//        if (position != getCount() - 1) {
             if (viewHolder.isEnable()) {
                 if (viewHolder.isCheck()) {
                     ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
@@ -60,12 +60,12 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
             } else {
                 ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
             }
-        } else {
-            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageAssetsFolder("images_gift");
-            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setRepeatCount(-1);
-            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setAnimation("data_gift.json");
-            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).playAnimation();
-        }
+//        } else {
+//            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageAssetsFolder("images_gift");
+//            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setRepeatCount(-1);
+//            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setAnimation("data_gift.json");
+//            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).playAnimation();
+//        }
         ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(viewHolder.getTitleId()));
 
         if (position == getCount() - 1) {

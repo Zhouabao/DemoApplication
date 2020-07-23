@@ -360,9 +360,9 @@ object UserManager {
         if (sp.getInt("online_only", -1) != -1) {
             parmas["online_only"] = sp.getInt("online_only", -1)
         }
-        if (sp.getInt("filter_gender", -1) != -1) {
-            parmas["gender"] = sp.getInt("filter_gender", -1)
-        }
+//        if (sp.getInt("filter_gender", -1) != -1) {
+//            parmas["gender"] = sp.getInt("filter_gender", -1)
+//        }
 
         return parmas
     }

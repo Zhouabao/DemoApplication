@@ -1,85 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.MyVisitActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/tabMyVisit"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/colorWhite" />
+
+    <View
+        android:id="@+id/viewVisit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        tools:context=".ui.activity.MyVisitActivity">
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorDivider" />
 
-    <include layout="@layout/layout_actionbar"/>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpMyVisit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <com.kennyc.view.MultiStateView
-            android:id="@+id/stateview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/refreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srlDisableContentWhenLoading="false"
-                app:srlDisableContentWhenRefresh="false">
-
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                <androidx.core.widget.NestedScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/visitRv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                </androidx.core.widget.NestedScrollView>
-
-                <RelativeLayout
-                        android:id="@+id/lockToSee"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="40dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_width="168dp"
-                        android:paddingLeft="37dp"
-                        android:paddingRight="37dp"
-                        android:background="@drawable/gradient_message_hi_time_bg_15dp"
-                        android:layout_height="wrap_content">
-
-                    <ImageView
-                            android:id="@+id/i1"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/icon_unlock"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"/>
-
-                    <TextView
-                            android:text="解锁查看"
-                            android:gravity="center"
-                            android:layout_centerVertical="true"
-                            android:textColor="#ffffffff"
-                            android:textSize="16sp"
-                            android:layout_toRightOf="@id/i1"
-                            android:layout_marginLeft="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"/>
-
-
-                </RelativeLayout>
-            </RelativeLayout>
-
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    </com.kennyc.view.MultiStateView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

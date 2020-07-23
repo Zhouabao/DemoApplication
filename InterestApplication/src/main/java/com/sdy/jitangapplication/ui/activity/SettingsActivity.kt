@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
@@ -22,6 +23,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.model.SettingsBean
+import com.sdy.jitangapplication.model.StateBean
 import com.sdy.jitangapplication.model.VersionBean
 import com.sdy.jitangapplication.presenter.SettingsPresenter
 import com.sdy.jitangapplication.presenter.view.SettingsView
@@ -85,6 +87,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         mPresenter.context = this
 
         blackListBtn.setOnClickListener(this)
+        seeBlackListBtn.setOnClickListener(this)
         msgNotificate.setOnClickListener(this)
         helpCenter.setOnClickListener(this)
         aboutUs.setOnClickListener(this)
@@ -130,7 +133,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     override fun onLazyClick(view: View) {
         when (view.id) {
             //黑名单
-            R.id.blackListBtn -> {
+            R.id.blackListBtn, R.id.seeBlackListBtn -> {
                 startActivity<BlackListActivity>()
             }
             //消息提醒
@@ -138,7 +141,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 // notify_square_like_state  notify_square_comment_state
                 startActivity<NotificationActivity>(
                     "notify_square_like_state" to settingsBean?.notify_square_like_state,
-                    "notify_square_comment_state" to settingsBean?.notify_square_comment_state
+                    "notify_square_comment_state" to settingsBean?.notify_square_comment_state,
+                    "sms_state" to settingsBean?.sms_state
                 )
             }
 
@@ -167,7 +171,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
             //返回
             R.id.btnBack -> {
-                finish()
+                onBackPressed()
             }
             //屏蔽距离
             R.id.filterDistance -> {
@@ -207,11 +211,17 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
             //todo 隐身模式
             R.id.hideModeBtn -> {
-                showHideModePicker()
+                showHideModePicker(hideModeContent, invisible_state, hideMode, "隐身模式", 2)
             }
             //todo 隐私权限
             R.id.privacyPowerBtn -> {
-                showPrivacyPowerPicker()
+                showHideModePicker(
+                    privacyPowerContent,
+                    private_chat_state,
+                    privacyPowers,
+                    "私聊权限",
+                    3
+                )
             }
 
         }
@@ -221,48 +231,35 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     /**
      * 展示条件选择器
      */
-    private val hideMode by lazy { mutableListOf("不隐身", "离线时隐身", "一直隐身") }
+    private var hideMode: MutableList<StateBean> = mutableListOf()
+    private var privacyPowers: MutableList<StateBean> = mutableListOf()
 
-    private fun showHideModePicker() {
+    //type 1隐身模式  2私聊权限
+    private fun showHideModePicker(
+        textView: TextView,
+        checkedState: StateBean,
+        states: MutableList<StateBean>,
+        title: String,
+        type: Int
+    ) {
         //条件选择器
         val pvOptions = OptionsPickerBuilder(this,
             OnOptionsSelectListener { options1, options2, options3, v ->
-                hideModeContent.text = hideMode[options1]
+                textView.text = states[options1].title
+                mPresenter.switchSet(type, states[options1].id)
             })
             .setSubmitText("确定")
-            .setTitleText("隐身模式")
+            .setTitleText(title)
             .setTitleColor(Color.parseColor("#191919"))
             .setTitleSize(16)
             .setDividerColor(resources.getColor(R.color.colorDivider))
             .setContentTextSize(20)
             .setDecorView(window.decorView.findViewById(android.R.id.content) as ViewGroup)
             .setSubmitColor(resources.getColor(R.color.colorBlueSky1))
-            .build<String>()
+            .build<StateBean>()
 
-        pvOptions.setPicker(hideMode)
-        pvOptions.setSelectOptions(1)
-        pvOptions.show()
-    }
-
-    private val privacyPowers by lazy { mutableListOf("仅针对高级用户", "所有用户") }
-
-    private fun showPrivacyPowerPicker() {
-        //条件选择器
-        val pvOptions = OptionsPickerBuilder(this,
-            OnOptionsSelectListener { options1, options2, options3, v ->
-                privacyPowerContent.text = privacyPowers[options1]
-            })
-            .setSubmitText("确定")
-            .setTitleText("私聊权限")
-            .setTitleColor(Color.parseColor("#191919"))
-            .setTitleSize(16)
-            .setDividerColor(resources.getColor(R.color.colorDivider))
-            .setContentTextSize(20)
-            .setDecorView(window.decorView.findViewById(android.R.id.content) as ViewGroup)
-            .setSubmitColor(resources.getColor(R.color.colorBlueSky1))
-            .build<String>()
-
-        pvOptions.setPicker(privacyPowers)
+        pvOptions.setPicker(states)
+        pvOptions.setSelectOptions(states.indexOf(checkedState))
         pvOptions.show()
     }
 
@@ -302,19 +299,25 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
 
     private var settingsBean: SettingsBean? = null
+    private var invisible_state = StateBean()//1 不隐身 2 离线时间隐身 3 一直隐身
+    private var private_chat_state = StateBean()//1 所有用户 2针对高级用户
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
             this.settingsBean = settingsBean
-            SPUtils.getInstance(Constants.SPNAME)
-                .put("switchDianzan", settingsBean?.notify_square_like_state ?: true)
-            SPUtils.getInstance(Constants.SPNAME)
-                .put("switchComment", settingsBean?.notify_square_comment_state ?: true)
+            SPUtils.getInstance(Constants.SPNAME).put("switchDianzan", settingsBean?.notify_square_like_state ?: true)
+            SPUtils.getInstance(Constants.SPNAME).put("switchComment", settingsBean?.notify_square_comment_state ?: true)
 
 
             stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT
             switchDistance.isChecked = settingsBean!!.hide_distance
             switchContacts.isChecked = settingsBean!!.hide_book
+            invisible_state = settingsBean!!.invisible_state
+            private_chat_state = settingsBean!!.private_chat_state
+            hideMode = settingsBean!!.invisible_list
+            privacyPowers = settingsBean!!.private_chat_list
+            hideModeContent.text = invisible_state.title
+            privacyPowerContent.text = private_chat_state.title
         } else {
             stateSettings.viewState = MultiStateView.VIEW_STATE_ERROR
         }

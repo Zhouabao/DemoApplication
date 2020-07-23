@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     app:msv_loadingView="@layout/loading_layout"
     app:msv_errorView="@layout/error_layout"
-    app:msv_viewState="loading"
+    app:msv_viewState="content"
     tools:context=".ui.fragment.MessageListFragment">
 
     <LinearLayout

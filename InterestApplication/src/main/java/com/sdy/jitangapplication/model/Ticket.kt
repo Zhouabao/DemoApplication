@@ -33,19 +33,32 @@ data class Ticket(
  * 开屏页推荐
  */
 data class IndexTopBean(
+    var amount: Int = 0,
+    var type: Int = 1,
     var accid: String = "",
     var age: Int = 0,
-    var amount: Int = 0,
     var avatar: String = "",
     var distance: String = "",
     var gender: Int = 0,
+    var juli: Int = 0,
     var nickname: String = "",
-    var type: Int = 1
-) :  MultiItemEntity,Serializable {
+    var source_type: Int = 0
+) : MultiItemEntity, Serializable {
     override fun getItemType(): Int {
         return type
     }
 }
 
 
-data class IndexListBean(var list: MutableList<IndexTopBean> = mutableListOf()) : Serializable
+data class IndexListBean(
+    var list: MutableList<IndexTopBean> = mutableListOf(),
+    var free_show: Boolean = false,//是否免费查看 true 免费 false 不能查看
+    var gender: Int = 0,//我的性别
+    var isplatinumvip: Boolean = false,//我是否 钻石会员 true 是 false不是
+    var mv_url: Boolean = false,//我是否有视频
+    var today_exposure_cnt: Int = 0,//总到访
+    var today_visit_cnt: Int = 0,//今日来访
+    var total_exposure_cnt: Int = 0,//today_exposure_cnt
+    var total_visit_cnt: Int = 0//总曝光
+) : Serializable
+

@@ -59,9 +59,6 @@ class MessageListAdapter :
         when (item.attachment) {
             is ChatHiAttachment -> holder.itemView.text.text =
                 when ((item.attachment as ChatHiAttachment).showType) {
-                    ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                    ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                    ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
                     ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
                     else -> ""
                 }

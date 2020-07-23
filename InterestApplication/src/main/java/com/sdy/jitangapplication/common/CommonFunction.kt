@@ -113,7 +113,10 @@ object CommonFunction {
      * 不是会员先弹充值
      * 不是好友就赠送礼物
      * 是好友就直接跳聊天界面
-     * 	201 拉起充值会员 206 是好友进聊天 200 拉起礼物列表
+     * 	201 拉起充值会员
+     * 	206 是好友进聊天
+     * 	200 拉起礼物列表
+     * 	208 充值高级会员（女性设置了聊天权限）
      */
     fun checkChat(context1: Context, target_accid: String) {
         val loading = LoadingDialog(context1)
@@ -162,6 +165,14 @@ object CommonFunction {
                                     }
 
                                 })
+                        }
+                        208->{
+                            ChatUpOpenPtVipDialog(
+                                context1,
+                                target_accid,
+                                ChatUpOpenPtVipDialog.TYPE_CHAT,
+                                t.data!!
+                            ).show()
                         }
                         401 -> {//女性未认证
                             VerifyThenChatDialog(context1).show()
@@ -569,6 +580,8 @@ object CommonFunction {
             EventBus.getDefault().postSticky(UserCenterEvent(true))
             EventBus.getDefault().post(CloseDialogEvent())
             EventBus.getDefault().post(RefreshTodayFateEvent())
+            //刷新顶部精选数据
+            EventBus.getDefault().post(TopCardEvent(true))
         }
 
 

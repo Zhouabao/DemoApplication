@@ -104,8 +104,6 @@ public class SessionHelper {
         NimUIKit.setRecentCustomization(getRecentCustomization());
     }
 
-
-
     // 定制化单聊界面。如果使用默认界面，返回null即可
     private static SessionCustomization getP2pCustomization() {
         if (p2pCustomization == null) {
@@ -164,7 +162,6 @@ public class SessionHelper {
         return p2pCustomization;
     }
 
-
     private static boolean checkLocalAntiSpam(IMMessage message) {
         if (!USE_LOCAL_ANTISPAM) {
             return true;
@@ -196,18 +193,6 @@ public class SessionHelper {
                 public String getDefaultDigest(RecentContact recent) {
                     if (recent.getAttachment() instanceof ChatHiAttachment) {
                         if (((ChatHiAttachment) recent.getAttachment())
-                                .getShowType() == ChatHiAttachment.CHATHI_MATCH) {
-                            return "『匹配消息』";
-                        } else if (((ChatHiAttachment) recent.getAttachment())
-                                .getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
-                            return "『好友消息』";
-                        } else if (((ChatHiAttachment) recent.getAttachment())
-                                .getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
-                            return "『消息过期』";
-                        } else if (((ChatHiAttachment) recent.getAttachment())
-                                .getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
-                            return "『意向匹配』";
-                        } else if (((ChatHiAttachment) recent.getAttachment())
                                 .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND) {
                             return "『聊天已解锁』";
                         }

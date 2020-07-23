@@ -59,7 +59,8 @@ class ChatUpOpenPtVipDialog(
     val context1: Context,
     val target_accid: String,
     val type: Int = TYPE_CHAT,
-    val chatUpBean: ChatUpBean
+    val chatUpBean: ChatUpBean,
+    val msg: String = ""
 ) :
     Dialog(context1, R.style.MyDialog) {
 
@@ -67,6 +68,7 @@ class ChatUpOpenPtVipDialog(
         const val TYPE_CHAT = 1
         const val TYPE_CONTACT = 2
         const val TYPE_LOCK_CHATUP = 3
+        const val TYPE_CHAT_LEVEL_HIGH = 4//女性设置高级会员可聊天
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -262,6 +264,17 @@ class ChatUpOpenPtVipDialog(
                         lockChatup()
 
                     }
+                }
+
+            }
+            TYPE_CHAT_LEVEL_HIGH -> {
+                openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+                chatupTitle.text = "她设置了聊天权限"
+                chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过"
+                chatupUnlockChat.isVisible = false
+                chatupContact.isVisible = false
+                openPtVipBtn.clickWithTrigger {
+                    context1.startActivity<VipPowerActivity>()
                 }
 
             }

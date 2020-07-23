@@ -1,122 +1,150 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.kennyc.view.MultiStateView
+import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.VisitorBean
-import com.sdy.jitangapplication.presenter.MyVisitPresenter
-import com.sdy.jitangapplication.presenter.view.MyVisitView
-import com.sdy.jitangapplication.ui.adapter.MyVisitAdater
-import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
+import com.sdy.jitangapplication.ui.fragment.MyTodayVisitFragment
+import com.sdy.jitangapplication.ui.fragment.MyVisitFragment
+import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.activity_my_visit.*
-import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.item_visit_headview.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.startActivity
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import java.util.*
 
 /**
  * 我的访客
  */
-class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefreshListener, OnLoadMoreListener {
+class MyVisitActivity : BaseActivity() {
+    private val from by lazy { intent.getIntExtra("from", FROM_ME) }
 
-    private var page = 1
-    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("freeShow", false)) }
-    private val params by lazy {
-        hashMapOf(
-            "token" to UserManager.getToken(),
-            "accid" to UserManager.getAccid(),
-            "page" to page
-        )
+    companion object {
+        const val FROM_ME = 1
+        const val FROM_TOP_RECOMMEND = 2
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_visit)
         initView()
-        mPresenter.myVisitedList(params)
+        initFragment()
     }
 
     private fun initView() {
-        mPresenter = MyVisitPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-        refreshLayout.setOnRefreshListener(this)
-        refreshLayout.setOnLoadMoreListener(this)
-
+        hotT1.text = "看过我的"
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "看过我的"
-
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.myVisitedList(params)
-        }
-
-        visitRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        visitRv.adapter = visitAdapter
-        visitAdapter.setEmptyView(R.layout.empty_layout, visitRv)
-        val view = layoutInflater.inflate(R.layout.item_visit_headview, visitRv, false)
-        view.visitTodayCount.text = "今日来访：${intent.getIntExtra("today", 0)}"
-        view.visitAllCount.text = "总来访：${intent.getIntExtra("all", 0)}"
-        visitAdapter.addHeaderView(view)
-
-        lockToSee.isVisible = !visitAdapter.freeShow
-        lockToSee.onClick {
-            startActivity<VipPowerActivity>()
-        }
-
-        visitAdapter.setOnItemClickListener { _, view, position ->
-            if (visitAdapter.freeShow && UserManager.getAccid() != visitAdapter.data[position].accid)
-                MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
-        }
-
+        divider.isVisible = false
     }
 
-    override fun onMyVisitResult(visitor: MutableList<VisitorBean>?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        if (visitor.isNullOrEmpty()) {
-            refreshLayout.setNoMoreData(true)
-            if (page == 1) {
-                lockToSee.isVisible = false
+
+    //fragment栈管理
+    private val mStack = Stack<Fragment>()
+    private val titles by lazy {
+        if (from == FROM_TOP_RECOMMEND) arrayOf(
+            "今天来过${intent.getIntExtra(
+                "today",
+                0
+            )}", "所有访客"
+        ) else {
+            arrayOf("所有访客")
+        }
+    }
+
+    private fun initIndicator() {
+        tabMyVisit.setBackgroundColor(Color.WHITE)
+        val commonNavigator = CommonNavigator(this)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return mStack.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
+                simplePagerTitleView.text = titles[index]
+                simplePagerTitleView.minScale = 0.88F
+                simplePagerTitleView.textSize = 18F
+                simplePagerTitleView.width =
+                    (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(40F)) / 2
+                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                simplePagerTitleView.normalColor = Color.parseColor("#FF7E8183")
+                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
+                simplePagerTitleView.onClick {
+                    vpMyVisit.currentItem = index
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 25.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
             }
         }
-        refreshLayout.finishLoadMore(true)
-        refreshLayout.finishRefresh(true)
-        visitAdapter.addData(visitor ?: mutableListOf())
-
+        tabMyVisit.navigator = commonNavigator
+        ViewPagerHelper.bind(tabMyVisit, vpMyVisit)
     }
 
+    /*
+      初始化Fragment栈管理
+      view.visitTodayCount.text = "今日来访：${intent.getIntExtra("today", 0)}"
+view.visitAllCount.text = "总来访：${intent.getIntExtra("all", 0)}"
+intent.getBooleanExtra("freeShow", false)
+   */
+    private fun initFragment() {
 
-    override fun onLoadMore(refreshLayout: RefreshLayout) {
-        page++
-        params["page"] = page
-        mPresenter.myVisitedList(params)
-    }
-
-    override fun onRefresh(refreshLayout: RefreshLayout) {
-        visitAdapter.data.clear()
-        refreshLayout.setNoMoreData(false)
-        page = 1
-        params["page"] = page
-        mPresenter.myVisitedList(params)
-    }
-
-    override fun onError(text: String) {
-        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-        stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
-            getString(R.string.retry_load_error)
+        if (from == FROM_TOP_RECOMMEND)
+            mStack.add(
+                MyTodayVisitFragment(
+                    intent.getIntExtra("todayExplosure", 0),
+                    intent.getBooleanExtra("freeShow", false)
+                )
+            )
+        //今日来访
+        mStack.add(
+            MyVisitFragment(
+                intent.getBooleanExtra("freeShow", false),
+                from,
+                intent.getIntExtra("today", 0),
+                intent.getIntExtra("all", 0)
+            )
+        )
+        //所有来访
+        vpMyVisit.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
+        if (from == FROM_TOP_RECOMMEND) {
+            vpMyVisit.offscreenPageLimit = 2
+            initIndicator()
+            tabMyVisit.isVisible = true
         } else {
-            getString(R.string.retry_net_error)
+            vpMyVisit.offscreenPageLimit = 1
+            tabMyVisit.isVisible = false
         }
+        vpMyVisit.currentItem = 0
     }
+
+
 }
+

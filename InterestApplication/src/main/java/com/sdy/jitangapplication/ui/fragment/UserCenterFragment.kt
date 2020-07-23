@@ -447,7 +447,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                     "isVip" to (userInfoBean?.userinfo?.isplatinum ?: false),
                     "today" to userInfoBean?.userinfo?.todayvisit,
                     "all" to userInfoBean?.userinfo?.allvisit,
-                    "freeShow" to userInfoBean?.free_show
+                    "freeShow" to userInfoBean?.free_show,
+                    "from" to MyVisitActivity.FROM_ME
                 )
             }
             //认证中心

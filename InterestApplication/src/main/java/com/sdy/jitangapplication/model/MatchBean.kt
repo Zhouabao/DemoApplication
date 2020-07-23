@@ -139,6 +139,7 @@ data class NearPersonBean(
     var intention_icon: String = "",
     var intention_title: String = "",
     var isfaced: Int = 0,
+    var face_str: String = "",
     var isvip: Boolean = false,
     var mv_faced: Boolean = false,
     var mv_btn: Boolean = false,

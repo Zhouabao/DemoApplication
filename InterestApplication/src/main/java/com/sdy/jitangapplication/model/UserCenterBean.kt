@@ -32,11 +32,24 @@ data class SettingsBean(
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
     val greet_switch: Boolean = false,//true 开启招呼 false关闭招呼
+    val sms_state: Boolean = false,//true 开启短信通知 false关闭短信通知
     val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证
     val notify_square_like_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
-    val notify_square_comment_state: Boolean = true//true 开启招呼认证 false关闭招呼认证
+    val notify_square_comment_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
+    val invisible_state: StateBean = StateBean(),// 选中的隐身状态
+    val invisible_list: MutableList<StateBean> = mutableListOf(),// 1 不隐身 2 离线时间隐身 3 一直隐身
+    val private_chat_state: StateBean = StateBean(),//选中的私聊权限
+    val private_chat_list: MutableList<StateBean> = mutableListOf()// 1 不隐身 2 离线时间隐身 3 一直隐身
 )
 
+data class StateBean(
+    var id: Int = 0,
+    var title: String = ""
+) : IPickerViewData {
+    override fun getPickerViewText(): String {
+        return title
+    }
+}
 
 //vip权益描述广告
 data class VipDescr(

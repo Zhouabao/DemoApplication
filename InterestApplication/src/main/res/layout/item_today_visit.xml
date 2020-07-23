@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite">
+
+
+    <com.sdy.baselibrary.widgets.RoundImageView
+        android:id="@+id/visitImg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/default_image_10dp"
+        app:borderRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:type="round" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rectangle_bottom_cover_10dp"
+        app:layout_constraintBottom_toBottomOf="@id/visitImg"
+        app:layout_constraintLeft_toLeftOf="@id/visitImg"
+        app:layout_constraintRight_toRightOf="@id/visitImg"
+        app:layout_constraintTop_toTopOf="@id/visitName" />
+
+
+    <TextView
+        android:id="@+id/visitName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:paddingTop="10dp"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/visitInfo"
+        app:layout_constraintLeft_toLeftOf="@id/visitInfo"
+        tools:text="用户名最大长" />
+
+
+    <TextView
+        android:id="@+id/visitInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="9dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/visitImg"
+        app:layout_constraintLeft_toLeftOf="@id/visitImg"
+        tools:text="22 / 女 / 巨蟹座 / 18.85km" />
+
+
+
+    <View
+        android:id="@+id/visitHideInfo"
+        android:background="@color/colorDivider"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/visitInfo"
+        app:layout_constraintLeft_toLeftOf="@id/visitInfo"
+        app:layout_constraintRight_toRightOf="@id/visitInfo"
+        app:layout_constraintTop_toTopOf="@id/visitInfo"/>
+
+    <View
+        android:id="@+id/visitHideName"
+        android:background="@color/colorDivider"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/visitName"
+        app:layout_constraintLeft_toLeftOf="@id/visitName"
+        app:layout_constraintRight_toRightOf="@id/visitName"
+        app:layout_constraintTop_toTopOf="@id/visitName"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
