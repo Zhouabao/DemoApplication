@@ -1,8 +1,5 @@
 package com.sdy.jitangapplication.ui.fragment
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +8,6 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -20,7 +16,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
@@ -164,7 +159,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     }
 
 
-
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         params["page"] = page
@@ -194,9 +188,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 } else if (nearBean?.iscompleteguide != true) {
                     GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
-                    if (UserManager.getGender() == 1)
-                        TodayFateDialog(activity!!, nearBean, indexRecommends).show()
-                    else
+                    if (UserManager.getGender() == 2)
+//                        TodayFateDialog(activity!!, nearBean, indexRecommends).show()
+//                    else
                         TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
                     TodayWantDialog(activity!!, nearBean).show()
