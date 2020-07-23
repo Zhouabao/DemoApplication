@@ -59,14 +59,14 @@ class PeopleRecommendTopAdapter :
                     }
                 } else {
                     if (UserManager.getGender() == 1) {
-                        itemView.choicenessCount.text = "成为“精选”用户 获取更多聊天"
+                        itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
                         itemView.openVipBtn.text = "开通会员"
                         itemView.openVipBtn.clickWithTrigger {
                             mContext.startActivity<VipPowerActivity>()
                         }
                     } else {
                         itemView.openVipBtn.clickWithTrigger {
-                            itemView.choicenessCount.text = "成为“精选”用户 获取更多聊天"
+                            itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
                             itemView.openVipBtn.text = "上传视频"
                             CommonFunction.startToVideoIntroduce(mContext)
                         }
