@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.VipPowerActivity">
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rvVipPower"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusableInTouchMode="true"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/seemoreBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clInfoBg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/powerUserBg"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_pt_vip_power_user_bg"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/powerUserBgExtend"
+                    android:layout_width="20dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/rectangle_left_ptvip_10dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/powerUserBg"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/powerUserBg" />
+
+                <TextView
+                    android:id="@+id/vipOutTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#FFCD7E14"
+                    android:textSize="12sp"
+                    app:layout_constraintRight_toRightOf="@id/powerUserBg"
+                    app:layout_constraintTop_toTopOf="@id/powerUserBg"
+                    tools:text="2020年10月12日到期" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/vipPowerAvator"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="65dp"
+                    android:src="@drawable/icon_default_avator"
+                    app:civ_border_color="#FFEBA35A"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintLeft_toLeftOf="@id/powerUserBg"
+                    app:layout_constraintTop_toTopOf="@id/powerUserBg" />
+
+                <TextView
+                    android:id="@+id/vipPowerNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="#FFCD7E14"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/vipSaveAmount"
+                    app:layout_constraintLeft_toRightOf="@id/vipPowerAvator"
+                    app:layout_constraintTop_toTopOf="@id/vipPowerAvator"
+                    tools:text="庾晶梅" />
+
+                <TextView
+                    android:id="@+id/vipSaveAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFCD7E14"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/vipPowerAvator"
+                    app:layout_constraintLeft_toLeftOf="@id/vipPowerNickname"
+                    app:layout_constraintTop_toBottomOf="@id/vipPowerNickname"
+                    tools:text="可为你节省200糖果，约合100元" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <com.sdy.jitangapplication.widgets.ScrollBottomRecyclerView
+                android:id="@+id/vipPowerRv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:overScrollMode="never"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/clInfoBg"
+                app:layout_constraintRight_toRightOf="@id/clInfoBg"
+                app:layout_constraintTop_toBottomOf="@id/clInfoBg" />
+
+
+            <LinearLayout
+                android:id="@+id/contactCl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/clInfoBg"
+                app:layout_constraintRight_toRightOf="@id/clInfoBg"
+                app:layout_constraintTop_toBottomOf="@id/clInfoBg">
+
+                <ImageView
+                    android:id="@+id/contactImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_contact_person" />
+
+                <TextView
+                    android:id="@+id/contactTimes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:text="每日免费解锁10次对方的联系方式\n不等待，直接联系约会"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/seemoreBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:drawableLeft="@drawable/icon_more_blue_down"
+        android:gravity="center"
+        android:text="往下滑动查看更多"
+        android:textColor="#FFB0B2B6"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

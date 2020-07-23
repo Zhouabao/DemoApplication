@@ -1,9 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
@@ -24,7 +21,7 @@ class VipPowerAdapter(val type: Int) :
         GlideUtil.loadCircleImg(mContext, item.icon_vip, helper.itemView.powerImg)
         helper.itemView.powerTitle.text = item.title ?: ""
         helper.itemView.powerContent.text = item.rule ?: ""
-        if (type == VipPowerBean.TYPE_NORMAL_VIP) {
+        if (type == VipPowerBean.TYPE_CONTACT_CARD) {
             helper.itemView.powerContent.setTextColor(Color.parseColor("#ffcd7e14"))
         } else {
             helper.itemView.powerContent.setTextColor(Color.parseColor("#FF5E6473"))

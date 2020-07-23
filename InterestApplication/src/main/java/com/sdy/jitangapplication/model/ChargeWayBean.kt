@@ -22,23 +22,25 @@ data class ChargeWayBeans(
     val mycandy_amount: Int = 0,
     val vip_express: String = "",
     val first_recharge: String = "",
-    val isplatinum: Boolean = false,
     val threshold_btn: Boolean = false,
+    val isdirect: Boolean = false,
+    val direct_cnt: Int = 0,
+    val direct_vip_express: String = "",
+    val isplatinum: Boolean = false,
     val platinum_save_str: String = "",
     val platinum_vip_express: String = ""
 )
 
 data class VipPowerBean(
-    val list: MutableList<ChargeWayBean>? = mutableListOf(),//会员按月购买
     val icon_list: MutableList<VipDescr>? = mutableListOf(),
-    val isvip: Boolean = false,
-    val vip_express: String = "",
-    val paylist: MutableList<PaywayBean>? = mutableListOf(),
-    var type: Int = TYPE_NORMAL_VIP
+    val isplatinum: Boolean = false,
+    val platinum_vip_express: String = "",
+    val platinum_save_str: String = "",
+    var type: Int = TYPE_CONTACT_CARD
 ) {
     companion object {
-        const val TYPE_NORMAL_VIP = 0
-        const val TYPE_PT_VIP = 1
+        const val TYPE_CONTACT_CARD = 1
+        const val TYPE_PT_VIP = 0
     }
 }
 

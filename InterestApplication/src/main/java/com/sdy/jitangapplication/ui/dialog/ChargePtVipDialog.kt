@@ -196,6 +196,7 @@ class ChargePtVipDialog(
             dismiss()
         }
         if (purchaseType == PURCHASE_CONTACT_CARD) {
+//            icon_gradient_vip_charge_bg
             purchaseBg.setImageResource(R.drawable.icon_gradient_contact_card)
             chargeTitle.text = "至尊直联卡"
         } else {
@@ -209,7 +210,6 @@ class ChargePtVipDialog(
      */
     private fun setPurchaseType(chargeWayBeans: MutableList<VipDescr>) {
         bannerIndicator.isVisible = chargeWayBeans.size > 1
-        purchaseBg.setImageResource(R.drawable.icon_gradient_contact_card)
         initVipPowerData(chargeWayBeans)
     }
 
