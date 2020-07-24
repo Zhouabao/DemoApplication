@@ -45,7 +45,7 @@ class PeopleRecommendTopAdapter :
         when (helper.itemViewType) {
             0 -> {
                 val itemView = helper.itemView
-                if ((UserManager.getGender() == 1 && isplatinum) || (UserManager.getGender() == 2 && !mv_url)) {
+                if ((UserManager.getGender() == 1 && isplatinum) || (UserManager.getGender() == 2 && mv_url)) {
                     itemView.choicenessCount.text = "${total_exposure_cnt}人通过精选\n用户看到了你"
                     itemView.openVipBtn.text = "谁看过我"
                     itemView.openVipBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_24dp)

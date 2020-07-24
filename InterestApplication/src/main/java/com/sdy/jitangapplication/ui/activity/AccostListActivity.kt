@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.AccostListPresenter
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_accost_list.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -50,7 +52,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
 
         hotT1.text = "搭讪列表"
         rightBtn.text = "隐私权限"
-        rightBtn.isVisible = false
+        rightBtn.isVisible = true
         btnBack.clickWithTrigger {
             finish()
         }
@@ -94,6 +96,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
             NIMClient.getService(MsgService::class.java)
                 .deleteRecentContact2(adapter.data[position].accid, SessionTypeEnum.P2P)
             adapter.remove(position)
+            EventBus.getDefault().post(UpdateHiEvent())
         }
 
     }

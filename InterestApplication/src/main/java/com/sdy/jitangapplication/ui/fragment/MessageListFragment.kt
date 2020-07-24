@@ -34,7 +34,10 @@ import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.*
+import com.sdy.jitangapplication.nim.attachment.ContactAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
+import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver
 import com.sdy.jitangapplication.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -207,9 +210,21 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
      */
     private val headAdapter by lazy { MessageListHeadAdapter() }
 
+    var checked = false
     private fun initAssistHeadsView(): View {
         val headView = LayoutInflater.from(activity!!)
             .inflate(R.layout.headerview_like_me, messageListRv, false)
+
+        headView.showCl.clickWithTrigger {
+            checked = !checked
+            if (checked) {
+                headView.questionCheckedBtn.setImageResource(R.drawable.icon_question_checked)
+                headView.questionShowIv.isVisible = true
+            } else {
+                headView.questionCheckedBtn.setImageResource(R.drawable.icon_question_uncheked)
+                headView.questionShowIv.isVisible = false
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
@@ -266,8 +281,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
             //todo 删除更多搭讪
-            adapter.headerLayout.moreChatUpBtn.isVisible =
-                (data?.chatup_list ?: mutableListOf()).size > 4
+//            adapter.headerLayout.moreChatUpBtn.isVisible =
+//                (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false

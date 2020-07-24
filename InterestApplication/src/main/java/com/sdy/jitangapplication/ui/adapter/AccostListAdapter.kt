@@ -30,7 +30,8 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
             holder.itemView.msgDivider.visibility = View.VISIBLE
         }
 
-        holder.itemView.swipeLayout.isCanLeftSwipe = false
+        holder.itemView.swipeLayout.isCanLeftSwipe = true
+        holder.itemView.menuTop.isVisible = false
         holder.itemView.swipeLayout.isCanRightSwipe = false
         holder.itemView.newCount.text = "${item.unreadCnt}"
         holder.itemView.msgTitle.text = "${item.nickname}"
