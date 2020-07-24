@@ -46,7 +46,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
             openPtVipBtn.clickWithTrigger {
                 ChargePtVipDialog(
-                    0,
+                    ChargePtVipDialog.UPDATE_VISIT,
                     context1,
                     ChargePtVipDialog.PURCHASE_PT_VIP
                 ).show()

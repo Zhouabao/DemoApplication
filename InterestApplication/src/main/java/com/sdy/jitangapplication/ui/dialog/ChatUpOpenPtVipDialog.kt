@@ -190,7 +190,7 @@ class ChatUpOpenPtVipDialog(
                     openPtVipBtn.text = "成为高级会员，免费开启聊天"
                     //成为高级会员
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(0, context1, ChargePtVipDialog.PURCHASE_PT_VIP).show()
+                        ChargePtVipDialog(ChargePtVipDialog.INFINITE_CHAT, context1, ChargePtVipDialog.PURCHASE_PT_VIP).show()
                         dismiss()
                     }
 
@@ -243,9 +243,9 @@ class ChatUpOpenPtVipDialog(
                 if (chatUpBean.isdirect) {//是直联卡会员,判断有没有次数
                     chatupUnlockChat.isVisible = false
                     chatupContent.isVisible = true
-                    if (chatUpBean.plat_cnt > 0) {
+                    if (chatUpBean.direct_residue_cnt > 0) {
                         chatupTitle.text = "是否解锁她的联系方式"
-                        chatupContent.text = "您当日还可免费解锁${chatUpBean.plat_cnt}次联系方式"
+                        chatupContent.text = "您当日还可免费解锁${chatUpBean.direct_residue_cnt}次联系方式"
                         openPtVipBtn.text = "解锁她的联系方式"
                     } else {
                         chatupTitle.text = "免费解锁次数已用完"
@@ -270,7 +270,7 @@ class ChatUpOpenPtVipDialog(
                     // 购买直联卡
                     openPtVipBtn.clickWithTrigger {
                         ChargePtVipDialog(
-                            0,
+                            ChargePtVipDialog.INFINITE_CHAT,
                             context1,
                             ChargePtVipDialog.PURCHASE_CONTACT_CARD
                         ).show()

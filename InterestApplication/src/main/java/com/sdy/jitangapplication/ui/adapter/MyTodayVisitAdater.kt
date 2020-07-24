@@ -63,7 +63,7 @@ class MyTodayVisitAdater(var freeShow: Boolean = false) :
             "男"
         } else {
             "女"
-        }}·${item.distance}"
+        }}·${item.age}·${item.distance}"
 
     }
 

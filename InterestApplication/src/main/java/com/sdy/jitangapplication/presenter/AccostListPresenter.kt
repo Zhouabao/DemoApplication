@@ -11,6 +11,7 @@ import com.netease.nimlib.sdk.ResponseCode
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.model.AccostListBean
 import com.sdy.jitangapplication.presenter.view.AccostListView
@@ -37,7 +38,7 @@ class AccostListPresenter : BasePresenter<AccostListView>() {
 
                 override fun onNext(t: BaseResp<AccostListBean?>) {
                     super.onNext(t)
-                    mView.onChatupListResult(t.data?.list?: mutableListOf())
+                    mView.onChatupListResult(t.data?.list ?: mutableListOf())
                 }
 
                 override fun onError(e: Throwable?) {
@@ -47,6 +48,31 @@ class AccostListPresenter : BasePresenter<AccostListView>() {
     }
 
 
+    /**
+     * 删除搭讪
+     */
+    fun delChat(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .delChat(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    mView.onDelChat(t.code == 200, position)
+                    if (t.code != 200) {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
+            })
+    }
+
 
     /**
      * 获取云信最近联系人
@@ -55,11 +81,15 @@ class AccostListPresenter : BasePresenter<AccostListView>() {
         NIMClient.getService(MsgService::class.java)
             .queryRecentContacts()
             .setCallback(object : RequestCallbackWrapper<MutableList<RecentContact>>() {
-                override fun onResult(code: Int, result: MutableList<RecentContact>?, exception: Throwable?) {
+                override fun onResult(
+                    code: Int,
+                    result: MutableList<RecentContact>?,
+                    exception: Throwable?
+                ) {
                     if (code != ResponseCode.RES_SUCCESS.toInt() || result == null) {
                         return
                     }
-                    mView.onGetRecentContactResults(result,data)
+                    mView.onGetRecentContactResults(result, data)
                 }
 
             })

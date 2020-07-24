@@ -43,6 +43,13 @@ interface Api {
     fun chatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AccostListBean?>>
 
     /**
+     * 删除搭讪
+     */
+    @FormUrlEncoded
+    @POST("Ticket/delChat${Constants.END_BASE_URL}")
+    fun delChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
      * 批量送礼物成为好友
      */
     @FormUrlEncoded
@@ -1259,7 +1266,6 @@ interface Api {
     @FormUrlEncoded
     @POST("Share/myInvite${Constants.END_BASE_URL}")
     fun myInvite(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyInviteBean?>>
-
 
 
     /**

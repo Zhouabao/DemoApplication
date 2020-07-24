@@ -279,6 +279,7 @@ data class ChatUpBean(
     var plat_cnt: Int = 0,
     var online: Boolean = false,
     var contact_amount: Int = 0,
+    var direct_residue_cnt: Int = 0,
     var contact: String = "",
     var contact_way: Int = 0,//联系方式 int 0 没有 1 手机 2微信 3 qq
     var avatar: String,

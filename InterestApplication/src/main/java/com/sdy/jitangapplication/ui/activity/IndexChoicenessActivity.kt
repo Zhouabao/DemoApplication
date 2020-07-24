@@ -177,7 +177,7 @@ class IndexChoicenessActivity : BaseActivity() {
                                 tobeChoicenessBtn.setBackgroundResource(R.drawable.icon_bg_choiceness_btn)
                                 tobeChoicenessBtn.clickWithTrigger {
                                     ChargePtVipDialog(
-                                        0,
+                                        ChargePtVipDialog.UPDATE_VISIT,
                                         this@IndexChoicenessActivity,
                                         ChargePtVipDialog.PURCHASE_PT_VIP
                                     ).show()

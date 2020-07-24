@@ -65,7 +65,7 @@ class AllVipPowerAdapter :
                 if (data!!.isplatinum)
                     itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
                 else
-                    itemview.vipOutTime.text = "立即升级享受更多特权"
+                    itemview.vipOutTime.text = "暂未激活特权"
 
             }
             VipPowerBean.TYPE_PT_VIP -> {

@@ -34,6 +34,7 @@ data class Ticket(
  */
 data class IndexTopBean(
     var amount: Int = 0,
+    var isplatinum: Boolean = false,
     var type: Int = 1,
     var accid: String = "",
     var age: Int = 0,
@@ -41,8 +42,7 @@ data class IndexTopBean(
     var distance: String = "",
     var gender: Int = 0,
     var nickname: String = "",
-    var source_type: Int = 0, //1视频 2图片
-    var weight: Int = 0
+    var source_type: Int = 0 //1视频 2图片
 ) : MultiItemEntity, Serializable {
     override fun getItemType(): Int {
         return type

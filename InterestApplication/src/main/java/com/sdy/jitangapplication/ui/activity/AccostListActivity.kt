@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -49,6 +50,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
 
         hotT1.text = "搭讪列表"
         rightBtn.text = "隐私权限"
+        rightBtn.isVisible = false
         btnBack.clickWithTrigger {
             finish()
         }
@@ -72,9 +74,10 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
                 }
                 //删除会话
                 R.id.menuDetele -> {
-                    //todo  删除会话，删除后，消息历史被一起删除
-                    NIMClient.getService(MsgService::class.java).deleteRecentContact2(adapter.data[position].accid,SessionTypeEnum.P2P)
-                    adapter.remove(position)
+                    mPresenter.delChat(
+                        hashMapOf("target_accid" to adapter.data[position].accid),
+                        position
+                    )
                 }
             }
         }
@@ -83,6 +86,16 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
     override fun onChatupListResult(data: MutableList<AccostBean>?) {
         //获取最近联系人列表
         mPresenter.getRecentContacts(data ?: mutableListOf())
+    }
+
+    override fun onDelChat(success: Boolean, position: Int) {
+        //todo  删除会话，删除后，消息历史被一起删除
+        if (success) {
+            NIMClient.getService(MsgService::class.java)
+                .deleteRecentContact2(adapter.data[position].accid, SessionTypeEnum.P2P)
+            adapter.remove(position)
+        }
+
     }
 
 

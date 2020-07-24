@@ -88,7 +88,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
         btnGoVip.onClick {
             ChargePtVipDialog(
-                0,
+                ChargePtVipDialog.VIP_LOGO,
                 context1,
                 ChargePtVipDialog.PURCHASE_PT_VIP
             ).show()

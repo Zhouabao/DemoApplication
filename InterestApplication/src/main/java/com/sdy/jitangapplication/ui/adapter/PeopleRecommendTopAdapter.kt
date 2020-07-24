@@ -59,20 +59,21 @@ class PeopleRecommendTopAdapter :
                         )
                     }
                 } else {
+                    itemView.openVipBtn.setBackgroundResource(R.drawable.gradient_orange_10dp)
                     if (UserManager.getGender() == 1) {
                         itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
                         itemView.openVipBtn.text = "升级会员"
                         itemView.openVipBtn.clickWithTrigger {
                             ChargePtVipDialog(
-                                0,
+                                ChargePtVipDialog.UPDATE_VISIT,
                                 mContext,
                                 ChargePtVipDialog.PURCHASE_PT_VIP
                             ).show()
                         }
                     } else {
+                        itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
+                        itemView.openVipBtn.text = "上传视频"
                         itemView.openVipBtn.clickWithTrigger {
-                            itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
-                            itemView.openVipBtn.text = "上传视频"
                             CommonFunction.startToVideoIntroduce(mContext)
                         }
                     }
@@ -94,6 +95,7 @@ class PeopleRecommendTopAdapter :
                 )
 
                 itemView.userMvBtn.isVisible = item.source_type == 1
+                itemView.userVipLogo.isVisible = item.isplatinum
             }
         }
     }

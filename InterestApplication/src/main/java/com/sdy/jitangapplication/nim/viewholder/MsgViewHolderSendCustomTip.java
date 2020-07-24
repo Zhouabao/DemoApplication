@@ -103,7 +103,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                         @Override
                         public void onClick(@NonNull View widget) {
-                            new ChargePtVipDialog(0, context, ChargePtVipDialog.PURCHASE_PT_VIP).show();
+                            new ChargePtVipDialog(ChargePtVipDialog.UPDATE_VISIT, context, ChargePtVipDialog.PURCHASE_PT_VIP).show();
                         }
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).append("可提升消息回复")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());

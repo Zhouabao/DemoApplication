@@ -1,17 +1,13 @@
 package com.sdy.jitangapplication.nim.fragment;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +40,6 @@ import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
-import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
@@ -234,23 +229,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
 
-        // 如果没有显示过礼物规则提醒
-        if (!UserManager.INSTANCE.isShowGuideGiftProtocol() && !sessionId.equals(Constants.ASSISTANT_ACCID)) {
-            Dialog dialog = new Dialog(getActivity(), R.style.MyDialog);
-            View guideGift = LayoutInflater.from(getActivity()).inflate(R.layout.popupwindow_guide_gift, null);
-            guideGift.setOnClickListener(v -> dialog.dismiss());
-            dialog.setContentView(guideGift);
-            Window window = dialog.getWindow();
-            window.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
-            WindowManager.LayoutParams attrs = window.getAttributes();
-            attrs.width = WindowManager.LayoutParams.MATCH_PARENT;
-            attrs.height = WindowManager.LayoutParams.MATCH_PARENT;
-            window.setAttributes(attrs);
-            dialog.show();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-            dialog.setOnDismissListener(dialog1 -> UserManager.INSTANCE.saveShowGuideGiftProtocol(true));
-        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

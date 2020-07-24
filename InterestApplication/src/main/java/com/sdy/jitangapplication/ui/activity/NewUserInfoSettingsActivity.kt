@@ -798,7 +798,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             R.id.userScoreVip -> {
                 ChargePtVipDialog(
-                    0,
+                    ChargePtVipDialog.VIP_LOGO,
                     this,
                     ChargePtVipDialog.PURCHASE_PT_VIP
                 ).show()

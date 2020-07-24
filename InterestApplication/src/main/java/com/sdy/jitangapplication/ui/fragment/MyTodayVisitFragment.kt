@@ -84,7 +84,7 @@ class MyTodayVisitFragment(val todayCount: Int, var freeShow: Boolean = false) :
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
             ChargePtVipDialog(
-                0,
+                ChargePtVipDialog.FREE_SEE_ME,
                 activity!!,
                 ChargePtVipDialog.PURCHASE_PT_VIP
             ).show()

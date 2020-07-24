@@ -375,11 +375,11 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     //是否认证
     private fun checkVip() {
         vipLevelSaveCount.text = "${userInfoBean?.platinum_vip_str}"
-        if (userInfoBean?.userinfo?.isplatinum == false) {
-            isVipPowerBtn.text = "升级会员"
-        } else {
-            isVipPowerBtn.text = "续费会员"
-        }
+//        if (userInfoBean?.userinfo?.isplatinum == false) {
+//            isVipPowerBtn.text = "升级会员"
+//        } else {
+//            isVipPowerBtn.text = "续费会员"
+//        }
     }
 
 

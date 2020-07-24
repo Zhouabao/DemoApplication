@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.model.AccostBean
 interface AccostListView : BaseView {
 
     fun onChatupListResult(data: MutableList<AccostBean>?)
+    fun onDelChat(success: Boolean, position: Int)
 
     fun onGetRecentContactResults(
         result: MutableList<RecentContact>,

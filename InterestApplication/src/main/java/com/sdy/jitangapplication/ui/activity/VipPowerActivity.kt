@@ -54,13 +54,13 @@ class VipPowerActivity() :
         payBtn.clickWithTrigger {
             if (lastPosition && slideLeft) {
                 ChargePtVipDialog(
-                    0,
+                    ChargePtVipDialog.VIP_LOGO,
                     this@VipPowerActivity,
                     ChargePtVipDialog.PURCHASE_CONTACT_CARD
                 ).show()
             } else {
                 ChargePtVipDialog(
-                    0,
+                    ChargePtVipDialog.VIP_LOGO,
                     this@VipPowerActivity,
                     ChargePtVipDialog.PURCHASE_PT_VIP
                 ).show()

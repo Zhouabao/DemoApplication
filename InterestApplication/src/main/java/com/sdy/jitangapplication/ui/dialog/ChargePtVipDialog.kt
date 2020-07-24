@@ -59,30 +59,13 @@ class ChargePtVipDialog(
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-
-        //         (1, '解锁无限制畅聊');
-// (2, '出现权重提升');
-// (3, '查看在意我的');
-// (4, '更多匹配机会');
-// (5, '尊享VIP身份标示');
-// (6, '会员独享筛选项');
-// (7, '看过我的');
-// (8, '广场评论');
-        const val INFINITE_CHAT = 1//解锁无限制畅聊
-        const val DOUBLE_HI = 1//加倍招呼
-        const val MORE_EXPODE = 2//出现权重提升
-        const val LIKED_ME = 3//喜欢我的
-        const val INFINITE_SLIDE = 4//更多匹配机会
-        const val VIP_LOGO = 5//尊享VIP身份标示
-        const val FILTER_LOCAL_CITY = 6//会员独享筛选项
-        const val FILTER_ONLINE = 6//会员独享筛选项
-        const val LOOKED_ME = 7//看过我的
-        const val COMMENT_FREE = 8//广场评论
-        const val GET_CONTACT = 9//获取联系人
-        const val LOOK_SAME_CITY = 10//获取联系人
-        const val LOOK_VIDEO = 11//获取联系人
-
-        const val FILTER = 8//已读功能
+        const val INFINITE_CHAT = 14//每日免费聊天
+        const val VIP_LOGO = 15//专属身份标识
+        const val FREE_VIDEO_INTRODUCE = 16//免费视频介绍
+        const val UPDATE_VISIT = 17//提升曝光度
+        const val FREE_SEE_ME = 18//查看看过我的
+        const val SQUARE_COMMENT = 19//广场评论权限
+        const val SUPER_ASSISTANT = 20//专属客服配套
 
         //购买类型
         const val PURCHASE_PT_VIP = 100//VIP购买

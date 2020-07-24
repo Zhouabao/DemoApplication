@@ -46,7 +46,7 @@ class CommentPtVipDialog(
 
         openPtVipBtn.clickWithTrigger {
             ChargePtVipDialog(
-                0,
+                ChargePtVipDialog.SQUARE_COMMENT,
                 context1,
                 ChargePtVipDialog.PURCHASE_PT_VIP
             ).show()
