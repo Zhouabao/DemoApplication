@@ -23,8 +23,8 @@ public class SendCustomTipAttachment extends CustomAttachment {
     public final static int CUSTOME_TIP_EXCHANGE_PRODUCT = 8;//已满足兑换所需糖果，立即兑换
     public final static int CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT = 9;//小助手发聊天糖果退回警告（针对女方）
     public final static int CUSTOME_TIP_NORMAL = 10;//常规的tip
-//    public final static int CUSTOME_TIP_RECEIVE_NOT_HUMAN = 8;//发件方 收件方非真人
-//    public final static int CUSTOM_TIP_FIRST_SEND_MAN = 1;//男方发送第一条消息（仅第一次发送消息会显示，切换用户不重复发送）
+    public final static int CUSTOME_TIP_PRIVICY_SETTINGS = 11;//私聊权限
+    public final static int CUSTOME_TIP_CHARGE_PT_VIP = 12;//充值高级会员
 
     private String content;//发送tip的内容
     private int showType;//是什么类型的tip

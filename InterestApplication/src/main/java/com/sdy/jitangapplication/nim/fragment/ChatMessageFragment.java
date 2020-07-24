@@ -145,7 +145,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         // 糖果门槛消费聊天
         unlockChatLl.setOnClickListener(v -> {
-            CommonFunction.INSTANCE.checkChat(getActivity(), sessionId, ChatUpOpenPtVipDialog.TYPE_LOCK_CHATUP);
+            CommonFunction.INSTANCE.checkChat(getActivity(), sessionId);
         });
 
         // 解锁联系方式
