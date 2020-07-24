@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -45,6 +46,8 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
+import com.sdy.jitangapplication.widgets.CommonAlertDialog.OnConfirmListener
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -165,6 +168,25 @@ object CommonFunction {
                                     }
 
                                 })
+                        }
+                        400 -> {
+                            toast(t.msg)
+//                            CommonAlertDialog.Builder(context1)
+//                                .setTitle("提示")
+//                                .setContent(t.msg).setCancelIconIsVisibility(false)
+//                                .setConfirmText("知道了").setCancelAble(false)
+//                                .setOnConfirmListener(object : OnConfirmListener {
+//                                    override fun onClick(dialog: Dialog) {
+//                                        dialog.cancel()
+//                                        NIMClient.getService(MsgService::class.java)
+//                                            .deleteRecentContact2(
+//                                                target_accid,
+//                                                SessionTypeEnum.P2P
+//                                            )
+//                                    }
+//                                })
+//                                .create()
+//                                .show()
                         }
                         401 -> {//女性未认证
                             VerifyThenChatDialog(context1).show()
