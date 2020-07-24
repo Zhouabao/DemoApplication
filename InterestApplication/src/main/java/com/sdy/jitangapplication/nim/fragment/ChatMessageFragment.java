@@ -44,7 +44,6 @@ import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
-import com.sdy.jitangapplication.model.SendTipBean;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
@@ -63,7 +62,6 @@ import com.sdy.jitangapplication.nim.uikit.common.fragment.TFragment;
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
-import com.sdy.jitangapplication.ui.dialog.ChatUpOpenPtVipDialog;
 import com.sdy.jitangapplication.ui.dialog.ContactCandyReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
@@ -261,7 +259,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateApproveEvent(UpdateSendGiftEvent event) {
+    public void updateSendGiftEvent(UpdateSendGiftEvent event) {
         messageListPanel.onMsgSend(event.getMessage());
     }
 
@@ -620,8 +618,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             // if (content.getMsgType() == MsgTypeEnum.text)
                             sendMsgS(content, false);
                             if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
-                                for (SendTipBean bean : nimBeanBaseResp.getData().getRet_tips_arr())
-                                    sendTipMessage(bean.getContent(), bean.getShowType(), bean.getIfSendUserShow());
+                                CommonFunction.INSTANCE.sendTips(sessionId,
+                                        nimBeanBaseResp.getData().getRet_tips_arr());
 
                             nimBean.set_send_msg(true);
 
@@ -669,17 +667,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     }
 
                 });
-    }
-
-    private void sendTipMessage(String msg, int type, boolean ifSendUserShow) {
-        // 同时，本地插入被对方拒收的tip消息
-        SendCustomTipAttachment attachment = new SendCustomTipAttachment(msg, type, ifSendUserShow);
-        IMMessage tip = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, attachment);
-        CustomMessageConfig config = new CustomMessageConfig();
-        config.enableUnreadCount = false;
-        config.enablePush = false;
-        tip.setConfig(config);
-        sendMsgS(tip, false);
     }
 
     private void sendMsgS(IMMessage content, boolean requestMsg) {

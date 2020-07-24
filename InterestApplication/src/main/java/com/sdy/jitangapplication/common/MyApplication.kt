@@ -107,7 +107,7 @@ class MyApplication : BaseApplication() {
     private val userStatusObserver: Observer<StatusCode> by lazy {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
-                TickDialog(ActivityUtils.getTopActivity()).show()
+                TickDialog(this).show()
             }
         }
     }

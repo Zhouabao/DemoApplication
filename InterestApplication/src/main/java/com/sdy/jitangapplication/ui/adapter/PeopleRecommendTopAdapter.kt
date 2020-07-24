@@ -11,7 +11,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.ui.activity.MyVisitActivity
-import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_people_recommend_top_content.view.*
@@ -49,6 +48,7 @@ class PeopleRecommendTopAdapter :
                 if ((UserManager.getGender() == 1 && isplatinum) || (UserManager.getGender() == 2 && !mv_url)) {
                     itemView.choicenessCount.text = "${total_exposure_cnt}人通过精选\n用户看到了你"
                     itemView.openVipBtn.text = "谁看过我"
+                    itemView.openVipBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_24dp)
                     itemView.openVipBtn.clickWithTrigger {
                         mContext.startActivity<MyVisitActivity>(
                             "today" to todayvisit,
@@ -61,7 +61,7 @@ class PeopleRecommendTopAdapter :
                 } else {
                     if (UserManager.getGender() == 1) {
                         itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
-                        itemView.openVipBtn.text = "开通会员"
+                        itemView.openVipBtn.text = "升级会员"
                         itemView.openVipBtn.clickWithTrigger {
                             ChargePtVipDialog(
                                 0,
@@ -93,7 +93,7 @@ class PeopleRecommendTopAdapter :
                     SizeUtils.dp2px(5f)
                 )
 
-                itemView.userMvBtn.isVisible = UserManager.getGender() == 1
+                itemView.userMvBtn.isVisible = item.source_type == 1
             }
         }
     }

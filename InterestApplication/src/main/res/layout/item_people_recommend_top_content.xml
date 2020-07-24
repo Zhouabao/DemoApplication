@@ -19,6 +19,7 @@
         android:id="@+id/userMvBtn"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:visibility="gone"
         android:src="@drawable/icon_video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

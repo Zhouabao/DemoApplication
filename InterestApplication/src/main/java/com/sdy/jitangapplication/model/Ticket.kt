@@ -40,9 +40,9 @@ data class IndexTopBean(
     var avatar: String = "",
     var distance: String = "",
     var gender: Int = 0,
-    var juli: Int = 0,
     var nickname: String = "",
-    var source_type: Int = 0
+    var source_type: Int = 0, //1视频 2图片
+    var weight: Int = 0
 ) : MultiItemEntity, Serializable {
     override fun getItemType(): Int {
         return type
