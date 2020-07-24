@@ -55,14 +55,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
 
     private fun initData() {
-        if (UserManager.getGender() == 2) {
-            privacyPowerBtn.isVisible = true
-            privacyPowerContent.isVisible = true
-        } else {
-            privacyPowerBtn.isVisible = false
-            privacyPowerContent.isVisible = false
-        }
-
         if (UserManager.isShowSettingNew()) {
             hideModeNew.isVisible = false
             privacyNew.isVisible = false
@@ -72,6 +64,16 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             privacyNew.isVisible = true
             notificationNew.isVisible = true
         }
+
+        if (UserManager.getGender() == 2) {
+            privacyPowerBtn.isVisible = true
+            privacyPowerContent.isVisible = true
+        } else {
+            privacyPowerBtn.isVisible = false
+            privacyPowerContent.isVisible = false
+            privacyNew.isVisible = false
+        }
+
 
         cacheDataSize.text = DataCleanManager.getTotalCacheSize(this)
     }

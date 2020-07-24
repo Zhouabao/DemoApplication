@@ -134,91 +134,117 @@ class ChatUpOpenPtVipDialog(
         }
 
         when (type) {
+            /**
+             * 1.非高级会员
+             *      1.1设置私聊权限
+             *              a.她仅允许高级用户联系她
+             *              b.立即成为高级用户，不要错过
+             *              c.成为高级会员，免费无限次聊天
+             *      1.2未设置私聊权限
+             *          1.2.1次数未用尽
+             *              a.获得聊天机会
+             *              b.今日还有3次免费聊天机会
+             *              (解锁聊天)
+             *              c.成为高级会员，免费无限次聊天
+             *
+             *          1.2.2次数用尽
+             *              a.获得聊天机会
+             *              b.今日聊天机会已用完
+             *              (解锁聊天  30糖果)
+             *              c.成为高级会员，免费无限次聊天
+             *
+             * 2.高级会员
+             *      2.1聊天次数未用尽
+             *          a.要给她打个招呼吗
+             *          b.今日还可以免费10次聊天
+             *          （微信 wei****5）
+             *          c.解锁聊天
+             *      2.2聊天次数用尽
+             *          a.今日免费次数已用完
+             *          b.今日免费聊天次数已用完
+             *          （微信 wei****5）
+             *          c.解锁聊天（30糖果）
+             *
+             */
+
             TYPE_CHAT -> { //解锁聊天
-                //是否钻石 是否联系方式  是否在线
+                openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                 if (chatUpBean.isplatinum) {
-                    openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
+                    chatupUnlockChat.isVisible = false
                     chatupContact.isVisible = chatUpBean.contact_way != 0
-                    if (chatupContact.isVisible) {
-                        openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
-                        chatupUnlockChat.isVisible = true
-                        openPtVipBtn.clickWithTrigger {
-                            unlockContact()
-                        }
-                        chatupUnlockChat.clickWithTrigger {
-                            unlockChat()
-                        }
-
-                    } else {
+                    chatupTitle.text = "获得聊天机会"
+                    openPtVipBtn.text = "成为高级会员，免费开启聊天"
+                    if (chatUpBean.plat_cnt > 0) {
+                        chatupTitle.text = "要给她打个招呼吗"
+                        chatupContent.text = "今日还可免费解锁${chatUpBean.plat_cnt}次聊天"
                         openPtVipBtn.text = "解锁聊天"
-                        chatupUnlockChat.isVisible = false
-                        openPtVipBtn.clickWithTrigger {
-                            unlockChat()
-                        }
-                    }
 
-                    if (chatUpBean.online || !chatupContact.isVisible) {
-                        if (chatUpBean.plat_cnt > 0) {
-                            chatupTitle.text = "要给她打个招呼吗"
-                            chatupContent.text = "今日还可免费解锁${chatUpBean.plat_cnt}次聊天"
-                            chatupUnlockChat.text = "解锁聊天"
-                        } else {
-                            chatupTitle.text = "今日免费次数已用完"
-                            chatupContent.text = "今日免费聊天次数已用完"
-                            chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
-                            openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
-                        }
                     } else {
-                        chatupTitle.text = "她今天没上线哦"
-                        chatupContent.text = "她今天没有在线\n你可以直接解锁她的联系方式找到她"
-                        if (chatUpBean.plat_cnt > 0) {
-                            chatupUnlockChat.text = "解锁聊天"
-                        } else {
-                            chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
-                        }
-                        openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
+                        chatupTitle.text = "今日免费次数已用完"
+                        chatupContent.text = "今日免费聊天次数已用完"
+                        openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                    }
+                    // 解锁聊天
+                    openPtVipBtn.clickWithTrigger {
+                        unlockChat()
                     }
                 } else {
-                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
-                    openPtVipBtn.text = "成为高级会员，免费开启聊天"
-                    chatupUnlockChat.isVisible = true
-                    chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                    chatupContact.isVisible = false
                     //成为高级会员
                     openPtVipBtn.clickWithTrigger {
                         ChargePtVipDialog(0, context1, ChargePtVipDialog.PURCHASE_PT_VIP).show()
                         dismiss()
-//                        context1.startActivity<VipPowerActivity>()
                     }
-                    // 解锁聊天
-                    chatupUnlockChat.clickWithTrigger {
-                        unlockChat()
+                    if (chatUpBean.private_chat_btn) {
+                        chatupTitle.text = "她设置了私聊权限"
+                        openPtVipBtn.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过"
+                        chatupUnlockChat.isVisible = false
+                    } else {
+                        chatupTitle.text = "获得聊天机会"
+                        openPtVipBtn.text = "成为高级会员，免费开启聊天"
+                        chatupUnlockChat.isVisible = true
+                        if (chatUpBean.plat_cnt > 0) {
+                            chatupContent.text = "今日还有${chatUpBean.plat_cnt}次聊天机会"
+                            chatupUnlockChat.text = "解锁聊天"
+                        } else {
+                            chatupContent.text = "今日免费聊天机会已用完"
+                            chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                        }
+                        // 解锁聊天
+                        chatupUnlockChat.clickWithTrigger {
+                            unlockChat()
+                        }
                     }
-
-//                    if (chatUpBean.online) {
-                    chatupTitle.text = "获得聊天机会"
-                    chatupContent.text = "成为高级会员，免费无限次聊天"
-                    chatupContact.isVisible = false
-//                    } else {
-//                        chatupContact.isVisible = chatUpBean.contact_way != 0
-//                        chatupContact.text = chatUpBean.contact
-//                        chatupTitle.text = "她今天没有上线哦"
-//                        if (chatupContact.isVisible) {
-//                            chatupContent.text = "你可以直接解锁她的联系方式找到她\n成为高级会员，免费开启聊天和解锁她的联系方式"
-//                        } else {
-//                            chatupContent.text = "你可以直接解锁她的联系方式找到她\n成为高级会员，免费开启聊天和解锁她的联系方式"
-//                        }
-//                    }
                 }
             }
             TYPE_CONTACT -> { //解锁联系方式
                 //todo 购买直联卡 获取免费解锁次数
-                //判断是不是直连卡会员
-                //是的话,判断有没有次数  不是的话,弹起购买直联卡
+                /**
+                 * 1.是否是直联卡
+                 *  1.1 聊天次数未用尽
+                 *      a.微信 Wei****5
+                 *      b.是否解锁她的联系方式
+                 *      c.您当日还可免费解锁10次联系方式
+                 *      d.解锁她的联系方式
+                 *
+                 *  1.2 聊天次数用尽
+                 *      a.微信 Wei****5
+                 *      b.今日免费解锁次数已用完
+                 *      c.您当日还可以免费解锁0次联系方式\n使用糖果解锁，不错过心仪的她
+                 *      d.解锁她的联系方式（200糖果）
+                 * 2.非高级会员
+                 *      a.微信 Wei****5
+                 *      b.解锁心仪的她
+                 *      c.解锁联系方式（200糖果）
+                 *      d.购买至尊直联卡，免费解锁联系方式
+                 *
+                 */
                 chatupContact.isVisible = true
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_contact_card)
 
                 if (chatUpBean.isdirect) {//是直联卡会员,判断有没有次数
                     chatupUnlockChat.isVisible = false
+                    chatupContent.isVisible = true
                     if (chatUpBean.plat_cnt > 0) {
                         chatupTitle.text = "是否解锁她的联系方式"
                         chatupContent.text = "您当日还可免费解锁${chatUpBean.plat_cnt}次联系方式"
@@ -234,9 +260,9 @@ class ChatUpOpenPtVipDialog(
                         unlockContact()
                     }
                 } else {  //不是的话,弹起购买直联卡
-                    chatupTitle.text = "解锁心仪的她"
-                    chatupContent.isVisible = false
                     chatupUnlockChat.isVisible = true
+                    chatupContent.isVisible = false
+                    chatupTitle.text = "解锁心仪的她"
                     chatupUnlockChat.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
                     // 解锁联系方式
                     chatupUnlockChat.clickWithTrigger {
@@ -245,12 +271,17 @@ class ChatUpOpenPtVipDialog(
                     openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                     // 购买直联卡
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(0,context1,ChargePtVipDialog.PURCHASE_CONTACT_CARD).show()
+                        ChargePtVipDialog(
+                            0,
+                            context1,
+                            ChargePtVipDialog.PURCHASE_CONTACT_CARD
+                        ).show()
                         dismiss()
                     }
                 }
             }
             TYPE_LOCK_CHATUP -> {
+                openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                 chatupContact.isVisible = false
                 if (chatUpBean.isplatinum) {
                     chatupUnlockChat.isVisible = false
@@ -267,7 +298,6 @@ class ChatUpOpenPtVipDialog(
                         chatupTitle.text = "是否要解锁聊天"
                         chatupContent.text = "今日免费解锁次数已用完"
                         openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
-                        openPtVipBtn.setBackgroundResource(R.drawable.rectangle_orange_bottom_15dp)
                         // 解锁搭讪聊天
                         openPtVipBtn.clickWithTrigger {
                             lockChatup()
@@ -276,7 +306,6 @@ class ChatUpOpenPtVipDialog(
                 } else {
                     chatupUnlockChat.isVisible = true
                     chatupTitle.text = "是否要解锁聊天"
-                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                     openPtVipBtn.text = "成为高级会员，免费开启聊天"
                     chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     openPtVipBtn.clickWithTrigger {
@@ -286,7 +315,6 @@ class ChatUpOpenPtVipDialog(
                     }
                     chatupUnlockChat.clickWithTrigger {
                         lockChatup()
-
                     }
                 }
 

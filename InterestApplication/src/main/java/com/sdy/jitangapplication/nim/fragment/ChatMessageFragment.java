@@ -42,7 +42,6 @@ import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
-import com.sdy.jitangapplication.model.ChatUpBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.model.SendTipBean;
@@ -146,10 +145,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         // 糖果门槛消费聊天
         unlockChatLl.setOnClickListener(v -> {
-            new ChatUpOpenPtVipDialog(getActivity(), sessionId, ChatUpOpenPtVipDialog.TYPE_LOCK_CHATUP,
-                    new ChatUpBean(nimBean.getChatup_amount(), nimBean.getPlat_cnt(), false, 0, "", 0,
-                            nimBean.getAvatar(), nimBean.getIsplatinum(),nimBean.getIsdirect()),
-                    "").show();
+            CommonFunction.INSTANCE.checkChat(getActivity(), sessionId, ChatUpOpenPtVipDialog.TYPE_LOCK_CHATUP);
         });
 
         // 解锁联系方式
@@ -455,7 +451,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         actions.add(new ChatTakeImageAction()); // 拍照
         actions.add(new MyLocationAction()); // 位置
         actions.add(new ChatContactAction()); // 联系方式
-//        actions.add(new ChatChooseGiftAction()); // 礼物
+        // actions.add(new ChatChooseGiftAction()); // 礼物
         // actions.add(new PhoneCallAction()); //语音通话
 
         return actions;

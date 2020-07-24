@@ -118,7 +118,7 @@ object CommonFunction {
      * 	200 拉起礼物列表
      * 	208 充值高级会员（女性设置了聊天权限）
      */
-    fun checkChat(context1: Context, target_accid: String) {
+    fun checkChat(context1: Context, target_accid: String,type: Int = ChatUpOpenPtVipDialog.TYPE_CHAT) {
         val loading = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
             .checkChat(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
@@ -136,7 +136,7 @@ object CommonFunction {
                                 ChatUpOpenPtVipDialog(
                                     context1,
                                     target_accid,
-                                    ChatUpOpenPtVipDialog.TYPE_CHAT,
+                                    type,
                                     t.data!!
                                 ).show()
                         }
@@ -170,7 +170,7 @@ object CommonFunction {
                             ChatUpOpenPtVipDialog(
                                 context1,
                                 target_accid,
-                                ChatUpOpenPtVipDialog.TYPE_CHAT,
+                                type,
                                 t.data!!
                             ).show()
                         }
