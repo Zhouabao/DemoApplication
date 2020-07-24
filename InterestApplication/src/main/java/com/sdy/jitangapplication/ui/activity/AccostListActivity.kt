@@ -6,7 +6,9 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.scwang.smartrefresh.layout.api.RefreshLayout
@@ -67,6 +69,12 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
             when (view.id) {
                 R.id.content -> {
                     ChatActivity.start(this, adapter.data[position].accid)
+                }
+                //删除会话
+                R.id.menuDetele -> {
+                    //todo  删除会话，删除后，消息历史被一起删除
+                    NIMClient.getService(MsgService::class.java).deleteRecentContact2(adapter.data[position].accid,SessionTypeEnum.P2P)
+                    adapter.remove(position)
                 }
             }
         }

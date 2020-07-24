@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
 class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.item_message_list) {
     override fun convert(holder: BaseViewHolder, item: AccostBean) {
         holder.addOnClickListener(R.id.content)
+        holder.addOnClickListener(R.id.menuDetele)
         if (holder.layoutPosition == data.size) {
             holder.itemView.msgDivider.visibility = View.INVISIBLE
         } else {
@@ -32,33 +33,25 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
         holder.itemView.swipeLayout.isCanLeftSwipe = false
         holder.itemView.swipeLayout.isCanRightSwipe = false
         holder.itemView.newCount.text = "${item.unreadCnt}"
+        holder.itemView.msgTitle.text = "${item.nickname}"
         GlideUtil.loadAvatorImg(
             mContext,
             item.avatar,
             holder.itemView.msgIcon
         )
-        holder.itemView.text.text = NIMClient.getService(MsgService::class.java)
-            .queryRecentContact(item.accid, SessionTypeEnum.P2P).content
-
-//        if (UserManager.getGender() == 1) {
-//            holder.itemView.text.text = if (item.content.isNotEmpty()) {
-//                item.content
-//            } else {
-//                "新的搭讪消息"
-//            }
-//        } else {
-//            if (item.unreadCnt > 0) {
-//                SpanUtils.with(holder.itemView.text)
-//                    .append("[礼物]")
-//                    .setForegroundColor(Color.parseColor("#FFFD4417"))
-//                    .append("搭讪礼物待领取")
-//                    .setForegroundColor(Color.parseColor("#FFCCCDCF"))
-//                    .create()
-//            } else {
-//                holder.itemView.text.text = "[礼物]搭讪礼物待领取"
-//            }
-//        }
-
+        holder.itemView.text.text = when {
+            NIMClient.getService(MsgService::class.java)
+                .queryRecentContact(item.accid, SessionTypeEnum.P2P) != null -> {
+                NIMClient.getService(MsgService::class.java)
+                    .queryRecentContact(item.accid, SessionTypeEnum.P2P).content
+            }
+            item.content.isNotEmpty() -> {
+                item.content
+            }
+            else -> {
+                "新的招呼消息"
+            }
+        }
 
         holder.itemView.latelyTime.isVisible = item.time != 0L
         holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)

@@ -57,7 +57,7 @@ class VideoIntroduceBeforeDialog(val context1: Context, var requestCode: Int = -
         verifyBtn.clickWithTrigger {
             verifyBtn.isEnabled = false
             if (requestCode != -1) {
-                (context1 as Activity).startActivityForResult<VideoVerifyActivity>(
+                (context1 as Activity).startActivityForResult<VideoVerifyActivity1>(
                     requestCode,
                     "copyMv" to copyMvBean
                 )

@@ -96,6 +96,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
         }
     }
 
+    private var type = 1 //1.自拍 2上传的视频
     private val filterDialog by lazy { DialogFilter(this) }
     private val mStartRecordingFilterCallback by lazy {
         object : StartRecordingFilterCallback(this) {
@@ -377,6 +378,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                 filterDialog.show()
             }
             R.id.chooseVideoBtn -> {
+                type = 2
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                     CommonFunction.onTakePhoto(
                         this,
@@ -395,6 +397,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                     )
             }
             R.id.captureButton -> {
+                type = 1
                 if (!isRecording) {
                     isAction = true
                     isRecording = false
@@ -509,6 +512,7 @@ class VideoVerifyActivity1 : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerif
                     mPresenter.uploadMv(
                         hashMapOf(
                             "mv_url" to key,
+                            "type" to type,
                             "normal_id" to if (switchIndex > -1 && mvCopy.size > switchIndex) {
                                 mvCopy[switchIndex].id
                             } else {
