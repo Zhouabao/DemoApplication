@@ -1,6 +1,16 @@
 package com.sdy.jitangapplication.common
 
 object Constants {
+    //云信新账号
+    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
+//    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
+
+//    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
+    //是否处于测试环境
+    const val TEST = false
+
+
+
     const val BaseUrl = ""
     const val DEFAULT_TIME = 500L
     const val READ_TIME = 500L
@@ -69,15 +79,6 @@ object Constants {
     const val SM_ORGANIZATION = "2WzKdLM1nFYXpxZB5HX0"
     const val SM_PUBLICKEY = "MIIDLzCCAhegAwIBAgIBMDANBgkqhkiG9w0BAQUFADAyMQswCQYDVQQGEwJDTjELMAkGA1UECwwCU00xFjAUBgNVBAMMDWUuaXNodW1laS5jb20wHhcNMTkxMTA4MDYzMTA5WhcNMzkxMTAzMDYzMTA5WjAyMQswCQYDVQQGEwJDTjELMAkGA1UECwwCU00xFjAUBgNVBAMMDWUuaXNodW1laS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC863Gs04OQP+63cPm43EdEnTPEcXh2y5per1OZGjUsyNRhJMG7+ePBE0vZKdtt+RLBwf8C59mdbnozMCwyu58Pt7ooSyEevkW72w4qP1U6DYP6R5PjrgTOU674z8KsmwIhbOimk1Gi+4X3pEVZlKNCfScjVKMmsypYgN343Yae2MLH4H6XyycZc6NWRCIXd1gAYOSBOzkb/kWRAsirrbYlHNbVFBfNr2SAk/F3x45rWS3CeZJZSeMImeomweLG+ya6l70osu1lVLu7aS5LhvCb4xNGiKsY63y0XsEZNYaQJJM6wMEPM1Ihhts8PkM5niJBLKj2n/wm//JF5Kj/S0cPAgMBAAGjUDBOMB0GA1UdDgQWBBTB7clijKNQxalsnJqe3M8qRIAPJDAfBgNVHSMEGDAWgBTB7clijKNQxalsnJqe3M8qRIAPJDAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4IBAQAQf3IQPlaxfc8T68QlWbrHX1cz1jjlZz6G+wKVKOT5PMn0RCu3Rw9Aarfl04rsZDF66AZjzNLVxqvRPZLWP1U4CQr74ErqgJtEXUU1WVz5NP1sJiVifUpbGKUJ36ucO22XPZspgFR84EA5Y0DVXtSvuXjHLurxC/qmLGKv0UFEZjzySmLOS/X3m2PMKlGZuDtO7a4t3ikkg0SFPbM3/3xQrJK533sr2FyUCzOfHocUe+bT45A4IDSd0ecPMHhkj+55JjlwfvXp9fGLBq6Iv57eKKpbY9vX8qRFLFIBGBmdpRSnpwNZ1rtBZrMgGTczpTQg527mpaTh68r1XIjaAknZ"
     const val SM_AINFOKEY = "cyhDpMYLMOWsrzgiCQTKPqHQYWqsEdEEVyaLTACvwYpJehLfFTUZIzfdiWoIzPjV"
-
-    //云信新账号
-//    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
-//    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
-
-    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
-    //是否处于测试环境
-    const val TEST = false
-
 
     //闪验
     const val SY_APP_ID="Rr9a0DYd"
