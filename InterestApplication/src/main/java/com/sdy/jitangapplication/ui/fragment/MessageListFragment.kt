@@ -197,6 +197,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         accostView.messageCenterRv.adapter = accostAdapter
         accostAdapter.setOnItemClickListener { _, _, position ->
             ChatActivity.start(activity!!, accostAdapter.data[position].accid)
+            EventBus.getDefault().post(GetNewMsgEvent())
         }
         accostView.moreChatUpBtn.clickWithTrigger {
             startActivity<AccostListActivity>()
@@ -280,9 +281,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
-            //todo 删除更多搭讪
-//            adapter.headerLayout.moreChatUpBtn.isVisible =
-//                (data?.chatup_list ?: mutableListOf()).size > 4
+            adapter.headerLayout.moreChatUpBtn.isVisible =
+                (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false

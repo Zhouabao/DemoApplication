@@ -185,8 +185,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
-                } else if (nearBean?.iscompleteguide != true) {
-                    GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
+//                } else if (nearBean?.iscompleteguide != true) {
+//                    GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
 //                        TodayFateDialog(activity!!, nearBean, indexRecommends).show()

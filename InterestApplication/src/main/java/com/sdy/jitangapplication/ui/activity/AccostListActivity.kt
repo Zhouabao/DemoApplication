@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -73,6 +74,7 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
             when (view.id) {
                 R.id.content -> {
                     ChatActivity.start(this, adapter.data[position].accid)
+                    EventBus.getDefault().post(GetNewMsgEvent())
                 }
                 //删除会话
                 R.id.menuDetele -> {
@@ -91,7 +93,6 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
     }
 
     override fun onDelChat(success: Boolean, position: Int) {
-        //todo  删除会话，删除后，消息历史被一起删除
         if (success) {
             NIMClient.getService(MsgService::class.java)
                 .deleteRecentContact2(adapter.data[position].accid, SessionTypeEnum.P2P)

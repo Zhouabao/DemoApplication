@@ -116,7 +116,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         }
 
         GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)
-        //todo 成为精选
         tobeChoicessBtn.clickWithTrigger {
             ChoicenessOpenPtVipDialog(activity!!).show()
         }

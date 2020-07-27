@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
 
 
@@ -151,6 +150,12 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
                 }
             }
             //搭讪
+
+            if (item.privacy_state)
+                itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
+            else
+                itemView.userChatBtn.setImageResource(R.drawable.icon_chat_pt_vip)
+
             itemView.userChatBtn.clickWithTrigger {
                 if (UserManager.touristMode)
                     TouristDialog(mContext).show()

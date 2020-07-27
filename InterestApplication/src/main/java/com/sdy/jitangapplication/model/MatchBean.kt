@@ -142,6 +142,7 @@ data class NearPersonBean(
     var face_str: String = "",
     var isvip: Boolean = false,
     var mv_faced: Boolean = false,
+    var privacy_state: Boolean = false,
     var mv_btn: Boolean = false,
     var isplatinumvip: Boolean = false,
     var isfriend: Boolean = false,

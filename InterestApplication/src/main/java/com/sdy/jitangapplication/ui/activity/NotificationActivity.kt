@@ -97,7 +97,6 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
                 mPresenter.squareNotifySwitch(2)
             }
             switchMessageBtn -> {//短信通知开关
-                //todo 短信通知请求开关
                 mPresenter.switchSet(
                     1, if (switchMessage.isChecked) {
                         2

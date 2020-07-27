@@ -23,8 +23,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -54,7 +52,6 @@ import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
-import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.empty_layout_block.view.*
@@ -335,16 +332,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         userVideoCl.isVisible = matchBean!!.mv_btn
         //钻石或者女性可以免费看
-        if (matchBean!!.myisplatinumvip)
-            GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
-        else
-            Glide.with(this)
-                .load(matchBean!!.mv_url)
-                .thumbnail(0.5F)
-                .placeholder(R.drawable.default_image_10dp)
-                .priority(Priority.NORMAL)
-                .transform(BlurTransformation(25))
-                .into(userVideoCover)
+        GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
         if (matchBean!!.intention_title.isNullOrEmpty()) {
             detailUserIntention1.isVisible = false
         } else {

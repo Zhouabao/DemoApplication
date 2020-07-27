@@ -135,9 +135,10 @@ class PrivacyDialog(
         //是否今日缘分
         //是否今日意向
         //资料完善度
-        if (nearBean != null && nearBean?.iscompleteguide != true) {
-            GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
-        } else if (!indexRecommends?.list.isNullOrEmpty()) {
+//        if (nearBean != null && nearBean?.iscompleteguide != true) {
+////            GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
+////        } else
+        if (!indexRecommends?.list.isNullOrEmpty()) {
             if (UserManager.getGender() == 1)
                 TodayFateDialog(context1, nearBean, indexRecommends).show()
             else

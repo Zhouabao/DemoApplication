@@ -211,11 +211,9 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 }
             }
 
-            //todo 隐身模式
             R.id.hideModeBtn -> {
                 showHideModePicker(hideModeContent, invisible_state, hideMode, "隐身模式", 2)
             }
-            //todo 隐私权限
             R.id.privacyPowerBtn -> {
                 showHideModePicker(
                     privacyPowerContent,
