@@ -55,31 +55,6 @@
     <string name="report_square">确认举报该条动态？</string>
     <string name="dissolve_wechat">是否确定解除微信绑定？</string>
 
-    <string-array name="custom_weekdays">
-        <item>一</item>
-        <item>二</item>
-        <item>三</item>
-        <item>四</item>
-        <item>五</item>
-        <item>六</item>
-        <item>日</item>
-    </string-array>
-
-    <string-array name="custom_months">
-        <item>01</item>
-        <item>02</item>
-        <item>03</item>
-        <item>04</item>
-        <item>05</item>
-        <item>06</item>
-        <item>07</item>
-        <item>08</item>
-        <item>09</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-    </string-array>
-
 
     <string name="input_contact_panel">联系方式</string>
     <string name="input_panel_take_photo">拍照</string>
@@ -212,7 +187,6 @@
     <string name="permission_request">需要语音和摄像头权限</string>
     <string name="sure">确定</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

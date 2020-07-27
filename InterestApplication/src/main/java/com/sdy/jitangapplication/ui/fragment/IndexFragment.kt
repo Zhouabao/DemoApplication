@@ -27,7 +27,6 @@ import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
-import com.sdy.jitangapplication.ui.activity.IndexChoicenessActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
@@ -105,14 +104,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 TouristDialog(activity!!).show()
             else
                 todayWantDialog.show()
-        }
-
-        //置顶卡片
-        topCardBtn.clickWithTrigger {
-            if (UserManager.touristMode)
-                TouristDialog(activity!!).show()
-            else
-                startActivity<IndexChoicenessActivity>()
         }
 
         GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)

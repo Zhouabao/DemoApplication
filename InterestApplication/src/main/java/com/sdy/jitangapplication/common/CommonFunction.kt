@@ -602,9 +602,7 @@ object CommonFunction {
             EventBus.getDefault().post(PayLabelResultEvent(true))
         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())
-        } else if (ActivityUtils.getTopActivity() is IndexChoicenessActivity) {//购买置顶券
-            EventBus.getDefault().post(UpdateTicketDataEvent())
-        } else if (ActivityUtils.getTopActivity() is MainActivity) {
+        }  else if (ActivityUtils.getTopActivity() is MainActivity) {
             EventBus.getDefault().post(RefreshEvent(true))
         } else {
             if (ActivityUtils.getTopActivity() !is MainActivity) {

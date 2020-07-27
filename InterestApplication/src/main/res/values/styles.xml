@@ -124,11 +124,6 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
 
-    <style name="MyDialogTopAnimation">
-        <item name="android:windowEnterAnimation">@anim/dialog_top_in</item>
-        <item name="android:windowExitAnimation">@anim/dialog_top_exit</item>
-    </style>
-
     <style name="MyDialogCenterAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_center_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_center_exit</item>
@@ -187,9 +182,4 @@
     </style>
 
 
-    <style name="CustomTextAppearance" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">#191919</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 </resources>

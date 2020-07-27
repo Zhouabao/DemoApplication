@@ -128,10 +128,7 @@
             android:name=".ui.activity.CandyRechargeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.IndexChoicenessActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.VideoVerifyConfirmActivity"
             android:launchMode="singleTop"
