@@ -24,9 +24,9 @@ class VipChargeAdapter(val type: Int = ChargePtVipDialog.PURCHASE_PT_VIP) :
     BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        params.leftMargin = SizeUtils.dp2px(15F)
+        params.leftMargin = SizeUtils.dp2px(10F)
         params.rightMargin = if (holder.layoutPosition == mData.size - 1) {
-            SizeUtils.dp2px(13F)
+            SizeUtils.dp2px(10F)
         } else {
             0
         }

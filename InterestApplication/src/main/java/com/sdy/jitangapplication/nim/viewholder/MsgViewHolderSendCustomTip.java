@@ -92,7 +92,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
             break;
         case SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP:// 免费消息会被归于对方搭讪列表，可能回复率偏低， 充值高级会员可提升消息回复
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("免费消息会被归于对方搭讪列表，可能回复率偏低，")
+            notificationTextView.setText(SpanUtils.with(notificationTextView).append("免费消息会被归于对方搭讪列表，可能回复率偏低，\n")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("充值高级会员")
                     .setClickSpan(new ClickableSpan() {
                         @Override

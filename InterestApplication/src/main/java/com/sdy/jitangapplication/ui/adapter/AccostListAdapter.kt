@@ -9,6 +9,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl
@@ -40,11 +41,12 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
             item.avatar,
             holder.itemView.msgIcon
         )
+        val recent = NIMClient.getService(MsgService::class.java)
+            .queryRecentContact(item.accid, SessionTypeEnum.P2P)
+
         holder.itemView.text.text = when {
-            NIMClient.getService(MsgService::class.java)
-                .queryRecentContact(item.accid, SessionTypeEnum.P2P) != null -> {
-                NIMClient.getService(MsgService::class.java)
-                    .queryRecentContact(item.accid, SessionTypeEnum.P2P).content
+            recent != null -> {
+                CommonFunction.setMessageContent(recent)
             }
             item.content.isNotEmpty() -> {
                 item.content

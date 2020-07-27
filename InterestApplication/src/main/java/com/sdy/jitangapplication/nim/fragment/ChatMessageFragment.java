@@ -23,6 +23,7 @@ import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -40,6 +41,8 @@ import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
+import com.sdy.jitangapplication.model.SendTipBean;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
@@ -228,7 +231,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (customization != null) {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
-
 
     }
 
@@ -492,6 +494,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * 设置消息体制内的数据
      * verifyLl
      */
+
+    private boolean isSendChargePtVip = false;
+
     private void setTargetInfoData() {
         // todo 获取服务器展示糖果的时间
         UserManager.INSTANCE.setShowCandyMessage(nimBean.getChat_expend_amount() > 0);
@@ -550,6 +555,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             new ContactCandyReceiveDialog(sessionId, nimBean.getUnlock_popup_str(), getActivity()).show();
             nimBean.setUnlock_popup_str("");
         }
+
+        // todo 男性是否充值了高级会员，如果没有充值，就提醒
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && UserManager.INSTANCE.getGender() == 2 && !isSendChargePtVip
+                && messageListPanel.getItems().get(messageListPanel.getItems().size() - 1)
+                        .getDirect() == MsgDirectionEnum.In) {
+            ArrayList<SendTipBean> tips = new ArrayList<>();
+            tips.add(new SendTipBean("", true, SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
+            CommonFunction.INSTANCE.sendTips(sessionId, tips);
+            isSendChargePtVip = true;
+        }
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid) {
@@ -599,9 +614,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
                                 CommonFunction.INSTANCE.sendTips(sessionId,
                                         nimBeanBaseResp.getData().getRet_tips_arr());
-
                             nimBean.set_send_msg(true);
 
+                            // todo 男性是否充值了高级会员，如果没有充值，就提醒
+                            if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
+                                    && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
+                                ArrayList<SendTipBean> tips = new ArrayList<>();
+                                tips.add(new SendTipBean("", true, SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
+                                CommonFunction.INSTANCE.sendTips(sessionId, tips);
+                                isSendChargePtVip = true;
+                            }
                         } else if (nimBeanBaseResp.getCode() == 409) {// 用户被封禁
                             new CommonAlertDialog.Builder(getActivity()).setTitle("提示")
                                     .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)

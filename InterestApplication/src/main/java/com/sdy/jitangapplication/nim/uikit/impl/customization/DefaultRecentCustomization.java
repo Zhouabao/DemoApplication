@@ -46,7 +46,7 @@ public class DefaultRecentCustomization extends RecentCustomization {
             case robot:
                 return "[机器人消息]";
             default:
-                return "[自定义消息] ";
+                return "[自定义消息]";
         }
     }
 }

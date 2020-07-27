@@ -18,7 +18,7 @@
 
         <include layout="@layout/layout_actionbar" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/blackLl"
             android:layout_width="match_parent"
             android:layout_height="41dp"
@@ -27,18 +27,37 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/privacyTip"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:text="此消息列表均为免费消息，如造成骚扰可以调整私聊权限"
+                android:text="列表均为初级会员通过免费消息渠道产生的回话，可调整右上角私聊权限仅接受更优质用户拒绝骚扰无效信息"
                 android:textColor="#ff191919"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/closePrivacy"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+
+                android:id="@+id/closePrivacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_close_privacy"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshAccost"

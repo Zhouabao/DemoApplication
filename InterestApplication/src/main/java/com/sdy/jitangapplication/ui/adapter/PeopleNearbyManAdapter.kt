@@ -150,8 +150,7 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
                 }
             }
             //搭讪
-
-            if (item.privacy_state)
+            if (item.private_chat_state)
                 itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
             else
                 itemView.userChatBtn.setImageResource(R.drawable.icon_chat_pt_vip)

@@ -187,7 +187,6 @@ class ChatUpOpenPtVipDialog(
                         unlockChat()
                     }
                 } else {
-                    openPtVipBtn.text = "成为高级会员，免费更多聊天"
                     //成为高级会员
                     openPtVipBtn.clickWithTrigger {
                         ChargePtVipDialog(
@@ -199,10 +198,12 @@ class ChatUpOpenPtVipDialog(
                     }
 
                     if (chatUpBean.private_chat_btn) {
-                        chatupTitle.text = "她设置了私聊权限"
-                        chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过"
+                        chatupTitle.text = "她设置了等级权限"
+                        chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
                         chatupUnlockChat.isVisible = false
+                        openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
                     } else {
+                        openPtVipBtn.text = "成为高级会员，免费更多聊天"
                         chatupTitle.text = "获得聊天机会"
                         chatupUnlockChat.isVisible = true
                         if (chatUpBean.plat_cnt > 0) {
@@ -244,10 +245,10 @@ class ChatUpOpenPtVipDialog(
                 if (chatUpBean.private_chat_btn) {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
                     //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
-                    chatupTitle.text = "她设置了私聊权限"
-                    chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过"
+                    chatupTitle.text = "她设置了等级权限"
+                    chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
                     chatupUnlockChat.isVisible = false
-                    openPtVipBtn.text = "成为高级会员，免费更多聊天"
+                    openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
                         ChargePtVipDialog(
                             ChargePtVipDialog.INFINITE_CHAT,

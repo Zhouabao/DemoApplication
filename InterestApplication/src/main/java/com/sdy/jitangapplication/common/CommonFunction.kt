@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -30,6 +29,7 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
@@ -39,15 +39,12 @@ import com.sdy.jitangapplication.model.SendTipBean
 import com.sdy.jitangapplication.model.UnlockCheckBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
+import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
-import com.sdy.jitangapplication.widgets.CommonAlertDialog.OnConfirmListener
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -144,7 +141,8 @@ object CommonFunction {
                                 ).show()
                         }
                         206 -> {
-                            ChatActivity.start(context1, target_accid)
+                            if (ActivityUtils.getTopActivity() !is ChatActivity)
+                                ChatActivity.start(context1, target_accid)
                         }
                         207 -> { //女性对男性搭讪
                             //随机发送一条招呼文本消息
@@ -156,9 +154,10 @@ object CommonFunction {
                             NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                 .setCallback(object : RequestCallback<Void> {
                                     override fun onSuccess(p0: Void?) {
-                                        Handler().postDelayed({
-                                            ChatActivity.start(context1, target_accid)
-                                        }, 500L)
+                                        if (ActivityUtils.getTopActivity() !is ChatActivity)
+                                            Handler().postDelayed({
+                                                ChatActivity.start(context1, target_accid)
+                                            }, 500L)
                                     }
 
                                     override fun onFailed(p0: Int) {
@@ -203,6 +202,26 @@ object CommonFunction {
             })
     }
 
+    /**
+     * 返回云信的消息
+     */
+    fun setMessageContent(item: RecentContact): String {
+        return when (item.attachment) {
+            is ChatHiAttachment ->
+                when ((item.attachment as ChatHiAttachment).showType) {
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
+                    else -> ""
+                }
+            is ShareSquareAttachment -> "『动态分享内容』"
+            is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
+            is ContactCandyAttachment -> {
+                "『解锁联系方式』"
+            }
+            is SendCustomTipAttachment -> (item.attachment as SendCustomTipAttachment).content
+            else -> item.content
+        }
+    }
+
 
     /**
      * 验证联系方式解锁
@@ -235,38 +254,41 @@ object CommonFunction {
                         }
 
                         222 -> {
-                            Handler().postDelayed({
-                                ChatActivity.start(context, target_accid)
-                            }, 500L)
-                        }
-
-                        207 -> { //女性解锁男性聊天方式
-                            if (t.msg.isNullOrEmpty()) {
+                            if (ActivityUtils.getTopActivity() !is ChatActivity)
                                 Handler().postDelayed({
                                     ChatActivity.start(context, target_accid)
                                 }, 500L)
-                            } else {
-                                val msg = MessageBuilder.createTextMessage(
-                                    target_accid,
-                                    SessionTypeEnum.P2P,
-                                    t.msg
-                                )
-                                NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
-                                    .setCallback(object : RequestCallback<Void> {
-                                        override fun onSuccess(p0: Void?) {
-                                            Handler().postDelayed({
-                                                ChatActivity.start(context, target_accid)
-                                            }, 500L)
-                                        }
+                        }
 
-                                        override fun onFailed(p0: Int) {
-                                        }
+                        207 -> { //女性解锁男性聊天方式
+                            if (ActivityUtils.getTopActivity() !is ChatActivity)
+                                if (t.msg.isNullOrEmpty()) {
+                                    Handler().postDelayed({
+                                        ChatActivity.start(context, target_accid)
+                                    }, 500L)
+                                } else {
+                                    val msg = MessageBuilder.createTextMessage(
+                                        target_accid,
+                                        SessionTypeEnum.P2P,
+                                        t.msg
+                                    )
+                                    NIMClient.getService(MsgService::class.java)
+                                        .sendMessage(msg, false)
+                                        .setCallback(object : RequestCallback<Void> {
+                                            override fun onSuccess(p0: Void?) {
+                                                Handler().postDelayed({
+                                                    ChatActivity.start(context, target_accid)
+                                                }, 500L)
+                                            }
 
-                                        override fun onException(p0: Throwable?) {
-                                        }
+                                            override fun onFailed(p0: Int) {
+                                            }
 
-                                    })
-                            }
+                                            override fun onException(p0: Throwable?) {
+                                            }
+
+                                        })
+                                }
 
                         }
                         else -> {

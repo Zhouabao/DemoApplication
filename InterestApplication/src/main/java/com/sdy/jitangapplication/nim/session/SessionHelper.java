@@ -209,7 +209,7 @@ public class SessionHelper {
                     } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
                         return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
                     } else if (recent.getAttachment() instanceof ContactCandyAttachment) {
-                        return "『解锁聊天方式』";
+                        return "『解锁联系方式』";
                     }
                     return super.getDefaultDigest(recent);
                 }

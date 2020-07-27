@@ -471,8 +471,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             firstClickTime = secondTime
         } else {
             UserManager.showCompleteUserCenterDialog = false
-            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
-            ActivityUtils.finishAllActivities()
+            AppUtils.exitApp()
+//            ActivityUtils.finishAllActivities()
 //            AppManager.instance.finishAllActivity()
 //            System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)

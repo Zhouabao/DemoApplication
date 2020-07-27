@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.fragment
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -216,11 +217,19 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         val headView = LayoutInflater.from(activity!!)
             .inflate(R.layout.headerview_like_me, messageListRv, false)
 
+        headView.questionCheckedBtn.isVisible = UserManager.getGender() == 2
         headView.showCl.clickWithTrigger {
             checked = !checked
             if (checked) {
                 headView.questionCheckedBtn.setImageResource(R.drawable.icon_question_checked)
                 headView.questionShowIv.isVisible = true
+                Handler().postDelayed({
+                    if (headView.questionShowIv.isVisible) {
+                        headView.questionCheckedBtn.setImageResource(R.drawable.icon_question_uncheked)
+                        headView.questionShowIv.isVisible = false
+                        checked = false
+                    }
+                }, 2000L)
             } else {
                 headView.questionCheckedBtn.setImageResource(R.drawable.icon_question_uncheked)
                 headView.questionShowIv.isVisible = false
@@ -281,8 +290,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
-            adapter.headerLayout.moreChatUpBtn.isVisible =
-                (data?.chatup_list ?: mutableListOf()).size > 4
+//            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false
@@ -543,6 +551,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
         registerObservers(false)
         registerOnlineStateChangeListener(false)
         EventBus.getDefault().unregister(this)
+        Handler().removeCallbacksAndMessages(null)
     }
 
     override fun onStart() {

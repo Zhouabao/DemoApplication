@@ -1,8 +1,10 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.SpanUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -25,6 +27,7 @@ import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.AccostListPresenter
 import com.sdy.jitangapplication.presenter.view.AccostListView
 import com.sdy.jitangapplication.ui.adapter.AccostListAdapter
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_accost_list.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -53,7 +56,8 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
 
         hotT1.text = "搭讪列表"
         rightBtn.text = "隐私权限"
-        rightBtn.isVisible = true
+        rightBtn.setTextColor(Color.parseColor("#191919"))
+        rightBtn.isVisible = UserManager.getGender() == 2
         btnBack.clickWithTrigger {
             finish()
         }
@@ -84,6 +88,20 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
                     )
                 }
             }
+        }
+
+        blackLl.isVisible = UserManager.getGender() == 2
+
+        SpanUtils.with(privacyTip)
+            .append("列表均为初级会员通过免费消息渠道产生的回话，可调整右上角")
+            .setForegroundColor(Color.parseColor("#191919"))
+            .append("私聊权限")
+            .setForegroundColor(Color.parseColor("#FF6796FA"))
+            .append("仅接受更优质用户拒绝骚扰无效信息")
+            .setForegroundColor(Color.parseColor("#191919"))
+            .create()
+        closePrivacy.clickWithTrigger {
+            blackLl.isVisible = false
         }
     }
 
