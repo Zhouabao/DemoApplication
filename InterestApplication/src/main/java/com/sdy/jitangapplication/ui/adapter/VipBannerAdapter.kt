@@ -17,6 +17,6 @@ class VipBannerAdapter() : BaseQuickAdapter<VipDescr, BaseViewHolder>(R.layout.i
     override fun convert(holder: BaseViewHolder, data: VipDescr) {
         holder.itemView.banner_name.text = "${data.title}"
         holder.itemView.banner_content.text = "${data.rule}"
-        GlideUtil.loadImgCenterCrop(mContext, data.icon_vip ?: "", holder.itemView.banner_img)
+        GlideUtil.loadImgCenterCrop(mContext, data.url ?: "", holder.itemView.banner_img)
     }
 }

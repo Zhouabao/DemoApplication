@@ -50,7 +50,7 @@ class MyVisitFragment(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
-            "type" to 1
+            "type" to 2
         )
     }
 

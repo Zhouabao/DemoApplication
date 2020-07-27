@@ -33,6 +33,8 @@ class ShowNearCountEvent()
 
 class UpdateApproveEvent()
 
+class UpdateAccostListEvent()
+
 
 class HideContactLlEvent()
 

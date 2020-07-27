@@ -61,6 +61,7 @@ class AllVipPowerAdapter :
                 itemview.vipOutTime.setTextColor(Color.parseColor("#FFFFD27A"))
                 itemview.vipPowerNickname.setTextColor(Color.parseColor("#FFFFD27A"))
                 itemview.powerUserBg.setImageResource(R.drawable.icon_power_contact_card)
+                itemview.contactTimes.text = "每日免费解锁${data!!.direct_cnt}次对方的联系方式\n不等待，直接联系约会"
 
                 if (data!!.isplatinum)
                     itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"

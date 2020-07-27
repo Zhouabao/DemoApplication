@@ -36,7 +36,8 @@ data class VipPowerBean(
     val isplatinum: Boolean = false,
     val platinum_vip_express: String = "",
     val platinum_save_str: String = "",
-    var type: Int = TYPE_CONTACT_CARD
+    var type: Int = TYPE_CONTACT_CARD,
+    var direct_cnt : Int = 0
 ) {
     companion object {
         const val TYPE_CONTACT_CARD = 1

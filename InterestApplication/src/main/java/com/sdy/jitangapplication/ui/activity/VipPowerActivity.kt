@@ -136,7 +136,8 @@ class VipPowerActivity() :
                     data.isdirect,
                     data.direct_vip_express,
                     "每日免费解锁${data.direct_cnt}次联系方式",
-                    VipPowerBean.TYPE_CONTACT_CARD
+                    VipPowerBean.TYPE_CONTACT_CARD,
+                    data.direct_cnt
                 )
             )
         }

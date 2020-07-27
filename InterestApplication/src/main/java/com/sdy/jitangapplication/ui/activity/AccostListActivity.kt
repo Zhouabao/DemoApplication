@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SpanUtils
@@ -21,6 +22,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.GetNewMsgEvent
+import com.sdy.jitangapplication.event.HideContactLlEvent
+import com.sdy.jitangapplication.event.UpdateAccostListEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.AccostBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -33,6 +36,8 @@ import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -46,6 +51,8 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         setContentView(R.layout.activity_accost_list)
         initView()
         mPresenter.chatupList(params)
+        EventBus.getDefault().register(this)
+
     }
 
     private val adapter by lazy { AccostListAdapter() }
@@ -183,6 +190,14 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
     override fun onDestroy() {
         super.onDestroy()
         registerObservers(false)
+
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun hideContactLlEvent(event: UpdateAccostListEvent) {
+        refreshAccost.autoRefresh()
     }
 
 
@@ -210,4 +225,6 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
                 }
             }
         }
+
+
 }

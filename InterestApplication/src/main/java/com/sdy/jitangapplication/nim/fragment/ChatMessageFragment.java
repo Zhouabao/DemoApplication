@@ -561,7 +561,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 && messageListPanel.getItems().get(messageListPanel.getItems().size() - 1)
                         .getDirect() == MsgDirectionEnum.In) {
             ArrayList<SendTipBean> tips = new ArrayList<>();
-            tips.add(new SendTipBean("", true, SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
+            tips.add(new SendTipBean("消息太多？你可以设置私聊权限仅高级会员过滤消息", true, SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
             CommonFunction.INSTANCE.sendTips(sessionId, tips);
             isSendChargePtVip = true;
         }
@@ -620,7 +620,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
                                     && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
                                 ArrayList<SendTipBean> tips = new ArrayList<>();
-                                tips.add(new SendTipBean("", true, SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
+                                tips.add(new SendTipBean("免费消息会被归于对方搭讪列表，可能回复率偏低， 充值高级会员可提升消息回复", true, SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
                                 CommonFunction.INSTANCE.sendTips(sessionId, tips);
                                 isSendChargePtVip = true;
                             }

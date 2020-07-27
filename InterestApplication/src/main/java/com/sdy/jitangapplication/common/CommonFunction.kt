@@ -217,7 +217,11 @@ object CommonFunction {
             is ContactCandyAttachment -> {
                 "『解锁联系方式』"
             }
-            is SendCustomTipAttachment -> (item.attachment as SendCustomTipAttachment).content
+            is SendCustomTipAttachment -> if ((item.attachment as SendCustomTipAttachment).content.isNullOrEmpty()) {
+                "『消息提醒』"
+            } else {
+                (item.attachment as SendCustomTipAttachment).content
+            }
             else -> item.content
         }
     }
@@ -602,7 +606,7 @@ object CommonFunction {
             EventBus.getDefault().post(PayLabelResultEvent(true))
         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
             EventBus.getDefault().post(UpdateMyLabelEvent())
-        }  else if (ActivityUtils.getTopActivity() is MainActivity) {
+        } else if (ActivityUtils.getTopActivity() is MainActivity) {
             EventBus.getDefault().post(RefreshEvent(true))
         } else {
             if (ActivityUtils.getTopActivity() !is MainActivity) {

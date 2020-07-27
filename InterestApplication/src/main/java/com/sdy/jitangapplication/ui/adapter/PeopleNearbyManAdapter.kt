@@ -151,9 +151,9 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
             }
             //搭讪
             if (item.private_chat_state)
-                itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
-            else
                 itemView.userChatBtn.setImageResource(R.drawable.icon_chat_pt_vip)
+            else
+                itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
 
             itemView.userChatBtn.clickWithTrigger {
                 if (UserManager.touristMode)

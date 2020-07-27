@@ -290,7 +290,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
-//            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf()).size > 4
+            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false

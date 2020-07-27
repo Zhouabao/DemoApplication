@@ -286,8 +286,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun initToolBar() {
         btnBack.onClick {
-            KeyboardUtils.hideSoftInput(this)
-            finish()
+            onBackPressed()
         }
         //打开聊天信息
         chatMore.onClick {
