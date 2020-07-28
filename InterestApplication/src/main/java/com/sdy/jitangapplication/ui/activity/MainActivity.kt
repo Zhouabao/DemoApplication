@@ -106,6 +106,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
 
 
+
 //        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
 //            0未认证/认证不成功     1认证通过     2认证中
 //            if (UserManager.isUserVerify() == 0) {

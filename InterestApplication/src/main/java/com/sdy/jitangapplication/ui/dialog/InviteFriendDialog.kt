@@ -4,42 +4,42 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.WindowManager
-import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import kotlinx.android.synthetic.main.dialog_chat_to_vip.*
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.dialog_invite_friend.*
 
 /**
  *    author : ZFM
- *    date   : 2019/10/1614:30
- *    desc   : 聊天界面提示开会员弹窗
+ *    date   : 2020/7/2811:05
+ *    desc   : 邀请好友分享
  *    version: 1.0
  */
-class ChatToViplDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
-
+class InviteFriendDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_chat_to_vip)
+        setContentView(R.layout.dialog_invite_friend)
         initWindow()
+
         initView()
     }
 
     private fun initView() {
-        close.onClick {
+        receiveRedPacket.clickWithTrigger {
             dismiss()
         }
-        chargeBtn.onClick {
-            ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context1).show()
+        closeBtn.clickWithTrigger {
             dismiss()
         }
     }
 
     override fun dismiss() {
         super.dismiss()
-    }
+        UserManager.showCompleteUserCenterDialog = true
 
+    }
 
     private fun initWindow() {
         val window = this.window
@@ -47,12 +47,11 @@ class ChatToViplDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.WRAP_CONTENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+
         params?.windowAnimations = R.style.MyDialogCenterAnimation
         window?.attributes = params
-        setCancelable(true)
-        setCanceledOnTouchOutside(true)
-        setOnKeyListener { dialogInterface, keyCode, event ->
-            keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
-        }
+        //点击外部可取消
+        setCanceledOnTouchOutside(false)
+        setCancelable(false)
     }
 }

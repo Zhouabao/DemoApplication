@@ -15,7 +15,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
-import kotlinx.android.synthetic.main.dialog_open_pt_vip.*
+import kotlinx.android.synthetic.main.dialog_pt_vip_comment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

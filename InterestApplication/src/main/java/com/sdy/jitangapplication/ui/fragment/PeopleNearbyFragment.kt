@@ -28,7 +28,10 @@ import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyManAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyWomanAdapter
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.InviteFriendDialog
+import com.sdy.jitangapplication.ui.dialog.PrivacyDialog
+import com.sdy.jitangapplication.ui.dialog.TodayFateWomanDialog
+import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -180,23 +183,16 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //如果没有显示过协议
             //否则直接判断有没有显示过引导页面
             //是否今日缘分
-            //是否今日意向
-            //资料完善度
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
-//                } else if (nearBean?.iscompleteguide != true) {
-//                    GuideSendCandyDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
-//                        TodayFateDialog(activity!!, nearBean, indexRecommends).show()
-//                    else
                         TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
                     TodayWantDialog(activity!!, nearBean).show()
-                } else if (nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
-                    //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
-                    CompleteUserCenterDialog(activity!!).show()
+                } else if (!UserManager.showCompleteUserCenterDialog) {
+                    InviteFriendDialog(activity!!).show()
                 }
             }
 

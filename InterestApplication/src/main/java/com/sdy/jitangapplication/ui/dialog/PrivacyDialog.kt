@@ -135,19 +135,16 @@ class PrivacyDialog(
         //是否今日缘分
         //是否今日意向
         //资料完善度
-//        if (nearBean != null && nearBean?.iscompleteguide != true) {
-////            GuideSendCandyDialog(context1, nearBean, indexRecommends).show()
-////        } else
         if (!indexRecommends?.list.isNullOrEmpty()) {
-            if (UserManager.getGender() == 1)
-                TodayFateDialog(context1, nearBean, indexRecommends).show()
-            else
-                TodayFateWomanDialog(context1, nearBean, indexRecommends).show()
+//            if (UserManager.getGender() == 1)\
+//                TodayFateDialog(context1, nearBean, indexRecommends).show()
+//            else
+            TodayFateWomanDialog(context1, nearBean, indexRecommends).show()
         } else if (nearBean != null && nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
             TodayWantDialog(context1, nearBean).show()
-        } else if (nearBean != null && nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+        } else if (!UserManager.showCompleteUserCenterDialog) {
             //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
-            CompleteUserCenterDialog(context1).show()
+            InviteFriendDialog(context1).show()
         }
 
     }
