@@ -46,7 +46,7 @@
         android:layout_height="56dp"
         android:gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@drawable/gradient_pt_vip"
+        android:background="@drawable/gradient_gold_vip"
         android:text="成为高级会员"
         android:textColor="#ffffffff"
         android:textSize="17sp"

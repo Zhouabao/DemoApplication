@@ -64,7 +64,7 @@ object CommonFunction {
     /**
      * 验证视频介绍解锁
      * 400 错误toast
-     * 201 冲会员
+     * 201 男性不是门槛会员
      * 222 （铂金会元/已经解锁视频 返回isnew_friend true是新好友 false 不是新建立 mv_url 视频地址 ）
      * 200 amount 糖果数 isplatinumvip 是否铂金会员
      */
@@ -90,6 +90,9 @@ object CommonFunction {
                         200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
                             VideoOpenPtVipDialog(context).show()
                         }
+                        201 -> {//todo 跳转内部充值页面已经解锁过
+                            context.startActivity<OpenVipActivity>()
+                        }
                         else -> {
                             toast(t.msg)
                         }
@@ -113,6 +116,7 @@ object CommonFunction {
      * 不是会员先弹充值
      * 不是好友就赠送礼物
      * 是好友就直接跳聊天界面
+     * 201解锁联系方式前置判断
      * 	201 拉起充值会员
      * 	206 是好友进聊天
      * 	200 拉起礼物列表
@@ -139,6 +143,10 @@ object CommonFunction {
                                     ChatUpOpenPtVipDialog.TYPE_CHAT,
                                     t.data!!
                                 ).show()
+                        }
+                        201 -> {//开通门槛会员
+                            //todo 跳转内部充值页面已经解锁过
+                            context1.startActivity<OpenVipActivity>()
                         }
                         206 -> {
                             if (ActivityUtils.getTopActivity() !is ChatActivity)
@@ -257,6 +265,9 @@ object CommonFunction {
                             ).show()
                         }
 
+                        201 -> {
+                            //todo 跳转内部充值页面已经解锁过
+                        }
                         222 -> {
                             if (ActivityUtils.getTopActivity() !is ChatActivity)
                                 Handler().postDelayed({

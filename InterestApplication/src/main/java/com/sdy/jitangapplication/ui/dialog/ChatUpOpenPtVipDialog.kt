@@ -166,7 +166,7 @@ class ChatUpOpenPtVipDialog(
              */
 
             TYPE_CHAT -> { //解锁聊天
-                openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+                openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 chatupContact.isVisible = false
                 if (chatUpBean.isplatinum) {
                     chatupUnlockChat.isVisible = false
@@ -178,8 +178,8 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "解锁聊天"
 
                     } else {
-                        chatupTitle.text = "今日免费次数已用完"
-                        chatupContent.text = "今日免费聊天次数已用完"
+                        chatupTitle.text = "获得聊天机会"
+                        chatupContent.text = "聊天需要消耗糖果，向对方表达诚意"
                         openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     }
                     // 解锁聊天
@@ -243,7 +243,7 @@ class ChatUpOpenPtVipDialog(
                  */
                 chatupContact.isVisible = true
                 if (chatUpBean.private_chat_btn) {
-                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                     //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
                     chatupTitle.text = "她设置了等级权限"
                     chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"

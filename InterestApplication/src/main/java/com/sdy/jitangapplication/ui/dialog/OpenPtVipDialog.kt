@@ -216,8 +216,9 @@ class OpenPtVipDialog(
                         200 -> {
                             PlayVideoDialog(context, t.data?.mv_url ?: "").show()
                         }
-                        201 -> { //已经解锁过
-                            ChargeVipDialog(ChargeVipDialog.LOOK_VIDEO, context1).show()
+                        201 -> { //todo 跳转内部充值页面
+                            context1.startActivity<OpenVipActivity>()
+//                            ChargeVipDialog(ChargeVipDialog.LOOK_VIDEO, context1).show()
                         }
                         419 -> {
                             AlertCandyEnoughDialog(

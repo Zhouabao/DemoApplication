@@ -119,6 +119,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200)
                         mView.onAddCommentResult(position, t, true)
                     else if (t.code == 202) {
+                        //todo 跳转内部充值页面
                         ChargeVipDialog(ChargeVipDialog.COMMENT_FREE, context).show()
                     } else if (t.code == 203) {
                         CommentPtVipDialog(context).show()

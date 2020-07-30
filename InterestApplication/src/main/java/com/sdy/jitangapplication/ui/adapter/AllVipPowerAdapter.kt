@@ -1,22 +1,17 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.graphics.Color
-import android.util.Log
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
-import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import kotlinx.android.synthetic.main.item_power_pt_vip.view.*
+import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -30,86 +25,65 @@ class AllVipPowerAdapter :
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
         val itemview = helper.itemView
 
-        val itemParams = itemview.layoutParams as RecyclerView.LayoutParams
-        itemParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(60F)
-        if (data.type == VipPowerBean.TYPE_PT_VIP) {
-            itemParams.leftMargin = SizeUtils.dp2px(30F)
-        } else {
-//            if (mData.size == 1) {
-//                itemParams.leftMargin = SizeUtils.dp2px(30F)
-//            } else {
-            itemParams.leftMargin = SizeUtils.dp2px(10F)
-            itemParams.rightMargin = SizeUtils.dp2px(30F)
-//            }
-        }
-        itemview.layoutParams = itemParams
-
-        val params = (itemview.powerUserBg.layoutParams as ConstraintLayout.LayoutParams)
-        params.width = itemParams.width
-        params.height = (170 / 325F * itemParams.width).toInt()
-        itemview.powerUserBg.layoutParams = params
-
-        helper.addOnClickListener(R.id.payBtn)
-        itemview.vipSaveAmount.text = data.platinum_save_str
-        when (data.type) {
-            VipPowerBean.TYPE_CONTACT_CARD -> {
-                itemview.vipPowerRv.isVisible = false
-                itemview.contactCl.isVisible = true
-                itemview.seemoreBtn.isVisible = false
-                itemview.vipPowerNickname.text = "至尊直联卡"
-                itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_vip_10dp)
-                itemview.vipOutTime.setTextColor(Color.parseColor("#FFFFD27A"))
-                itemview.vipPowerNickname.setTextColor(Color.parseColor("#FFFFD27A"))
-                itemview.powerUserBg.setImageResource(R.drawable.icon_power_contact_card)
-                itemview.contactTimes.text = "每日免费解锁${data!!.direct_cnt}次对方的联系方式\n不等待，直接联系约会"
-
-                if (data!!.isplatinum)
-                    itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
-                else
-                    itemview.vipOutTime.text = "暂未激活特权"
-
+        val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
+        val chargeManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+        itemview.vipPriceRv.layoutManager = chargeManager
+        itemview.vipPriceRv.adapter = chargePriceAdapter
+        chargePriceAdapter.setNewData(data.list)
+        chargePriceAdapter.setOnItemClickListener { _, view, position ->
+            for (data in chargePriceAdapter.data) {
+                data.is_promote = data == chargePriceAdapter.data[position]
             }
-            VipPowerBean.TYPE_PT_VIP -> {
-                itemview.vipPowerNickname.text =
-                    "高级会员（${(data.icon_list ?: mutableListOf()).size}项特权）"
-                itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_ptvip_10dp)
-                itemview.vipOutTime.setTextColor(Color.parseColor("#ffcd7e14"))
-                itemview.vipPowerNickname.setTextColor(Color.parseColor("#ffcd7e14"))
-                itemview.powerUserBg.setImageResource(R.drawable.icon_pt_vip_power_user_bg)
-                itemview.vipPowerRv.isVisible = true
-                itemview.contactCl.isVisible = false
-                itemview.seemoreBtn.isVisible = true
-                itemview.rvVipPower.setOnScrollChangeListener { v: NestedScrollView, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-                    val childAt = v.getChildAt(0)
-                    val childHeight = childAt.height
-                    val myHeight = v.height
-                    if (scrollY + myHeight < childHeight) {
-                        itemview.seemoreBtn.visibility = View.VISIBLE
-                    } else {
-                        itemview.seemoreBtn.visibility = View.INVISIBLE
-                    }
-                    Log.d(
-                        "rvVipPower",
-                        "====childHeight=${childHeight},====scrollY=${scrollY},====myHeight=${myHeight}"
-                    )
+            itemview.openVipBtn.text = "¥${if (chargePriceAdapter.data[position].type == 1) {
+                BigDecimal(chargePriceAdapter.data[position].original_price).setScale(
+                    0,
+                    BigDecimal.ROUND_HALF_UP
+                )
+            } else {
+                BigDecimal(chargePriceAdapter.data[position].discount_price).setScale(
+                    0,
+                    BigDecimal.ROUND_HALF_UP
+                )
+            }} 获取${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+                "黄金"
+            } else {
+                "钻石"
+            }}会员"
+            chargePriceAdapter.notifyDataSetChanged()
+            notifyDataSetChanged()
+        }
+
+
+        itemview.openVipBtn.clickWithTrigger {
+            var position: ChargeWayBean? = null
+            for (data in chargePriceAdapter.data) {
+                if (data.is_promote) {
+                    position = data
+                    break
                 }
+            }
+            if (position != null)
+                ConfirmPayCandyDialog(mContext, position, data.payway).show()
+        }
 
 
-                val vipPowerAdapter = VipPowerAdapter(data.type)
-                val manager = GridLayoutManager(mContext!!, 2, RecyclerView.VERTICAL, false)
-                itemview.vipPowerRv.layoutManager = manager
-                itemview.vipPowerRv.adapter = vipPowerAdapter
-                if (data!!.isplatinum)
-                    itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
-                else
-                    itemview.vipOutTime.text = "暂未激活特权"
+        val vipPowerAdapter = VipPowerAdapter(data.type)
+        val manager = GridLayoutManager(mContext!!, 2, RecyclerView.VERTICAL, false)
+        itemview.vipPowerRv.layoutManager = manager
+        itemview.vipPowerRv.adapter = vipPowerAdapter
+        vipPowerAdapter.setNewData(data.icon_list)
 
-                vipPowerAdapter.setNewData(data.icon_list)
+        when (data.type) {
+            VipPowerBean.TYPE_PT_VIP -> {
+                itemview.openVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip_24dp)
+                itemview.vipLogo.setImageResource(R.drawable.icon_logo_pt_vip)
+            }
+            VipPowerBean.TYPE_GOLD_VIP -> {
+                itemview.vipLogo.setImageResource(R.drawable.icon_logo_gold_vip)
+                itemview.openVipBtn.setBackgroundResource(R.drawable.gradient_light_orange_24dp)
+
             }
         }
-        GlideUtil.loadCircleImg(mContext, UserManager.getAvator(), itemview.vipPowerAvator)
-
 
     }
-
 }

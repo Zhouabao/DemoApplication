@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="145dp"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:layout_marginTop="30dp"
-    android:gravity="center"
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/powerImg"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_gravity="center"
         android:src="@drawable/icon_default_avator_logo" />
 
     <TextView
@@ -19,6 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="每日免费聊天"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="#FFFAC66F"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -28,8 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:text="每天10个免费聊天机会"
-        android:textColor="#FF9E9688"
+        android:textColor="#FF7B7D82"
         android:textSize="12sp" />
 
 

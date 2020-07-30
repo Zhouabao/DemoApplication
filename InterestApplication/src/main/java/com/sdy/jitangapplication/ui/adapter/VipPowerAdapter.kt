@@ -21,10 +21,12 @@ class VipPowerAdapter(val type: Int) :
         GlideUtil.loadCircleImg(mContext, item.icon_vip, helper.itemView.powerImg)
         helper.itemView.powerTitle.text = item.title ?: ""
         helper.itemView.powerContent.text = item.rule ?: ""
-        if (type == VipPowerBean.TYPE_CONTACT_CARD) {
-            helper.itemView.powerContent.setTextColor(Color.parseColor("#ffcd7e14"))
+        if (type == VipPowerBean.TYPE_PT_VIP) {
+            helper.itemView.powerTitle.setTextColor(Color.parseColor("#FFD4D7DF"))
+            helper.itemView.powerContent.setTextColor(Color.parseColor("#FF7B7D82"))
         } else {
-            helper.itemView.powerContent.setTextColor(Color.parseColor("#FF5E6473"))
+            helper.itemView.powerTitle.setTextColor(Color.parseColor("#FFFAC66F"))
+            helper.itemView.powerContent.setTextColor(Color.parseColor("#FF9E9688"))
         }
     }
 }

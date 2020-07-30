@@ -10,13 +10,11 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_choiceness_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 /**
  * 1.开通高级会员成为精选用户（男性）
@@ -43,7 +41,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             choicenessTitle.text = "成为精选用户"
             choicenessContent.text = "成为高级会员，让女生第一眼看到你"
             openPtVipBtn.text = "开通高级会员"
-            openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+            openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
                 ChargePtVipDialog(
                     ChargePtVipDialog.UPDATE_VISIT,
