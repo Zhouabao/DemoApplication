@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorOrange"
+    tools:context=".ui.activity.InviteRewardsActivity">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/icon_bg_invite_top"
+        app:layout_constraintBottom_toBottomOf="@+id/llTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include layout="@layout/layout_actionbar" />
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTitle">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iconBg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_bg_invite_behind"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/scrollRewards"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rectangle_left_half_transparent_23dp"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ViewFlipper
+                    android:id="@+id/rewardsFl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:autoStart="true"
+                    android:flipInterval="2000"
+                    android:inAnimation="@anim/push_up_in"
+                    android:outAnimation="@anim/push_up_out"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="XX****XX升级为2级领航员，获得20元现金红包"
+                        android:textColor="#ffffffff"
+                        android:textSize="12sp" />
+                </ViewFlipper>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@drawable/rectangle_yellow_12dp"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="邀请规则"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rewardsCl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/rectangle_white_10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scrollRewards">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rewardsRv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/t1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当前等级："
+                    android:textColor="#ff191919"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/rewardsPercent"
+                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv" />
+
+                <ImageView
+                    android:id="@+id/rewardsLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_level1"
+                    app:layout_constraintBottom_toBottomOf="@id/rewardsPercent"
+                    app:layout_constraintLeft_toRightOf="@id/t1" />
+
+                <TextView
+                    android:id="@+id/rewardsPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="20dp"
+                    android:text="享20%分佣"
+                    android:textColor="#fffe6318"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toRightOf="@id/rewardsLevel"
+                    app:layout_constraintTop_toBottomOf="@id/rewardsRv" />
+
+                <TextView
+                    android:id="@+id/rewardsMoreLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="再邀请10人可升级为二级XXX，享30%分佣"
+                    android:textColor="#ff888d92"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintTop_toBottomOf="@id/rewardsPercent" />
+
+                <com.sdy.jitangapplication.widgets.ProgressBarHorizontal
+                    android:layout_width="0dp"
+                    android:layout_height="12dp"
+                    app:layout_constraintBottom_toBottomOf="@id/rewardsMoney"
+                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintRight_toRightOf="@id/rewardsRv"
+                    app:layout_constraintTop_toTopOf="@id/rewardsMoney"
+                    app:pbhBgColorEnd="#FFFFDFD0"
+                    app:pbhBgColorStart="#FFFFDFD0"
+                    app:pbhBgRadius="6dp"
+                    app:pbhCoverColorEnd="#FFFF6318"
+                    app:pbhCoverColorStart="#FFFFA618"
+                    app:pbhCoverRadius="6dp"
+                    app:pbhProgress="80" />
+
+                <TextView
+                    android:id="@+id/rewardsMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rectangle_solid_orange_18dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:text="5"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintTop_toBottomOf="@id/rewardsMoreLevel" />
+
+                <TextView
+                    android:id="@+id/rewardsMoneyMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_rectangle_orange_12dp"
+                    android:drawableLeft="@drawable/icon_red_packet"
+                    android:drawablePadding="1dp"
+                    android:gravity="center"
+                    android:paddingRight="4dp"
+                    android:text="30元"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/rewardsMoney"
+                    app:layout_constraintRight_toRightOf="@id/rewardsRv"
+                    app:layout_constraintTop_toTopOf="@id/rewardsMoney" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="18dp"
+                    android:src="@drawable/icon_share"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintRight_toRightOf="@id/rewardsRv"
+                    app:layout_constraintTop_toBottomOf="@id/rewardsMoney" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/myScoreCl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rectangle_white_10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/rewardsCl"
+                app:layout_constraintRight_toRightOf="@id/rewardsCl"
+                app:layout_constraintTop_toBottomOf="@id/rewardsCl">
+
+
+                <ImageView
+                    android:id="@+id/myScoreBg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/icon_bg_my_score"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11dp"
+                    android:src="@drawable/icon_my_score"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/t11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="34dp"
+                    android:text="我邀请的"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/seeMyInvited"
+                    app:layout_constraintTop_toTopOf="@id/myScoreBg" />
+
+                <TextView
+                    android:id="@+id/myInvitedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="300"
+                    android:textColor="#ffffffff"
+                    android:textSize="30sp"
+                    app:layout_constraintLeft_toLeftOf="@id/t11"
+                    app:layout_constraintRight_toRightOf="@id/t11"
+                    app:layout_constraintTop_toBottomOf="@id/t11" />
+
+                <TextView
+                    android:id="@+id/seeMyInvited"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="27dp"
+                    android:background="@drawable/rectangle_338d3600_12dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="查看详情"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
+                    app:layout_constraintRight_toLeftOf="@id/seeMyReward"
+                    app:layout_constraintTop_toBottomOf="@id/myInvitedCount" />
+
+                <TextView
+                    android:id="@+id/t12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="34dp"
+                    android:text="我的奖励"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/seeMyReward"
+                    app:layout_constraintTop_toTopOf="@id/myScoreBg" />
+
+
+                <TextView
+                    android:id="@+id/myRewardsMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1080"
+                    android:textColor="#ffffffff"
+                    android:textSize="30sp"
+                    app:layout_constraintLeft_toLeftOf="@id/t12"
+                    app:layout_constraintRight_toRightOf="@id/t12"
+                    app:layout_constraintTop_toBottomOf="@id/t12" />
+
+                <TextView
+                    android:id="@+id/seeMyReward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_338d3600_12dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="查看详情"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@id/seeMyInvited"
+                    app:layout_constraintLeft_toRightOf="@id/seeMyInvited"
+                    app:layout_constraintRight_toRightOf="@id/myScoreBg" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="70dp"
+                    android:background="#FFE85813"
+                    app:layout_constraintBottom_toBottomOf="@id/myScoreBg"
+                    app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
+                    app:layout_constraintRight_toRightOf="@id/myScoreBg"
+                    app:layout_constraintTop_toTopOf="@id/myScoreBg" />
+
+
+                <TextView
+                    android:id="@+id/addKefuWechat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信jitangkefu，备注「拉新」"
+                    android:textColor="#ff888d92"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
+                    app:layout_constraintRight_toRightOf="@id/myScoreBg"
+                    app:layout_constraintTop_toBottomOf="@id/myScoreBg" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

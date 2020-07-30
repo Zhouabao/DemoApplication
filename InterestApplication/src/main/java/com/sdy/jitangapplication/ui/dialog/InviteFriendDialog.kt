@@ -7,8 +7,10 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.ui.activity.InviteRewardsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_invite_friend.*
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -28,7 +30,7 @@ class InviteFriendDialog(val context1: Context) : Dialog(context1, R.style.MyDia
 
     private fun initView() {
         receiveRedPacket.clickWithTrigger {
-            dismiss()
+            context1.startActivity<InviteRewardsActivity>()
         }
         closeBtn.clickWithTrigger {
             dismiss()
