@@ -11,7 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
-import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.item_charge_vip.view.*
 import java.math.BigDecimal
 
@@ -21,7 +21,7 @@ import java.math.BigDecimal
  *    desc   : 会员支付购买时间适配器
  *    version: 1.0
  */
-class VipChargeAdapter(val type: Int = ChargePtVipDialog.PURCHASE_PT_VIP) :
+class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
     BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams

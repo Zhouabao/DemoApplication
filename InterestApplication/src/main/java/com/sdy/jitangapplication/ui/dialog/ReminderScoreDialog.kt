@@ -21,6 +21,9 @@ import org.greenrobot.eventbus.EventBus
  *    desc   :
  *    version: 1.0
  */
+
+
+
 class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

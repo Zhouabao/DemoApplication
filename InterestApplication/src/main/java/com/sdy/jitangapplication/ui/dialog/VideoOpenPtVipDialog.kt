@@ -17,6 +17,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.MatchByWishHelpEvent
@@ -50,11 +51,7 @@ class VideoOpenPtVipDialog(val context1: Context) :
 
     private fun initView() {
         openPtVipBtn.clickWithTrigger {
-            ChargePtVipDialog(
-                0,
-                context1,
-                ChargePtVipDialog.PURCHASE_PT_VIP
-            ).show()
+            CommonFunction.startToVip(context1)
         }
     }
 

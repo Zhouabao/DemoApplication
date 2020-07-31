@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.dialog_choiceness_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wysaid.common.Common
 
 /**
  * 1.开通高级会员成为精选用户（男性）
@@ -43,11 +44,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             openPtVipBtn.text = "开通高级会员"
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
-                ChargePtVipDialog(
-                    ChargePtVipDialog.UPDATE_VISIT,
-                    context1,
-                    ChargePtVipDialog.PURCHASE_PT_VIP
-                ).show()
+                CommonFunction.startToFootPrice(context1)
             }
         } else {
             choicenessTitle.text = "成为精选用户"

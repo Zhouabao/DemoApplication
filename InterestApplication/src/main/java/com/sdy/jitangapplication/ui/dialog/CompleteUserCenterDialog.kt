@@ -11,7 +11,6 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_complete_user_center.*
-import kotlinx.android.synthetic.main.dialog_human_verify.closeBtn
 import org.jetbrains.anko.startActivity
 
 /**

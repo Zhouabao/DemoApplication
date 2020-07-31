@@ -189,11 +189,7 @@ class ChatUpOpenPtVipDialog(
                 } else {
                     //成为高级会员
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(
-                            ChargePtVipDialog.INFINITE_CHAT,
-                            context1,
-                            ChargePtVipDialog.PURCHASE_PT_VIP
-                        ).show()
+                        CommonFunction.startToVip(context1)
                         dismiss()
                     }
 
@@ -250,11 +246,7 @@ class ChatUpOpenPtVipDialog(
                     chatupUnlockChat.isVisible = false
                     openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(
-                            ChargePtVipDialog.INFINITE_CHAT,
-                            context1,
-                            ChargePtVipDialog.PURCHASE_CONTACT_CARD
-                        ).show()
+                        CommonFunction.startToVip(context1)
                         dismiss()
                     }
 
@@ -289,12 +281,7 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            ChargePtVipDialog(
-                                ChargePtVipDialog.INFINITE_CHAT,
-                                context1,
-                                ChargePtVipDialog.PURCHASE_CONTACT_CARD
-                            ).show()
-                            dismiss()
+                            CommonFunction.startToVip(context1,1)
                         }
                     }
                 }

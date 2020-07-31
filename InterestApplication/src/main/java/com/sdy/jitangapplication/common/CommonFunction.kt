@@ -341,8 +341,8 @@ object CommonFunction {
     /**
      * 支付会员
      */
-    fun startToVip(context: Context) {
-        context.startActivity<VipPowerActivity>()
+    fun startToVip(context: Context, position: Int = 0) {
+        context.startActivity<VipPowerActivity>("position" to position)
     }
 
     /**

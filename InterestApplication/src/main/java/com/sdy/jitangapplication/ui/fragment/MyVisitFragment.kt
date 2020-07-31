@@ -22,7 +22,6 @@ import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.MyVisitActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.ui.adapter.MyVisitAdater
-import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_visit.*

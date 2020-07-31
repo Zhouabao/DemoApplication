@@ -29,6 +29,13 @@ import java.math.BigDecimal
 
 class VipPowerActivity() :
     BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
+
+    companion object {
+        //购买类型
+        const val PURCHASE_PT_VIP = 100//VIP购买
+        const val PURCHASE_CONTACT_CARD = 200//购买联系方式直连卡
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vip_power1)
@@ -103,6 +110,7 @@ class VipPowerActivity() :
                 slideLeft = dx > 0
             }
         })
+
     }
 
 
@@ -155,7 +163,9 @@ class VipPowerActivity() :
                 )
             )
             powerInfoAdapter.setNewData(adapter.data)
-            setPriceData(adapter.data[0])
+            setPriceData(adapter.data[intent.getIntExtra("position", 0)])
+            powerInfoRv.scrollToPosition(intent.getIntExtra("position", 0))
+
         }
     }
 
