@@ -65,9 +65,11 @@ class PeopleNearbyWomanAdapter() :
         } else {
             itemView.userVerify.isVisible = false
         }
-        itemView.userVip.isVisible = item.isplatinumvip
+        itemView.userVip.isVisible = item.isplatinumvip || item.isdirectvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_vip)
+        } else if (item.isdirectvip) {
+            itemView.userVip.setImageResource(R.drawable.icon_direct_vip)
         }
 
         itemView.userOnline.text = "${if (!item.online_time.isNullOrEmpty()) {

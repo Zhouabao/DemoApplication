@@ -25,6 +25,7 @@ data class ChargeWayBeans(
     val threshold_btn: Boolean = false,
     val isdirect: Boolean = false,
     val direct_cnt: Int = 0,
+    val same_sex_cnt: Int = 0,
     val direct_vip_express: String = "",
     val isplatinum: Boolean = false,
     val platinum_save_str: String = "",

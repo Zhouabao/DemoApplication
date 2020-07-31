@@ -62,6 +62,11 @@ data class VipDescr(
     val title_pay: String = ""
 )
 
+data class FootDescr(
+    val title: String = "",
+    var icon: Int = 0
+)
+
 
 /**
  * 访客

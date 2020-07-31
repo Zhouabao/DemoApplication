@@ -14,6 +14,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.VisitorBean
 import com.sdy.jitangapplication.presenter.MyVisitPresenter
 import com.sdy.jitangapplication.presenter.view.MyVisitView
@@ -92,11 +93,7 @@ class MyVisitFragment(
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            ChargePtVipDialog(
-                ChargePtVipDialog.FREE_SEE_ME,
-                activity!!,
-                ChargePtVipDialog.PURCHASE_PT_VIP
-            ).show()
+            CommonFunction.startToVip(activity!!)
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

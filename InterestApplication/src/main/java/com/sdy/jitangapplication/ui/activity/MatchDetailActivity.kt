@@ -391,13 +391,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             isVisible = !(matchBean!!.sign.isNullOrBlank())
         }
 
-        detailUserVip.visibility = if (matchBean!!.isplatinumvip) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        detailUserVip.isVisible = matchBean!!.isplatinumvip || matchBean!!.isdirectvip
         if (matchBean!!.isplatinumvip) {
             detailUserVip.setImageResource(R.drawable.icon_vip)
+        } else {
+            detailUserVip.setImageResource(R.drawable.icon_direct_vip)
         }
 
 

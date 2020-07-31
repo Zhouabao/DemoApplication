@@ -15,6 +15,7 @@ import java.io.Serializable
 data class MatchBean(
     var intention_icon: String = "",
     var isvip: Int = 0,    //是否会员 true是 false不是
+    var isdirectvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
     var myisplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
@@ -45,7 +46,6 @@ data class MatchBean(
 ) : Serializable
 
 
-
 data class LabelQuality(
     var icon: String = "",
     var icon2: String = "",
@@ -61,7 +61,6 @@ data class Square(
 //    var photo_json: String?,
 //    var video_json: String?
 ) : Serializable
-
 
 
 /**
@@ -83,7 +82,6 @@ data class Tag(
     var title: String = "",
     var sameLabel: Boolean = false
 ) : Serializable
-
 
 
 data class DetailUserInfoBean(
@@ -145,6 +143,7 @@ data class NearPersonBean(
     var private_chat_state: Boolean = false,
     var mv_btn: Boolean = false,
     var isplatinumvip: Boolean = false,
+    var isdirectvip: Boolean = false,
     var isfriend: Boolean = false,
     var member_level: Int = 0,
     var nickname: String = "",
@@ -162,7 +161,6 @@ data class TodayFateBean(
     val list: MutableList<NearPersonBean> = mutableListOf(),
     var gift_list: MutableList<GiftBean> = mutableListOf()
 )
-
 
 
 /**

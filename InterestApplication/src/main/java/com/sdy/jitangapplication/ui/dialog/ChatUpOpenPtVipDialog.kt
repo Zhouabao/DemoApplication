@@ -497,7 +497,7 @@ class ChatUpOpenPtVipDialog(
                     super.onNext(t)
                     if (t.code == 201) {
                         loading.dismiss()
-                        OpenVipActivity.start(context1, null)
+                        CommonFunction.startToFootPrice(context1)
                     } else if (t.code == 200) {
                         sendMatchFriendMessage(loading)
                     } else if (t.code == 206) {

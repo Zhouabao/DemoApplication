@@ -19,6 +19,7 @@ data class SquareListBean(
  * 广场列表数据
  */
 data class SquareBean(
+    var isdirectvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isplatinumvip: Boolean = false,    //是否铂金会员 true是 false不是
     var isvip: Int = 0,//是否会员 1是 0 不是
     var accid: String = "",

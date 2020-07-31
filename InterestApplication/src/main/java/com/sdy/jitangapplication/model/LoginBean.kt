@@ -45,6 +45,7 @@ data class Userinfo(
     val face_audit_state: Int? = 0,
     val isvip: Boolean = false,
     val isplatinum: Boolean = false,
+    val isdirectvip: Boolean = false,
     val todayvisit: Int = 0,
     val vip_express: String = "",
     val platinum_vip_express: String = "",

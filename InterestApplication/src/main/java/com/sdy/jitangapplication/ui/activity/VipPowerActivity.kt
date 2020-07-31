@@ -21,7 +21,6 @@ import com.sdy.jitangapplication.ui.adapter.AllVipPowerAdapter
 import com.sdy.jitangapplication.ui.adapter.PowerInfoAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import kotlinx.android.synthetic.main.activity_vip_power1.*
@@ -60,21 +59,7 @@ class VipPowerActivity() :
     var lastPosition = false
 
     private fun initVp2() {
-        payBtn.clickWithTrigger {
-            if (lastPosition && slideLeft) {
-                ChargePtVipDialog(
-                    ChargePtVipDialog.VIP_LOGO,
-                    this@VipPowerActivity,
-                    ChargePtVipDialog.PURCHASE_CONTACT_CARD
-                ).show()
-            } else {
-                ChargePtVipDialog(
-                    ChargePtVipDialog.VIP_LOGO,
-                    this@VipPowerActivity,
-                    ChargePtVipDialog.PURCHASE_PT_VIP
-                ).show()
-            }
-        }
+
 
         powerInfoRv.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
         LinearSnapHelper().attachToRecyclerView(powerInfoRv)

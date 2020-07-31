@@ -91,7 +91,7 @@ object CommonFunction {
                             VideoOpenPtVipDialog(context).show()
                         }
                         201 -> {//todo 跳转内部充值页面已经解锁过
-                            context.startActivity<OpenVipActivity>()
+                            startToFootPrice(context)
                         }
                         else -> {
                             toast(t.msg)
@@ -146,7 +146,7 @@ object CommonFunction {
                         }
                         201 -> {//开通门槛会员
                             //todo 跳转内部充值页面已经解锁过
-                            context1.startActivity<OpenVipActivity>()
+                            startToFootPrice(context1)
                         }
                         206 -> {
                             if (ActivityUtils.getTopActivity() !is ChatActivity)
@@ -267,6 +267,7 @@ object CommonFunction {
 
                         201 -> {
                             //todo 跳转内部充值页面已经解锁过
+                            startToFootPrice(context)
                         }
                         222 -> {
                             if (ActivityUtils.getTopActivity() !is ChatActivity)
@@ -334,6 +335,21 @@ object CommonFunction {
         config.enablePush = true
         tip.config = config
         NIMClient.getService(MsgService::class.java).sendMessage(tip, false)
+    }
+
+
+    /**
+     * 支付会员
+     */
+    fun startToVip(context: Context) {
+        context.startActivity<VipPowerActivity>()
+    }
+
+    /**
+     * 门槛付费
+     */
+    fun startToFootPrice(context: Context) {
+        context.startActivity<FootPriceActivity>()
     }
 
 
@@ -613,10 +629,6 @@ object CommonFunction {
     fun payResultNotify(context: Context) {
         if (ActivityUtils.getTopActivity() is OpenVipActivity) {//注册界面支付会员进入首页
             EventBus.getDefault().post(CloseRegVipEvent())
-        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {//兴趣购买充值
-            EventBus.getDefault().post(PayLabelResultEvent(true))
-        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {//我的兴趣购买充值
-            EventBus.getDefault().post(UpdateMyLabelEvent())
         } else if (ActivityUtils.getTopActivity() is MainActivity) {
             EventBus.getDefault().post(RefreshEvent(true))
         } else {
@@ -628,6 +640,7 @@ object CommonFunction {
             EventBus.getDefault().postSticky(RefreshEvent(true))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
             EventBus.getDefault().post(CloseDialogEvent())
+            EventBus.getDefault().post(UpdateSameCityVipEvent())
             EventBus.getDefault().post(RefreshTodayFateEvent())
             //刷新顶部精选数据
             EventBus.getDefault().post(TopCardEvent(true))
