@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.MyInvitedBeans
+import com.sdy.jitangapplication.model.MyRewardBeans
 
 /**
  *    author : ZFM
@@ -10,5 +11,5 @@ import com.sdy.jitangapplication.model.MyInvitedBeans
  *    version: 1.0
  */
 interface MyRewardsView : BaseView {
-    fun myinviteLogResult(data: MyInvitedBeans?)
+    fun myInviteRewardResult(data: MyRewardBeans?)
 }

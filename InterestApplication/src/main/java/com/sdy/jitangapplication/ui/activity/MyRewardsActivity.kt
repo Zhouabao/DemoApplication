@@ -14,8 +14,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.model.GiftBean
-import com.sdy.jitangapplication.model.MyInvitedBeans
+import com.sdy.jitangapplication.model.MyRewardBeans
 import com.sdy.jitangapplication.presenter.MyRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.MyRewardsView
 import com.sdy.jitangapplication.ui.adapter.MyInvitedAdapter
@@ -62,10 +61,9 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         refreshMyRewards.setOnLoadMoreListener(this)
         myRewardsdRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         myRewardsdRv.adapter = adapter
-        addData()
 
         withdrawBtn.clickWithTrigger {
-            WithdrawCandyDialog(this).show()
+            WithdrawCandyDialog(this,false).show()
         }
 
     }
@@ -82,25 +80,23 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         mPresenter.myinviteLog(page)
     }
 
-    fun addData() {
-
-    }
 
     private var page = 1
-    override fun myinviteLogResult(data: MyInvitedBeans?) {
+    override fun myInviteRewardResult(data: MyRewardBeans?) {
         if (data != null) {
             if (refreshMyRewards.state == RefreshState.Loading) {
-                if (data!!.list.isNullOrEmpty() || data!!.list.size < Constants.PAGESIZE)
+                if (data!!.list.isNullOrEmpty() || data!!.list.size < Constants.PAGESIZE) {
                     refreshMyRewards.finishLoadMoreWithNoMoreData()
-                else
+                } else {
                     refreshMyRewards.finishLoadMore()
-
-
+                }
+            } else {
+                myRewardsMoney.text="${data!!.red_balance_money}"
+                myWithdrawRewardsMoney.text="已提现${data!!.red_withdraw_money}"
             }
         } else {
             refreshMyRewards.finishLoadMore(false)
             refreshMyRewards.finishRefresh(false)
         }
-
     }
 }

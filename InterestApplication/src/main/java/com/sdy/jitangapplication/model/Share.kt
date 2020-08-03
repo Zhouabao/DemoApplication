@@ -7,6 +7,7 @@ package com.sdy.jitangapplication.model
  *    version: 1.0
  */
 
+/**我的邀请**/
 data class MyInvitedBeans(
     var list: MutableList<MyInvitedBean> = mutableListOf(),
     var now_level: Int = 0,
@@ -20,7 +21,9 @@ data class MyInvitedBean(
     var account: String = "",
     var avatar: String = "",
     var is_payed: Boolean = false,
-    var nickname: String = ""
+    var nickname: String = "",
+    var amount: Int = 0,
+    var descr: String = ""
 )
 
 data class Progress(
@@ -28,3 +31,33 @@ data class Progress(
     var invite_cnt: Int = 0,
     var reward_money: Int = 0
 )
+
+/**我的奖励**/
+data class MyRewardBeans(
+    var list: MutableList<MyInvitedBean> = mutableListOf(),
+    var red_balance_money: Int = 0,
+    var red_freeze_money: Int = 0,
+    var red_withdraw_money: Int = 0
+)
+
+
+/*我的分享要请------邀请有礼*/
+data class InvitePoliteBean(
+    var invite_amount: Int = 0,
+    var invite_cnt: Int = 0,
+    var level_list: MutableList<Level> = mutableListOf(),
+    var now_level: Int = 0,
+    var now_rate: Int = 0,
+    var progress: Progress = Progress(),
+    var reward_list: MutableList<String> = mutableListOf(),
+    var title: String = ""
+)
+
+data class Level(
+    var commission_rate: Int = 0,
+    var isget: Int = 0,
+    var reward_money: String = "",
+    var set_cnt: Int = 0,
+    var title: String = ""
+)
+

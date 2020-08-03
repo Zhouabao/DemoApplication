@@ -6,32 +6,33 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.MyRewardBeans
-import com.sdy.jitangapplication.presenter.view.MyRewardsView
+import com.sdy.jitangapplication.model.InvitePoliteBean
+import com.sdy.jitangapplication.presenter.view.InviteRewardsView
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
- *    date   : 2020/7/3116:28
+ *    date   : 2020/8/310:15
  *    desc   :
  *    version: 1.0
  */
-class MyRewardsPresenter : BasePresenter<MyRewardsView>() {
+class InviteRewardsPresenter : BasePresenter<InviteRewardsView>() {
 
-    fun myinviteLog(page:Int){
+    fun invitePolite() {
         RetrofitFactory.instance.create(Api::class.java)
-            .myInviteReward(UserManager.getSignParams(hashMapOf("page" to page,"pagesize" to Constants.PAGESIZE)))
-            .excute(object : BaseSubscriber<BaseResp<MyRewardBeans?>>(mView){
-                override fun onNext(t: BaseResp<MyRewardBeans?>) {
+            .invitePolite(UserManager.getSignParams())
+            .excute(object :BaseSubscriber<BaseResp<InvitePoliteBean?>>(mView){
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<InvitePoliteBean?>) {
                     super.onNext(t)
-                    mView.myInviteRewardResult(t.data)
+
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
-                    mView.myInviteRewardResult(null)
-
                 }
             })
     }

@@ -1288,4 +1288,19 @@ interface Api {
     fun myinviteLog(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyInvitedBeans?>>
 
 
+    /**
+     * 我的奖励
+     */
+    @FormUrlEncoded
+    @POST("Share/myInviteReward${Constants.END_BASE_URL}")
+    fun myInviteReward(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyRewardBeans?>>
+
+    /**
+     * 我的分享要请------邀请有礼
+     */
+    @FormUrlEncoded
+    @POST("Share/invitePolite${Constants.END_BASE_URL}")
+    fun invitePolite(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<InvitePoliteBean?>>
+
+
 }

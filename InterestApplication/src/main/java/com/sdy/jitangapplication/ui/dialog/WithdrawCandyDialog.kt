@@ -35,7 +35,8 @@ import org.jetbrains.anko.startActivity
  *    desc   : 糖果提现人民币
  *    version: 1.0
  */
-class WithdrawCandyDialog(val myContext: Context) : BottomSheetDialog(myContext, R.style.BottomSheetDialog),
+class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true) :
+    BottomSheetDialog(myContext, R.style.BottomSheetDialog),
     View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +62,9 @@ class WithdrawCandyDialog(val myContext: Context) : BottomSheetDialog(myContext,
 
 
     private fun initView() {
+        candyCount.isVisible = fromCandy
+        t8.isVisible = fromCandy
+        withdrawCandy.isVisible = fromCandy
         inputWithdrawMoney.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.isNullOrEmpty())
@@ -133,6 +137,7 @@ class WithdrawCandyDialog(val myContext: Context) : BottomSheetDialog(myContext,
     }
 
     private var pullWithdrawBean: PullWithdrawBean? = null
+
     /**
      * 拉起提现
      */
