@@ -209,7 +209,12 @@ class ChargePtVipDialog(
             }
         }
         if (chargeWayBeans.isNotEmpty()) {
-            params["product_id"] = chargeWayBeans[0].id
+            for (data in adapter.data) {
+                if (data.is_promote) {
+                    params["product_id"] = data.id
+                    break
+                }
+            }
         } else {
             return
         }
