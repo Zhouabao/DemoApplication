@@ -36,6 +36,10 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
     private val adapter by lazy { UplevelRewardsAdapter() }
     private fun initView() {
+        mPresenter = InviteRewardsPresenter()
+        mPresenter.context = this
+        mPresenter.mView = this
+
         StatusBarUtil.immersive(this)
         val params1 = iconBgTop.layoutParams as ConstraintLayout.LayoutParams
         params1.width = ScreenUtils.getScreenWidth()
