@@ -11,9 +11,11 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.ui.adapter.UplevelRewardsAdapter
+import com.sdy.jitangapplication.ui.dialog.ShareRuleDialog
 import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_invite_rewards.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 分享有礼页面
@@ -54,5 +56,21 @@ class InviteRewardsActivity : BaseActivity() {
         adapter.addData(GiftBean(checked = true))
         adapter.addData(GiftBean(checked = false))
         adapter.addData(GiftBean(checked = false))
+
+        //分享规则
+        shareRuleBtn.clickWithTrigger {
+            ShareRuleDialog(this).show()
+        }
+
+        //我邀请的
+        seeMyInvited.clickWithTrigger {
+            startActivity<MyInvitedActivity>()
+        }
+
+        //我的奖励
+        seeMyReward.clickWithTrigger {
+            startActivity<MyRewardsActivity>()
+
+        }
     }
 }

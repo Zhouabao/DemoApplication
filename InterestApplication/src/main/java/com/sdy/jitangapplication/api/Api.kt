@@ -1280,4 +1280,12 @@ interface Api {
     fun tagUnlockPopup(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
+    /**
+     * 我的邀请
+     */
+    @FormUrlEncoded
+    @POST("Share/myinviteLog${Constants.END_BASE_URL}")
+    fun myinviteLog(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyInvitedBeans?>>
+
+
 }

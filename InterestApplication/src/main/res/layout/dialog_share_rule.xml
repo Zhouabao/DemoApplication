@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/rectangle_white_15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/rule1"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/shape_oval_orange"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rule11" />
+
+        <TextView
+            android:id="@+id/rule11"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginRight="15dp"
+            android:text="分红仅对通过分享链接注册并下载软件的用户生效，如非通过链接注册（如口头传播、文字传播或直接下载）用户则不算做邀请"
+            android:textColor="#ff696e73"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/rule1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rule2"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/shape_oval_orange"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rule22" />
+
+        <TextView
+            android:id="@+id/rule22"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:text="分红仅针对邀请用户的会员相关的充值，糖果充值不作分红奖励"
+            android:textColor="#ff696e73"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/rule1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rule11" />
+
+        <TextView
+            android:id="@+id/rule3"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/shape_oval_orange"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rule33" />
+
+        <TextView
+            android:id="@+id/rule33"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:text="合伙人等级分3级，分佣根据等级从30%-50%，等级提升与邀请人数相关，每次升级有现金红包可以领取"
+            android:textColor="#ff696e73"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/rule3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rule22" />
+
+        <TextView
+            android:id="@+id/okBtn"
+            android:layout_width="232dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_rectangle_orange_24dp"
+            android:gravity="center"
+            android:text="好的"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rule33" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/icon_share_rule"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

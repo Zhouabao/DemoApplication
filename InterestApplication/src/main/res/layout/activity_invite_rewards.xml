@@ -75,6 +75,7 @@
                 </ViewFlipper>
 
                 <TextView
+                    android:id="@+id/shareRuleBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
@@ -109,7 +110,7 @@
                     android:id="@+id/rewardsRv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="15dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -120,11 +121,13 @@
                     android:id="@+id/t1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:text="当前等级："
                     android:textColor="#ff191919"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/rewardsPercent"
-                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rewardsPercent" />
 
                 <ImageView
                     android:id="@+id/rewardsLevel"
@@ -132,7 +135,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_level1"
                     app:layout_constraintBottom_toBottomOf="@id/rewardsPercent"
-                    app:layout_constraintLeft_toRightOf="@id/t1" />
+                    app:layout_constraintLeft_toRightOf="@id/t1"
+                    app:layout_constraintTop_toTopOf="@id/rewardsPercent" />
 
                 <TextView
                     android:id="@+id/rewardsPercent"
@@ -140,6 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="20dp"
+                    android:gravity="bottom"
                     android:text="享20%分佣"
                     android:textColor="#fffe6318"
                     android:textSize="16sp"
@@ -155,14 +160,14 @@
                     android:text="再邀请10人可升级为二级XXX，享30%分佣"
                     android:textColor="#ff888d92"
                     android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
                     app:layout_constraintTop_toBottomOf="@id/rewardsPercent" />
 
                 <com.sdy.jitangapplication.widgets.ProgressBarHorizontal
                     android:layout_width="0dp"
                     android:layout_height="12dp"
                     app:layout_constraintBottom_toBottomOf="@id/rewardsMoney"
-                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
                     app:layout_constraintRight_toRightOf="@id/rewardsRv"
                     app:layout_constraintTop_toTopOf="@id/rewardsMoney"
                     app:pbhBgColorEnd="#FFFFDFD0"
@@ -171,12 +176,12 @@
                     app:pbhCoverColorEnd="#FFFF6318"
                     app:pbhCoverColorStart="#FFFFA618"
                     app:pbhCoverRadius="6dp"
-                    app:pbhProgress="80" />
+                    app:pbhProgress="40" />
 
                 <TextView
                     android:id="@+id/rewardsMoney"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/rectangle_solid_orange_18dp"
                     android:paddingLeft="6dp"
@@ -185,7 +190,7 @@
                     android:textColor="#ffffffff"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
                     app:layout_constraintTop_toBottomOf="@id/rewardsMoreLevel" />
 
                 <TextView
@@ -211,7 +216,7 @@
                     android:layout_marginBottom="18dp"
                     android:src="@drawable/icon_share"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="@id/rewardsRv"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
                     app:layout_constraintRight_toRightOf="@id/rewardsRv"
                     app:layout_constraintTop_toBottomOf="@id/rewardsMoney" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -256,9 +261,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
                     android:text="我邀请的"
-                    android:textColor="#ffffffff"
+                    android:textColor="#B3FFFFFF"
                     android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="@id/seeMyInvited"
+                    app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
+                    app:layout_constraintRight_toRightOf="@id/view1"
                     app:layout_constraintTop_toTopOf="@id/myScoreBg" />
 
                 <TextView
@@ -269,8 +275,8 @@
                     android:text="300"
                     android:textColor="#ffffffff"
                     android:textSize="30sp"
-                    app:layout_constraintLeft_toLeftOf="@id/t11"
-                    app:layout_constraintRight_toRightOf="@id/t11"
+                    app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
+                    app:layout_constraintRight_toRightOf="@id/view1"
                     app:layout_constraintTop_toBottomOf="@id/t11" />
 
                 <TextView
@@ -288,7 +294,7 @@
                     android:textColor="#ffffffff"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="@id/myScoreBg"
-                    app:layout_constraintRight_toLeftOf="@id/seeMyReward"
+                    app:layout_constraintRight_toRightOf="@id/view1"
                     app:layout_constraintTop_toBottomOf="@id/myInvitedCount" />
 
                 <TextView
@@ -297,9 +303,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
                     android:text="我的奖励"
-                    android:textColor="#ffffffff"
+                    android:textColor="#B3FFFFFF"
                     android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="@id/seeMyReward"
+                    app:layout_constraintLeft_toRightOf="@id/view1"
+                    app:layout_constraintRight_toRightOf="@id/myScoreBg"
                     app:layout_constraintTop_toTopOf="@id/myScoreBg" />
 
 
@@ -310,8 +317,9 @@
                     android:text="1080"
                     android:textColor="#ffffffff"
                     android:textSize="30sp"
-                    app:layout_constraintLeft_toLeftOf="@id/t12"
-                    app:layout_constraintRight_toRightOf="@id/t12"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintLeft_toRightOf="@id/view1"
+                    app:layout_constraintRight_toRightOf="@id/myScoreBg"
                     app:layout_constraintTop_toBottomOf="@id/t12" />
 
                 <TextView
@@ -327,10 +335,11 @@
                     android:textColor="#ffffffff"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@id/seeMyInvited"
-                    app:layout_constraintLeft_toRightOf="@id/seeMyInvited"
+                    app:layout_constraintLeft_toRightOf="@id/view1"
                     app:layout_constraintRight_toRightOf="@id/myScoreBg" />
 
                 <View
+                    android:id="@+id/view1"
                     android:layout_width="1dp"
                     android:layout_height="70dp"
                     android:background="#FFE85813"
