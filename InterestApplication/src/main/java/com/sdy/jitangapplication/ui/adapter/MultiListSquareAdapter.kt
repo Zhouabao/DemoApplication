@@ -156,9 +156,11 @@ class MultiListSquareAdapter(
             }
 
             holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
-            holder.itemView.squareUserVipIv1.isVisible = item.isplatinumvip
+            holder.itemView.squareUserVipIv1.isVisible = item.isplatinumvip || item.isdirectvip
             if (item.isplatinumvip) {
                 holder.itemView.squareUserVipIv1.setImageResource(R.drawable.icon_vip)
+            } else if (item.isdirectvip) {
+                holder.itemView.squareUserVipIv1.setImageResource(R.drawable.icon_direct_vip)
             }
             holder.itemView.squareLocation.text = "${item.puber_address}"
             if (item.puber_address.isNullOrEmpty()) {

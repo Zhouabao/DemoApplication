@@ -240,11 +240,14 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
         squareUserName1.text = "${squareBean!!.nickname}"
         headSquareUserName1.text = "${squareBean!!.nickname}"
-        squareUserVipIv1.isVisible = squareBean!!.isplatinumvip
-        headSquareUserVipIv1.isVisible = squareBean!!.isplatinumvip
+        squareUserVipIv1.isVisible = squareBean!!.isplatinumvip || squareBean!!.isdirectvip
+        headSquareUserVipIv1.isVisible = squareUserVipIv1.isVisible
         if (squareBean!!.isplatinumvip) {
             squareUserVipIv1.setImageResource(R.drawable.icon_vip)
             headSquareUserVipIv1.setImageResource(R.drawable.icon_vip)
+        } else if (squareBean!!.isdirectvip) {
+            squareUserVipIv1.setImageResource(R.drawable.icon_direct_vip)
+            headSquareUserVipIv1.setImageResource(R.drawable.icon_direct_vip)
         }
 
         if (squareBean!!.isfriend) {

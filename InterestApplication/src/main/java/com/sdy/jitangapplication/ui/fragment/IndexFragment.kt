@@ -121,13 +121,15 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         recommendUsers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recommendUsers.adapter = peopleRecommendTopAdapter
         peopleRecommendTopAdapter.setOnItemClickListener { adapter, view, position ->
-            if (!UserManager.touristMode)
-                MatchDetailActivity.start(
-                    activity!!,
-                    peopleRecommendTopAdapter.data[position].accid
-                )
-            else
+            if (!UserManager.touristMode) {
+                if (peopleRecommendTopAdapter.data[position].type == 1)
+                    MatchDetailActivity.start(
+                        activity!!,
+                        peopleRecommendTopAdapter.data[position].accid
+                    )
+            } else {
                 TouristDialog(activity!!).show()
+            }
         }
 
     }

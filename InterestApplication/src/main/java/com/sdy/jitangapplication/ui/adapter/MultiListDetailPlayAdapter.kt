@@ -44,7 +44,11 @@ import kotlinx.android.synthetic.main.item_square_play_detail_video.view.*
  *    desc   :
  *    version: 1.0
  */
-class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: Context, data: MutableList<SquareBean>) :
+class MultiListDetailPlayAdapter(
+    var currentPicPosition: Int = 0,
+    var context: Context,
+    data: MutableList<SquareBean>
+) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     val TAG = "MultiListDetailPlayAdapter"
 
@@ -75,10 +79,20 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
 
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
-        holder.itemView.detailPlayUserVipIv.isVisible = item.isplatinumvip
+        holder.itemView.detailPlayUserVipIv.isVisible = item.isplatinumvip || item.isdirectvip
+        if (item.isplatinumvip) {
+            holder.itemView.detailPlayUserVipIv.setImageResource(R.drawable.icon_vip)
+        } else if (item.isdirectvip) {
+            holder.itemView.detailPlayUserVipIv.setImageResource(R.drawable.icon_direct_vip)
+        }
         val drawable1 =
             context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
-        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+        drawable1!!.setBounds(
+            0,
+            0,
+            drawable1.intrinsicWidth,
+            drawable1.intrinsicHeight
+        )    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${if (item.like_cnt < 0) {
             0
@@ -119,8 +133,13 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
                         SquareDetailImgsAdaper(mContext, item.photo_json!!, holder.layoutPosition)
 
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
-                    holder.itemView.detailPlayVp2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    holder.itemView.detailPlayVp2.addOnPageChangeListener(object :
+                        ViewPager.OnPageChangeListener {
+                        override fun onPageScrolled(
+                            position: Int,
+                            positionOffset: Float,
+                            positionOffsetPixels: Int
+                        ) {
                         }
 
                         override fun onPageScrollStateChanged(state: Int) {
@@ -128,7 +147,8 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
 
                         override fun onPageSelected(position: Int) {
                             for (i in 0 until holder.itemView.detailPlayVp2Indicator1.size) {
-                                (holder.itemView.detailPlayVp2Indicator1[i] as RadioButton).isChecked = i == position
+                                (holder.itemView.detailPlayVp2Indicator1[i] as RadioButton).isChecked =
+                                    i == position
                             }
                         }
                     })
@@ -138,7 +158,8 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
                             indicator.width = SizeUtils.dp2px(10F)
                             indicator.height = SizeUtils.dp2px(10F)
                             indicator.buttonDrawable = null
-                            indicator.background = mContext.resources.getDrawable(R.drawable.selector_circle_indicator)
+                            indicator.background =
+                                mContext.resources.getDrawable(R.drawable.selector_circle_indicator)
 
                             indicator.layoutParams = LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -192,7 +213,10 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
                 holder.itemView.detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
                     override fun onClickBlank(url: String?, vararg objects: Any?) {
                         super.onClickBlank(url, *objects)
-                        (mContext as SquarePlayListDetailActivity).hideCover(holder.layoutPosition, SquareBean.VIDEO)
+                        (mContext as SquarePlayListDetailActivity).hideCover(
+                            holder.layoutPosition,
+                            SquareBean.VIDEO
+                        )
                     }
                 })
             }
@@ -211,7 +235,12 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
 
 
                 //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度
-                val objAnim = ObjectAnimator.ofFloat(holder.itemView.detailPlayAudioBg, "rotation", 0.0f, 360.0f)
+                val objAnim = ObjectAnimator.ofFloat(
+                    holder.itemView.detailPlayAudioBg,
+                    "rotation",
+                    0.0f,
+                    360.0f
+                )
                 //设定动画的旋转周期
                 objAnim.duration = (item.audio_json?.get(0)?.duration ?: 0) * 1000L
                 //设置动画的插值器，这个为匀速旋转

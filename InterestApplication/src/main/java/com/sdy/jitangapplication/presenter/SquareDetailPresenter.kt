@@ -13,7 +13,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.presenter.view.SquareDetailView
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CommentPtVipDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -184,7 +183,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     if (t.code == 200)
                         mView.onAddCommentResult(t, true)
                     else if (t.code == 202) {
-                        ChargeVipDialog(ChargeVipDialog.COMMENT_FREE, context).show()
+                        //todo 跳转内部充值页面
+                        CommonFunction.startToFootPrice(context)
                     } else if (t.code == 203) {
                         CommentPtVipDialog(context).show()
                     }else {

@@ -160,7 +160,7 @@ class ConfirmSendGiftDialog(
                             ).show()
                         }
                         201 -> {//需要充值会员
-                            ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context1).show()
+                            CommonFunction.startToFootPrice(context1)
                         }
                         400 -> {//错误信息
                             CommonFunction.toast(t.msg)

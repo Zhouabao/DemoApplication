@@ -1,5 +1,8 @@
 package com.sdy.jitangapplication.ui.fragment
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +11,7 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -16,7 +20,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
@@ -159,6 +165,86 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             mPresenter.nearlyIndex(params, type, firstLoad)
         }
 
+    }
+
+    private fun showOpenVipCl(isvip: Boolean) {
+        if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
+            openVipCl.isVisible = true
+            t2.text = "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
+                "people_amount",
+                0
+            )}名糖宝女孩\n满足你的需求"
+
+            openVipBtn.text = "开通会员联系她们"
+
+            GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), myAvator)
+            openVipBtn.clickWithTrigger {
+                CommonFunction.startToFootPrice(activity!!)
+            }
+            lottieMoreMatch.imageAssetsFolder = "images_boy"
+            lottieMoreMatch.setAnimation("data_boy_more_match.json")
+
+
+            val scaleAnimationX = ObjectAnimator.ofFloat(myAvator, "scaleX", 0F, 1F)
+            val scaleAnimationY = ObjectAnimator.ofFloat(myAvator, "scaleY", 0F, 1F)
+            val alphaAnimation = ObjectAnimator.ofFloat(myAvator, "alpha", 0F, 1F)
+            val animationSet = AnimatorSet()
+            animationSet.duration = 500
+            animationSet.playTogether(scaleAnimationX, scaleAnimationY, alphaAnimation)
+            animationSet.start()
+
+            animationSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    lottieMoreMatch.playAnimation()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+
+
+            lottieMoreMatch.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    lottieMoreMatchRipple1.postDelayed({
+                        try {
+                            lottieMoreMatchRipple1.playAnimation()
+                        } catch (e: Exception) {
+                        }
+                    }, 2000L)
+
+                    lottieMoreMatchRipple2.postDelayed({
+                        try {
+                            lottieMoreMatchRipple2.playAnimation()
+                        } catch (e: Exception) {
+                        }
+                    }, 4000L)
+
+
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                    lottieMoreMatchRipple.playAnimation()
+                }
+
+            })
+
+        } else {
+            openVipCl.isVisible = false
+        }
     }
 
 
@@ -307,6 +393,13 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         //取消recycleview的滑动
         rvPeopleNearby.setHasFixedSize(true);
         rvPeopleNearby.isNestedScrollingEnabled = event.enable;
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
+        if (type == TYPE_SAMECITY)
+            showOpenVipCl(true)
     }
 
 

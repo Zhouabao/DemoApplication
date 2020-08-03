@@ -375,11 +375,18 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     //是否认证
     private fun checkVip() {
         vipLevelSaveCount.text = "${userInfoBean?.platinum_vip_str}"
-//        if (userInfoBean?.userinfo?.isplatinum == false) {
-//            isVipPowerBtn.text = "升级会员"
-//        } else {
-//            isVipPowerBtn.text = "续费会员"
-//        }
+        if (userInfoBean?.userinfo?.isdirectvip == true) {
+            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_direct_vip_quanyi_bg)
+            vipLevelSaveCount.setTextColor(Color.parseColor("#FF5E6473"))
+            vipLevelLogo.setImageResource(R.drawable.icon_direct_vip_me)
+            malePowerLl.setBackgroundResource(R.drawable.icon_direct_vip_bg)
+        } else {
+            isVipPowerBtn.setBackgroundResource(R.drawable.gradient_is_pt_vip_quanyi_bg)
+            vipLevelSaveCount.setTextColor(Color.parseColor("#FF936F3F"))
+            vipLevelLogo.setImageResource(R.drawable.icon_vip_me)
+            malePowerLl.setBackgroundResource(R.drawable.icon_pt_vip_bg)
+        }
+
     }
 
 
@@ -431,7 +438,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             //会员权益
             R.id.isVipPowerBtn -> {
                 //无门槛 非会员 开通会员(灰色)
-                startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_PT_VIP)
+                startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_GOLD_VIP)
             }
             //我的兴趣
             R.id.publishCl -> {

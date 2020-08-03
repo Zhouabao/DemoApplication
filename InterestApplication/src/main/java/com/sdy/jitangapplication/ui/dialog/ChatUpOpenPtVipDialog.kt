@@ -166,7 +166,7 @@ class ChatUpOpenPtVipDialog(
              */
 
             TYPE_CHAT -> { //解锁聊天
-                openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+                openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 chatupContact.isVisible = false
                 if (chatUpBean.isplatinum) {
                     chatupUnlockChat.isVisible = false
@@ -178,8 +178,8 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "解锁聊天"
 
                     } else {
-                        chatupTitle.text = "今日免费次数已用完"
-                        chatupContent.text = "今日免费聊天次数已用完"
+                        chatupTitle.text = "获得聊天机会"
+                        chatupContent.text = "聊天需要消耗糖果，向对方表达诚意"
                         openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     }
                     // 解锁聊天
@@ -189,11 +189,7 @@ class ChatUpOpenPtVipDialog(
                 } else {
                     //成为高级会员
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(
-                            ChargePtVipDialog.INFINITE_CHAT,
-                            context1,
-                            ChargePtVipDialog.PURCHASE_PT_VIP
-                        ).show()
+                        CommonFunction.startToVip(context1)
                         dismiss()
                     }
 
@@ -243,18 +239,14 @@ class ChatUpOpenPtVipDialog(
                  */
                 chatupContact.isVisible = true
                 if (chatUpBean.private_chat_btn) {
-                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip)
+                    openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                     //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
                     chatupTitle.text = "她设置了等级权限"
                     chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
                     chatupUnlockChat.isVisible = false
                     openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
-                        ChargePtVipDialog(
-                            ChargePtVipDialog.INFINITE_CHAT,
-                            context1,
-                            ChargePtVipDialog.PURCHASE_CONTACT_CARD
-                        ).show()
+                        CommonFunction.startToVip(context1)
                         dismiss()
                     }
 
@@ -289,12 +281,7 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            ChargePtVipDialog(
-                                ChargePtVipDialog.INFINITE_CHAT,
-                                context1,
-                                ChargePtVipDialog.PURCHASE_CONTACT_CARD
-                            ).show()
-                            dismiss()
+                            CommonFunction.startToVip(context1,1)
                         }
                     }
                 }
@@ -497,7 +484,7 @@ class ChatUpOpenPtVipDialog(
                     super.onNext(t)
                     if (t.code == 201) {
                         loading.dismiss()
-                        OpenVipActivity.start(context1, null)
+                        CommonFunction.startToFootPrice(context1)
                     } else if (t.code == 200) {
                         sendMatchFriendMessage(loading)
                     } else if (t.code == 206) {

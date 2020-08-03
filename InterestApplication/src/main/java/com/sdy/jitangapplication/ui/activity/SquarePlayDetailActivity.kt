@@ -37,10 +37,12 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.umeng.socialize.UMShareAPI
+import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
+import kotlinx.android.synthetic.main.layout_square_list_top.*
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -219,7 +221,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             } else {
                 squareBean!!.like_cnt
             }}"
-        detailPlayUserVipIv.isVisible = squareBean.isplatinumvip
+        detailPlayUserVipIv.isVisible = squareBean.isplatinumvip ||squareBean.isdirectvip
+        if (squareBean!!.isplatinumvip) {
+            detailPlayUserVipIv.setImageResource(R.drawable.icon_vip)
+        } else if (squareBean!!.isdirectvip) {
+            detailPlayUserVipIv.setImageResource(R.drawable.icon_direct_vip)
+        }
     }
 
 

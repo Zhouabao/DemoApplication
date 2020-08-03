@@ -11,6 +11,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.VipPowerBean
@@ -45,11 +46,7 @@ class CommentPtVipDialog(
         setCanceledOnTouchOutside(true)
 
         openPtVipBtn.clickWithTrigger {
-            ChargePtVipDialog(
-                ChargePtVipDialog.SQUARE_COMMENT,
-                context1,
-                ChargePtVipDialog.PURCHASE_PT_VIP
-            ).show()
+            CommonFunction.startToVip(context1)
         }
 
     }

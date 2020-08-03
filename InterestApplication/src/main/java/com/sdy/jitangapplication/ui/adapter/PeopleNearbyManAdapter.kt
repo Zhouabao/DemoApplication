@@ -96,6 +96,8 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
         itemView.userVip.isVisible = item.isplatinumvip
         if (item.isplatinumvip) {
             itemView.userVip.setImageResource(R.drawable.icon_vip)
+        } else if (item.isdirectvip) {
+            itemView.userVip.setImageResource(R.drawable.icon_direct_vip)
         }
         if (item.intention_title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false

@@ -324,14 +324,14 @@ interface Api {
      *
      */
     @FormUrlEncoded
-    @POST("Home/checkContactV23${Constants.END_BASE_URL}")
+    @POST("Home/checkContactV231${Constants.END_BASE_URL}")
     fun checkUnlockContact(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
 
     /**
      * 验证解锁视频介绍
      */
     @FormUrlEncoded
-    @POST("Candy/checkUnlockMv${Constants.END_BASE_URL}")
+    @POST("Candy/checkUnlockMvV231${Constants.END_BASE_URL}")
     fun checkUnlockMv(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UnlockCheckBean?>>
 
 
@@ -510,7 +510,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("MemberInfo/myInfoCandyV223${Constants.END_BASE_URL}")
+    @POST("MemberInfo/myInfoCandyV231${Constants.END_BASE_URL}")
     fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
 
@@ -1255,7 +1255,7 @@ interface Api {
      *
      */
     @FormUrlEncoded
-    @POST("Home/checkChatV23${Constants.END_BASE_URL}")
+    @POST("Home/checkChatV231${Constants.END_BASE_URL}")
     fun checkChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChatUpBean?>>
 
 

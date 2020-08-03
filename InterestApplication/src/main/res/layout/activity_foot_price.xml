@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF181817"
+    android:fitsSystemWindows="false"
+    tools:context=".ui.activity.FootPriceActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/topBg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_bg_top_foot_price"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/icon_back_white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fooPriceCl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/icon_bg_foot_price"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/t1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="高端精英认证"
+                android:textColor="#ff3c3740"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/footUserCount"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/footUserCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="20dp"
+                android:text="已有3525名高端男士加入"
+                android:textColor="#ff3c3740"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintTop_toBottomOf="@id/t1" />
+
+
+            <TextView
+                android:id="@+id/footNowPirce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginRight="7dp"
+                android:text="¥ 30/永久"
+                android:textColor="#ff3c3740"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/footOriginalPrice"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/footOriginalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:text="原价¥99"
+                android:textColor="#ff3c3740"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/footNowPirce"
+                app:layout_constraintRight_toRightOf="@id/footNowPirce"
+                app:layout_constraintTop_toBottomOf="@id/footNowPirce" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/footPowerRv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:overScrollMode="never"
+            app:layout_constraintLeft_toLeftOf="@id/fooPriceCl"
+            app:layout_constraintTop_toBottomOf="@id/fooPriceCl" />
+
+
+        <TextView
+            android:id="@+id/joinNowBtn"
+            android:layout_width="298dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/gradient_light_orange_24dp"
+            android:gravity="center"
+            android:text="立即加入"
+            android:textColor="#ff131415"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/footPowerRv" />
+
+        <TextView
+            android:id="@+id/whyPayBtn"
+            android:layout_width="298dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_stroke_light_orange_24dp"
+            android:gravity="center"
+            android:text="为什么要付费"
+            android:textColor="#ffffffff"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/joinNowBtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>

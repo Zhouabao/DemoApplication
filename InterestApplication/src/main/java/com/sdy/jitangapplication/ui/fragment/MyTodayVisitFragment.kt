@@ -14,13 +14,13 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.VisitorBean
 import com.sdy.jitangapplication.presenter.MyVisitPresenter
 import com.sdy.jitangapplication.presenter.view.MyVisitView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.ui.adapter.MyTodayVisitAdater
-import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_visit.*
@@ -83,11 +83,8 @@ class MyTodayVisitFragment(val todayCount: Int, var freeShow: Boolean = false) :
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            ChargePtVipDialog(
-                ChargePtVipDialog.FREE_SEE_ME,
-                activity!!,
-                ChargePtVipDialog.PURCHASE_PT_VIP
-            ).show()
+            CommonFunction.startToVip(activity!!)
+
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

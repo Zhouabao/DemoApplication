@@ -17,7 +17,6 @@ import com.sdy.jitangapplication.nim.uikit.business.session.viewholder.MsgViewHo
 import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.SettingsActivity;
-import com.sdy.jitangapplication.ui.dialog.ChargePtVipDialog;
 
 import java.util.StringTokenizer;
 
@@ -103,7 +102,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                         @Override
                         public void onClick(@NonNull View widget) {
-                            new ChargePtVipDialog(ChargePtVipDialog.UPDATE_VISIT, context, ChargePtVipDialog.PURCHASE_PT_VIP).show();
+                            CommonFunction.INSTANCE.startToVip(context,0);
                         }
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).append("可提升消息回复")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());

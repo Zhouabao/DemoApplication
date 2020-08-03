@@ -33,7 +33,6 @@ import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
-import com.sdy.jitangapplication.ui.activity.ShareFriendsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_forever_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -103,8 +102,8 @@ class OpenVipActivity : BaseActivity() {
 
         when (from) {
             FROM_REGISTER_OPEN_VIP -> {
-                shareFriendsBtn.isVisible = !moreMatch?.share_btn.isNullOrEmpty()
-                shareFriendsBtn.text = moreMatch?.share_btn
+//                shareFriendsBtn.isVisible = !moreMatch?.share_btn.isNullOrEmpty()
+//                shareFriendsBtn.text = moreMatch?.share_btn
                 if (UserManager.getGender() == 1) {
                     if (UserManager?.registerFileBean?.threshold == true) {
                         moreInfoText.text = "成为会员和她们亲密接触"
@@ -228,10 +227,11 @@ class OpenVipActivity : BaseActivity() {
 
         //分享给好友
         shareFriendsBtn.clickWithTrigger {
-            startActivity<ShareFriendsActivity>(
-                "chargeWayBeans" to chargeWayBeans,
-                "payways" to payways
-            )
+            WhyPayDialog(this).show()
+//            startActivity<ShareFriendsActivity>(
+//                "chargeWayBeans" to chargeWayBeans,
+//                "payways" to payways
+//            )
         }
     }
 
@@ -263,6 +263,7 @@ class OpenVipActivity : BaseActivity() {
                             chargeWayBeans = it.data!!.list ?: mutableListOf()
                             setPurchaseType()
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
+                            sameSexCnt.text = "已有${it.data!!.same_sex_cnt}名高端男士加入"
                         }
                     } else {
                         CommonFunction.toast(it.msg)
@@ -303,6 +304,8 @@ class OpenVipActivity : BaseActivity() {
                 )
                 .setFontSize(30, true)
                 .setBold()
+                .append("/永久")
+                .setFontSize(14,true)
                 .create()
         }
     }

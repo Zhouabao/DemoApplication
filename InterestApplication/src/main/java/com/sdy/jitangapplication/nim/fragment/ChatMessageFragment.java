@@ -61,9 +61,7 @@ import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.ContactCandyReceiveDialog;
-import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
-import com.sdy.jitangapplication.ui.dialog.OpenVipActivity;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
@@ -331,7 +329,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else if (canSendMsg()) {
             // 男性,非会员 弹充值界面
             if (nimBean.getForce_isvip()) {
-                OpenVipActivity.Companion.start(getActivity(), null, OpenVipActivity.FROM_P2P_CHAT, -1);
+                CommonFunction.INSTANCE.startToFootPrice(getActivity());
+//                OpenVipActivity.Companion.start(getActivity(), null, OpenVipActivity.FROM_P2P_CHAT, -1);
             } else {
                 // if (message.getMsgType() == MsgTypeEnum.text) {
                 sendMsgRequest(message, sessionId);
@@ -598,11 +597,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                             inputPanel.restoreText(true);
-                            // 如果糖果助力值大于0则证明是回复糖果助力消息，弹助力领取成功弹窗
-                            if (nimBeanBaseResp.getData().getGet_help_amount() > 0) {
-                                new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity())
-                                        .show();
-                            }
                             // 搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
                             if (nimBeanBaseResp.getData().getRid_data() != null
                                     && !nimBeanBaseResp.getData().getRid_data().getIcon().isEmpty()) {
@@ -620,7 +614,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
                                     && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
                                 ArrayList<SendTipBean> tips = new ArrayList<>();
-                                tips.add(new SendTipBean("免费消息会被归于对方搭讪列表，可能回复率偏低， 充值高级会员可提升消息回复", true, SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
+                                tips.add(new SendTipBean("免费消息会被归于对方搭讪列表，可能回复率偏低，充值高级会员可提升消息回复", true, SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
                                 CommonFunction.INSTANCE.sendTips(sessionId, tips);
                                 isSendChargePtVip = true;
                             }

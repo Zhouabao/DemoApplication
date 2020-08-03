@@ -25,6 +25,7 @@ data class ChargeWayBeans(
     val threshold_btn: Boolean = false,
     val isdirect: Boolean = false,
     val direct_cnt: Int = 0,
+    val same_sex_cnt: Int = 0,
     val direct_vip_express: String = "",
     val isplatinum: Boolean = false,
     val platinum_save_str: String = "",
@@ -36,19 +37,20 @@ data class VipPowerBean(
     val isplatinum: Boolean = false,
     val platinum_vip_express: String = "",
     val platinum_save_str: String = "",
-    var type: Int = TYPE_CONTACT_CARD,
-    var direct_cnt : Int = 0
+    var type: Int = TYPE_PT_VIP,
+    val list: MutableList<ChargeWayBean> = mutableListOf(),
+    val payway: MutableList<PaywayBean> = mutableListOf()
+
 ) {
     companion object {
-        const val TYPE_CONTACT_CARD = 1
-        const val TYPE_PT_VIP = 0
+        const val TYPE_PT_VIP = 1
+        const val TYPE_GOLD_VIP = 0
     }
 }
 
 
 data class ChargeWayBean(
     var is_promote: Boolean = false,
-    val duration: Int? = 0,
     val ename: String? = "",
     val id: Int = 0,
     var discount_price: Double = 0.0,
@@ -66,7 +68,6 @@ data class ChargeWayBean(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readByte() != 0.toByte(),
-        parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
         parcel.readInt(),
         parcel.readDouble(),
@@ -86,7 +87,6 @@ data class ChargeWayBean(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeByte(if (is_promote) 1 else 0)
-        parcel.writeValue(duration)
         parcel.writeString(ename)
         parcel.writeInt(id)
         parcel.writeDouble(discount_price)
