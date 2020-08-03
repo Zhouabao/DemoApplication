@@ -120,7 +120,7 @@ object CommonFunction {
      * 	201 拉起充值会员
      * 	206 是好友进聊天
      * 	200 拉起礼物列表
-     * 	208 充值高级会员（女性设置了聊天权限）
+     * 	208 充值黄金会员（女性设置了聊天权限）
      */
     fun checkChat(context1: Context, target_accid: String) {
         val loading = LoadingDialog(context1)
@@ -238,7 +238,7 @@ object CommonFunction {
     /**
      * 验证联系方式解锁
      * 	400 toast错误
-     * 	202 高级会员充值
+     * 	202 黄金会员充值
      * 	222 （已经解锁过了）
      * 	200 amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
      *

@@ -20,7 +20,7 @@
         app:srlDisableContentWhenRefresh="true"
         app:srlEnableAutoLoadMore="false"
         app:srlEnableLoadMore="true"
-        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableLoadMoreWhenContentNotFull="false"
         app:srlEnableRefresh="true">
 
         <androidx.core.widget.NestedScrollView

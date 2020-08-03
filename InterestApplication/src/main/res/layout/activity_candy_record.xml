@@ -18,6 +18,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llTitle"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
+        app:msv_emptyView="@layout/empty_layout"
         app:msv_viewState="loading">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout

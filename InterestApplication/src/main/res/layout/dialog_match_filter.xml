@@ -305,7 +305,7 @@
         android:layout_height="24dp"
         android:background="@color/colorWhite"
         android:gravity="center_vertical"
-        android:text="开通高级会员"
+        android:text="开通黄金会员"
         android:textColor="@color/colorOrange"
         android:textSize="12sp"
         android:visibility="gone"

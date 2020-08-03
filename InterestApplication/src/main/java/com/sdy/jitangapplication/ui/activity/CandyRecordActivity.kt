@@ -13,6 +13,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.BillBean
+import com.sdy.jitangapplication.model.MyBillBeans
 import com.sdy.jitangapplication.presenter.CandyRecordPresenter
 import com.sdy.jitangapplication.presenter.view.CandyRecordView
 import com.sdy.jitangapplication.ui.adapter.CandyRecordAdapter
@@ -30,7 +31,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_candy_record)
         initView()
-        mPresenter.myBillList(params)
+        mPresenter.myRedWithdrawLog(params)
     }
 
     private var page = 1
@@ -54,7 +55,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
 
         stateRecord.retryBtn.onClick {
             stateRecord.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.myBillList(params)
+            mPresenter.myRedWithdrawLog(params)
         }
 
         refreshRecord.setOnRefreshListener(this)
@@ -68,16 +69,16 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         params["page"] = page
-        mPresenter.myBillList(params)
+        mPresenter.myRedWithdrawLog(params)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         params["page"] = page
-        mPresenter.myBillList(params)
+        mPresenter.myRedWithdrawLog(params)
     }
 
-    override fun onMyBillList(success: Boolean, billList: MutableList<BillBean>?) {
+    override fun onMyRedWithdrawLog(success: Boolean, billList: MyBillBeans?) {
         if (success) {
             stateRecord.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (refreshRecord.state != RefreshState.Loading) {
@@ -86,13 +87,17 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
                 refreshRecord.finishRefresh()
                 refreshRecord.resetNoMoreData()
             } else {
-                if ((billList ?: mutableListOf<BillBean>()).size < Constants.PAGESIZE) {
+                if ((billList?.list ?: mutableListOf<BillBean>()).size < Constants.PAGESIZE) {
                     refreshRecord.finishLoadMoreWithNoMoreData()
                 } else {
                     refreshRecord.finishLoadMore(true)
                 }
             }
-            adapter.addData(billList ?: mutableListOf<BillBean>())
+            adapter.addData(billList?.list?: mutableListOf())
+
+            if (adapter.data.isEmpty()) {
+                stateRecord.viewState = MultiStateView.VIEW_STATE_EMPTY
+            }
         } else {
             stateRecord.viewState = MultiStateView.VIEW_STATE_ERROR
         }

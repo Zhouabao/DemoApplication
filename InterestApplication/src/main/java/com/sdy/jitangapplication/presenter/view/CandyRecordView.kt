@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.BillBean
+import com.sdy.jitangapplication.model.MyBillBeans
 
 /**
  *    author : ZFM
@@ -11,5 +12,5 @@ import com.sdy.jitangapplication.model.BillBean
  */
 interface CandyRecordView : BaseView {
 
-    fun onMyBillList(success: Boolean, billList: MutableList<BillBean>?)
+    fun onMyRedWithdrawLog(success: Boolean, billList: MyBillBeans?)
 }

@@ -62,7 +62,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
 
 
     private fun initView() {
-        candyCount.isVisible = fromCandy
+        if (fromCandy)
+            candyCount.isVisible = true
+        else
+            candyCount.visibility = View.INVISIBLE
         t8.isVisible = fromCandy
         withdrawCandy.isVisible = fromCandy
         inputWithdrawMoney.addTextChangedListener(object : TextWatcher {
@@ -142,20 +145,35 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
      * 拉起提现
      */
     fun pullWithdraw() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .myCadny(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<PullWithdrawBean?>>(null) {
-                override fun onNext(t: BaseResp<PullWithdrawBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200) {
-                        pullWithdrawBean = t.data
-                        candyCount.text = "${pullWithdrawBean?.candy_amount}"
-                        withdrawMoney.text = "可提现¥${pullWithdrawBean?.money_amount}"
-                        if (pullWithdrawBean?.alipay != null)
-                            wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
+        if (fromCandy)
+            RetrofitFactory.instance.create(Api::class.java)
+                .myCadny(UserManager.getSignParams())
+                .excute(object : BaseSubscriber<BaseResp<PullWithdrawBean?>>(null) {
+                    override fun onNext(t: BaseResp<PullWithdrawBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            pullWithdrawBean = t.data
+                            candyCount.text = "${pullWithdrawBean?.candy_amount}"
+                            withdrawMoney.text = "可提现¥${pullWithdrawBean?.money_amount}"
+                            if (pullWithdrawBean?.alipay != null)
+                                wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
+                        }
                     }
-                }
-            })
+                })
+        else
+            RetrofitFactory.instance.create(Api::class.java)
+                .pullWithdraw(UserManager.getSignParams())
+                .excute(object : BaseSubscriber<BaseResp<PullWithdrawBean?>>(null) {
+                    override fun onNext(t: BaseResp<PullWithdrawBean?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            pullWithdrawBean = t.data
+                            withdrawMoney.text = "可提现¥${pullWithdrawBean?.red_balance_money}"
+                            if (pullWithdrawBean?.alipay != null)
+                                wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
+                        }
+                    }
+                })
     }
 
 
@@ -166,35 +184,66 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
         val params = hashMapOf<String, Any>(
             "amount" to inputWithdrawMoney.text.toString().toFloat()
         )
-        RetrofitFactory.instance.create(Api::class.java)
-            .withdraw(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<WithDrawSuccessBean?>>(null) {
-                override fun onStart() {
-                    super.onStart()
-                    loadingDialog.show()
-                }
-
-                override fun onNext(t: BaseResp<WithDrawSuccessBean?>) {
-                    super.onNext(t)
-                    loadingDialog.dismiss()
-                    if (t.code == 200) {
-                        withdrawCl.isVisible = false
-                        withdrawSuccessCl.isVisible = true
-                        withdrawID.text = "${t.data?.trade_no}"
-                        withdrawTime.text = "${t.data?.create_tme}"
-                        withdrawCandy.text = "${t.data?.candy_amount}颗"
-                        withdrawMoney1.text = "¥${t.data?.money_amount}"
-                        EventBus.getDefault().post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
-                    } else {
-                        CommonFunction.toast(t.msg)
+        if (fromCandy)
+            RetrofitFactory.instance.create(Api::class.java)
+                .withdraw(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<WithDrawSuccessBean?>>(null) {
+                    override fun onStart() {
+                        super.onStart()
+                        loadingDialog.show()
                     }
-                }
 
-                override fun onError(e: Throwable?) {
-                    super.onError(e)
-                    loadingDialog.dismiss()
-                }
-            })
+                    override fun onNext(t: BaseResp<WithDrawSuccessBean?>) {
+                        super.onNext(t)
+                        loadingDialog.dismiss()
+                        if (t.code == 200) {
+                            withdrawCl.isVisible = false
+                            withdrawSuccessCl.isVisible = true
+                            withdrawID.text = "${t.data?.trade_no}"
+                            withdrawTime.text = "${t.data?.create_tme}"
+                            withdrawCandy.text = "${t.data?.candy_amount}颗"
+                            withdrawMoney1.text = "¥${t.data?.money_amount}"
+                            EventBus.getDefault()
+                                .post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
+                        } else {
+                            CommonFunction.toast(t.msg)
+                        }
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        super.onError(e)
+                        loadingDialog.dismiss()
+                    }
+                })
+        else
+            RetrofitFactory.instance.create(Api::class.java)
+                .doRedWithdraw(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<WithDrawSuccessBean?>>(null) {
+                    override fun onStart() {
+                        super.onStart()
+                        loadingDialog.show()
+                    }
+
+                    override fun onNext(t: BaseResp<WithDrawSuccessBean?>) {
+                        super.onNext(t)
+                        loadingDialog.dismiss()
+                        if (t.code == 200) {
+                            withdrawCl.isVisible = false
+                            withdrawSuccessCl.isVisible = true
+                            withdrawID.text = "${t.data?.trade_no}"
+                            withdrawTime.text = "${t.data?.create_tme}"
+                            withdrawCandy.text = "${t.data?.candy_amount}颗"
+                            withdrawMoney1.text = "¥${t.data?.money_amount}"
+                        } else {
+                            CommonFunction.toast(t.msg)
+                        }
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        super.onError(e)
+                        loadingDialog.dismiss()
+                    }
+                })
     }
 
 

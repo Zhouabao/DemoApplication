@@ -1302,5 +1302,28 @@ interface Api {
     @POST("Share/invitePolite${Constants.END_BASE_URL}")
     fun invitePolite(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<InvitePoliteBean?>>
 
+    /**
+     * 拉新提现记录
+     */
+    @FormUrlEncoded
+    @POST("Share/myRedWithdrawLog${Constants.END_BASE_URL}")
+    fun myRedWithdrawLog(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyBillBeans?>>
+
+
+    /**
+     * 红包拉起提现
+     */
+    @FormUrlEncoded
+    @POST("Share/pullWithdraw${Constants.END_BASE_URL}")
+    fun pullWithdraw(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PullWithdrawBean?>>
+
+
+    /**
+     * 红包发起提现
+     */
+    @FormUrlEncoded
+    @POST("Share/doRedWithdraw${Constants.END_BASE_URL}")
+    fun doRedWithdraw(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<WithDrawSuccessBean?>>
+
 
 }

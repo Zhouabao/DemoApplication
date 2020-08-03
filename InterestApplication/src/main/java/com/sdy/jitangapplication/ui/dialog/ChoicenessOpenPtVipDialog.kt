@@ -40,8 +40,8 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
         // * 2.添加视频介绍成为精选用户（女性）
         if (UserManager.getGender() == 1) {
             choicenessTitle.text = "成为精选用户"
-            choicenessContent.text = "成为高级会员，让女生第一眼看到你"
-            openPtVipBtn.text = "开通高级会员"
+            choicenessContent.text = "成为黄金会员，让女生第一眼看到你"
+            openPtVipBtn.text = "开通黄金会员"
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
                 CommonFunction.startToFootPrice(context1)

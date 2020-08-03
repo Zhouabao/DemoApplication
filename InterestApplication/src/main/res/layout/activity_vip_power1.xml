@@ -119,7 +119,7 @@
                 android:layout_height="48dp"
                 android:background="@drawable/gradient_light_orange_0dp"
                 android:gravity="center"
-                android:text="成为高级会员"
+                android:text="成为黄金会员"
                 android:textColor="#ff1d1f21"
                 android:textSize="17sp"
                 android:textStyle="bold"

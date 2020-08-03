@@ -193,8 +193,9 @@ data class BillBean(
 data class PullWithdrawBean(
     var alipay: Alipay? = null,
     var has_unread: Boolean = false,
-    var is_withdraw: Boolean = false,
+    var is_withdraw: Boolean = false,//是否可以提现 true 可以 false 不可以
     var candy_amount: Int = 0,
+    var red_balance_money: Float = 0.0F,
     var money_amount: Float = 0.0F
 )
 

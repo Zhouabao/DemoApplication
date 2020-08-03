@@ -19,7 +19,13 @@ import com.sdy.jitangapplication.model.MyInvitedBeans
 import com.sdy.jitangapplication.presenter.MyInvitedPresenter
 import com.sdy.jitangapplication.presenter.view.MyInvitedView
 import com.sdy.jitangapplication.ui.adapter.MyInvitedAdapter
+import kotlinx.android.synthetic.main.activity_invite_rewards.*
 import kotlinx.android.synthetic.main.activity_my_invited.*
+import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoney
+import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoneyMax
+import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoreLevel
+import kotlinx.android.synthetic.main.activity_my_invited.rewardsPercent
+import kotlinx.android.synthetic.main.activity_my_invited.rewardsProgress
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
@@ -45,21 +51,14 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
         btnBack.setImageResource(R.drawable.icon_back_white)
         hotT1.text = "所有邀请"
         hotT1.setTextColor(Color.WHITE)
-        rightBtn.isVisible = true
-        rightBtn.text = "所有提现"
-        rightBtn.setTextColor(Color.WHITE)
         btnBack.clickWithTrigger {
             finish()
-        }
-        rightBtn.clickWithTrigger {
-            startActivity<CandyRecordActivity>()
         }
 
         refreshMyInvited.setOnRefreshListener(this)
         refreshMyInvited.setOnLoadMoreListener(this)
         myInvitedRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         myInvitedRv.adapter = adapter
-        addData()
 
     }
 
@@ -76,9 +75,6 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
         mPresenter.myinviteLog(page)
     }
 
-    fun addData() {
-
-    }
 
     private var page = 1
     override fun myinviteLogResult(data: MyInvitedBeans?) {
@@ -98,11 +94,18 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
                 rewardsMoney.text = "${data!!.progress.invite_cnt}"
                 rewardsMoneyMax.text = "${data!!.progress.reward_money}元"
                 rewardsProgress.setProgress(data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt * 100)
-//                rewardsMoney.
+
+
+                val rate = rewardsMoneyMax.width * 1f / rewardsProgress.width
                 val translate = ObjectAnimator.ofFloat(
                     rewardsMoney,
                     "translationX",
-                    rewardsProgress.width * data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt
+                    if (1 - (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) > rate
+                    ) {
+                        rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt)
+                    } else {
+                        rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) - rewardsMoneyMax.width - rewardsMoney.width
+                    }
                 )
                 translate.duration = 100
                 translate.start()

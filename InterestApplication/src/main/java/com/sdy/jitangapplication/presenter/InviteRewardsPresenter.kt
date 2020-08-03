@@ -28,6 +28,7 @@ class InviteRewardsPresenter : BasePresenter<InviteRewardsView>() {
 
                 override fun onNext(t: BaseResp<InvitePoliteBean?>) {
                     super.onNext(t)
+                    mView.invitePoliteResult(t.data)
 
                 }
 

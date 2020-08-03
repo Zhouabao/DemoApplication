@@ -252,7 +252,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_weight="1"
-                                android:text="高级会员丨已为你节省300个糖果"
+                                android:text="黄金会员丨已为你节省300个糖果"
                                 android:textColor="#FF936F3F"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />

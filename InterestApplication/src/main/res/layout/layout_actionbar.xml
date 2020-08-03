@@ -7,6 +7,7 @@
     android:background="@color/colorWhite">
 
     <ImageView
+        android:layout_centerVertical="true"
         android:id="@+id/btnBack"
         style="@style/BckBtnStyle" />
 

@@ -48,7 +48,7 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
         when (data.type) {
             VipPowerBean.TYPE_GOLD_VIP -> {
                 itemview.vipPowerNickname.text =
-                    "高级会员（${(data.icon_list ?: mutableListOf()).size}项特权）"
+                    "黄金会员（${(data.icon_list ?: mutableListOf()).size}项特权）"
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_ptvip_10dp)
                 itemview.vipOutTime.setTextColor(Color.parseColor("#ffcd7e14"))
                 itemview.vipSaveAmount.setTextColor(Color.parseColor("#ffcd7e14"))
@@ -58,23 +58,24 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
                     itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
                 else
                     itemview.vipOutTime.text = "暂未激活特权"
+                itemview.vipPowerAvator.borderColor = Color.parseColor("#FFEBA35A")
 
             }
 
             VipPowerBean.TYPE_PT_VIP -> {
-                itemview.vipPowerNickname.text = "至尊直联卡"
+                itemview.vipPowerNickname.text = "钻石会员"
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_vip_10dp)
-                itemview.vipOutTime.setTextColor(Color.parseColor("#FFFFD27A"))
-                itemview.vipPowerNickname.setTextColor(Color.parseColor("#FFFFD27A"))
+                itemview.vipOutTime.setTextColor(Color.parseColor("#FF5E6473"))
+                itemview.vipPowerNickname.setTextColor(Color.parseColor("#FF5E6473"))
                 itemview.powerUserBg.setImageResource(R.drawable.icon_power_contact_card)
-                itemview.vipSaveAmount.setTextColor(Color.parseColor("#FFFFD27A"))
+                itemview.vipSaveAmount.setTextColor(Color.parseColor("#FF5E6473"))
 
                 if (data!!.isplatinum)
                     itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
                 else
                     itemview.vipOutTime.text = "暂未激活特权"
 
-
+                itemview.vipPowerAvator.borderColor = Color.parseColor("#FF565259")
             }
 
         }

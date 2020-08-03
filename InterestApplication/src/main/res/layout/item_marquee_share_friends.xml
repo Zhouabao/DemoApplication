@@ -5,6 +5,8 @@
     android:layout_gravity="center"
     android:id="@+id/vipShareDescr"
     android:gravity="center"
+    android:maxLines="1"
+    android:ellipsize="end"
     android:text="XX****XX升级为2级领航员，获得20元现金红包"
     android:textColor="#ffffffff"
     android:textSize="12sp" />

@@ -5,20 +5,27 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.InvitePoliteBean
+import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil
 import com.sdy.jitangapplication.presenter.InviteRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.InviteRewardsView
 import com.sdy.jitangapplication.ui.adapter.UplevelRewardsAdapter
+import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.ShareRuleDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_invite_rewards.*
+import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.item_marquee_share_friends.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -41,6 +48,10 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         mPresenter.mView = this
 
         StatusBarUtil.immersive(this)
+        val params11 = llTitle.layoutParams as ConstraintLayout.LayoutParams
+        params11.topMargin = StatusBarUtil.getStatusBarHeight(this)
+        iconBgTop.layoutParams = params11
+
         val params1 = iconBgTop.layoutParams as ConstraintLayout.LayoutParams
         params1.width = ScreenUtils.getScreenWidth()
         params1.height = (88 / 375F * params1.width).toInt()
@@ -86,9 +97,16 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
             startActivity<MyRewardsActivity>()
 
         }
+
+        //立即分享
+        shareNowBtn.clickWithTrigger {
+            showShareDialog()
+        }
     }
 
     override fun invitePoliteResult(invitePoliteBean: InvitePoliteBean?) {
+//        invitePoliteBean?.progress?.invite_cnt = invitePoliteBean?.progress?.all_cnt ?: 0
+        invitePoliteBean?.progress?.invite_cnt = 10
         for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
             rewardsFl.addView(getMarqueeView(data))
         }
@@ -116,20 +134,26 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
             .create()
         rewardsMoney.text = "${invitePoliteBean?.progress?.invite_cnt}"
         rewardsMoneyMax.text = "${invitePoliteBean?.progress?.reward_money}"
-        rewardsProgress.maxProgress = (invitePoliteBean?.progress?.all_cnt ?: 0f) as Float
-        rewardsProgress.setProgress((invitePoliteBean?.progress?.invite_cnt ?: 0F) as Float)
-
-
         rewardsProgress.setProgress(
-            (invitePoliteBean?.progress?.invite_cnt ?: 0) * 1f
-                    / (invitePoliteBean?.progress?.all_cnt ?: 0) * 100
+            (invitePoliteBean?.progress?.invite_cnt
+                ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0) * 100
         )
-//                rewardsMoney.
+
+
+        val rate = rewardsMoneyMax.width * 1f / rewardsProgress.width
         val translate = ObjectAnimator.ofFloat(
             rewardsMoney,
             "translationX",
-            rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt ?: 0) * 1f
-                    / (invitePoliteBean?.progress?.all_cnt ?: 0)
+            if (1 - (invitePoliteBean?.progress?.invite_cnt
+                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0) > rate
+            ) {
+                rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt
+                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0)
+            } else {
+                rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt
+                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt
+                    ?: 0) - rewardsMoneyMax.width - rewardsMoney.width
+            }
         )
         translate.duration = 100
         translate.start()
@@ -143,5 +167,39 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         val view = layoutInflater.inflate(R.layout.item_marquee_share_friends, null, false)
         view.vipShareDescr.text = content
         return view
+    }
+
+
+    /**
+     * 展示更多操作对话框
+     */
+
+    lateinit var moreActionDialog: MoreActionNewDialog
+    private fun showShareDialog() {
+        //todo 拉新分享链接
+        moreActionDialog =
+            MoreActionNewDialog(
+                this,
+                url = "拉新分享",
+                type = MoreActionNewDialog.TYPE_SHARE_VIP_URL,
+                title = "拉新分享",
+                content = "快来加入鸡汤吧",
+                pic = UserManager.getAvator()
+            )
+        moreActionDialog.show()
+
+        moreActionDialog.collect.isVisible = true
+        moreActionDialog.report.isVisible = false
+        moreActionDialog.delete.isVisible = false
+        moreActionDialog.transpondFriend.isVisible = false
+
+        moreActionDialog.collect.text = "复制链接"
+        val top = resources.getDrawable(R.drawable.icon_copy_url)
+        moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
+
+        moreActionDialog.collect.onClick {
+            ClipboardUtil.clipboardCopyText(this, "")
+            CommonFunction.toast("分享链接已复制")
+        }
     }
 }

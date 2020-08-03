@@ -171,7 +171,7 @@ class ChatUpOpenPtVipDialog(
                 if (chatUpBean.isplatinum) {
                     chatupUnlockChat.isVisible = false
                     chatupTitle.text = "获得聊天机会"
-                    openPtVipBtn.text = "成为高级会员，免费更多聊天"
+                    openPtVipBtn.text = "成为黄金会员，免费更多聊天"
                     if (chatUpBean.plat_cnt > 0) {
                         chatupTitle.text = "要给她打个招呼吗"
                         chatupContent.text = "今日还可免费解锁${chatUpBean.plat_cnt}次聊天"
@@ -197,9 +197,9 @@ class ChatUpOpenPtVipDialog(
                         chatupTitle.text = "她设置了等级权限"
                         chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
                         chatupUnlockChat.isVisible = false
-                        openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
+                        openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     } else {
-                        openPtVipBtn.text = "成为高级会员，免费更多聊天"
+                        openPtVipBtn.text = "成为黄金会员，免费更多聊天"
                         chatupTitle.text = "获得聊天机会"
                         chatupUnlockChat.isVisible = true
                         if (chatUpBean.plat_cnt > 0) {
@@ -244,7 +244,7 @@ class ChatUpOpenPtVipDialog(
                     chatupTitle.text = "她设置了等级权限"
                     chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
                     chatupUnlockChat.isVisible = false
-                    openPtVipBtn.text = "成为高级会员，证明实力解锁关系"
+                    openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
                         CommonFunction.startToVip(context1)
                         dismiss()
