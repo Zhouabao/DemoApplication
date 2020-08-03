@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
@@ -37,9 +38,9 @@ class WhyPayDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
         val window = this.window
         window?.setGravity(Gravity.BOTTOM)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.width = ScreenUtils.getScreenWidth()-SizeUtils.dp2px(20F)
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-//        params?.y = SizeUtils.dp2px(10f)
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
         window?.attributes = params
 
     }

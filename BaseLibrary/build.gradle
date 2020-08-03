@@ -106,7 +106,7 @@ dependencies {
     //强大的工具类
     api 'com.blankj:utilcodex:1.28.4'
     //屏幕适配
-    api 'me.jessyan:autosize:1.1.2'
+    api 'me.jessyan:autosize:1.2.1'
     //GSYVideoPlayer
     api "com.shuyu:GSYVideoPlayer:$gsy_video_version"
 //    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"

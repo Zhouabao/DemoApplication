@@ -29,6 +29,7 @@ data class ChargeWayBeans(
     val direct_vip_express: String = "",
     val isplatinum: Boolean = false,
     val platinum_save_str: String = "",
+    val direct_save_str: String = "",
     val platinum_vip_express: String = ""
 )
 

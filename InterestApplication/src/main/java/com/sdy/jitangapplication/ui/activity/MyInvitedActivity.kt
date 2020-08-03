@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.activity
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
@@ -19,15 +18,8 @@ import com.sdy.jitangapplication.model.MyInvitedBeans
 import com.sdy.jitangapplication.presenter.MyInvitedPresenter
 import com.sdy.jitangapplication.presenter.view.MyInvitedView
 import com.sdy.jitangapplication.ui.adapter.MyInvitedAdapter
-import kotlinx.android.synthetic.main.activity_invite_rewards.*
 import kotlinx.android.synthetic.main.activity_my_invited.*
-import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoney
-import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoneyMax
-import kotlinx.android.synthetic.main.activity_my_invited.rewardsMoreLevel
-import kotlinx.android.synthetic.main.activity_my_invited.rewardsPercent
-import kotlinx.android.synthetic.main.activity_my_invited.rewardsProgress
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.startActivity
 
 
 /**
@@ -59,6 +51,9 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
         refreshMyInvited.setOnLoadMoreListener(this)
         myInvitedRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         myInvitedRv.adapter = adapter
+
+        adapter.setEmptyView(R.layout.empty_layout, myInvitedRv)
+        adapter.isUseEmpty(false)
 
     }
 
@@ -100,8 +95,7 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
                 val translate = ObjectAnimator.ofFloat(
                     rewardsMoney,
                     "translationX",
-                    if (1 - (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) > rate
-                    ) {
+                    if (1 - (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) > rate) {
                         rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt)
                     } else {
                         rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) - rewardsMoneyMax.width - rewardsMoney.width
@@ -112,6 +106,7 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
             }
 
             adapter.addData(data!!.list)
+            adapter.isUseEmpty(adapter.data.isEmpty())
         } else {
             refreshMyInvited.finishLoadMore(false)
             refreshMyInvited.finishRefresh(false)

@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.presenter.MyRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.MyRewardsView
 import com.sdy.jitangapplication.ui.adapter.MyInvitedAdapter
 import com.sdy.jitangapplication.ui.dialog.WithdrawCandyDialog
+import kotlinx.android.synthetic.main.activity_my_invited.*
 import kotlinx.android.synthetic.main.activity_my_rewards.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -61,6 +62,8 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         refreshMyRewards.setOnLoadMoreListener(this)
         myRewardsdRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         myRewardsdRv.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout, myRewardsdRv)
+        adapter.isUseEmpty(false)
 
         withdrawBtn.clickWithTrigger {
             WithdrawCandyDialog(this,false).show()
@@ -91,9 +94,12 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
                     refreshMyRewards.finishLoadMore()
                 }
             } else {
+                refreshMyRewards.finishRefresh()
                 myRewardsMoney.text="${data!!.red_balance_money}"
                 myWithdrawRewardsMoney.text="已提现${data!!.red_withdraw_money}"
             }
+            adapter.addData(data!!.list)
+            adapter.isUseEmpty(adapter.data.isEmpty())
         } else {
             refreshMyRewards.finishLoadMore(false)
             refreshMyRewards.finishRefresh(false)

@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF181817"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.FootPriceActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
+        android:background="#FF181817"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -113,7 +114,7 @@
             android:id="@+id/joinNowBtn"
             android:layout_width="298dp"
             android:layout_height="48dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="112dp"
             android:background="@drawable/gradient_light_orange_24dp"
             android:gravity="center"
             android:text="立即加入"

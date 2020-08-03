@@ -156,7 +156,7 @@ class VipPowerActivity() :
                     data.direct_icon_list,
                     data.isdirect,
                     data.direct_vip_express,
-                    "每日免费解锁${data.direct_cnt}次联系方式",
+                    data.direct_save_str,
                     VipPowerBean.TYPE_PT_VIP,
                     data.direct_list ?: mutableListOf(),
                     data.paylist ?: mutableListOf()
@@ -188,7 +188,11 @@ class VipPowerActivity() :
                 0,
                 BigDecimal.ROUND_HALF_UP
             )
-        }} 获取${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+        }} ${if (data.isplatinum) {
+            "续费"
+        } else {
+            "获取"
+        }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
             "黄金"
         } else {
             "钻石"
@@ -212,7 +216,11 @@ class VipPowerActivity() :
                     0,
                     BigDecimal.ROUND_HALF_UP
                 )
-            }} 获取${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+            }} ${if (data.isplatinum) {
+                "续费"
+            } else {
+                "获取"
+            }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
                 "黄金"
             } else {
                 "钻石"

@@ -115,6 +115,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
         femalePowerLl.setOnClickListener(this)
+        shareRedBtn.setOnClickListener(this)
         candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
 
         tabMySquareAndTag.viewTreeObserver.addOnGlobalLayoutListener {
@@ -486,6 +487,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             R.id.candyCl -> {
                 startActivity<MyCandyActivity>()
             }
+            //分享红包
+            R.id.shareRedBtn -> {
+                startActivity<InviteRewardsActivity>()
+            }
             //女性权益页面
             R.id.femalePowerLl -> {
                 startActivity<FemalePowerActivity>(
@@ -495,7 +500,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                     "url" to userInfoBean?.power_url
                 )
             }
-
         }
     }
 
