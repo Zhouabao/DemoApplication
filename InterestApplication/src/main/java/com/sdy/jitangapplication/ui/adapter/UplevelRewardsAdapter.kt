@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
-import android.graphics.Typeface
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -47,9 +46,11 @@ class UplevelRewardsAdapter() :
             .setFontSize(36, true)
             .create()
 
-        helper.itemView.uplevelRewardsMoney.text = "${BigDecimal(item.reward_money).setScale(
-            0,
-            BigDecimal.ROUND_HALF_UP
-        )}"
+        helper.itemView.uplevelRewardsState.text = if (item.isget) {
+            "已领取"
+        } else {
+            "邀请${item.set_cnt}人"
+        }
+
     }
 }

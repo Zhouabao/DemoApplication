@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -9,13 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.InvitePoliteBean
-import com.sdy.jitangapplication.model.ViplistBean
 import com.sdy.jitangapplication.presenter.InviteRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.InviteRewardsView
 import com.sdy.jitangapplication.ui.adapter.UplevelRewardsAdapter
@@ -68,9 +66,6 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
         rewardsRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rewardsRv.adapter = adapter
-        adapter.addData(GiftBean(checked = true))
-        adapter.addData(GiftBean(checked = false))
-        adapter.addData(GiftBean(checked = false))
 
         //分享规则
         shareRuleBtn.clickWithTrigger {
@@ -93,8 +88,47 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
             rewardsFl.addView(getMarqueeView(data))
         }
-        adapter.addData(invitePoliteBean?.level_list)
+        adapter.addData(invitePoliteBean?.level_list ?: mutableListOf())
+        when (invitePoliteBean?.now_level) {
+            1 -> rewardsLevel.setImageResource(R.drawable.icon_level1)
+            2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
+            3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
+        }
+        rewardsPercent.text = "享${invitePoliteBean?.now_rate}%分佣"
+        rewardsMoreLevel.text = "${invitePoliteBean?.title}"
+        SpanUtils.with(myInvitedCount)
+            .append("${invitePoliteBean?.invite_cnt}")
+            .setFontSize(30, true)
+            .setBold()
+            .append("人")
+            .setFontSize(12, true)
+            .create()
+        SpanUtils.with(myRewardsMoney)
+            .append("${invitePoliteBean?.invite_amount}")
+            .setFontSize(30, true)
+            .setBold()
+            .append("元")
+            .setFontSize(12, true)
+            .create()
+        rewardsMoney.text = "${invitePoliteBean?.progress?.invite_cnt}"
+        rewardsMoneyMax.text = "${invitePoliteBean?.progress?.reward_money}"
+        rewardsProgress.maxProgress = (invitePoliteBean?.progress?.all_cnt ?: 0f) as Float
+        rewardsProgress.setProgress((invitePoliteBean?.progress?.invite_cnt ?: 0F) as Float)
 
+
+        rewardsProgress.setProgress(
+            (invitePoliteBean?.progress?.invite_cnt ?: 0) * 1f
+                    / (invitePoliteBean?.progress?.all_cnt ?: 0) * 100
+        )
+//                rewardsMoney.
+        val translate = ObjectAnimator.ofFloat(
+            rewardsMoney,
+            "translationX",
+            rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt ?: 0) * 1f
+                    / (invitePoliteBean?.progress?.all_cnt ?: 0)
+        )
+        translate.duration = 100
+        translate.start()
     }
 
 

@@ -91,12 +91,7 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
                 refreshMyInvited.finishLoadMore()
             } else {
                 refreshMyInvited.finishRefresh()
-                32
-                when (data!!.now_level) {
-                    1 -> rewardsLevel.setImageResource(R.drawable.icon_level1)
-                    2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
-                    3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
-                }
+
                 rewardsPercent.text = "享${data!!.now_rate}%分佣"
                 rewardsMoreLevel.text = data!!.title
 
