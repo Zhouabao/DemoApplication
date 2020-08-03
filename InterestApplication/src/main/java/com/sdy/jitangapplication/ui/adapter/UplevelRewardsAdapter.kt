@@ -1,11 +1,14 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
+import android.graphics.Typeface
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.model.Level
 import kotlinx.android.synthetic.main.item_uplevel_rewards.view.*
+import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -14,9 +17,9 @@ import kotlinx.android.synthetic.main.item_uplevel_rewards.view.*
  *    version: 1.0
  */
 class UplevelRewardsAdapter() :
-    BaseQuickAdapter<GiftBean, BaseViewHolder>(R.layout.item_uplevel_rewards) {
-    override fun convert(helper: BaseViewHolder, item: GiftBean) {
-        if (item.checked) {
+    BaseQuickAdapter<Level, BaseViewHolder>(R.layout.item_uplevel_rewards) {
+    override fun convert(helper: BaseViewHolder, item: Level) {
+        if (item.isget) {
             helper.itemView.uplevelRewardsCl.setBackgroundResource(R.drawable.shape_rectangle_gray_white_10dp)
             helper.itemView.uplevel.setBackgroundResource(R.drawable.rectangle_gray_white_12dp)
             helper.itemView.uplevelRewardsMoney.setBackgroundResource(R.drawable.rectangle_gray_top_10dp)
@@ -29,5 +32,24 @@ class UplevelRewardsAdapter() :
             helper.itemView.uplevelRewardsMoney.setTextColor(Color.WHITE)
             helper.itemView.uplevelRewardsState.setTextColor(Color.parseColor("#ff6318"))
         }
+
+        helper.itemView.uplevel.text = item.title
+
+        SpanUtils.with(helper.itemView.uplevelRewardsMoney)
+            .append("¥")
+            .setFontSize(16, true)
+            .append(
+                "${BigDecimal(item.reward_money).setScale(
+                    0,
+                    BigDecimal.ROUND_HALF_UP
+                )}"
+            )
+            .setFontSize(36, true)
+            .create()
+
+        helper.itemView.uplevelRewardsMoney.text = "${BigDecimal(item.reward_money).setScale(
+            0,
+            BigDecimal.ROUND_HALF_UP
+        )}"
     }
 }

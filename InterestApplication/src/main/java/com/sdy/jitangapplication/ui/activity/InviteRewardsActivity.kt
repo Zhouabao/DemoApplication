@@ -21,7 +21,7 @@ import com.sdy.jitangapplication.presenter.view.InviteRewardsView
 import com.sdy.jitangapplication.ui.adapter.UplevelRewardsAdapter
 import com.sdy.jitangapplication.ui.dialog.ShareRuleDialog
 import kotlinx.android.synthetic.main.activity_invite_rewards.*
-import kotlinx.android.synthetic.main.item_marquee_vip_friends.view.*
+import kotlinx.android.synthetic.main.item_marquee_share_friends.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
@@ -92,8 +92,8 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
     override fun invitePoliteResult(invitePoliteBean: InvitePoliteBean?) {
         for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
             rewardsFl.addView(getMarqueeView(data))
-
         }
+        adapter.addData(invitePoliteBean?.level_list)
 
     }
 
@@ -102,8 +102,8 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
      * 遍历循环到已经成为会员的
      */
     private fun getMarqueeView(content: String): View {
-        val view = layoutInflater.inflate(R.layout.item_marquee_vip_friends, null, false)
-        view.vipFriendsName.text = content
+        val view = layoutInflater.inflate(R.layout.item_marquee_share_friends, null, false)
+        view.vipShareDescr.text = content
         return view
     }
 }

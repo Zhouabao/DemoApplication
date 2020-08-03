@@ -55,7 +55,7 @@ data class InvitePoliteBean(
 
 data class Level(
     var commission_rate: Int = 0,
-    var isget: Int = 0,
+    var isget: Boolean = false,
     var reward_money: String = "",
     var set_cnt: Int = 0,
     var title: String = ""
