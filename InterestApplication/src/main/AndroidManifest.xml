@@ -366,6 +366,24 @@
             android:name=".nim.uikit.common.media.imagepicker.camera.CaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".nim.uikit.business.session.activity.WatchMessagePictureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+      <activity
+            android:name=".nim.uikit.business.session.activity.CaptureVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+    <activity
+            android:name=".nim.uikit.business.session.activity.WatchPicAndVideoMenuActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+    <activity
+            android:name=".nim.uikit.business.session.activity.WatchVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
 
         <activity
