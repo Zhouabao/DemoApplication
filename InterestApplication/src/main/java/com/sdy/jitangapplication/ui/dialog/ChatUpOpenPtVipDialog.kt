@@ -308,52 +308,68 @@ class ChatUpOpenPtVipDialog(
      * 发送本地搭讪好友消息
      */
     private fun sendMatchFriendMessage(loadingDialog: LoadingDialog) {
-        val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_CHATUP_FRIEND)
-        val config = CustomMessageConfig()
-        config.enablePush = false
-        val message = MessageBuilder.createCustomMessage(
-            target_accid,
-            SessionTypeEnum.P2P,
-            "",
-            wishHelpFirendAttachment,
-            config
-        )
+        EventBus.getDefault().post(UpdateApproveEvent())
+        EventBus.getDefault().post(UpdateHiEvent())
+        EventBus.getDefault().post(UpdateAccostListEvent())
+        if (ActivityUtils.getTopActivity() is MatchDetailActivity)
+            EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+        if (ActivityUtils.getTopActivity() !is ChatActivity) {
+            Handler().postDelayed({
+                loadingDialog.dismiss()
+                ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+            }, 400L)
+        } else {
+            loadingDialog.dismiss()
+        }
+        dismiss()
 
-        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-            .setCallback(object : RequestCallback<Void?> {
-                override fun onSuccess(param: Void?) {
-                    EventBus.getDefault().post(UpdateApproveEvent())
-                    EventBus.getDefault().post(UpdateHiEvent())
-                    EventBus.getDefault().post(UpdateAccostListEvent())
-                    if (ActivityUtils.getTopActivity() is MatchDetailActivity)
-                        EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
-                    if (ActivityUtils.getTopActivity() !is ChatActivity) {
-                        Handler().postDelayed({
-                            loadingDialog.dismiss()
-                            ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
-                        }, 400L)
-                    } else {
-                        EventBus.getDefault().post(UpdateSendGiftEvent(message))
-                        loadingDialog.dismiss()
-                    }
-                    dismiss()
-//                    sendContactMessage(contactContent, contactWay)
-                }
 
-                override fun onFailed(code: Int) {
-                    loadingDialog.dismiss()
-                    EventBus.getDefault().post(UpdateApproveEvent())
-                    EventBus.getDefault().post(UpdateHiEvent())
-                    EventBus.getDefault().post(UpdateAccostListEvent())
-                }
-
-                override fun onException(exception: Throwable) {
-                    loadingDialog.dismiss()
-                    EventBus.getDefault().post(UpdateApproveEvent())
-                    EventBus.getDefault().post(UpdateHiEvent())
-                    EventBus.getDefault().post(UpdateAccostListEvent())
-                }
-            })
+//        val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_CHATUP_FRIEND)
+//        val config = CustomMessageConfig()
+//        config.enablePush = false
+//        val message = MessageBuilder.createCustomMessage(
+//            target_accid,
+//            SessionTypeEnum.P2P,
+//            "",
+//            wishHelpFirendAttachment,
+//            config
+//        )
+//
+//        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+//            .setCallback(object : RequestCallback<Void?> {
+//                override fun onSuccess(param: Void?) {
+//                    EventBus.getDefault().post(UpdateApproveEvent())
+//                    EventBus.getDefault().post(UpdateHiEvent())
+//                    EventBus.getDefault().post(UpdateAccostListEvent())
+//                    if (ActivityUtils.getTopActivity() is MatchDetailActivity)
+//                        EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+//                    if (ActivityUtils.getTopActivity() !is ChatActivity) {
+//                        Handler().postDelayed({
+//                            loadingDialog.dismiss()
+//                            ChatActivity.start(ActivityUtils.getTopActivity(), target_accid)
+//                        }, 400L)
+//                    } else {
+//                        EventBus.getDefault().post(UpdateSendGiftEvent(message))
+//                        loadingDialog.dismiss()
+//                    }
+//                    dismiss()
+////                    sendContactMessage(contactContent, contactWay)
+//                }
+//
+//                override fun onFailed(code: Int) {
+//                    loadingDialog.dismiss()
+//                    EventBus.getDefault().post(UpdateApproveEvent())
+//                    EventBus.getDefault().post(UpdateHiEvent())
+//                    EventBus.getDefault().post(UpdateAccostListEvent())
+//                }
+//
+//                override fun onException(exception: Throwable) {
+//                    loadingDialog.dismiss()
+//                    EventBus.getDefault().post(UpdateApproveEvent())
+//                    EventBus.getDefault().post(UpdateHiEvent())
+//                    EventBus.getDefault().post(UpdateAccostListEvent())
+//                }
+//            })
     }
 
 
