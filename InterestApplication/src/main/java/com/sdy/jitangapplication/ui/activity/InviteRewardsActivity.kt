@@ -17,13 +17,13 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.InvitePoliteBean
+import com.sdy.jitangapplication.model.MyInviteBean
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil
 import com.sdy.jitangapplication.presenter.InviteRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.InviteRewardsView
 import com.sdy.jitangapplication.ui.adapter.UplevelRewardsAdapter
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.ShareRuleDialog
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_invite_rewards.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.item_marquee_share_friends.view.*
@@ -84,7 +84,7 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
         //分享规则
         shareRuleBtn.clickWithTrigger {
-            ShareRuleDialog(this).show()
+            ShareRuleDialog(this, invite_rule).show()
         }
 
         //我邀请的
@@ -100,11 +100,20 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
         //立即分享
         shareNowBtn.clickWithTrigger {
-            showShareDialog()
+            if (myInviteBean.invite_url.isNotEmpty())
+                showShareDialog()
         }
     }
 
+    private var myInviteBean = MyInviteBean()
+    private val invite_rule by lazy { mutableListOf<String>() }
     override fun invitePoliteResult(invitePoliteBean: InvitePoliteBean?) {
+        myInviteBean.invite_descr = invitePoliteBean?.invite_descr ?: ""
+        myInviteBean.invite_title = invitePoliteBean?.invite_title ?: ""
+        myInviteBean.invite_pic = invitePoliteBean?.invite_pic ?: ""
+        myInviteBean.invite_url = invitePoliteBean?.invite_url ?: ""
+        invite_rule.addAll(invitePoliteBean?.invite_rule ?: mutableListOf())
+
 //        invitePoliteBean?.progress?.invite_cnt = invitePoliteBean?.progress?.all_cnt ?: 0
         invitePoliteBean?.progress?.invite_cnt = 10
         for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
@@ -180,11 +189,11 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         moreActionDialog =
             MoreActionNewDialog(
                 this,
-                url = "拉新分享",
+                url = myInviteBean.invite_url,
                 type = MoreActionNewDialog.TYPE_SHARE_VIP_URL,
-                title = "拉新分享",
-                content = "快来加入鸡汤吧",
-                pic = UserManager.getAvator()
+                title = myInviteBean.invite_title,
+                content = myInviteBean.invite_descr,
+                pic = myInviteBean.invite_pic
             )
         moreActionDialog.show()
 

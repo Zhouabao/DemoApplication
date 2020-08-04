@@ -5,8 +5,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.ui.adapter.InviteRuleAdapter
 import kotlinx.android.synthetic.main.dialog_share_rule.*
 
 /**
@@ -15,7 +18,7 @@ import kotlinx.android.synthetic.main.dialog_share_rule.*
  *    desc   :分享规则
  *    version: 1.0
  */
-class ShareRuleDialog(val context1: Context) :
+class ShareRuleDialog(val context1: Context, val rules: MutableList<String>) :
     Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +29,12 @@ class ShareRuleDialog(val context1: Context) :
     }
 
 
+    private val adapter by lazy {  InviteRuleAdapter() }
     fun changeVerifyStatus() {
+        ruleRv.layoutManager = LinearLayoutManager(context1, RecyclerView.VERTICAL, false)
+        ruleRv.adapter = adapter
+        adapter.setNewData(rules)
+
         //关闭弹窗
         okBtn.clickWithTrigger {
             dismiss()
