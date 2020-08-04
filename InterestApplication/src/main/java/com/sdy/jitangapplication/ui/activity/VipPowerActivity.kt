@@ -60,46 +60,28 @@ class VipPowerActivity() :
         initVp2()
     }
 
-    private val adapter by lazy { AllVipPowerAdapter() }
+    private val powerPriceAdapter by lazy { AllVipPowerAdapter() }
     private val powerInfoAdapter by lazy { PowerInfoAdapter() }
-    var slideLeft = false
+
     var lastPosition = false
 
     private fun initVp2() {
-
-
         powerInfoRv.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
         LinearSnapHelper().attachToRecyclerView(powerInfoRv)
         powerInfoRv.adapter = powerInfoAdapter
-        powerPriceRv.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        LinearSnapHelper().attachToRecyclerView(powerPriceRv)
-        powerPriceRv.adapter = adapter
         powerInfoRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            var isPowerInfoRvSlideToLeft = false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 val last =
                     (powerInfoRv.layoutManager as CenterLayoutManager).findLastCompletelyVisibleItemPosition()
-                lastPosition =
-                    last == (powerInfoRv.layoutManager as CenterLayoutManager).itemCount - 1
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (last == (powerInfoRv.layoutManager as CenterLayoutManager).itemCount - 1 && slideLeft) {
-//                        if (chargeWayBeans?.isdirect == true)
-//                            payBtn.text = "续费至尊直联卡"
-//                        else
-//                            payBtn.text = "获取至尊直联卡"
-//                        payBtn.setTextColor(Color.parseColor("#FFFFD27A"))
-//                        payBtn.setBackgroundResource(R.drawable.gradient_dark_black_0dp)
-//                        powerPriceRv.scrollToPosition(1)
-                        setPriceData(adapter.data[1])
+                    if (last == (powerInfoRv.layoutManager as CenterLayoutManager).itemCount - 1 && isPowerInfoRvSlideToLeft) {
+                        powerPriceRv.smoothScrollToPosition(1)
+//                        setPriceData(adapter.data[1])
                     } else {
-                        setPriceData(adapter.data[0])
-//                        powerPriceRv.scrollToPosition(0)
-//                        if (chargeWayBeans?.isplatinum == true)
-//                            payBtn.text = "续费高级会员"
-//                        else
-//                            payBtn.text = "成为高级会员"
-//                        payBtn.setTextColor(Color.parseColor("#ff1d1f21"))
-//                        payBtn.setBackgroundResource(R.drawable.gradient_light_orange_0dp)
+//                        setPriceData(adapter.data[0])
+                        powerPriceRv.smoothScrollToPosition(0)
                     }
                 }
 
@@ -107,7 +89,35 @@ class VipPowerActivity() :
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                slideLeft = dx > 0
+                isPowerInfoRvSlideToLeft = dx > 0
+            }
+        })
+
+
+
+        powerPriceRv.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        LinearSnapHelper().attachToRecyclerView(powerPriceRv)
+        powerPriceRv.adapter = powerPriceAdapter
+        powerPriceRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            var ispowerPriceRvSlideToLeft = false
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val last =
+                    (powerPriceRv.layoutManager as CenterLayoutManager).findLastCompletelyVisibleItemPosition()
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (last == (powerInfoRv.layoutManager as CenterLayoutManager).itemCount - 1 && ispowerPriceRvSlideToLeft) {
+                        powerInfoRv.smoothScrollToPosition(1)
+                    } else {
+                        powerInfoRv.smoothScrollToPosition(0)
+                    }
+                }
+
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                ispowerPriceRvSlideToLeft = dx > 0
+//                powerInfoRv.scrollTo(dx,dy)
             }
         })
 
@@ -119,7 +129,7 @@ class VipPowerActivity() :
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         chargeWayBeans = data
         if (data != null) {
-            adapter.threshold_btn = data?.threshold_btn ?: false
+            powerPriceAdapter.threshold_btn = data?.threshold_btn ?: false
             var ispromote = false
             for (tdata in data.pt_list ?: mutableListOf()) {
                 if (tdata.is_promote) {
@@ -130,7 +140,7 @@ class VipPowerActivity() :
             if (!ispromote && !data.pt_list.isNullOrEmpty()) {
                 data.pt_list[0]?.is_promote = true
             }
-            adapter.addData(
+            powerPriceAdapter.addData(
                 VipPowerBean(
                     data.pt_icon_list,
                     data.isplatinum,
@@ -151,7 +161,7 @@ class VipPowerActivity() :
             if (!ispromote1 && !data.direct_list.isNullOrEmpty()) {
                 data.direct_list[0]?.is_promote = true
             }
-            adapter.addData(
+            powerPriceAdapter.addData(
                 VipPowerBean(
                     data.direct_icon_list,
                     data.isdirect,
@@ -162,9 +172,10 @@ class VipPowerActivity() :
                     data.paylist ?: mutableListOf()
                 )
             )
-            powerInfoAdapter.setNewData(adapter.data)
-            setPriceData(adapter.data[intent.getIntExtra("position", 0)])
+            powerInfoAdapter.setNewData(powerPriceAdapter.data)
+            setPriceData(powerPriceAdapter.data[intent.getIntExtra("position", 0)])
             powerInfoRv.scrollToPosition(intent.getIntExtra("position", 0))
+            powerPriceRv.scrollToPosition(intent.getIntExtra("position", 0))
 
         }
     }

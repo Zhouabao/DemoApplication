@@ -278,7 +278,7 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.clickWithTrigger {
                             unlockContact()
                         }
-                        openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
+                        openPtVipBtn.text = "成为钻石会员，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
                             CommonFunction.startToVip(context1,1)

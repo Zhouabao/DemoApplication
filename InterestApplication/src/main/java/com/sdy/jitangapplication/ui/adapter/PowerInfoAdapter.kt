@@ -2,6 +2,8 @@ package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -9,9 +11,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
+import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_power_info.view.*
+import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -83,5 +89,6 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
 
 
     }
+
 
 }
