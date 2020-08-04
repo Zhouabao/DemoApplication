@@ -43,7 +43,7 @@ data class MyRewardBeans(
 
 /*我的分享要请------邀请有礼*/
 data class InvitePoliteBean(
-    var invite_amount: Int = 0,
+    var invite_amount: Float = 0f,
     var invite_cnt: Int = 0,
     var invite_rule: MutableList<String> = mutableListOf(),
     var level_list: MutableList<Level> = mutableListOf(),
