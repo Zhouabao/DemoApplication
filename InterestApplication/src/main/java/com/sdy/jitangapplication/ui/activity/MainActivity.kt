@@ -471,7 +471,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
-            UserManager.showCompleteUserCenterDialog = false
             AppUtils.exitApp()
 //            ActivityUtils.finishAllActivities()
 //            AppManager.instance.finishAllActivity()

@@ -172,7 +172,7 @@
                     app:pbhCoverColorEnd="#FFFF6318"
                     app:pbhCoverColorStart="#FFFFA618"
                     app:pbhCoverRadius="6dp"
-                    app:pbhProgress="40" />
+                    app:pbhProgress="0" />
 
                 <TextView
                     android:id="@+id/rewardsMoney"

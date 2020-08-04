@@ -19,7 +19,6 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class InviteFriendDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_invite_friend)

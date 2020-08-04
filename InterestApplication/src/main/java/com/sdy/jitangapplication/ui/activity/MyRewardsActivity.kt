@@ -48,7 +48,7 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         hotT1.text = "我的奖励"
         hotT1.setTextColor(Color.WHITE)
         rightBtn.isVisible = true
-        rightBtn.text = "所有提现"
+        rightBtn.text = "提现记录"
         rightBtn.setTextColor(Color.WHITE)
 
         btnBack.clickWithTrigger {

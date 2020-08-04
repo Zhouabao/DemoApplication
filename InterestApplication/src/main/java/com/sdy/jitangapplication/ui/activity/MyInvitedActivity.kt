@@ -78,8 +78,8 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
                 if (data!!.list.isNullOrEmpty() || data!!.list.size < Constants.PAGESIZE) {
                     refreshMyInvited.finishLoadMoreWithNoMoreData()
                 } else {
+                    refreshMyInvited.finishLoadMore()
                 }
-                refreshMyInvited.finishLoadMore()
             } else {
                 refreshMyInvited.finishRefresh()
 

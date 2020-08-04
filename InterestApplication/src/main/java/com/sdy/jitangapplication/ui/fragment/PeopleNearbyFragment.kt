@@ -277,7 +277,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
                     TodayWantDialog(activity!!, nearBean).show()
-                } else if (!nearBean?.today_invite_pull) {
+                } else if (!nearBean?.today_pull_share && !UserManager.showCompleteUserCenterDialog) {
                     InviteFriendDialog(activity!!).show()
                 }
             }

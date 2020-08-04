@@ -15,9 +15,11 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.InvitePoliteBean
 import com.sdy.jitangapplication.model.MyInviteBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.ClipboardUtil
 import com.sdy.jitangapplication.presenter.InviteRewardsPresenter
 import com.sdy.jitangapplication.presenter.view.InviteRewardsView
@@ -47,6 +49,8 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         mPresenter.context = this
         mPresenter.mView = this
 
+
+
         StatusBarUtil.immersive(this)
         val params11 = llTitle.layoutParams as ConstraintLayout.LayoutParams
         params11.topMargin = StatusBarUtil.getStatusBarHeight(this)
@@ -71,6 +75,12 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         hotT1.text = "邀请有礼"
         rightBtn.setTextColor(Color.WHITE)
         rightBtn.text = "联系我们"
+        rightBtn.isVisible = true
+        rightBtn.clickWithTrigger {
+            ChatActivity.start(this,Constants.ASSISTANT_ACCID)
+        }
+
+
 
         SpanUtils.with(addKefuWechat)
             .append("分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信")
@@ -115,7 +125,7 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         invite_rule.addAll(invitePoliteBean?.invite_rule ?: mutableListOf())
 
 //        invitePoliteBean?.progress?.invite_cnt = invitePoliteBean?.progress?.all_cnt ?: 0
-        invitePoliteBean?.progress?.invite_cnt = 10
+//        invitePoliteBean?.progress?.invite_cnt = 10
         for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
             rewardsFl.addView(getMarqueeView(data))
         }
