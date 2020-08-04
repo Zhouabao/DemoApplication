@@ -8,55 +8,58 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.ImageFormat
-import android.hardware.Camera
-import android.media.CamcorderProfile
-import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
-import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.utils.NetWorkUtils
+import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
-
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.camera_filter.ConstantFilters
+import com.sdy.jitangapplication.camera_filter.callback.LoadAssetsImageCallback
+import com.sdy.jitangapplication.camera_filter.dialog.DialogFilter
+import com.sdy.jitangapplication.camera_filter.listener.EndRecordingFilterCallback
+import com.sdy.jitangapplication.camera_filter.listener.StartRecordingFilterCallback
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.FemaleVideoEvent
+import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateApproveEvent
+import com.sdy.jitangapplication.event.VideoTrimmerEvent
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.nim.uikit.common.ToastHelper
-import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.CameraPreview
-import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.CameraUtils
 import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.ConfirmationDialog
 import com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.camera.ErrorDialog
-import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.jitangapplication.presenter.VideoVerifyPresenter
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
 import com.sdy.jitangapplication.ui.dialog.VerifyForceDialog
 import com.sdy.jitangapplication.ui.dialog.VideoIntroduceBeforeDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_video_verify.*
+import kotlinx.android.synthetic.main.activity_video_verify1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.textColor
+import org.wysaid.myUtils.ImageUtil
+import org.wysaid.nativePort.CGENativeLibrary
 import java.io.File
-import java.io.IOException
 
 
 /**
@@ -68,17 +71,17 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         val RATIO = 500 / 375F //拍摄比例
         val TAG = VideoVerifyActivity::class.java.simpleName
         val VIDEO_PERMISSIONS =
-            arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
-        const val VIDEO_PERMISSIONS_REQUEST_CODE = 1
-        const val RESULT_CODE_RECORD_VIDEO = 1006
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
         const val RESULT_CODE_CHOOSE_VIDEO = 1007
         const val RESULT_CODE_CONFIRM_VIDEO = 1008
-        const val RESULT_CODE_CONFIRM_IMAGE = 1009
-        const val EXTRA_RESULT_ITEMS = "extra_result_items"
-        const val RESULT_EXTRA_CONFIRM_IMAGES = "RESULT_EXTRA_CONFIRM_IMAGES"
 
 
-        const val RECORD_MAX_TIME = 30 //录制的总时长秒数，单位秒，默认30秒
+        const val RECORD_MAX_TIME = 15 //录制的总时长秒数，单位秒，默认30秒
         const val RECORD_MIN_TIME = 5 //最小录制时长，单位秒，默认1秒
         const val REQUEST_VIDEO_PERMISSIONS = 1
         const val PERMISSIONS_FRAGMENT_DIALOG = "permission_dialog"
@@ -93,24 +96,76 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
     }
 
+    private var type = 1 //1.自拍 2上传的视频
+    private val filterDialog by lazy { DialogFilter(this) }
+    private val mStartRecordingFilterCallback by lazy {
+        object : StartRecordingFilterCallback(this) {
+            override fun startRecordingOver(success: Boolean) {
+//            super.startRecordingOver(success)
+                if (success) {
+                    CommonFunction.toast("开始录制视频")
+                    runOnUiThread {
+                        chooseVideoBtn.isEnabled = false
+                    }
+                } else {
+                    CommonFunction.toast("录制视频失败")
+                }
+            }
+        }
+    }
+    private val mEndRecordingFilterCallback by lazy {
+        object : EndRecordingFilterCallback(this) {
+            override fun endRecordingOK() {
+                super.endRecordingOK()
+                runOnUiThread {
+                    chooseVideoBtn.isEnabled = true
+                }
+                startActivityForResult<VideoVerifyConfirmActivity>(
+                    VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
+                    "ratio" to RATIO,
+                    "path" to videoSavePath,
+                    "duration" to currentTime * 1000L
+                )
+            }
+        }
+    }
     private lateinit var mainHandler: Handler
-    private var mCamera: Camera? = null
-    private var cameraId: Int = 0
-    private var mPreview: CameraPreview? = null
-    private var mMediaRecorder: MediaRecorder? = null
     private var longPressRunnable: LongPressRunnable? = null
     private var isAction = false
     private var isRecording = false
-    private var isCameraFront = true //当前是否是前置摄像头
     private var currentTime = 0
     private var videoSavePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_verify)
+        setContentView(R.layout.activity_video_verify1)
         initView()
+        initListener()
         switchMvCopy()
 
+    }
+
+    private fun initListener() {
+        btnBack.setOnClickListener(this)
+        rightBtn2.setOnClickListener(this)
+        switchRecordContentBtn.setOnClickListener(this)
+        captureButton.setOnClickListener(this)
+        chooseVideoBtn.setOnClickListener(this)
+        turnCameraBtn.setOnClickListener(this)
+
+        //滤镜对话框选择滤镜的监听
+        filterDialog.setOnFilterChangedListener {
+            camera_preview.setFilterWithConfig(ConstantFilters.FILTERS[it])
+        }
+
+        filterDialog.setOnShowListener {
+//            recordCl.animate().alpha(0F).setDuration(1000L).start()
+        }
+
+
+        filterDialog.setOnDismissListener {
+//            recordCl.animate().alpha(1F).setDuration(1000L).start()
+        }
     }
 
     private var switchIndex = -1
@@ -119,6 +174,8 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         mPresenter = VideoVerifyPresenter()
         mPresenter.context = this
         mPresenter.mView = this
@@ -126,159 +183,30 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         StatusBarUtil.immersive(this)
         mainHandler = Handler()
 
-
-//        setupTouchListener()
-        btnBack.setOnClickListener(this)
-        switchRecordContentBtn.setOnClickListener(this)
-        captureButton.setOnClickListener(this)
-        chooseVideoBtn.setOnClickListener(this)
-        turnCameraBtn.setOnClickListener(this)
-        longPressRunnable = LongPressRunnable()
-
         llTitle.setBackgroundResource(R.color.colorTransparent)
         hotT1.text = "视频介绍"
         hotT1.textColor = Color.WHITE
+        rightBtn2.isVisible = true
+        rightBtn2.setImageResource(R.drawable.icon_filter_gallery)
         btnBack.setImageResource(R.drawable.icon_back_white)
-    }
 
-    fun setVideoRatio() {
+        CGENativeLibrary.setLoadImageCallback(LoadAssetsImageCallback(this), null)
+
+        //设置摄像头方向
+        camera_preview.presetCameraForward(false)
+        //录制视频大小
+        camera_preview.presetRecordingSize(480, 640)
         val params = camera_preview.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth()
         params.height = (RATIO * ScreenUtils.getScreenWidth()).toInt()
         camera_preview.layoutParams = params
-    }
+        //拍照大小
+        camera_preview.setPictureSize(2048, 2048, true)
+        //充满view
+        camera_preview.setFitFullView(true)
+//        setupTouchListener()
 
-    override fun onResume() {
-        super.onResume()
-        if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
-            requestVideoPermissions()
-            return
-        } else {
-            setVideoRatio()
-            setupSurfaceIfNeeded()
-            setupCamera()
-        }
-    }
-
-    private fun setupSurfaceIfNeeded() {
-        if (mPreview != null) {
-            return
-        }
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = CameraPreview(this)
-        //设置界面的大小
-        mPreview?.holder?.setFixedSize(
-            (RATIO * ScreenUtils.getScreenWidth()).toInt(),
-            ScreenUtils.getScreenWidth()
-        )
-
-        camera_preview.addView(mPreview)
-    }
-
-    private fun setupCamera() {
-        // Create an instance of Camera
-        val pair = CameraUtils.getCameraInstance(isCameraFront)
-        mCamera = pair.first
-        cameraId = pair.second
-        if (mCamera == null) {
-            ToastHelper.showToast(this, "设备异常")
-            finish()
-        }
-        // get Camera parameters
-        val params = mCamera!!.parameters
-        val focusModes = params.supportedFocusModes
-        if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-            // Autofocus mode is supported
-            // set the focus mode
-            params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
-        }
-        val choosePictureSize = CameraUtils.choosePictureSize(params.supportedPictureSizes)
-        params.setPictureSize(choosePictureSize.width, choosePictureSize.getHeight())
-//        params.setPreviewSize(choosePictureSize.width, choosePictureSize.getHeight())
-        params.pictureFormat = ImageFormat.JPEG
-        params.setRotation(CameraUtils.getPictureRotation(this, cameraId))
-        val displayOrientation = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, false)
-        mCamera?.setDisplayOrientation(displayOrientation)
-        // set Camera parameters
-        mCamera?.parameters = params
-        mPreview?.setCamera(mCamera, isCameraFront)
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        isAction = false
-        // stop recording and release camera
-        try {
-            mMediaRecorder?.stop()    // stop the recording
-        } catch (stopException: RuntimeException) {
-        }
-        releaseMediaRecorder()  // release the MediaRecorder object
-        mCamera?.lock()          // take camera access back from MediaRecorder
-        isRecording = false
-        mainHandler.removeCallbacks(progressRunnable)
-        stopButtonAnimation()
-        mProgressView.reset()
-        releaseCamera()
-
-    }
-
-
-    private fun switchCamera() {
-        mCamera!!.stopPreview()
-        releaseCamera()
-        isCameraFront = !isCameraFront
-        mPreview = null
-        setVideoRatio()
-        setupSurfaceIfNeeded()
-        setupCamera()
-        mCamera?.startPreview()
-    }
-
-    private fun setupProfile() {
-        when {
-            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P) -> {
-                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P)
-                mMediaRecorder?.setProfile(profile)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            }
-            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P) -> {
-                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P)
-                mMediaRecorder?.setProfile(profile)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            }
-            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P) -> {
-                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P)
-                mMediaRecorder?.setProfile(profile)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            }
-            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_QVGA) -> {
-                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA)
-                mMediaRecorder?.setProfile(profile)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            }
-            CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_CIF) -> {
-                val profile = CamcorderProfile.get(CamcorderProfile.QUALITY_CIF)
-                mMediaRecorder?.setProfile(profile)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate(profile.videoBitRate / 8)
-            }
-            else -> {
-                mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-                mMediaRecorder?.setVideoFrameRate(30)
-                mMediaRecorder?.setVideoSize(640, 480)
-                mMediaRecorder?.setVideoEncodingBitRate((1.5 * 1000 * 1000).toInt())
-                mMediaRecorder?.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT)
-                mMediaRecorder?.setAudioEncodingBitRate(96000)
-                mMediaRecorder?.setAudioChannels(1)
-                mMediaRecorder?.setAudioSamplingRate(48000)
-                mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-            }
-        }
+        longPressRunnable = LongPressRunnable()
 
 
     }
@@ -292,110 +220,40 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
     }
 
-    private fun prepareVideoRecorder(): Boolean {
-        mMediaRecorder = MediaRecorder()
-        try {
-            // Step 1: Unlock and set camera to MediaRecorder
-            mCamera?.unlock()
-            mMediaRecorder!!.setCamera(mCamera)
-            val degrees = CameraUtils.getDisplayOrientation(this, cameraId, mCamera, true)
-            mMediaRecorder!!.setOrientationHint(degrees)
-            // Step 2: Set sources
-            mMediaRecorder!!.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
-            mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
-            // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-            setupProfile()
-//        mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            // Step 4: Set output file
-            val now = TimeUtil.getNow_millisecond()
-            videoSavePath =
-                CameraUtils.getOutputMediaFile(MEDIA_TYPE_VIDEO, now.toString()).getAbsolutePath()
-            mMediaRecorder!!.setOutputFile(videoSavePath)
-            // Step 5: Set the preview output
-            mMediaRecorder!!.setPreviewDisplay(mPreview?.holder?.surface)
-            // Step 6: Prepare configured MediaRecorder
-            mMediaRecorder!!.prepare()
-        } catch (e: IllegalStateException) {
-            Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.message)
-            releaseMediaRecorder()
-            return false
-        } catch (e: IOException) {
-            Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
-            releaseMediaRecorder()
-            return false
-        } catch (e: NullPointerException) {
-            Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
-            releaseMediaRecorder()
-            return false
-        } catch (e: RuntimeException) {
-            Log.d(TAG, "IOException preparing MediaRecorder: " + e.message)
-            releaseMediaRecorder()
-            return false
-        }
-        return true
-    }
 
     private fun startMediaRecorder() {
-        // Camera is available and unlocked, MediaRecorder is prepared,
-        // now you can start recording
-        mMediaRecorder?.start()
         isRecording = true
-
         startButtonAnimation()
         currentTime = 0
         mainHandler.postDelayed(progressRunnable, 0)
+
+        videoSavePath = ImageUtil.getPath() + "/" + System.currentTimeMillis() + ".mp4"
+//        videoSavePath = CameraUtils.getOutputMediaFile(
+//            MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO,
+//            System.currentTimeMillis().toString()
+//        ).getAbsolutePath()
+        mEndRecordingFilterCallback.setVideoFilePath(videoSavePath)
+        camera_preview.startRecording(videoSavePath, mStartRecordingFilterCallback)
     }
 
     private fun stopMediaRecorder() {
-        // stop recording and release camera
-        try {
-            mMediaRecorder?.stop()    // stop the recording
-        } catch (stopException: RuntimeException) {
+        if (currentTime <= RECORD_MIN_TIME) {
+            CommonFunction.toast("录制时间不可小于5S")
+            isAction = true
+            return
         }
-        releaseMediaRecorder()  // release the MediaRecorder object
-        mCamera?.lock()          // take camera access back from MediaRecorder
         isRecording = false
         mainHandler.removeCallbacks(progressRunnable)
         stopButtonAnimation()
         mProgressView.reset()
-        if (currentTime <= RECORD_MIN_TIME) {
-            CommonFunction.toast("录制时间不可小于5S")
-        } else {
-            startActivityForResult<VideoVerifyConfirmActivity>(
-                VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
-                "ratio" to RATIO,
-                "path" to videoSavePath,
-                "duration" to currentTime * 1000L
-            )
-        }
-    }
+//        mEndRecordingFilterCallback.endRecordingOK()
+        camera_preview.endRecording(mEndRecordingFilterCallback)
 
-    private fun releaseMediaRecorder() {
-        if (mMediaRecorder != null) {
-            mMediaRecorder!!.reset()    // clear recorder configuration
-            mMediaRecorder!!.release()  // release the recorder object
-            mMediaRecorder = null
-            mCamera?.lock()            // lock camera for later use
-        }
-    }
-
-    fun releaseCamera() {
-        if (mCamera != null) {
-            mCamera!!.release()         // release the camera for other applications
-            mCamera = null
-        }
     }
 
     inner class LongPressRunnable : Runnable {
         override fun run() {
-            // initialize video camera
-            if (prepareVideoRecorder()) {
-                startMediaRecorder()
-            } else {
-                // prepare didn't work, release the camera
-                releaseMediaRecorder()
-                // inform user
-            }
+            startMediaRecorder()
         }
     }
 
@@ -503,6 +361,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
     }
 
+
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.switchRecordContentBtn -> {
@@ -512,17 +371,33 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 onBackPressed()
             }
             R.id.turnCameraBtn -> {
-                switchCamera()
+                camera_preview.switchCamera()
+//                switchCamera()
+            }
+            R.id.rightBtn2 -> {
+                filterDialog.show()
             }
             R.id.chooseVideoBtn -> {
-                CommonFunction.onTakePhoto(
-                    this,
-                    1,
-                    RESULT_CODE_CHOOSE_VIDEO,
-                    PictureMimeType.ofVideo()
-                )
+                type = 2
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                    CommonFunction.onTakePhoto(
+                        this,
+                        1,
+                        RESULT_CODE_CHOOSE_VIDEO,
+                        PictureMimeType.ofVideo(),
+                        minSeconds = RECORD_MIN_TIME,
+                        maxSeconds = RECORD_MAX_TIME
+                    )
+                } else
+                    CommonFunction.onTakePhoto(
+                        this,
+                        1,
+                        RESULT_CODE_CHOOSE_VIDEO,
+                        PictureMimeType.ofVideo()
+                    )
             }
             R.id.captureButton -> {
+                type = 1
                 if (!isRecording) {
                     isAction = true
                     isRecording = false
@@ -551,22 +426,74 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RESULT_CODE_CONFIRM_VIDEO) {
+        if (requestCode == RESULT_CODE_CONFIRM_VIDEO) { //视频拍摄预览回调
             if (resultCode == Activity.RESULT_OK) {
                 uploadProfile(videoSavePath)
             } else {
                 File(videoSavePath).delete()
             }
+        } else if (requestCode == RESULT_CODE_CHOOSE_VIDEO) {//视频选择成功
+            if (resultCode == Activity.RESULT_OK) {
+                videoSavePath =
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && !PictureSelector.obtainMultipleResult(
+                            data
+                        )[0].androidQToPath.isNullOrEmpty()
+                    ) {
+                        PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                    } else {
+                        PictureSelector.obtainMultipleResult(data)[0].path
+                    }
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                    startActivityForResult<VideoVerifyConfirmActivity>(
+                        VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
+                        "ratio" to RATIO,
+                        "path" to videoSavePath,
+                        "duration" to PictureSelector.obtainMultipleResult(data)[0].duration
+                    )
+                else
+                    VideoTrimmerActivity.start(this, videoSavePath)
+
+//
+
+            }
         }
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
+            requestVideoPermissions()
+            return
+        } else {
+            camera_preview.resumePreview()
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        isAction = false
+        isRecording = false
+        camera_preview.stopPreview()
+        stopButtonAnimation()
+        mProgressView.reset()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        camera_preview.release(null)
+        EventBus.getDefault().unregister(this)
+    }
+
 
     /**
      * 上传照片
      * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      * face_source_type是否是消息过来的上传 1是 0否
      */
-    private fun uploadProfile(filePath: String) {
+    private fun uploadProfile(filePath: String, fromCrop: Boolean = false) {
         val fileKey =
             "${Constants.FILE_NAME_INDEX}${Constants.VIDEOFACE}${UserManager.getAccid()}/" +
                     "${System.currentTimeMillis()}/${RandomUtils.getRandomString(16)}"
@@ -579,10 +506,13 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             { key, info, response ->
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null && info.isOK) {
+                    if (fromCrop)
+                        File(filePath).delete()
                     //视频上传成功
                     mPresenter.uploadMv(
                         hashMapOf(
                             "mv_url" to key,
+                            "type" to type,
                             "normal_id" to if (switchIndex > -1 && mvCopy.size > switchIndex) {
                                 mvCopy[switchIndex].id
                             } else {
@@ -605,6 +535,9 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 //聊天页面刷新认证数据数据
                 EventBus.getDefault().post(UpdateApproveEvent())
 
+                //刷新顶部精选数据
+                EventBus.getDefault().post(TopCardEvent(true))
+
                 //更新录制视频介绍
                 UserManager.my_mv_url = true
                 EventBus.getDefault().post(FemaleVideoEvent(2))
@@ -612,6 +545,14 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         }
 
 
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onVideoTrimmerEvent(event: VideoTrimmerEvent) {
+        if (!event.filePath.isNullOrEmpty()) {
+            uploadProfile(event.filePath, true)
+        }
     }
 
 

@@ -204,10 +204,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.VideoVerifyActivity1"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.VipPowerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

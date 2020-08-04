@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.dialog_choiceness_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wysaid.common.Common
 
 /**
  * 1.开通高级会员成为精选用户（男性）
