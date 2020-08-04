@@ -60,7 +60,7 @@ class FootPriceActivity : BaseActivity() {
 
         val params = topBg.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth()
-        params.height = (139F / 375 * params.width).toInt()
+        params.height = (278F / 750 * params.width).toInt()
         topBg.layoutParams = params
 
         footPowerRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

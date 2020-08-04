@@ -21,40 +21,6 @@ import kotlinx.android.synthetic.main.item_label_all1.view.*
 class AllNewLabelAdapter1(val isCross: Boolean = false, var isIndex: Boolean = false) :
     BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all1) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
-        //1.无需付费.未添加 2无需付费.已经添加  3.无需付费.已删除 4需要付费.付费进入
-        //5.无需付费.男性付费 6.无需付费.女性付费  7.需要付费.已过期 8.需要付费.(已删除,未加入).未过期限
-        //9.需要付费.已删除.过期 10.需要付费.已经添加
-        helper.itemView.labelOutTime.isVisible = item.state == 7
-        when (item.state) {
-            1, 3 -> {//1.无需付费.未添加  3.无需付费.已删除
-                helper.itemView.labelAdded.isVisible = false
-            }
-            2, 10 -> {//2无需付费.已经添加  10.需要付费.已经添加
-                helper.itemView.labelAdded.isVisible = isIndex
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_added)
-            }
-            8 -> {//8.需要付费.(已删除,未加入).未过期限
-                helper.itemView.labelAdded.isVisible = true
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_purchased)
-            }
-            7 -> {//7.需要付费.已过期
-                helper.itemView.labelAdded.isVisible = true
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_outtime)
-            }
-            4, 9 -> {//4需要付费.付费进入   9.需要付费.已删除.过期
-                helper.itemView.labelAdded.isVisible = true
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_payed)
-            }
-            5 -> {//5.无需付费.男性付费
-                helper.itemView.labelAdded.isVisible = true
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_payed_man)
-            }
-            6 -> {//6.无需付费.女性付费
-                helper.itemView.labelAdded.isVisible = true
-                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_payed_woman)
-            }
-        }
-
         helper.itemView.labelChecked.isVisible = item.checked
         if (isCross) {
             val params = helper.itemView.labelRoot.layoutParams as RecyclerView.LayoutParams

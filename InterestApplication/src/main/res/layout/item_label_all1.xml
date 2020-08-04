@@ -12,8 +12,7 @@
 
     <ImageView
             android:id="@+id/labelImg"
-            android:src="@drawable/icon_logo"
-            android:scaleType="centerCrop"
+            android:src="@drawable/default_image_10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,28 +31,6 @@
             app:layout_constraintRight_toRightOf="@id/labelImg"
             app:layout_constraintTop_toTopOf="@id/labelImg"/>
 
-    <ImageView
-            android:id="@+id/labelOutTime"
-            android:visibility="visible"
-            android:src="@drawable/icon_notice"
-            android:scaleType="center"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/rectangle_cover_bg40_10dp"
-            app:layout_constraintBottom_toBottomOf="@id/labelImg"
-            app:layout_constraintLeft_toLeftOf="@id/labelImg"
-            app:layout_constraintRight_toRightOf="@id/labelImg"
-            app:layout_constraintTop_toTopOf="@id/labelImg"/>
-
-
-    <ImageView
-            android:id="@+id/labelAdded"
-            android:visibility="visible"
-            android:src="@drawable/icon_label_added"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/labelImg"
-            app:layout_constraintLeft_toLeftOf="parent"/>
 
 
     <TextView

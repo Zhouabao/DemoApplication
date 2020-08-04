@@ -142,7 +142,7 @@ class OpenVipActivity : BaseActivity() {
                 if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
-                    payExplain.isVisible = true
+                    payExplain.isVisible = false
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false

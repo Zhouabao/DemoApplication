@@ -64,7 +64,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
     private var menuClick = false
     private fun initView() {
-        EventBus.getDefault().register(this)
 
         mPresenter = AddLabelPresenter()
         mPresenter.context = this
@@ -230,11 +229,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
     override fun onBackPressed() {
         if (from != FROM_REGISTER)
             super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
 

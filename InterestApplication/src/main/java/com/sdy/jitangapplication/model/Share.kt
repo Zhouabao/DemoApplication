@@ -45,12 +45,18 @@ data class MyRewardBeans(
 data class InvitePoliteBean(
     var invite_amount: Int = 0,
     var invite_cnt: Int = 0,
+    var invite_rule: MutableList<String> = mutableListOf(),
     var level_list: MutableList<Level> = mutableListOf(),
     var now_level: Int = 0,
     var now_rate: Int = 0,
     var progress: Progress = Progress(),
     var reward_list: MutableList<String> = mutableListOf(),
-    var title: String = ""
+    var title: String = "",
+    var invite_url: String = "",//我的邀请连接
+    var invite_title: String = "",//我的邀请标题
+    var invite_descr: String = "",//我的邀请描述
+    var invite_pic: String = "",//我的邀请描述
+    var invited_cnt: Int = 0//已经邀请了几个
 )
 
 data class Level(
@@ -60,7 +66,6 @@ data class Level(
     var set_cnt: Int = 0,
     var title: String = ""
 )
-
 
 
 data class MyBillBeans(
