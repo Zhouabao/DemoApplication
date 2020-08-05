@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GetAlipayAccountEvent
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.RefreshMyWithDraw
 import com.sdy.jitangapplication.model.PullWithdrawBean
 import com.sdy.jitangapplication.model.WithDrawSuccessBean
 import com.sdy.jitangapplication.ui.activity.BindAlipayAccountActivity
@@ -36,7 +37,7 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true) :
-    BottomSheetDialog(myContext, R.style.BottomSheetDialog),
+    BottomSheetDialog(myContext, R.style.MyDialog),
     View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,29 +52,42 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
     private fun initWindow() {
         val window = this.window
         window?.setGravity(Gravity.BOTTOM)
-        setCanceledOnTouchOutside(true)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         params?.windowAnimations = R.style.MyDialogBottomAnimation
 
         window?.attributes = params
+        setCanceledOnTouchOutside(true)
     }
 
 
     private fun initView() {
-        if (fromCandy)
+        if (fromCandy) {
+            t7.text = "兑换金额:"
             candyCount.isVisible = true
-        else
+        } else {
+            t7.text = "提现金额:"
             candyCount.visibility = View.INVISIBLE
+        }
         t8.isVisible = fromCandy
         withdrawCandy.isVisible = fromCandy
         inputWithdrawMoney.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.isNullOrEmpty())
-                    if (s.toString().toFloat() > (pullWithdrawBean?.money_amount ?: 0F)
+                    if (s.toString().toFloat() > if (fromCandy) {
+                            pullWithdrawBean?.money_amount ?: 0F
+                        } else {
+                            pullWithdrawBean?.red_balance_money ?: 0F
+                        }
                     ) {
-                        CommonFunction.toast("可提现金额不能大于${(pullWithdrawBean?.money_amount ?: 0F)}")
+                        CommonFunction.toast(
+                            "可提现金额不能大于${if (fromCandy) {
+                                pullWithdrawBean?.money_amount ?: 0F
+                            } else {
+                                pullWithdrawBean?.red_balance_money ?: 0F
+                            }}"
+                        )
                         inputWithdrawMoney.setText("")
                     }
                 checkWithdrawEnable()
@@ -101,7 +115,11 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                     0F
                 } else {
                     inputWithdrawMoney.text.toString().toFloat()
-                } <= (pullWithdrawBean?.money_amount ?: 0F)
+                } <= (if (fromCandy) {
+            pullWithdrawBean?.money_amount ?: 0F
+        } else {
+            pullWithdrawBean?.red_balance_money ?: 0F
+        })
     }
 
     override fun show() {
@@ -124,7 +142,13 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
     override fun onClick(v: View) {
         when (v.id) {
             R.id.withdrawAll -> {//全部提现
-                inputWithdrawMoney.setText("${pullWithdrawBean?.money_amount}")
+                inputWithdrawMoney.setText(
+                    "${if (fromCandy) {
+                        pullWithdrawBean?.money_amount
+                    } else {
+                        pullWithdrawBean?.red_balance_money
+                    }}"
+                )
                 inputWithdrawMoney.setSelection(inputWithdrawMoney.text.length)
             }
             R.id.wirteAlipayAcount -> {//填写支付宝账户
@@ -234,6 +258,8 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             withdrawTime.text = "${t.data?.create_tme}"
                             withdrawCandy.text = "${t.data?.candy_amount}颗"
                             withdrawMoney1.text = "¥${t.data?.money_amount}"
+                            EventBus.getDefault()
+                                .post(RefreshMyWithDraw(t.data?.money_amount ?: 0F))
                         } else {
                             CommonFunction.toast(t.msg)
                         }

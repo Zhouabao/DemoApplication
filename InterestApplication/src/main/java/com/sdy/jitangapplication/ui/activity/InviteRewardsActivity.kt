@@ -9,7 +9,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
@@ -28,6 +30,7 @@ import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.ShareRuleDialog
 import kotlinx.android.synthetic.main.activity_invite_rewards.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.item_marquee_share_friends.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -77,7 +80,7 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         rightBtn.text = "联系我们"
         rightBtn.isVisible = true
         rightBtn.clickWithTrigger {
-            ChatActivity.start(this,Constants.ASSISTANT_ACCID)
+            ChatActivity.start(this, Constants.ASSISTANT_ACCID)
         }
 
 
@@ -113,69 +116,87 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
             if (myInviteBean.invite_url.isNotEmpty())
                 showShareDialog()
         }
+
+        retryBtn.clickWithTrigger {
+            stateInviteRewards.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.invitePolite()
+        }
     }
 
     private var myInviteBean = MyInviteBean()
     private val invite_rule by lazy { mutableListOf<String>() }
     override fun invitePoliteResult(invitePoliteBean: InvitePoliteBean?) {
-        myInviteBean.invite_descr = invitePoliteBean?.invite_descr ?: ""
-        myInviteBean.invite_title = invitePoliteBean?.invite_title ?: ""
-        myInviteBean.invite_pic = invitePoliteBean?.invite_pic ?: ""
-        myInviteBean.invite_url = invitePoliteBean?.invite_url ?: ""
-        invite_rule.addAll(invitePoliteBean?.invite_rule ?: mutableListOf())
+        if (invitePoliteBean != null) {
+            stateInviteRewards.viewState = MultiStateView.VIEW_STATE_CONTENT
+
+            myInviteBean.invite_descr = invitePoliteBean?.invite_descr
+            myInviteBean.invite_title = invitePoliteBean?.invite_title
+            myInviteBean.invite_pic = invitePoliteBean?.invite_pic
+            myInviteBean.invite_url = invitePoliteBean?.invite_url
+            invite_rule.addAll(invitePoliteBean?.invite_rule)
 
 //        invitePoliteBean?.progress?.invite_cnt = invitePoliteBean?.progress?.all_cnt ?: 0
 //        invitePoliteBean?.progress?.invite_cnt = 10
-        for (data in invitePoliteBean?.reward_list ?: mutableListOf()) {
-            rewardsFl.addView(getMarqueeView(data))
-        }
-        adapter.addData(invitePoliteBean?.level_list ?: mutableListOf())
-        when (invitePoliteBean?.now_level) {
-            1 -> rewardsLevel.setImageResource(R.drawable.icon_level1)
-            2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
-            3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
-        }
-        rewardsPercent.text = "享${invitePoliteBean?.now_rate}%分佣"
-        rewardsMoreLevel.text = "${invitePoliteBean?.title}"
-        SpanUtils.with(myInvitedCount)
-            .append("${invitePoliteBean?.invite_cnt}")
-            .setFontSize(30, true)
-            .setBold()
-            .append("人")
-            .setFontSize(12, true)
-            .create()
-        SpanUtils.with(myRewardsMoney)
-            .append("${invitePoliteBean?.invite_amount}")
-            .setFontSize(30, true)
-            .setBold()
-            .append("元")
-            .setFontSize(12, true)
-            .create()
-        rewardsMoney.text = "${invitePoliteBean?.progress?.invite_cnt}"
-        rewardsMoneyMax.text = "${invitePoliteBean?.progress?.reward_money}"
-        rewardsProgress.setProgress(
-            (invitePoliteBean?.progress?.invite_cnt
-                ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0) * 100
-        )
-
-
-        val rate = rewardsMoneyMax.width * 1f / rewardsProgress.width
-        val translate = ObjectAnimator.ofFloat(
-            rewardsMoney,
-            "translationX",
-            if (1 - (invitePoliteBean?.progress?.invite_cnt
-                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0) > rate
-            ) {
-                rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt
-                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt ?: 0)
-            } else {
-                rewardsProgress.width * (invitePoliteBean?.progress?.invite_cnt
-                    ?: 0) * 1f / (invitePoliteBean?.progress?.all_cnt
-                    ?: 0) - rewardsMoneyMax.width - rewardsMoney.width
+            for (data in invitePoliteBean?.reward_list) {
+                rewardsFl.addView(getMarqueeView(data))
             }
-        )
-        translate.duration = 100
-        translate.start()
+            adapter.addData(invitePoliteBean?.level_list)
+            when (invitePoliteBean?.now_level) {
+                1 -> rewardsLevel.setImageResource(R.drawable.icon_level1)
+                2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
+                3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
+            }
+            rewardsPercent.text = "享${invitePoliteBean?.now_rate}%分佣"
+            rewardsMoreLevel.isVisible = !invitePoliteBean?.title.isNullOrEmpty()
+            rewardsMoreLevel.text = "${invitePoliteBean?.title}"
+            SpanUtils.with(myInvitedCount)
+                .append("${invitePoliteBean?.invite_cnt}")
+                .setFontSize(30, true)
+                .setBold()
+                .append("人")
+                .setFontSize(12, true)
+                .create()
+            SpanUtils.with(myRewardsMoney)
+                .append("${invitePoliteBean?.invite_amount}")
+                .setFontSize(30, true)
+                .setBold()
+                .append("元")
+                .setFontSize(12, true)
+                .create()
+
+            if (invitePoliteBean?.progress != null && invitePoliteBean?.progress.all_cnt > 0) {
+                rewardsprogressCl.isVisible = true
+                rewardsMoney.text = "${invitePoliteBean?.progress?.invite_cnt}"
+                rewardsMoneyMax.text = "${invitePoliteBean?.progress?.reward_money}"
+                val progress = invitePoliteBean?.progress?.invite_cnt * 1f / invitePoliteBean?.progress?.all_cnt
+                val progressWidth = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(60F)
+                val rate = rewardsMoneyMax.minWidth * 1f / progressWidth
+                val cntRate = rewardsMoney.minWidth * 1f / progressWidth
+
+                rewardsProgress.setProgress(progress * 100)
+                val translate = ObjectAnimator.ofFloat(
+                    rewardsMoney,
+                    "translationX",
+                    if (1 - progress > rate) {
+                        progressWidth * progress - if (progress > cntRate) {
+                            rewardsMoney.minWidth / 2F
+                        } else {
+                            0F
+                        }
+                    } else {
+                        progressWidth * progress - rewardsMoneyMax.minWidth - rewardsMoney.minWidth
+                    }
+                )
+                translate.duration = 300
+                translate.start()
+            } else {
+                rewardsprogressCl.isVisible = false
+            }
+        } else {
+            stateInviteRewards.viewState = MultiStateView.VIEW_STATE_ERROR
+        }
+
+
     }
 
 

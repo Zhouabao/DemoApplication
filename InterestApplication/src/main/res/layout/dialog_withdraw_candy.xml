@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:animateLayoutChanges="false"
     android:background="@drawable/shape_rectangle_white_top_left_right_25_corners_bg"
     android:orientation="vertical">
 
@@ -46,7 +45,7 @@
             android:layout_marginRight="15dp"
             android:drawableLeft="@drawable/icon_candy_small"
             android:drawablePadding="5dp"
-            android:text="3650"
+            android:text="0"
             android:textColor="#ff191919"
             android:textSize="14sp"
             app:layout_constraintRight_toRightOf="parent"
@@ -89,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="11dp"
-            android:text="可提现¥36"
+            android:text="可提现¥0"
             android:textColor="#ff191919"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/withdrawAll"

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
@@ -75,6 +76,7 @@ class FootPriceActivity : BaseActivity() {
         joinNowBtn.clickWithTrigger {
             ConfirmPayCandyDialog(this, chargeWayBeans[0], payways).show()
         }
+
 
         //为什么要付费
         whyPayBtn.clickWithTrigger {

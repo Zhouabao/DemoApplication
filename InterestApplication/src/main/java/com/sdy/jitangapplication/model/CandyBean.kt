@@ -212,7 +212,7 @@ data class Alipay(
 data class WithDrawSuccessBean(
     var candy_amount: Int = 0,
     var create_tme: String = "",
-    var money_amount: Int = 0,
+    var money_amount: Float = 0F,
     var trade_no: String = ""
 )
 

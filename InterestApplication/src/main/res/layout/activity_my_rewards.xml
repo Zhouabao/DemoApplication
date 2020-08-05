@@ -10,117 +10,127 @@
 
     <include layout="@layout/layout_actionbar" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshMyRewards"
+    <com.kennyc.view.MultiStateView
+        android:id="@+id/stateMyRewards"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/llTitle"
-        app:srlDisableContentWhenLoading="true"
-        app:srlDisableContentWhenRefresh="true"
-        app:srlEnableAutoLoadMore="false"
-        app:srlEnableLoadMore="true"
-        app:srlEnableLoadMoreWhenContentNotFull="true"
-        app:srlEnableRefresh="true">
+        android:layout_height="0dp"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTitle">
 
-        <androidx.core.widget.NestedScrollView
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshMyRewards"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle">
+            android:layout_height="match_parent"
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            app:srlEnableAutoLoadMore="false"
+            app:srlEnableLoadMore="true"
+            app:srlEnableLoadMoreWhenContentNotFull="false"
+            app:srlEnableRefresh="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="86dp"
-                    android:background="@drawable/gradient_orange_to_light"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:overScrollMode="never">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/myLevelCl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/rectangle_white_15dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/t1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="可提现金额"
-                        android:textColor="#ff191919"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="86dp"
+                        android:background="@drawable/gradient_orange_to_light"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/myRewardsMoney"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/myLevelCl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/rectangle_white_15dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/t1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="可提现金额"
+                            android:textColor="#ff191919"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/myRewardsMoney"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="0.00"
+                            android:textColor="#ffff6318"
+                            android:textSize="40sp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/t1" />
+
+                        <TextView
+                            android:id="@+id/myWithdrawRewardsMoney"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="已提现0.00"
+                            android:textColor="#ff888d92"
+                            android:textSize="12sp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/myRewardsMoney" />
+
+                        <TextView
+                            android:id="@+id/withdrawBtn"
+                            android:layout_width="280dp"
+                            android:layout_height="42dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="15dp"
+                            android:background="@drawable/gradient_rectangle_orange_24dp"
+                            android:gravity="center"
+                            android:text="提现"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/myWithdrawRewardsMoney" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/myRewardsdRv"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="0.00"
-                        android:textColor="#ffff6318"
-                        android:textSize="40sp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/t1" />
-
-                    <TextView
-                        android:id="@+id/myWithdrawRewardsMoney"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="已提现0.00"
-                        android:textColor="#ff888d92"
-                        android:textSize="12sp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/myRewardsMoney" />
-
-                    <TextView
-                        android:id="@+id/withdrawBtn"
-                        android:layout_width="280dp"
-                        android:layout_height="42dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/gradient_rectangle_orange_24dp"
-                        android:gravity="center"
-                        android:text="提现"
-                        android:textColor="#ffffffff"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/myWithdrawRewardsMoney" />
-
-
+                        android:overScrollMode="never"
+                        app:layout_constraintLeft_toLeftOf="@id/myLevelCl"
+                        app:layout_constraintRight_toRightOf="@id/myLevelCl"
+                        app:layout_constraintTop_toBottomOf="@id/myLevelCl" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/myRewardsdRv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:overScrollMode="never"
-                    app:layout_constraintLeft_toLeftOf="@id/myLevelCl"
-                    app:layout_constraintRight_toRightOf="@id/myLevelCl"
-                    app:layout_constraintTop_toBottomOf="@id/myLevelCl" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.kennyc.view.MultiStateView>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

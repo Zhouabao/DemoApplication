@@ -43,7 +43,7 @@ class VisitUserAvatorAdater(var fromMark: Boolean = false) :
         } else {
             Glide.with(mContext)
                 .load(item)
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25)))
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(1,10)))
                 .into(holder.itemView.visitCoverImg)
         }
 

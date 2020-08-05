@@ -22,7 +22,7 @@ data class MyInvitedBean(
     var avatar: String = "",
     var is_payed: Boolean = false,
     var nickname: String = "",
-    var amount: Int = 0,
+    var amount: Float = 0F,
     var descr: String = ""
 )
 
@@ -35,9 +35,9 @@ data class Progress(
 /**我的奖励**/
 data class MyRewardBeans(
     var list: MutableList<MyInvitedBean> = mutableListOf(),
-    var red_balance_money: Int = 0,
-    var red_freeze_money: Int = 0,
-    var red_withdraw_money: Int = 0
+    var red_balance_money: Float = 0F,
+    var red_freeze_money: Float = 0F,
+    var red_withdraw_money: Float = 0F
 )
 
 
@@ -69,5 +69,13 @@ data class Level(
 
 
 data class MyBillBeans(
-    val list: MutableList<BillBean> = mutableListOf()
+    val list: MutableList<RedRecordBean> = mutableListOf()
+)
+
+data class RedRecordBean(
+    var ali_account: String = "",
+    var amount: Float = 0F,
+    var create_time: String = "",
+    var status: Int = 0,
+    var trade_no: String = ""
 )

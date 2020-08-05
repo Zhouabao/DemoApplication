@@ -143,11 +143,13 @@ class OpenVipActivity : BaseActivity() {
                     vipChargeCl.isVisible = true
                     openVipBtn.text = "成为会员"
                     payExplain.isVisible = false
+                    shareFriendsBtn.isVisible = true
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false
                     openVipBtn.text = "立即加入"
                     payExplain.isVisible = false
+                    shareFriendsBtn.isVisible = false
                 }
 
             }

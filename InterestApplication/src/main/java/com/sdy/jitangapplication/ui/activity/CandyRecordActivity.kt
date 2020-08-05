@@ -16,7 +16,7 @@ import com.sdy.jitangapplication.model.BillBean
 import com.sdy.jitangapplication.model.MyBillBeans
 import com.sdy.jitangapplication.presenter.CandyRecordPresenter
 import com.sdy.jitangapplication.presenter.view.CandyRecordView
-import com.sdy.jitangapplication.ui.adapter.CandyRecordAdapter
+import com.sdy.jitangapplication.ui.adapter.RedRecordAdapter
 import kotlinx.android.synthetic.main.activity_candy_record.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -42,7 +42,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
         )
     }
 
-    private val adapter by lazy { CandyRecordAdapter() }
+    private val adapter by lazy { RedRecordAdapter() }
     private fun initView() {
         mPresenter = CandyRecordPresenter()
         mPresenter.mView = this
@@ -93,7 +93,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
                     refreshRecord.finishLoadMore(true)
                 }
             }
-            adapter.addData(billList?.list?: mutableListOf())
+            adapter.addData(billList?.list ?: mutableListOf())
 
             if (adapter.data.isEmpty()) {
                 stateRecord.viewState = MultiStateView.VIEW_STATE_EMPTY

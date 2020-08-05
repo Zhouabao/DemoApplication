@@ -54,7 +54,7 @@ class MyTodayVisitAdater(var freeShow: Boolean = false) :
             holder.itemView.visitHideInfo.visibility = View.VISIBLE
             Glide.with(mContext)
                 .load(item.avatar ?: "")
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25)))
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(1,10)))
                 .into(holder.itemView.visitImg)
         }
 

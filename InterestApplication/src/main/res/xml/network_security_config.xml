@@ -6,16 +6,16 @@
         </trust-anchors>
     </base-config>
 
-<!--    <domain-config>-->
-<!--        &lt;!&ndash;添加需要抓包的域名&ndash;&gt;-->
-<!--        <domain includeSubdomains="true">devppsns.duluduludala.com</domain>-->
-<!--        <domain includeSubdomains="true">ppsns.duluduludala.com</domain>-->
-<!--        <domain includeSubdomains="true">192.168.0.111</domain>-->
-<!--        <domain includeSubdomains="true">fengkongcloud.com</domain>-->
-<!--        <trust-anchors>-->
-<!--            &lt;!&ndash;信任用户自己安装的证书&ndash;&gt;-->
-<!--            <certificates src="system" />-->
-<!--            <certificates src="user" />-->
-<!--        </trust-anchors>-->
-<!--    </domain-config>-->
+    <!--<domain-config>
+        &lt;!&ndash;添加需要抓包的域名&ndash;&gt;
+        <domain includeSubdomains="true">devppsns.duluduludala.com</domain>
+        <domain includeSubdomains="true">ppsns.duluduludala.com</domain>
+        <domain includeSubdomains="true">192.168.0.111</domain>
+        <domain includeSubdomains="true">fengkongcloud.com</domain>
+        <trust-anchors>
+            &lt;!&ndash;信任用户自己安装的证书&ndash;&gt;
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>-->
 </network-security-config>

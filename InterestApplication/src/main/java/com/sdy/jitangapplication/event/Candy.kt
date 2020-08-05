@@ -20,6 +20,10 @@ class GetAlipayAccountEvent(val account: Alipay)
  * 更新我的糖果之类的数据
  */
 class RefreshMyCandyEvent(val candyCount: Int)
+/**
+ * 更新我的糖果之类的数据
+ */
+class RefreshMyWithDraw(val redMoney: Float)
 
 
 /**

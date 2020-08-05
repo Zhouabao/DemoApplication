@@ -3,9 +3,13 @@ package com.sdy.jitangapplication.ui.activity
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
@@ -19,6 +23,7 @@ import com.sdy.jitangapplication.presenter.MyInvitedPresenter
 import com.sdy.jitangapplication.presenter.view.MyInvitedView
 import com.sdy.jitangapplication.ui.adapter.MyInvitedAdapter
 import kotlinx.android.synthetic.main.activity_my_invited.*
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 
@@ -45,6 +50,11 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
         hotT1.setTextColor(Color.WHITE)
         btnBack.clickWithTrigger {
             finish()
+        }
+
+        retryBtn.clickWithTrigger {
+            stateMyInvite.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.myinviteLog(page)
         }
 
         refreshMyInvited.setOnRefreshListener(this)
@@ -81,36 +91,59 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
                     refreshMyInvited.finishLoadMore()
                 }
             } else {
+                stateMyInvite.viewState = MultiStateView.VIEW_STATE_CONTENT
                 refreshMyInvited.finishRefresh()
-
                 rewardsPercent.text = "享${data!!.now_rate}%分佣"
+                rewardsMoreLevel.isVisible = !data!!.title.isNullOrEmpty()
                 rewardsMoreLevel.text = data!!.title
+                when (data!!.now_level) {
+                    1 -> rewardsLevel.setImageResource(R.drawable.icon_level1)
+                    2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
+                    3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
+                }
 
-                rewardsMoney.text = "${data!!.progress.invite_cnt}"
-                rewardsMoneyMax.text = "${data!!.progress.reward_money}元"
-                rewardsProgress.setProgress(data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt * 100)
 
+                if (data!!.progress.all_cnt > 0) {
+                    rewardsprogressCl.isVisible = true
+                    rewardsMoney.text = "${data!!.progress?.invite_cnt}"
+                    rewardsMoneyMax.text = "${data!!.progress?.reward_money}"
+                    rewardsProgress.setProgress(data!!.progress?.invite_cnt * 1f / data!!.progress?.all_cnt * 100)
 
-                val rate = rewardsMoneyMax.width * 1f / rewardsProgress.width
-                val translate = ObjectAnimator.ofFloat(
-                    rewardsMoney,
-                    "translationX",
-                    if (1 - (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) > rate) {
-                        rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt)
-                    } else {
-                        rewardsProgress.width * (data!!.progress.invite_cnt * 1f / data!!.progress.all_cnt) - rewardsMoneyMax.width - rewardsMoney.width
-                    }
-                )
-                translate.duration = 100
-                translate.start()
+                    val progressWidth = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(60F)
+                    val rate = rewardsMoneyMax.minWidth * 1f / progressWidth
+                    val cntRate = rewardsMoney.minWidth * 1f / progressWidth
+                    val progress =
+                        data!!.progress?.invite_cnt * 1f / data!!.progress?.all_cnt
+                    val translate = ObjectAnimator.ofFloat(
+                        rewardsMoney,
+                        "translationX",
+                        if (1 - progress > rate) {
+                            progressWidth * progress - if (progress > cntRate) {
+                                rewardsMoney.minWidth / 2F
+                            } else {
+                                0F
+                            }
+                        } else {
+                            progressWidth * progress - rewardsMoneyMax.minWidth - rewardsMoney.minWidth
+                        }
+                    )
+                    translate.duration = 300
+                    translate.start()
+                } else {
+                    rewardsprogressCl.isVisible = false
+                }
+                adapter.data.clear()
             }
 
             adapter.addData(data!!.list)
             adapter.isUseEmpty(adapter.data.isEmpty())
+            adapter.notifyDataSetChanged()
         } else {
+            stateMyInvite.viewState = MultiStateView.VIEW_STATE_ERROR
             refreshMyInvited.finishLoadMore(false)
             refreshMyInvited.finishRefresh(false)
         }
 
     }
+
 }

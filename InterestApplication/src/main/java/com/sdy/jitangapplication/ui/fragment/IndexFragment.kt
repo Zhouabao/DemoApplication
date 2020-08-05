@@ -56,7 +56,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("推荐", "同城") }
+    private val titles by lazy { arrayOf("推荐", "附近") }
 
     //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
