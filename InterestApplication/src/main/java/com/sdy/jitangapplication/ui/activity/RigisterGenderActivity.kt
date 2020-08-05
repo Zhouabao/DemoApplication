@@ -89,6 +89,8 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
     override fun onUploadUserInfoResult(uploadResult: Boolean, moreMatchBean: MoreMatchBean?) {
         if (uploadResult) {
             UserManager.saveGender(gender)
+            if (moreMatchBean != null)
+                UserManager?.registerFileBean?.threshold = moreMatchBean?.threshold
             //男性跳转更多配对，女性跳转个人信息
             if (gender == 1) {
                 startActivity<GetMoreMatchActivity>("morematchbean" to moreMatchBean)

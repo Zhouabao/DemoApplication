@@ -35,9 +35,9 @@ data class Progress(
 /**我的奖励**/
 data class MyRewardBeans(
     var list: MutableList<MyInvitedBean> = mutableListOf(),
-    var red_balance_money: Float = 0F,
+    var red_balance_money: Double = 0.0,
     var red_freeze_money: Float = 0F,
-    var red_withdraw_money: Float = 0F
+    var red_withdraw_money: Double = 0.0
 )
 
 

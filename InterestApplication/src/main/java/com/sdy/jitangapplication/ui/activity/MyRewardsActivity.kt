@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
+import java.math.BigDecimal
 
 
 /**
@@ -96,8 +97,8 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
 
 
     private var page = 1
-    private var myBanlanceMoney = 0F
-    private var myWithdrawMoney = 0F
+    private var myBanlanceMoney = 0.0
+    private var myWithdrawMoney = 0.0
     override fun myInviteRewardResult(data: MyRewardBeans?) {
         if (data != null) {
             stateMyRewards.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -110,10 +111,9 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
             } else {
                 adapter.data.clear()
                 refreshMyRewards.finishRefresh()
-                myRewardsMoney.text = "${data!!.red_balance_money}"
-                myWithdrawRewardsMoney.text = "已提现${data!!.red_withdraw_money}"
                 myBanlanceMoney = data!!.red_balance_money
                 myWithdrawMoney = data!!.red_withdraw_money
+                setBanlanceMoney()
             }
             adapter.addData(data!!.list)
             adapter.isUseEmpty(adapter.data.isEmpty())
@@ -125,13 +125,24 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         }
     }
 
+    private fun setBanlanceMoney() {
+        myRewardsMoney.text = "${BigDecimal(myBanlanceMoney).setScale(
+            2,
+            BigDecimal.ROUND_HALF_UP
+        )}"
+        myWithdrawRewardsMoney.text = "已提现${BigDecimal(myWithdrawMoney).setScale(
+            2,
+            BigDecimal.ROUND_HALF_UP
+        )}"
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyWithDraw(event: RefreshMyWithDraw) {
         myBanlanceMoney -= event.redMoney
         myWithdrawMoney += event.redMoney
-        myRewardsMoney.text = "$myBanlanceMoney"
-        myWithdrawRewardsMoney.text = "已提现${myWithdrawMoney}"
+        setBanlanceMoney()
+
     }
 
     override fun onDestroy() {
