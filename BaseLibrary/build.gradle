@@ -93,7 +93,6 @@ dependencies {
 //    api 'com.scwang.smart:refresh-header-material:2.0.1'
 //    api 'com.scwang.smart:refresh-footer-classics:2.0.1'
 //    api 'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //图片选择器
@@ -129,7 +128,7 @@ dependencies {
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 
     //statusBar
-    api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+//    api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
     //友盟统计
     api 'com.umeng.umsdk:analytics:8.1.4'

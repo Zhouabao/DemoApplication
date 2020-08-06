@@ -35,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 29
-        versionName "2.3.1"
+        versionCode 30
+        versionName "2.3.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -66,12 +66,14 @@ android {
 
     buildTypes {
         debug {
+            // 不显示Log
             signingConfig signingConfigs.dev
+
         }
         release {
             minifyEnabled false
             //zipalign优化
-//            zipAlignEnabled true
+            zipAlignEnabled false
             //移除无用的resource文件
             shrinkResources false
             signingConfig signingConfigs.release //设置签名信息
@@ -208,7 +210,7 @@ dependencies {
     //跑马灯
     implementation 'com.github.385841539:MarqueeView:1.0.0'
     //日历控件
-    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+//    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
     //带索引的通讯录
     implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
     // 云信推送
@@ -241,7 +243,7 @@ dependencies {
     implementation 'com.github.iknow4:android-utils-sdk:1.1.2'
     implementation 'nl.bravobit:android-ffmpeg:1.1.7'
 //        implementation project(path: ':android-ffmpeg')
-    implementation 'org.wysaid:gpuimage-plus:2.5.1'
+    implementation 'org.wysaid:gpuimage-plus:2.6.3'
 
 
 }

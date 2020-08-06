@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.ZipUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.chuanglan.shanyan_sdk.view.CmccLoginActivity
 import com.chuanglan.shanyan_sdk.view.ShanYanOneKeyActivity
