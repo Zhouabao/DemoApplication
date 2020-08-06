@@ -69,11 +69,11 @@ android {
             signingConfig signingConfigs.dev
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             //zipalign优化
 //            zipAlignEnabled true
             //移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             signingConfig signingConfigs.release //设置签名信息
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
