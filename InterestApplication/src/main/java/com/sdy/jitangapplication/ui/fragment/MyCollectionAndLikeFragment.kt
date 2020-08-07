@@ -360,8 +360,6 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
 
     override fun onError(text: String) {
         adapter.notifyDataSetChanged()
-        refreshLayout.finishRefresh(false)
-        refreshLayout.finishLoadMore(false)
         stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
             this.getString(R.string.retry_load_error)

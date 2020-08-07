@@ -393,23 +393,21 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     private val guideContent by lazy { "完成认证获取更多曝光" }
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
-        multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
 
         if (userinfo != null) {
+            multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
             userInfoBean = userinfo
             initData()
-        }
-    }
-
-
-    override fun onError(text: String) {
-        multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
-        multiStateView.errorMsg.text = if (mPresenter.checkNetWork()) {
-            getString(R.string.retry_load_error)
         } else {
-            getString(R.string.retry_net_error)
+            multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
+            multiStateView.errorMsg.text = if (mPresenter.checkNetWork()) {
+                getString(R.string.retry_load_error)
+            } else {
+                getString(R.string.retry_net_error)
+            }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

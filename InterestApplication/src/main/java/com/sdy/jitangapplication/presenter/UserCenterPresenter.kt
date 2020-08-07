@@ -36,7 +36,7 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else
-                        mView.onError("")
+                        mView.onGetMyInfoResult(null)
                 }
             })
     }
