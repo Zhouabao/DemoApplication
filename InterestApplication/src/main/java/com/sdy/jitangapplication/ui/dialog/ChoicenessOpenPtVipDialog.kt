@@ -43,7 +43,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             openPtVipBtn.text = "开通黄金会员"
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
-                CommonFunction.startToFootPrice(context1)
+                CommonFunction.startToVip(context1)
             }
         } else {
             choicenessTitle.text = "成为精选用户"
