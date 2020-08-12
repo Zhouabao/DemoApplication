@@ -37,6 +37,8 @@ object UserManager {
     var showCandyMessage: Boolean = true//聊天是否显示糖果
     var showCandyTime: Long = 0L//聊天显示糖果的时间
 
+    var goldOnlyDating: Boolean = false
+
     //每次进入APP弹完善个人资料弹窗
     var showCompleteUserCenterDialog: Boolean = false
 
@@ -675,7 +677,8 @@ object UserManager {
             //跳到主页
             SPUtils.getInstance(Constants.SPNAME).put("nickname", moreMatchBean?.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
-            SPUtils.getInstance(Constants.SPNAME).put("people_amount", moreMatchBean?.people_amount ?: 0)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("people_amount", moreMatchBean?.people_amount ?: 0)
             context.startActivity<MainActivity>()
         } else {
             context.startActivity<GetMoreMatchActivity>("morematchbean" to moreMatchBean)

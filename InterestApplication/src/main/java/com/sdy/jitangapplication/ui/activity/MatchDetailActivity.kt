@@ -202,6 +202,23 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             GSYVideoManager.releaseAllVideos()
         }
 
+        initDatingView()
+
+    }
+
+    private fun initDatingView() {
+        val params = datingDetailBg.layoutParams as ConstraintLayout.LayoutParams
+        params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2f)
+        params.height = (166F / 345f * params.width).toInt()
+        datingDetailBg.layoutParams = params
+
+        datingAudioView.setUi(
+            R.drawable.shape_rectangle_white_22dp,
+            resources.getColor(R.color.colorOrange),
+            R.drawable.icon_play_dating_audio_orange,
+            R.drawable.icon_pause_dating_audio_orange
+        )
+
     }
 
     private var expand = false

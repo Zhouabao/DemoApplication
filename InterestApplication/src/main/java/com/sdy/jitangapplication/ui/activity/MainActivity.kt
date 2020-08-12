@@ -1,48 +1,40 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.LinearInterpolator
-import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.*
-import com.kotlin.base.ext.onClick
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
 import com.netease.nimlib.sdk.Observer
-import com.netease.nimlib.sdk.StatusCode
-import com.netease.nimlib.sdk.auth.AuthServiceObserver
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
-import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.dialog.*
-import com.sdy.jitangapplication.ui.fragment.ContentFragment
-import com.sdy.jitangapplication.ui.fragment.IndexFragment
-import com.sdy.jitangapplication.ui.fragment.MessageListFragment
-import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.ChangeAvatarRealManDialog
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
+import com.sdy.jitangapplication.ui.fragment.*
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
@@ -55,7 +47,7 @@ import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("心动", "发现", "消息", "我的")
+    private val titles = arrayOf("心动", "发现", "约会", "消息", "我的")
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
@@ -65,6 +57,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     //广场
     private val contentFragment by lazy { ContentFragment() }
+
+    //约会
+    private val datingFragment by lazy { DatingFragment() }
 
     //消息
     private val messageListFragment by lazy { MessageListFragment() }
@@ -89,7 +84,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
-        filterBtn.setOnClickListener(this)
 
 
 
@@ -104,7 +98,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }
         }
-
 
 
 //        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
@@ -155,13 +148,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             .observeReceiveMessage(incomingMessageObserver, true)
         //首页禁止滑动
         setSwipeBackEnable(false)
-        labelAddBtn.setOnClickListener(this)
         mPresenter = MainPresenter()
         mPresenter.mView = this
         mPresenter.context = this
         initFragment()
         //进入页面弹消息提醒
         mPresenter.msgList()
+
+
+//        val params = tabBg.layoutParams as ConstraintLayout.LayoutParams
+//        params.width = ScreenUtils.getScreenWidth()
+//        params.height = (71 / 375F * params.width).toInt()
     }
 
 
@@ -171,33 +168,20 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initFragment() {
         tabMatchCount.setOnClickListener(this)
         tabSquare.setOnClickListener(this)
-        tabSquarePublish.onClick(
-            object : CustomClickListener() {
-                override fun onSingleClick(view: View) {
-                    try {
-                        //游客模式则提醒登录
-                        if (UserManager.touristMode) {
-                            TouristDialog(this@MainActivity).show()
-                        } else
-                            contentFragment.mPresenter.checkBlock()
-                    } catch (e: Exception) {
-
-                    }
-                }
-            }
-        )
+        tabDating.setOnClickListener(this)
         tabMe.setOnClickListener(this)
         tabMessage.setOnClickListener(this)
 
         mStack.add(indexFragment)
         mStack.add(contentFragment)
+        mStack.add(datingFragment)
         mStack.add(messageListFragment)
         mStack.add(myFragment)
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         vpMain.currentItem = 0
         switchTab(0)
         vpMain.setScrollable(false)
-        vpMain.offscreenPageLimit = 4
+        vpMain.offscreenPageLimit = 5
         vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -214,7 +198,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 if (UserManager.touristMode && position != 0 && position != 1) {
                     TouristDialog(this@MainActivity).show()
                 } else {
-                    if (position == 3) {
+                    if (position == 4) {
                         EventBus.getDefault().postSticky(UserCenterEvent(true))
                     }
                     switchTab(position)
@@ -238,9 +222,15 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                publishGuideIv.isVisible = false
-                tabSquarePublish.isVisible = false
-                tabSquare.isVisible = true
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabDating.setImageResource(R.drawable.icon_tab_dating)
+
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMe.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -257,62 +247,22 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
-                if (!UserManager.isShowGuidePublish()) {
-                    publishGuideIv.isVisible = true
-                    val params = publishGuideIv.layoutParams as FrameLayout.LayoutParams
-                    params.width = SizeUtils.dp2px(186F)
-                    params.height = SizeUtils.dp2px(121F)
-                    params.leftMargin =
-                        ((1 / 4F + 1 / 8F) * ScreenUtils.getScreenWidth() - SizeUtils.dp2px(186 / 2F)).toInt()
-                    publishGuideIv.layoutParams = params
-
-                    val trans = ObjectAnimator.ofFloat(
-                        publishGuideIv,
-                        "translationY",
-                        SizeUtils.dp2px(-5F).toFloat(),
-                        SizeUtils.dp2px(0F).toFloat(),
-                        SizeUtils.dp2px(-5F).toFloat()
-                    )
-                    trans.duration = 500
-                    trans.repeatCount = 6
-                    trans.interpolator = LinearInterpolator()
-                    trans.addListener(object : Animator.AnimatorListener {
-                        override fun onAnimationRepeat(animation: Animator?) {
-
-                        }
-
-                        override fun onAnimationEnd(animation: Animator?) {
-                            publishGuideIv.isVisible = false
-                            UserManager.saveShowGuidePublish(true)
-                        }
-
-                        override fun onAnimationCancel(animation: Animator?) {
-                        }
-
-                        override fun onAnimationStart(animation: Animator?) {
-                        }
-
-                    })
-                    trans.start()
-                    publishGuideIv.onClick {
-                        if (UserManager.touristMode)
-                            TouristDialog(this).show()
-                        else
-                            startActivity<PublishActivity>()
-                    }
-                } else {
-                    publishGuideIv.isVisible = false
-                }
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
                     null,
                     null
                 )
-                tabSquarePublish.isVisible = true
-                tabSquare.visibility = View.INVISIBLE
+                tabSquare.setTextColor(resources.getColor(R.color.colorOrange))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square_checked),
+                    null,
+                    null
+                )
+                tabDating.setImageResource(R.drawable.icon_tab_dating)
+
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMe.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -337,14 +287,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabDating.setImageResource(R.drawable.icon_tab_dating_checked)
 
-                publishGuideIv.isVisible = false
-                tabSquarePublish.isVisible = false
-                tabSquare.isVisible = true
-                tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMessage.setCompoundDrawablesWithIntrinsicBounds(
                     null,
-                    resources.getDrawable(R.drawable.icon_tab_message_checked),
+                    resources.getDrawable(R.drawable.icon_tab_message),
                     null,
                     null
                 )
@@ -365,9 +320,48 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                publishGuideIv.isVisible = false
-                tabSquarePublish.isVisible = false
-                tabSquare.isVisible = true
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabDating.setImageResource(R.drawable.icon_tab_dating)
+
+                tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMessage.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_message_checked),
+                    null,
+                    null
+                )
+                tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMe.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_me),
+                    null,
+                    null
+                )
+            }
+            4 -> {
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match),
+                    null,
+                    null
+                )
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabDating.setImageResource(R.drawable.icon_tab_dating)
+
                 tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMessage.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -390,26 +384,34 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.labelAddBtn -> { //兴趣添加
-                startActivity<MyLabelActivity>()
-            }
             R.id.tabMatchCount -> {
                 vpMain.currentItem = 0
             }
             R.id.tabSquare -> {
                 vpMain.currentItem = 1
             }
+            R.id.tabDating -> {
+                if (vpMain.currentItem != 2) {
+                    vpMain.currentItem = 2
+                } else {
+                    if (UserManager.touristMode) {
+                        TouristDialog(this@MainActivity).show()
+                    } else {
+                        CommonFunction.checkPublishDating(this)
+                    }
+                }
+            }
             R.id.tabMessage -> {
                 if (UserManager.touristMode) {
                     TouristDialog(this).show()
                 } else
-                    vpMain.currentItem = 2
+                    vpMain.currentItem = 3
             }
             R.id.tabMe -> {
                 if (UserManager.touristMode) {
                     TouristDialog(this).show()
                 } else
-                    vpMain.currentItem = 3
+                    vpMain.currentItem = 4
             }
         }
     }
@@ -437,10 +439,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
             }
-
-        if (vpMain.currentItem == 1 && UserManager.isShowGuidePublish()) {
-            publishGuideIv.isVisible = false
-        }
     }
 
     override fun onDestroy() {
@@ -511,7 +509,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var incomingMessageObserver: Observer<List<IMMessage>> = Observer {
         mPresenter.msgList()
     }
-
 
 
     companion object {

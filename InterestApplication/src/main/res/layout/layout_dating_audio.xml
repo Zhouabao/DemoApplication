@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/audioRecordLl"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@drawable/gradient_rectangle_orange_22dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="visible"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:id="@+id/audioPlayBtn"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/icon_play_dating_audio" />
+
+    <TextView
+        android:id="@+id/audioPlayTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:text="点击试听约会语音描述"
+        android:textColor="#ffffffff"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/audioTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:textColor="#ffffffff"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="00:30" />
+
+    <com.airbnb.lottie.LottieAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/voicePlayView"
+        android:layout_width="160dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="12dp"
+        android:visibility="gone"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="yinzhu.json"
+        app:lottie_loop="true" />
+
+
+</LinearLayout>
+

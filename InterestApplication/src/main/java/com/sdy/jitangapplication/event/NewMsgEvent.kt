@@ -13,6 +13,9 @@ import com.sdy.jitangapplication.utils.UserManager
 //首页更新红点消息
 class GetNewMsgEvent
 
+class ShowPublishAndDatingEvent(val show: Boolean)
+
+
 //重新认证事件通知
 class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 

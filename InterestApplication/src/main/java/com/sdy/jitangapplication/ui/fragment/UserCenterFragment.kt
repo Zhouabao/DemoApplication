@@ -156,10 +156,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
     private val myTagFragment by lazy { MyTagFragment() }
+    private val myDatingFragment by lazy { MyDatingFragment() }
     private val mySquareFragment by lazy { MySquareFragment() }
 
     private fun initFragment() {
         mStack.add(mySquareFragment)  //我的广场
+        mStack.add(myDatingFragment)  //我的约会
         mStack.add(myTagFragment)   //我的兴趣
         vpMySquareAndTag.adapter =
             MainPagerAdapter(childFragmentManager, mStack, titles)
@@ -171,7 +173,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("动态", "兴趣")
+    private val titles = arrayOf("动态", "约会", "兴趣")
 
     private fun initIndicator() {
         tabMySquareAndTag.setBackgroundColor(Color.WHITE)
@@ -187,7 +189,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                 simplePagerTitleView.minScale = 0.88F
                 simplePagerTitleView.textSize = 18F
                 simplePagerTitleView.width =
-                    (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) / 3
+                    (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) / 4
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.normalColor = Color.parseColor("#FF7E8183")
                 simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
@@ -287,8 +289,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         checkVip()
         setUserPower()
 
-        EventBus.getDefault()
-            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault().post(UpdateMyDatingEvent( mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
 
         if (!UserManager.isShowGuideVerify()) {

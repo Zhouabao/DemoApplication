@@ -8,7 +8,7 @@ import android.content.Context
  *    desc   :
  *    version: 1.0
  */
-class CustomScaleTransitionPagerTitleView(context: Context) :
+class CustomScaleTransitionPagerTitleView(context: Context, val fromSquare: Boolean = false) :
     ScaleTransitionPagerTitleView(context) {
 
 
@@ -21,7 +21,6 @@ class CustomScaleTransitionPagerTitleView(context: Context) :
         super.onDeselected(index, totalCount)
         paint.isFakeBoldText = false
     }
-
 
 
 }

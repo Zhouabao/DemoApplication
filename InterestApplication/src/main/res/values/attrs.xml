@@ -207,10 +207,10 @@
     </declare-styleable>
 
     <declare-styleable name="CircleImageView">
-        <attr name="civ_border_width" format="dimension"/>
-        <attr name="civ_border_color" format="color"/>
-        <attr name="civ_border_overlay" format="boolean"/>
-        <attr name="civ_fill_color" format="color"/>
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
     </declare-styleable>
 
     <declare-styleable name="CropImageView">
@@ -243,11 +243,32 @@
         <attr name="textColor" format="color" />
     </declare-styleable>
     <declare-styleable name="RatioImage">
-        <attr name="ri_ratio_width" format="float"/>
-        <attr name="ri_ratio_height" format="float"/>
+        <attr name="ri_ratio_width" format="float" />
+        <attr name="ri_ratio_height" format="float" />
         <attr name="ri_standard">
-            <enum name="width" value="0"/>
-            <enum name="height" value="1"/>
+            <enum name="width" value="0" />
+            <enum name="height" value="1" />
         </attr>
     </declare-styleable>
+
+
+    <declare-styleable name="SpreadView">
+        <!--中心圆颜色-->
+        <attr name="spread_center_color" format="color" />
+        <!--中心圆半径-->
+        <attr name="spread_radius" format="integer" />
+        <!--扩散圆颜色-->
+        <attr name="spread_spread_color" format="color" />
+        <!--扩散间距-->
+        <attr name="spread_distance" format="integer" />
+        <!--扩散最大半径-->
+        <attr name="spread_max_radius" format="integer" />
+        <!--扩散延迟间隔-->
+        <attr name="spread_delay_milliseconds" format="integer" />
+        <!--中间图片-->
+        <attr name="spread_center_icon" format="reference" />
+        <attr name="spread_auto_running" format="boolean" />
+    </declare-styleable>
+
+
 </resources>

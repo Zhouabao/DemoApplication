@@ -10,7 +10,7 @@
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading"
-        tools:context=".ui.fragment.NearbySquareFragment">
+        tools:context=".ui.fragment.SquareNearbyFragment">
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshNearbySquare"

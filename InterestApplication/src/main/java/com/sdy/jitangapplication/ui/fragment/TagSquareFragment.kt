@@ -42,7 +42,7 @@ class TagSquareFragment : BaseMvpFragment<TagSquarePresenter>(), TagSquareView,
         super.onViewCreated(view, savedInstanceState)
         loadData()
     }
-     fun loadData() {
+    fun loadData() {
         initView()
     }
 

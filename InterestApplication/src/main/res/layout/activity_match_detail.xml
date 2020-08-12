@@ -17,7 +17,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -112,8 +112,8 @@
                                 android:id="@+id/userVideoCover"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                app:borderRadius="10dp"
                                 android:background="@drawable/default_image_10dp"
+                                app:borderRadius="10dp"
                                 app:type="round" />
 
                             <com.github.mmin18.widget.RealtimeBlurView
@@ -356,20 +356,154 @@
                             app:layout_constraintTop_toBottomOf="@id/detailUserGenderAndAge"
                             tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。" />
 
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/datailDatingCl"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="15dp"
+                            app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserSign">
+
+                            <View
+                                android:id="@+id/datingDetailBg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/icon_matchdetial_dating_bg"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/datingProjectIv"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/icon_default_avator"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/datingProjectText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:text="她想和你：一起运动"
+                                android:textColor="#ffffffff"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toTopOf="@id/datingProjectDetailText"
+                                app:layout_constraintLeft_toRightOf="@id/datingProjectIv"
+                                app:layout_constraintTop_toTopOf="@id/datingProjectIv" />
+
+                            <TextView
+                                android:id="@+id/datingProjectDetailText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:background="@drawable/shape_rectangle_white_40_11dp"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="2dp"
+                                android:paddingRight="5dp"
+                                android:paddingBottom="2dp"
+                                android:text="有人想晚上来一起夜跑的吗"
+                                android:textColor="#ffffffff"
+                                android:textSize="12sp"
+                                app:layout_constraintBottom_toBottomOf="@id/datingProjectIv"
+                                app:layout_constraintLeft_toRightOf="@id/datingProjectIv"
+                                app:layout_constraintTop_toBottomOf="@id/datingProjectText" />
+
+
+                            <ImageView
+                                android:id="@+id/datingZanBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="4dp"
+                                android:src="@drawable/icon_zan_normal"
+                                app:layout_constraintBottom_toBottomOf="@id/datingProjectIv"
+                                app:layout_constraintRight_toLeftOf="@id/datingZanCnt"
+                                app:layout_constraintTop_toTopOf="@id/datingProjectIv" />
+
+                            <TextView
+                                android:id="@+id/datingZanCnt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="15dp"
+                                android:text="123"
+                                android:textColor="#ffffffff"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="@id/datingProjectIv"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/datingProjectIv" />
+
+                            <TextView
+                                android:id="@+id/datingPlace"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/icon_dating_place"
+                                android:drawablePadding="5dp"
+                                android:text="15km·成都市·吉泰路"
+                                android:textColor="#ffffffff"
+                                android:textSize="13sp"
+                                app:layout_constraintBottom_toBottomOf="@id/datingApplyForBtn"
+                                app:layout_constraintLeft_toLeftOf="@id/datingProjectIv"
+                                app:layout_constraintTop_toTopOf="@id/datingApplyForBtn" />
+
+                            <ImageView
+                                android:id="@+id/datingApplyForBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:src="@drawable/icon_apply_for"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintRight_toRightOf="@id/datingZanCnt" />
+
+
+                            <com.sdy.jitangapplication.widgets.MyDatingAudioView
+                                android:id="@+id/datingAudioView"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:visibility="visible"
+                                app:layout_constraintBottom_toBottomOf="@id/datingTypeText"
+                                app:layout_constraintLeft_toLeftOf="@id/datingTypeText"
+                                app:layout_constraintRight_toRightOf="@id/datingTypeText"
+                                app:layout_constraintTop_toTopOf="@id/datingTypeText" />
+
+                            <TextView
+                                android:id="@+id/datingTypeText"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginBottom="15dp"
+                                android:text="有人喜欢打羽毛球吗？好想找个人明天来陪我一起打羽毛球呀想来的报名哟~来陪我一起打羽毛球呀想来"
+                                android:textColor="#ffffffff"
+                                android:textSize="14sp"
+                                android:visibility="invisible"
+                                app:layout_constraintBottom_toTopOf="@id/datingApplyForBtn"
+                                app:layout_constraintLeft_toLeftOf="@id/datingProjectIv"
+                                app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
+                                app:layout_constraintTop_toBottomOf="@id/datingProjectDetailText" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/detailUserInformationRv"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="15dp"
                             android:layout_marginRight="8dp"
                             android:background="@color/colorWhite"
                             android:nestedScrollingEnabled="false"
                             android:overScrollMode="never"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/detailUserSign" />
+                            app:layout_constraintTop_toBottomOf="@id/datailDatingCl" />
 
                         <TextView
                             android:id="@+id/tag1"
@@ -387,11 +521,11 @@
                             android:id="@+id/notifyAddTagBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
                             android:text="希望Ta添加"
                             android:textColor="#ff789eff"
                             android:textSize="14sp"
                             android:visibility="gone"
-                            android:layout_marginRight="15dp"
                             app:layout_constraintBottom_toBottomOf="@id/tag1"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tag1" />
@@ -422,7 +556,6 @@
 
                         <TextView
                             android:id="@+id/giftAll"
-                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="15dp"
@@ -430,6 +563,7 @@
                             android:text="查看全部"
                             android:textColor="#ffa5a5a5"
                             android:textSize="14sp"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="@id/gift"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/gift" />
@@ -437,11 +571,11 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvGift"
-                            android:visibility="gone"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:nestedScrollingEnabled="false"
+                            android:visibility="gone"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/gift" />
@@ -569,8 +703,8 @@
                     android:drawableLeft="@drawable/icon_wechat_detail"
                     android:gravity="center"
                     android:paddingLeft="36dp"
-                    android:paddingRight="36dp"
                     android:paddingTop="15dp"
+                    android:paddingRight="36dp"
                     android:paddingBottom="15dp"
                     android:text="联系方式"
                     android:textColor="#ffffffff"
@@ -579,8 +713,8 @@
 
                 <ImageView
                     android:id="@+id/detailUserChatBtn"
-                    android:layout_height="wrap_content"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"

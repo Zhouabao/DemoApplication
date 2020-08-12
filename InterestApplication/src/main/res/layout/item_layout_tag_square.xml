@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="5dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        app:contentPaddingBottom="10dp"
-        app:contentPaddingLeft="10dp"
-        app:contentPaddingRight="5dp"
-        app:contentPaddingTop="10dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true"
+    app:contentPaddingBottom="10dp"
+    app:contentPaddingLeft="10dp"
+    app:contentPaddingRight="5dp"
+    app:contentPaddingTop="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/tagImg"
-                android:src="@drawable/icon_default_avator"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/tagImg"
+            android:src="@drawable/icon_default_avator"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-                android:id="@+id/tagName"
-                android:layout_marginLeft="10dp"
-                android:text="玩游戏"
-                android:textColor="#ff191919"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/tagIsHot"
-                app:layout_constraintLeft_toRightOf="@id/tagImg"
-                app:layout_constraintTop_toTopOf="@id/tagImg"/>
+            android:id="@+id/tagName"
+            android:layout_marginLeft="10dp"
+            android:text="玩游戏"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/tagIsHot"
+            app:layout_constraintLeft_toRightOf="@id/tagImg"
+            app:layout_constraintTop_toTopOf="@id/tagImg"/>
 
         <TextView
-                android:id="@+id/tagIsHot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="热门标签"
-                android:textColor="#ffa5a5a5"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/tagImg"
-                app:layout_constraintLeft_toLeftOf="@id/tagName"
-                app:layout_constraintTop_toBottomOf="@id/tagName"
-                />
+            android:id="@+id/tagIsHot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="热门标签"
+            android:textColor="#ffa5a5a5"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/tagImg"
+            app:layout_constraintLeft_toLeftOf="@id/tagName"
+            app:layout_constraintTop_toBottomOf="@id/tagName"
+            />
 
         <ImageView
-                android:id="@+id/btnTagMore"
-                android:src="@drawable/icon_more_black"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:paddingLeft="15dp"
-                android:layout_marginRight="5dp"
-                app:layout_constraintBottom_toBottomOf="@id/tagImg"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tagImg"/>
+            android:id="@+id/btnTagMore"
+            android:src="@drawable/icon_more_black"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingLeft="15dp"
+            android:layout_marginRight="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/tagImg"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tagImg"/>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTagSquareImg"
-                android:layout_marginTop="10dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tagImg"/>
+            android:id="@+id/rvTagSquareImg"
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagImg"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

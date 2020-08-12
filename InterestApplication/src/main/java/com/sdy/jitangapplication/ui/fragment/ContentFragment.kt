@@ -23,11 +23,13 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.presenter.ContentPresenter
 import com.sdy.jitangapplication.presenter.view.ContentView
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
+import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
@@ -113,6 +115,14 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
         initFragments()
         initViewpager()
 
+        publishSquareBtn.clickWithTrigger {
+            //游客模式则提醒登录
+            if (UserManager.touristMode) {
+                TouristDialog(activity!!).show()
+            } else
+                mPresenter.checkBlock()
+        }
+
 
         /**
          *性别筛选
@@ -186,10 +196,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
     private fun initFragments() {
 
-        mStack.add(NewestSquareFragment())
-        mStack.add(RecommendSquareFragment())
+        mStack.add(SquareNewestFragment())
+        mStack.add(SquareRecommendFragment())
         mStack.add(TagSquareFragment())
-        mStack.add(NearbySquareFragment())
+        mStack.add(SquareNearbyFragment())
     }
 
     private fun initViewpager() {
@@ -331,6 +341,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
 
     private var from = 1
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
         from = if (event.context == MySquareFragment::class.java.simpleName) {
@@ -415,9 +426,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 UserManager.cancelUpload = false
                 //TODO上传视频
                 val videoQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                        .getString(
+                            "accid"
+                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
                     )}"
                 mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, videoQnPath, 2)
@@ -426,9 +438,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 UserManager.cancelUpload = false
                 //TODO上传音频
                 val audioQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                        .getString(
+                            "accid"
+                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
                     )}"
                 mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, audioQnPath, 3)
@@ -491,9 +504,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
     private fun uploadPictures() {
         //上传图片
         val imagePath =
-            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                "accid"
-            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                .getString(
+                    "accid"
+                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
             )}"
         mPresenter.uploadFile(

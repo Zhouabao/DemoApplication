@@ -269,6 +269,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //如果没有显示过协议
             //否则直接判断有没有显示过引导页面
             //是否今日缘分
+
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
@@ -281,7 +282,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     InviteFriendDialog(activity!!).show()
                 }
             }
-
 
             if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
                 EventBus.getDefault().post(

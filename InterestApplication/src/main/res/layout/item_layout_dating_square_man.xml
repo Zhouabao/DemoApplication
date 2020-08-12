@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="15dp"
+    android:background="@drawable/gradient_dating_bg">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/datingAvator"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/icon_default_avator"
+        app:layout_constraintBottom_toBottomOf="@id/datingOnlineDistance"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/datingName" />
+
+
+    <TextView
+        android:id="@+id/datingName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:text="阎筠霄"
+        android:textColor="#ffffffff"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/datingAvator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/datingVip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:src="@drawable/icon_vip"
+        app:layout_constraintBottom_toBottomOf="@id/datingName"
+        app:layout_constraintLeft_toRightOf="@id/datingName"
+        app:layout_constraintTop_toTopOf="@id/datingName" />
+
+    <TextView
+        android:id="@+id/datingOnlineDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1小时前 1.2km"
+        android:textColor="#CCFFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/datingName"
+        app:layout_constraintTop_toBottomOf="@id/datingName" />
+
+
+    <ImageView
+        android:id="@+id/datingApplyForBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_apply_for"
+        app:layout_constraintBottom_toBottomOf="@id/datingOnlineDistance"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/datingName" />
+
+
+    <TextView
+        android:id="@+id/datingProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_rectangle_graye6f_14dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
+        android:text="一起运动·夜跑"
+        android:textColor="#ff24151a"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintTop_toBottomOf="@id/datingOnlineDistance" />
+
+
+    <TextView
+        android:id="@+id/datingPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:drawableLeft="@drawable/icon_dating_place"
+        android:drawablePadding="5dp"
+        android:text="15km·成都市·吉泰路"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintTop_toBottomOf="@id/datingProject" />
+
+    <TextView
+        android:id="@+id/datingObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/icon_dating_plan"
+        android:drawablePadding="5dp"
+        android:text="仅限高级会员丨帅气英俊丨对方支出丨预估5000内"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintTop_toBottomOf="@id/datingPlace" />
+
+    <TextView
+        android:id="@+id/datingPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/icon_dating_plan"
+        android:drawablePadding="5dp"
+        android:text="后续活动看感觉"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintTop_toBottomOf="@id/datingObject" />
+
+
+    <TextView
+        android:id="@+id/datingContentText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_rectangle_gray4df_10dp"
+        android:padding="10dp"
+        android:text="有人喜欢打羽毛球吗？好想找个人明天来陪我一起打羽毛球呀，想来的报名哟~"
+        android:textColor="#ffffffff"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/datingPlan" />
+
+    <com.sdy.jitangapplication.widgets.MyDatingAudioView
+        android:id="@+id/datingContentAudio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_rectangle_gray4df_10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
+        app:layout_constraintTop_toBottomOf="@id/datingPlan"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

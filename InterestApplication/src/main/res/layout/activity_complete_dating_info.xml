@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.CompleteDatingInfoActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <TextView
+        android:id="@+id/tip1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#FFFFEFE7"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="请勿发布招嫖、涉黄信息，违禁者无警告直接永久封号"
+        android:textColor="#ffff6318"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTitle" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingContentCl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tip1">
+
+        <TextView
+            android:id="@+id/t1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="约会内容"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:gravity="right"
+            android:hint="填写想要的运动项目，没想好也可以不填"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc8c8c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/t1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFF6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingPlaceCl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/datingContentCl">
+
+        <TextView
+            android:id="@+id/t2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="约会地点"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/chooseDatingPlaceBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:drawableRight="@drawable/icon_more_right_gray"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:hint="选择位置"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc8c8c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/t2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFF6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingObjectCl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/datingPlaceCl">
+
+        <TextView
+            android:id="@+id/t3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="约会对象"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/chooseDatingObjectBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:drawableRight="@drawable/icon_more_right_gray"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:hint="选择意向类型"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc8c8c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/t3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFF6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingMoneyCl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/datingObjectCl">
+
+        <TextView
+            android:id="@+id/t4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="费用开支"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/chooseDatingPayBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:drawableRight="@drawable/icon_more_right_gray"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:hint="选择买单方式"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc8c8c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/t4"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFF6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingPlanCl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/datingMoneyCl">
+
+        <TextView
+            android:id="@+id/t5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="后续活动"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/chooseDatingPlanBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="37dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:drawableRight="@drawable/icon_more_right_gray"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:hint="选择后续活动"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc8c8c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/t5"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFF6F6F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#FFF6F6F6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/datingPlanCl" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view2">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/datingTextCl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/datingDescrEt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@null"
+                android:hint="分享一下此刻的心情吧..."
+                android:textColor="@color/colorBlack19"
+                android:textColorHint="#ffc1c2c8"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/datingDescrLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="0/150"
+                android:textColor="#ffc8c8c8"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/datingDescrEt" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/datingAudioCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/recordTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:text="00:00"
+                android:textColor="#ff888d92"
+                android:textSize="14sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/recordTv"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+            <TextView
+                android:id="@+id/recordTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="点击录音"
+                android:textColor="#ff888d92"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/startRecordRl"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/deleteRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_dating_record_revert"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/startRecordRl"
+                app:layout_constraintLeft_toLeftOf="@id/restartTip"
+                app:layout_constraintRight_toRightOf="@id/restartTip"
+                app:layout_constraintTop_toTopOf="@id/startRecordRl" />
+
+            <TextView
+                android:id="@+id/restartTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="重新录制"
+                android:textColor="#ff888d92"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/startRecordRl"
+                app:layout_constraintTop_toTopOf="@id/audioPlayTip" />
+
+            <RelativeLayout
+                android:id="@+id/startRecordRl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recordTv">
+
+                <ImageView
+                    android:id="@+id/recordAnimaBig"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_record_orange2" />
+
+
+                <ImageView
+                    android:id="@+id/recordAnimaSmall"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_record_orange1" />
+
+                <ImageView
+                    android:id="@+id/startRecordBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon_record_normal" />
+
+                <View
+                    android:id="@+id/animationBg"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_centerInParent="true"
+                    android:background="@color/colorTransparent" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/audioPlayTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="点击试听"
+                android:textColor="#ff888d92"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="@id/startRecordRl"
+                app:layout_constraintRight_toRightOf="@id/startRecordRl"
+                app:layout_constraintTop_toBottomOf="@id/startRecordRl" />
+
+
+            <ImageView
+                android:id="@+id/finishRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_dating_record_ok"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/startRecordRl"
+                app:layout_constraintLeft_toLeftOf="@id/audioFinishTip"
+                app:layout_constraintRight_toRightOf="@id/audioFinishTip"
+                app:layout_constraintTop_toTopOf="@id/startRecordRl" />
+
+            <TextView
+                android:id="@+id/audioFinishTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="重新录制"
+                android:textColor="#ff888d92"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toRightOf="@id/startRecordRl"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/audioPlayTip" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/datingAudioPreviewCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="15dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.sdy.jitangapplication.widgets.MyDatingAudioView
+                android:id="@+id/myDatingAudioView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/restartRecordBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/shape_rectangle_gray_white_13dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:text="重新录制"
+                android:textColor="#ff696e73"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myDatingAudioView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/switchContentTypeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rectangle_gray_white_13dp"
+            android:drawableLeft="@drawable/icon_dating_switch_text"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:text="切换语音描述"
+            android:textColor="#ff696e73"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="345dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="15dp"
+    android:background="@drawable/rectangle_white_15dp">
+
+
+    <com.sdy.baselibrary.widgets.RoundImageView
+        android:id="@+id/datingAvatorWoman"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/icon_verify_account_ing"
+        app:borderRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:type="round" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/gradient_cover_bg_top_10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/datingNameWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:text="阎筠霄"
+        android:textColor="#ffffffff"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/datingVipWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:src="@drawable/icon_vip"
+        app:layout_constraintBottom_toBottomOf="@id/datingNameWoman"
+        app:layout_constraintLeft_toRightOf="@id/datingNameWoman"
+        app:layout_constraintTop_toTopOf="@id/datingNameWoman" />
+
+    <TextView
+        android:id="@+id/datingOnlineDistanceWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1小时前 1.2km"
+        android:textColor="#CCFFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman"
+        app:layout_constraintTop_toBottomOf="@id/datingNameWoman" />
+
+
+    <ImageView
+        android:id="@+id/datingApplyForWomanBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_apply_for"
+        app:layout_constraintBottom_toBottomOf="@id/datingOnlineDistanceWoman"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/datingNameWoman" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/gradient_cover_bg_bottom_10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <TextView
+        android:id="@+id/datingProjectWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_rectangle_graye6f_14dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
+        android:text="一起运动·夜跑"
+        android:textColor="#ff24151a"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/datingPlaceWoman"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman" />
+
+    <TextView
+        android:id="@+id/datingPlaceWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:drawableLeft="@drawable/icon_dating_place"
+        android:drawablePadding="5dp"
+        android:text="15km·成都市·吉泰路"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/datingObjectWoman"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman" />
+
+    <TextView
+        android:id="@+id/datingObjectWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:drawableLeft="@drawable/icon_dating_plan"
+        android:drawablePadding="5dp"
+        android:text="仅限高级会员丨帅气英俊丨对方支出丨预估5000内"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/datingPlanWoman"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman" />
+
+    <TextView
+        android:id="@+id/datingPlanWoman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/icon_dating_plan"
+        android:drawablePadding="5dp"
+        android:text="后续活动看感觉"
+        android:textColor="#ffffffff"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/datingContentWomanCl"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/datingContentWomanCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/datingNameWoman"
+        app:layout_constraintRight_toRightOf="@id/datingApplyForWomanBtn">
+
+        <TextView
+            android:id="@+id/datingContentTextWoman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rectangle_gray4df_10dp"
+            android:padding="10dp"
+            android:text="有人喜欢打羽毛球吗？好想找个人明天来陪我一起打羽毛球呀，想来的报名哟~"
+            android:textColor="#ffffffff"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.sdy.jitangapplication.widgets.MyDatingAudioView
+            android:id="@+id/datingContentAudioWoman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rectangle_gray4df_10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

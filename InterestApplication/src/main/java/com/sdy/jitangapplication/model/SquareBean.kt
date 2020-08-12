@@ -170,6 +170,7 @@ data class SquareTagBean(
     var title: String = ""
 )
 
+
 /**
  * 广场运营位广告
  */
@@ -193,7 +194,7 @@ data class CopyMvBean(
     val mv_url: String = "",
     val mv_url_cover: String = "",
     var list: MutableList<VideoVerifyBannerBean> = mutableListOf()
-):Serializable
+) : Serializable
 
 
 data class RecommendSquareBean(

@@ -85,7 +85,7 @@ class TodayWantDialog(
      */
     private fun getIntention() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getIntention(UserManager.getSignParams())
+            .getDatingTypeList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<MutableList<CheckBean>?>>() {
                 override fun onNext(t: BaseResp<MutableList<CheckBean>?>) {
                     super.onNext(t)

@@ -283,7 +283,7 @@ data class ChatUpBean(
     var direct_residue_cnt: Int = 0,
     var contact: String = "",
     var contact_way: Int = 0,//联系方式 int 0 没有 1 手机 2微信 3 qq
-    var avatar: String,
+    var avatar: String ="",
     var isplatinum: Boolean = false,
     var isdirect: Boolean = false, //是否是直连卡
     var private_chat_btn: Boolean = false

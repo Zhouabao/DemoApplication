@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateDatingSquare"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="content"
+    tools:context=".ui.fragment.DatingFragment">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshDatingSquare"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        app:srlDisableContentWhenLoading="true"
+        app:srlDisableContentWhenRefresh="true"
+        app:srlEnableLoadMore="false"
+        app:srlEnableRefresh="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/headDatingRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDatingSquare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:overScrollMode="never" />
+        </LinearLayout>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</com.kennyc.view.MultiStateView>

@@ -61,6 +61,30 @@ import java.text.ParseException
  *    version: 1.0
  */
 object CommonFunction {
+
+
+    /**
+     * 验证发布约会
+     */
+    fun checkPublishDating(context: Context){
+        PublishDatingKnowDialog(context).show()
+
+//        DatingOpenPtVipDialog(context,DatingOpenPtVipDialog.TYPE_DATING_PUBLISH,ChatUpBean()).show()
+    }
+
+
+    /**
+     * 验证报名约会
+     */
+    fun checkApplyForDating(context: Context){
+//        PublishDatingKnowDialog(context).show()
+        DatingOpenPtVipDialog(context,DatingOpenPtVipDialog.TYPE_DATING_PUBLISH,ChatUpBean()).show()
+    }
+
+
+
+
+
     /**
      * 验证视频介绍解锁
      * 400 错误toast

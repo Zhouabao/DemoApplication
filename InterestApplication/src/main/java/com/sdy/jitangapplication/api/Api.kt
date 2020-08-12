@@ -397,14 +397,6 @@ interface Api {
 
 
     /**
-     * 获取今日意向
-     */
-    @FormUrlEncoded
-    @POST("Index/getIntention${Constants.END_BASE_URL}")
-    fun getIntention(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<CheckBean>?>>
-
-
-    /**
      * 添加今日意向
      */
     @FormUrlEncoded
@@ -1324,6 +1316,30 @@ interface Api {
     @FormUrlEncoded
     @POST("Share/doRedWithdraw${Constants.END_BASE_URL}")
     fun doRedWithdraw(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<WithDrawSuccessBean?>>
+
+
+    /*************************************邀约*********************************/
+    /**
+     * 发布约会
+     */
+    @FormUrlEncoded
+    @POST("Dating/releaseDate${Constants.END_BASE_URL}")
+    fun releaseDate(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 返回约会选项内容
+     */
+    @FormUrlEncoded
+    @POST("Dating/datingOptions${Constants.END_BASE_URL}")
+    fun datingOptions(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<DatingOptionsBean?>>
+
+    /**
+     * 获取约会类型
+     */
+
+    @FormUrlEncoded
+    @POST("Dating/getMenuList${Constants.END_BASE_URL}")
+    fun getDatingTypeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<CheckBean>?>>
 
 
 }
