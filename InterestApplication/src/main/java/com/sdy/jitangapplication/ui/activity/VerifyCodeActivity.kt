@@ -34,7 +34,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
 
-    private val loadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
         const val TYPE_LOGIN_PHONE = 1 //手机登录
@@ -78,8 +77,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
                 if (complete) {
-                    if (!loadingDialog.isShowing)
-                        loadingDialog.show()
                     if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
                         mPresenter.cancelAccount(
                             hashMapOf<String, Any>(
@@ -165,14 +162,12 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         if (isRight) {
             //注销成功
             if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
-                loadingDialog.dismiss()
                 LoginOffSuccessDialog(this).show()
             } else {//登录成功
                 this.data = data
                 mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
             }
         } else {
-            loadingDialog.dismiss()
             inputVerifyCode.isEnabled = true
         }
     }
@@ -199,7 +194,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      * IM登录
      */
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
-        loadingDialog.dismiss()
         inputVerifyCode.isEnabled = true
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)

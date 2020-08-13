@@ -106,6 +106,7 @@ interface Api {
     /**
      * 检查验证码是否一致,即登录
      * type 是	登陆方式 1,短信 2,QQ 3,微信 4闪验
+     * 401 注册人数过多
      */
     @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")

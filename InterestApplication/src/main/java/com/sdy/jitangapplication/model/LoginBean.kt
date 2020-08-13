@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class LoginBean(
     val accid: String?,
+    var duration: Long = 0L,
     val phone_check: Boolean?,
     val qntk: String?,
     val taglist: List<TagBean>?,
