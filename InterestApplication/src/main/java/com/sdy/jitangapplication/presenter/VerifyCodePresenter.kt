@@ -13,13 +13,18 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.RegisterTooManyBean
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
+import com.sdy.jitangapplication.ui.activity.RegisterTooManyActivity
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
+import org.jetbrains.anko.startActivity
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
+    private val loadingDialog by lazy { LoadingDialog(context) }
 
     /**
      * 对比验证码是否正确，正确即登录
@@ -40,21 +45,29 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
                 override fun onNext(t: BaseResp<LoginBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
+                    } else if (t.code == 401) {
+                        loadingDialog.dismiss()
+                        RegisterTooManyActivity.start(t.data?.countdown_time ?: 0, context)
                     } else {
+                        loadingDialog.dismiss()
                         CommonFunction.toast(t.msg)
                         mView.onConfirmVerifyCode(t.data, false)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onConfirmVerifyCode(null, false)
                     }
@@ -78,24 +91,25 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             .cancelAccount(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
                 override fun onNext(t: BaseResp<Any>) {
+                    loadingDialog.dismiss()
                     mView.onConfirmVerifyCode(null, t.code == 200)
                     if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
-
                     } else if (t.code != 200) {
                         CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onStart() {
+                    loadingDialog.show()
 
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-
                         mView.onConfirmVerifyCode(null, false)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                     }
@@ -119,8 +133,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         RetrofitFactory.instance
             .create(Api::class.java)
             .sendSms(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
-                override fun onNext(t: BaseResp<Any>) {
+            .excute(object : BaseSubscriber<BaseResp<RegisterTooManyBean?>>(mView) {
+                override fun onNext(t: BaseResp<RegisterTooManyBean?>) {
                     mView.onGetVerifyCode(t)
                 }
 
@@ -142,15 +156,18 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
     fun loginIM(info: LoginInfo) {
         val callback = object : RequestCallback<LoginInfo> {
             override fun onSuccess(param: LoginInfo) {
+                loadingDialog.dismiss()
                 mView.onIMLoginResult(param, true)
             }
 
             override fun onFailed(code: Int) {
+                loadingDialog.dismiss()
                 Log.d("OkHttp", "=====$code")
                 mView.onIMLoginResult(null, false)
             }
 
             override fun onException(exception: Throwable?) {
+                loadingDialog.dismiss()
                 Log.d("OkHttp", exception.toString())
             }
 

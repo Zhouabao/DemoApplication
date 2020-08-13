@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
+import com.sdy.jitangapplication.ui.activity.RegisterTooManyActivity
 import com.sdy.jitangapplication.ui.activity.VerifyCodeActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -64,7 +65,8 @@ class WXEntryActivity : WXCallbackActivity() {
         val params = hashMapOf<String, Any>("wxcode" to wxcode)
         RetrofitFactory.instance.create(Api::class.java)
             .bundWeChat(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<WechatNameBean>>(null) {
+            .excute(object :
+                BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<WechatNameBean>>(null) {
                 override fun onStart() {
                     loading.show()
                 }
@@ -94,24 +96,34 @@ class WXEntryActivity : WXCallbackActivity() {
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
-        val params = hashMapOf<String, Any>("type" to VerifyCodeActivity.TYPE_LOGIN_WECHAT, "wxcode" to code)
+        val params =
+            hashMapOf<String, Any>("type" to VerifyCodeActivity.TYPE_LOGIN_WECHAT, "wxcode" to code)
         params.putAll(UserManager.getLocationParams())
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
+            .excute(object :
+                BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
                 override fun onStart() {
                     loading.show()
                 }
 
                 override fun onNext(t: com.kotlin.base.data.protocol.BaseResp<LoginBean?>) {
                     if (t.code == 202) { //首次微信登录
-                        startActivity<PhoneActivity>("wxcode" to code, "type" to "${VerifyCodeActivity.TYPE_LOGIN_WECHAT}")
+                        startActivity<PhoneActivity>(
+                            "wxcode" to code,
+                            "type" to "${VerifyCodeActivity.TYPE_LOGIN_WECHAT}"
+                        )
                         finish()
                     } else if (t.code == 200) {//已经微信登录过
                         data = t.data
                         loginIM(LoginInfo(data?.accid, data?.extra_data?.im_token))
                     } else if (t.code == 400) {
                         CommonFunction.toast(t.msg)
+                    } else if (t.code == 401) {
+                        RegisterTooManyActivity.start(
+                            t.data?.countdown_time ?: 0,
+                            this@WXEntryActivity
+                        )
                     }
                     loading.dismiss()
                 }

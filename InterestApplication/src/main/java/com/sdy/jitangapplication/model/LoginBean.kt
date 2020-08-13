@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class LoginBean(
     val accid: String?,
+    var countdown_time: Int = 0,
     val phone_check: Boolean?,
     val qntk: String?,
     val taglist: List<TagBean>?,
@@ -15,6 +16,9 @@ data class LoginBean(
     val qn_prefix: List<String>?,
     val extra_data: ExtraBean?
 )
+
+data class RegisterTooManyBean(val countdown_time: Int = 0)
+
 
 data class ExtraBean(
     val im_token: String = "",

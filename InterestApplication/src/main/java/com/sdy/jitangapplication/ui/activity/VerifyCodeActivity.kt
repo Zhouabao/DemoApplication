@@ -13,9 +13,9 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.RegisterTooManyBean
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.LoginOffSuccessDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.VerificationCodeInput
@@ -34,7 +34,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
 
-    private val loadingDialog by lazy { LoadingDialog(this) }
 
     companion object {
         const val TYPE_LOGIN_PHONE = 1 //手机登录
@@ -78,8 +77,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
                 if (complete) {
-                    if (!loadingDialog.isShowing)
-                        loadingDialog.show()
                     if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
                         mPresenter.cancelAccount(
                             hashMapOf<String, Any>(
@@ -112,7 +109,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     val timer = object : CountDownTimer(60 * 1000, 1000) {
         override fun onFinish() {
             tvPhone.text = "$phone"
-            countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
+            SpanUtils.with(countVerifyCodeTime)
                 .append("重新获取")
                 .setBold()
                 .create()
@@ -120,12 +117,11 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         }
 
         override fun onTick(p0: Long) {
-            countVerifyCodeTime.text =
-                SpanUtils.with(countVerifyCodeTime)
-                    .append("验证码已发送")
-                    .append("  ${p0 / 1000}秒")
-                    .setBold()
-                    .create()
+            SpanUtils.with(countVerifyCodeTime)
+                .append("验证码已发送")
+                .append("  ${p0 / 1000}秒")
+                .setBold()
+                .create()
         }
 
     }
@@ -165,22 +161,20 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         if (isRight) {
             //注销成功
             if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
-                loadingDialog.dismiss()
                 LoginOffSuccessDialog(this).show()
             } else {//登录成功
                 this.data = data
                 mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
             }
         } else {
-            loadingDialog.dismiss()
             inputVerifyCode.isEnabled = true
         }
     }
 
 
-    override fun onGetVerifyCode(data: BaseResp<Any?>?) {
+    override fun onGetVerifyCode(data: BaseResp<RegisterTooManyBean?>?) {
         if (data != null && data.code == 200) {
-            tvPhone.text = SpanUtils.with(tvPhone)
+            SpanUtils.with(tvPhone)
                 .append("验证码已发至 ")
                 .append("$phone")
                 .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
@@ -188,9 +182,20 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                 .create()
             countVerifyCodeTime.isEnabled = false
             onCountTime()
+        } else if (data?.code == 401) {
+            RegisterTooManyActivity.start(data?.data?.countdown_time ?: 0, this)
+            countVerifyCodeTime.isEnabled = true
+            SpanUtils.with(countVerifyCodeTime)
+                .append("重新获取")
+                .setBold()
+                .create()
         } else {
             CommonFunction.toast("${data?.msg}")
             countVerifyCodeTime.isEnabled = true
+            SpanUtils.with(countVerifyCodeTime)
+                .append("重新获取")
+                .setBold()
+                .create()
         }
     }
 
@@ -199,7 +204,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      * IM登录
      */
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
-        loadingDialog.dismiss()
         inputVerifyCode.isEnabled = true
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)

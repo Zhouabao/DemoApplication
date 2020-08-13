@@ -9,6 +9,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.RegisterTooManyBean
 import com.sdy.jitangapplication.model.loginOffCauseBean
 import com.sdy.jitangapplication.presenter.view.ChangeAccountView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -61,12 +62,12 @@ class ChangeAccountPresenter : BasePresenter<ChangeAccountView>() {
     fun sendSms(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .sendSms(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<RegisterTooManyBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<Any>) {
+                override fun onNext(t: BaseResp<RegisterTooManyBean?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
                         mView.onSendSmsResult(true)

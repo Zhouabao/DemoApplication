@@ -6,4 +6,4 @@ package com.kotlin.base.data.protocol
     @message:响应文字消息
     @data:具体响应业务对象
  */
-data class BaseResp<out T>(val code: Int, val msg: String, val data: T, val time: String)
+data class BaseResp<out T>(var code: Int, val msg: String, val data: T, val time: String)

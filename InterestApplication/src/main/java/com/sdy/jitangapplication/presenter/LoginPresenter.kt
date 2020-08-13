@@ -15,8 +15,10 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.presenter.view.LoginView
+import com.sdy.jitangapplication.ui.activity.RegisterTooManyActivity
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
+import org.jetbrains.anko.startActivity
 
 class LoginPresenter : BasePresenter<LoginView>() {
 
@@ -34,9 +36,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 }
             })
     }
-
-
-
 
 
     /**
@@ -58,10 +57,13 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 override fun onStart() {
                     super.onStart()
                 }
+
                 override fun onNext(t: BaseResp<LoginBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
+                    } else if (t.code == 401) {
+                        RegisterTooManyActivity.start(t.data?.countdown_time ?: 0, context)
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onConfirmVerifyCode(t.data, false)
@@ -79,7 +81,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 }
             })
     }
-
 
 
     /**
