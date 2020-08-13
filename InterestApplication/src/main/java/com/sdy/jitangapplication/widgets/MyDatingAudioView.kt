@@ -127,7 +127,7 @@ class MyDatingAudioView @JvmOverloads constructor(
     }
 
     fun playAudio() {
-        audioTime.startTime(duration * 1000L, "3")
+        audioTime.startTime(duration.toLong(), "3")
         mediaPlayer!!.prepareMedia()
     }
 
