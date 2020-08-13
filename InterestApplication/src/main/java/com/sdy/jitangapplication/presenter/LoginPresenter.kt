@@ -63,7 +63,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
                     } else if (t.code == 401) {
-                        context.startActivity<RegisterTooManyActivity>("duration" to t.data?.duration)
+                        RegisterTooManyActivity.start(t.data?.countdown_time ?: 0, context)
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onConfirmVerifyCode(t.data, false)

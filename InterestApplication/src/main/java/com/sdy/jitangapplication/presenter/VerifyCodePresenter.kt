@@ -13,6 +13,7 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.RegisterTooManyBean
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.sdy.jitangapplication.ui.activity.RegisterTooManyActivity
@@ -54,7 +55,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                         mView.onConfirmVerifyCode(t.data, true)
                     } else if (t.code == 401) {
                         loadingDialog.dismiss()
-                        context.startActivity<RegisterTooManyActivity>("duration" to t.data?.duration)
+                        RegisterTooManyActivity.start(t.data?.countdown_time ?: 0, context)
                     } else {
                         loadingDialog.dismiss()
                         CommonFunction.toast(t.msg)
@@ -132,8 +133,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         RetrofitFactory.instance
             .create(Api::class.java)
             .sendSms(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
-                override fun onNext(t: BaseResp<Any>) {
+            .excute(object : BaseSubscriber<BaseResp<RegisterTooManyBean?>>(mView) {
+                override fun onNext(t: BaseResp<RegisterTooManyBean?>) {
                     mView.onGetVerifyCode(t)
                 }
 

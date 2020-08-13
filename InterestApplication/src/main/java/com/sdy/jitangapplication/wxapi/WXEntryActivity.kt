@@ -120,7 +120,10 @@ class WXEntryActivity : WXCallbackActivity() {
                     } else if (t.code == 400) {
                         CommonFunction.toast(t.msg)
                     } else if (t.code == 401) {
-                        startActivity<RegisterTooManyActivity>("duration" to t.data?.duration)
+                        RegisterTooManyActivity.start(
+                            t.data?.countdown_time ?: 0,
+                            this@WXEntryActivity
+                        )
                     }
                     loading.dismiss()
                 }

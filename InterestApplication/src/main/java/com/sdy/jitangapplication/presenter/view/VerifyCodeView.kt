@@ -4,6 +4,7 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.RegisterTooManyBean
 
 interface VerifyCodeView : BaseView {
 
@@ -12,7 +13,7 @@ interface VerifyCodeView : BaseView {
 
 
     //获取验证码结果
-    fun onGetVerifyCode(data: BaseResp<Any?>?)
+    fun onGetVerifyCode(data: BaseResp<RegisterTooManyBean?>?)
 
 
     //倒计时

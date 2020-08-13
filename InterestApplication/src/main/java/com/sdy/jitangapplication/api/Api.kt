@@ -866,7 +866,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/SendSms${Constants.END_BASE_URL}")
-    fun sendSms(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+    fun sendSms(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RegisterTooManyBean?>>
 
     /**
      * 注销原因(新)

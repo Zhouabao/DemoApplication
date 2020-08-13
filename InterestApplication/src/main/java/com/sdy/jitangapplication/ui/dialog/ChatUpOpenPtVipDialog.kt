@@ -29,7 +29,6 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.model.UnlockBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -238,7 +237,7 @@ class ChatUpOpenPtVipDialog(
                  *
                  */
                 chatupContact.isVisible = true
-                if (chatUpBean.private_chat_btn) {
+                if (chatUpBean.private_chat_btn && !chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                     //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
                     chatupTitle.text = "她设置了等级权限"
@@ -281,7 +280,7 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "成为钻石会员，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            CommonFunction.startToVip(context1,1)
+                            CommonFunction.startToVip(context1, 1)
                         }
                     }
                 }
