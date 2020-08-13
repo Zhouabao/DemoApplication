@@ -297,7 +297,7 @@
             android:id="@+id/datingTextCl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <EditText
                 android:id="@+id/datingDescrEt"
@@ -334,7 +334,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -366,11 +366,11 @@
 
 
             <ImageView
-                android:id="@+id/deleteRecord"
+                android:id="@+id/revertRecord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_dating_record_revert"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/startRecordRl"
                 app:layout_constraintLeft_toLeftOf="@id/restartTip"
                 app:layout_constraintRight_toRightOf="@id/restartTip"
@@ -383,6 +383,7 @@
                 android:text="重新录制"
                 android:textColor="#ff888d92"
                 android:textSize="12sp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/startRecordRl"
                 app:layout_constraintTop_toTopOf="@id/audioPlayTip" />
@@ -437,6 +438,7 @@
                 android:text="点击试听"
                 android:textColor="#ff888d92"
                 android:textSize="12sp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="@id/startRecordRl"
                 app:layout_constraintRight_toRightOf="@id/startRecordRl"
                 app:layout_constraintTop_toBottomOf="@id/startRecordRl" />
@@ -447,7 +449,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_dating_record_ok"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/startRecordRl"
                 app:layout_constraintLeft_toLeftOf="@id/audioFinishTip"
                 app:layout_constraintRight_toRightOf="@id/audioFinishTip"
@@ -457,9 +459,10 @@
                 android:id="@+id/audioFinishTip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="重新录制"
+                android:text="确认使用"
                 android:textColor="#ff888d92"
                 android:textSize="12sp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@id/startRecordRl"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/audioPlayTip" />

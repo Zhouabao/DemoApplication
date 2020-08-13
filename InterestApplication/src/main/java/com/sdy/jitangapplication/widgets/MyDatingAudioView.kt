@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
+import com.sdy.jitangapplication.utils.UriUtils
 import kotlinx.android.synthetic.main.layout_dating_audio.view.*
 
 /**
@@ -22,6 +24,14 @@ class MyDatingAudioView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    companion object {
+        const val MEDIA_PREPARE = 0
+        const val MEDIA_PLAY = 1
+        const val MEDIA_PAUSE = 2
+        const val MEDIA_STOP = 3
+        const val MEDIA_ERROR = 4
+    }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_dating_audio, this)
@@ -47,6 +57,9 @@ class MyDatingAudioView @JvmOverloads constructor(
     var playIcon = -1
     var pauseIcon = -1
     var mediaPlayer: IjkMediaPlayerUtil? = null
+    private var filePath = ""
+    private var duration: Int = 0
+    private var playState: Int = MEDIA_PREPARE
 
     private fun initAudio() {
         if (mediaPlayer != null) {
@@ -55,44 +68,20 @@ class MyDatingAudioView @JvmOverloads constructor(
         }
         mediaPlayer = IjkMediaPlayerUtil(context, 0, object : OnPlayingListener {
             override fun onPlay(position: Int) {
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-//                voicePlayView.playAnimation()
-//                UpdateVoiceTimeThread.getInstance(
-//                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-//                    audioTime
-//                ).start()
                 audioPlayBtn.setImageResource(pauseIcon)
             }
 
             override fun onPause(position: Int) {
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-//                voicePlayView.cancelAnimation()
-//                UpdateVoiceTimeThread.getInstance(
-//                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-//                    audioTime
-//                ).pause()
                 audioPlayBtn.setImageResource(playIcon)
             }
 
             override fun onStop(position: Int) {
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                voicePlayView.cancelAnimation()
-//                UpdateVoiceTimeThread.getInstance(
-//                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-//                    audioTime
-//                ).stop()
                 audioPlayBtn.setImageResource(playIcon)
 
             }
 
             override fun onError(position: Int) {
                 CommonFunction.toast("音频播放出错")
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-//                voicePlayView.cancelAnimation()
-//                UpdateVoiceTimeThread.getInstance(
-//                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-//                    audioTime
-//                ).stop()
                 audioPlayBtn.setImageResource(playIcon)
                 mediaPlayer!!.resetMedia()
             }
@@ -102,59 +91,52 @@ class MyDatingAudioView @JvmOverloads constructor(
             }
 
             override fun onPreparing(position: Int) {
-//                voicePlayView.cancelAnimation()
-//                UpdateVoiceTimeThread.getInstance(
-//                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-//                    audioTime
-//                ).stop()
                 audioPlayBtn.setImageResource(playIcon)
             }
 
             override fun onRelease(position: Int) {
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                voicePlayView.stop()
+
 //                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
-//                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-//                mediaPlayer!!.resetMedia()
-//                mediaPlayer = null
+                audioPlayBtn.setImageResource(playIcon)
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
             }
 
         }).getInstance()
 
+        audioPlayBtn.clickWithTrigger {
+            if (playState == MEDIA_PREPARE || playState == MEDIA_PAUSE || playState == MEDIA_STOP || playState == MEDIA_ERROR) {
+                playState = MEDIA_PLAY
+            } else if (playState == MEDIA_PLAY) {
+                playState = MEDIA_PAUSE
+            }
 
+            when (playState) {
+                MEDIA_PREPARE, MEDIA_ERROR, MEDIA_STOP -> {
+                    playAudio()
+                }
+                MEDIA_PAUSE -> {
+                    resumeAudio()
+                }
+                MEDIA_PLAY -> {
+                    pauseAudio()
+                }
 
-        audioPlayBtn.setOnClickListener {
-//            when (squareBean!!.isPlayAudio) {
-//                IjkMediaPlayerUtil.MEDIA_ERROR -> {
-//                    initAudio(0)
-//                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
-//                        .prepareMedia()
-//                }
-//                IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
-//                    mediaPlayer!!.prepareMedia()
-//                }
-//                IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
-//                    initAudio(0)
-//                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
-//                        .prepareMedia()
-//                }
-//                IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
-//                    mediaPlayer!!.pausePlay()
-//                }
-//                IjkMediaPlayerUtil.MEDIA_PAUSE -> {//暂停再次点击就播放
-//                    mediaPlayer!!.resumePlay()
-//                }
-//            }
+            }
         }
     }
 
     fun playAudio() {
-        mediaPlayer!!.startPlay()
+        audioTime.startTime(duration * 1000L, "3")
+        mediaPlayer!!.prepareMedia()
     }
 
-    fun prepareAudio() {
-//        mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+    fun prepareAudio(path: String, duration: Int) {
+        filePath = path
+        this.duration = duration
         initAudio()
+        mediaPlayer!!.setDataSource(path)
+        audioTime.text = UriUtils.getShowTime(duration)
     }
 
 
