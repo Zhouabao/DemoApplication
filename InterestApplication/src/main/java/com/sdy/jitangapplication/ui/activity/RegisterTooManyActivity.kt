@@ -56,17 +56,16 @@ class RegisterTooManyActivity : BaseActivity(), MediaPlayer.OnErrorListener {
         super.onResume()
         if (!videoPreview.isPlaying)
             videoPreview.start()
-//        videoPreview.resume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         videoPreview.stopPlayback()
+        timeRunTextView.stopTime()
     }
 
 
     private fun showVideoPreview() {
-//        videoPreview.setMediaController(MediaController(this))
         videoPreview.setVideoURI(Uri.parse("android.resource://com.sdy.jitangapplication/${R.raw.login_video}"))
         videoPreview.setOnCompletionListener {
             videoPreview.start()
