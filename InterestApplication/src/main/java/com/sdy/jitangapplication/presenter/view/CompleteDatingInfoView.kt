@@ -13,4 +13,8 @@ interface CompleteDatingInfoView : BaseView {
 
     fun onDatingOptionsResult(data: DatingOptionsBean?)
 
+
+    fun onSquareAnnounceResult(success: Boolean, code: Int = 0)
+
+    fun onQnUploadResult(success: Boolean, key: String)
 }

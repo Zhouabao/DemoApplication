@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.WriteDatingContentActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_rectangle_gray_white_13dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="15dp">
+
+        <EditText
+            android:id="@+id/datingContentEt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="描述具体活动项目"
+            android:maxLength="15"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#FFC8C8C8"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/datingContentLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/10"
+            android:textColor="#ffc8c8c8"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/contentTip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="其他用户预览样式如下，请妥善描述，发布违禁内容或导致封号及设备禁用"
+        android:textColor="#ff606060"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/datingContentShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:paddingLeft="14dp"
+        android:paddingTop="7dp"
+        android:paddingRight="14dp"
+        android:background="@drawable/shape_rectangle_gray_white_15dp"
+        android:paddingBottom="7dp"
+        android:text="一起运动·待描述"
+        android:textColor="#ff24151a"
+        android:textSize="14sp" />
+</LinearLayout>

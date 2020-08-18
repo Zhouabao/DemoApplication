@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import java.io.Serializable
 
 /**
  *    author : ZFM
@@ -15,8 +16,7 @@ data class CheckBean(
     var checked: Boolean = false,
     var icon: String = "",
     var id: Int = -1
-)
-
+) : Serializable
 
 
 data class MyTapsBean(

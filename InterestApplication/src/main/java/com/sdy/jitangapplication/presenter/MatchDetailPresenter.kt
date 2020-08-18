@@ -14,6 +14,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.LikeBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
@@ -233,4 +234,33 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
 
+
+    fun doLike(dating_id: Int, type: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .doLike(
+                UserManager.getSignParams(
+                    hashMapOf<String, Any>(
+                        "dating_id" to dating_id,
+                        "type" to type
+                    )
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<LikeBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<LikeBean?>) {
+                    super.onNext(t)
+                    //likeState
+                    if (t.code == 200) {
+                        mView.doLikeResult(t.code == 200, t.data!!.isliked)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
+            })
+    }
 }

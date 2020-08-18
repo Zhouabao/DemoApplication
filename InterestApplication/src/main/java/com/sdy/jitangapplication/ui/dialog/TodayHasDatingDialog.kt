@@ -8,54 +8,27 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.ui.activity.ChooseDatingTypeActivity
-import kotlinx.android.synthetic.main.dialog_publish_dating_must_know.*
+import com.sdy.jitangapplication.ui.activity.CompleteDatingInfoActivity
+import kotlinx.android.synthetic.main.dialog_today_has_dating.*
 import org.jetbrains.anko.startActivity
 
 /**
- * 发布约会须知
+ * 今日已经发布过活动
  */
-class PublishDatingKnowDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class TodayHasDatingDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_publish_dating_must_know)
+        setContentView(R.layout.dialog_today_has_dating)
         initWindow()
         initView()
     }
 
 
-    override fun show() {
-        super.show()
-//        timer.start()
-    }
 
-    override fun dismiss() {
-        super.dismiss()
-//        timer.cancel()
-    }
-
-    /** 倒计时60秒，一次1秒 */
-    val timer = object : CountDownTimer(6 * 1000, 1000) {
-        override fun onFinish() {
-            knowBtn.text = "我已了解"
-            knowBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
-            knowBtn.isEnabled = true
-        }
-
-        override fun onTick(p0: Long) {
-            knowBtn.text = "我已了解（${p0 / 1000}s）"
-        }
-
-    }
 
     private fun initView() {
-        knowBtn.isEnabled = true
-
-
         knowBtn.clickWithTrigger {
-            //todo  跳转到发布约会
-            context1.startActivity<ChooseDatingTypeActivity>()
             dismiss()
         }
     }

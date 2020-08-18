@@ -88,8 +88,8 @@ class PeopleNearbyWomanAdapter() :
             itemView.userRelationshipRv.adapter = adapter
 
             val datas = mutableListOf<UserRelationshipBean>()
-            if (!item.intention_title.isNullOrEmpty())
-                datas.add(UserRelationshipBean(item.intention_title, 0))
+            if (!item.title.isNullOrEmpty())
+                datas.add(UserRelationshipBean(item.title, 0, item.invitation_id))
             for (data in item.want) {
                 datas.add(UserRelationshipBean(data, 1))
             }

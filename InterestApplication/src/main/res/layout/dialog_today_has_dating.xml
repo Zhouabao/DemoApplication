@@ -9,62 +9,55 @@
     android:layout_marginBottom="10dp"
     android:background="@drawable/rectangle_white_15dp">
 
+    <ImageView
+        android:id="@+id/iv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/icon_has_dating"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/choicenessTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="发布约会须知"
+        android:text="今日已发布过活动"
         android:textColor="#ff191919"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/iv1" />
 
     <TextView
         android:id="@+id/t1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="left"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="26dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="每日最多发布1条约会信息，最多可保留1条最新的约会信息，所有发布内容均需经过人工审核。"
-        android:textColor="#ff696e73"
+        android:text="你今天已经发布过活动了，为了活动的有效性请明日再试，我们会为你保留最新发布的活动信息"
+        android:textColor="#ffb5b7b9"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choicenessTitle" />
 
-    <TextView
-        android:id="@+id/t2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:gravity="left"
-        android:lineSpacingMultiplier="1.2"
-        android:text="发布色情、招嫖信息，发布广告等违规信息及恶意侮辱他人等违规行为或将被永久封禁设备及账号，请妥善发布内容，共建绿色诚信约会"
-        android:textColor="#ff696e73"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/t1" />
 
-<!--rectangle_gray_bottom_15dp-->
+    <!--rectangle_gray_bottom_15dp-->
     <TextView
         android:id="@+id/knowBtn"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/rectangle_gray_bottom_15dp"
-        android:enabled="false"
+        android:background="@drawable/rectangle_orange_bottom_15dp"
         android:gravity="center"
-        android:text="我已了解（5s）"
+        android:text="好的"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold"
@@ -72,5 +65,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/t2" />
+        app:layout_constraintTop_toBottomOf="@id/t1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

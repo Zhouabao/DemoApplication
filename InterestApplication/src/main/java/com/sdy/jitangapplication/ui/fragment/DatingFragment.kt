@@ -6,37 +6,37 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ActivityUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateFindByTagEvent
 import com.sdy.jitangapplication.model.CheckBean
 import com.sdy.jitangapplication.model.DatingBean
-import com.sdy.jitangapplication.model.SquareTagBean
 import com.sdy.jitangapplication.presenter.DatingPresenter
 import com.sdy.jitangapplication.presenter.view.DatingView
-import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
+import com.sdy.jitangapplication.ui.activity.DatingDetailActivity
 import com.sdy.jitangapplication.ui.adapter.DatingSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.TodayWantAdapter
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_dating.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 约会
  */
 class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
-    OnRefreshListener {
+    OnRefreshListener, OnLoadMoreListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,14 +45,13 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
 
     fun loadData() {
         initView()
+        mPresenter.getIntention()
     }
 
 
     //广场列表内容适配器
     private val adapter by lazy { DatingSquareAdapter() }
-
     val layoutManager by lazy { LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false) }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,11 +69,13 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
         mPresenter.context = activity!!
 
         refreshDatingSquare.setOnRefreshListener(this)
+        refreshDatingSquare.setOnLoadMoreListener(this)
 
         stateDatingSquare.retryBtn.onClick {
             stateDatingSquare.viewState = MultiStateView.VIEW_STATE_LOADING
 //            这个地方还要默认设置选中第一个兴趣来更新数据
-            mPresenter.getSquareList()
+            mPresenter.getIntention()
+
         }
 
         initDatingHeaderView()
@@ -82,82 +83,73 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
         rvDatingSquare.adapter = adapter
         adapter.setHeaderAndEmpty(false)
         adapter.setEmptyView(R.layout.empty_friend_layout, rvDatingSquare)
+        adapter.emptyView.emptyFriendTitle.text = "什么也没有"
+        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(rvDatingSquare)
 
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.touristMode) {
                 TouristDialog(activity!!).show()
-            } else
-                if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
-                    startActivity<TagDetailCategoryActivity>(
-                        "id" to adapter.data[position].id,
-                        "type" to TagDetailCategoryActivity.TYPE_TAG
-                    )
+            } else {
+                DatingDetailActivity.start2Detail(activity!!, adapter.data[position].id)
+            }
+
         }
-
-        adapter.setOnItemChildClickListener { _, view, position ->
-            if (UserManager.touristMode) {
-                TouristDialog(activity!!).show()
-            } else
-                when (view.id) {
-
-                }
-        }
-
-        mPresenter.getSquareList()
-        mPresenter.getIntention()
 
     }
 
     /**
      * 初始化顶部约会项目数据
      */
-    private val datingProjectAdapter by lazy { TodayWantAdapter(true) }
+    private val datingTypeAdapter by lazy { TodayWantAdapter(true) }
     private fun initDatingHeaderView() {
-        headDatingRv.layoutManager =
-            LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        headDatingRv.adapter = datingProjectAdapter
-        datingProjectAdapter.setOnItemClickListener { _, view, position ->
+        headDatingRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        headDatingRv.adapter = datingTypeAdapter
+        datingTypeAdapter.setOnItemClickListener { _, view, position ->
             checkPosi = position
-            for (data in datingProjectAdapter.data) {
-                data.checked = data == datingProjectAdapter.data[position]
+            checkWantId = datingTypeAdapter.data[position].id
+            for (data in datingTypeAdapter.data) {
+                data.checked = data == datingTypeAdapter.data[position]
             }
-            datingProjectAdapter.notifyDataSetChanged()
+            datingTypeAdapter.notifyDataSetChanged()
+
+            refreshDatingSquare.autoRefresh()
         }
     }
 
 
-    private var topPosition = -1
-
-
+    private var page = 1
     override fun onRefresh(refreshTagSquare: RefreshLayout) {
-        refreshTagSquare.setNoMoreData(false)
-        mPresenter.getSquareList()
-
+        refreshTagSquare.resetNoMoreData()
+        page = 1
+        mPresenter.getDatingList(page, checkWantId)
     }
 
 
-    override fun onGetSquareTagResult(data: MutableList<SquareTagBean>?, result: Boolean) {
+    override fun onLoadMore(refreshLayout: RefreshLayout) {
+        page++
+        mPresenter.getDatingList(page, checkWantId)
+    }
+
+    override fun onGetSquareDatingResult(data: MutableList<DatingBean>?, result: Boolean) {
         if (result) {
-            if (refreshDatingSquare.state == RefreshState.Refreshing) {
-                adapter.data.clear()
-                adapter.notifyDataSetChanged()
-                rvDatingSquare.scrollToPosition(0)
-            }
             stateDatingSquare.viewState = MultiStateView.VIEW_STATE_CONTENT
-
-            for (datas in data ?: mutableListOf()) {
-                if (UserManager.getGender() == 1) {
-                    if (datas.is_hot)
-                        adapter.addData(DatingBean(datas.icon, type = DatingBean.TYPE_MAN))
-                    else
-                        adapter.addData(DatingBean(datas.icon, type = DatingBean.TYPE_WOMAN))
-                } else {
-                    adapter.addData(DatingBean(datas.icon, type = DatingBean.TYPE_MAN))
+            if (refreshDatingSquare.state == RefreshState.Loading) {
+                refreshDatingSquare.finishLoadMore(result)
+            } else {
+                adapter.data.clear()
+                rvDatingSquare.scrollToPosition(0)
+                if (data.isNullOrEmpty()) {
+                    adapter.isUseEmpty(true)
                 }
+                refreshDatingSquare.finishRefresh(result)
             }
-
+            adapter.addData(data ?: mutableListOf())
+            adapter.notifyDataSetChanged()
+            if (adapter.data.size < Constants.PAGESIZE * page)
+                refreshDatingSquare.finishLoadMoreWithNoMoreData()
         } else {
             stateDatingSquare.viewState = MultiStateView.VIEW_STATE_ERROR
             stateDatingSquare.errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -167,12 +159,7 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
             }
             adapter.notifyDataSetChanged()
         }
-        refreshDatingSquare.finishRefresh(result)
-    }
 
-
-    override fun onGetMarkTagResult(result: Boolean) {
-        refreshDatingSquare.autoRefresh()
     }
 
     private var checkWantId = -1
@@ -185,23 +172,23 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
                     if (data.value.id == checkWantId) {
                         data.value.checked = true
                         checkPosi = data.index
+                        checkWantId = data.value.id
                         hasCheck = true
                         break
                     }
                 }
             }
             if (!hasCheck) {
-                result!![0].checked = true
+                result[0].checked = true
+                checkWantId = result[0].id
                 checkPosi = 0
             }
-            datingProjectAdapter.setNewData(result)
+            datingTypeAdapter.setNewData(result)
         } else {
             adapter.removeAllHeaderView()
         }
-    }
 
-    override fun showLoading() {
-        stateDatingSquare.viewState = MultiStateView.VIEW_STATE_LOADING
+        mPresenter.getDatingList(page, checkWantId)
     }
 
 
@@ -213,7 +200,8 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateFindByTagEvent(eve: UpdateFindByTagEvent) {
-        refreshDatingSquare.autoRefresh()
+//        refreshDatingSquare.autoRefresh()
     }
+
 
 }

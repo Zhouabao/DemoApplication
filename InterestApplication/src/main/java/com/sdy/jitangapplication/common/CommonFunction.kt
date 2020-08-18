@@ -33,10 +33,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.ChatUpBean
-import com.sdy.jitangapplication.model.GiftStateBean
-import com.sdy.jitangapplication.model.SendTipBean
-import com.sdy.jitangapplication.model.UnlockCheckBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.attachment.*
@@ -61,28 +58,162 @@ import java.text.ParseException
  *    version: 1.0
  */
 object CommonFunction {
-
-
     /**
      * 验证发布约会
+     * //todo 历史是否发布过  今日是否发布过
+     * 当才code 201 需要充值门槛 202 需要充值黄金会员 200 验证通过了可以发布 203 今日是否发布过
      */
-    fun checkPublishDating(context: Context){
-        PublishDatingKnowDialog(context).show()
+    fun checkPublishDating(context: Context) {
+        val loading = LoadingDialog(context)
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkReleaseDating(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<CheckPublishDatingBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
 
-//        DatingOpenPtVipDialog(context,DatingOpenPtVipDialog.TYPE_DATING_PUBLISH,ChatUpBean()).show()
+                override fun onNext(t: BaseResp<CheckPublishDatingBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+                            if (t.data?.is_publish == true)
+                                context.startActivity<ChooseDatingTypeActivity>()
+                            else
+                                context.startActivity<PublishDatingKnowActivity>()
+                        }
+                        201 -> {
+                            startToFootPrice(context)
+                        }
+                        202 -> {
+                            DatingOpenPtVipDialog(
+                                context,
+                                DatingOpenPtVipDialog.TYPE_DATING_PUBLISH
+                            ).show()
+                        }
+                        203 -> {
+                            TodayHasDatingDialog(context).show()
+
+                        }
+                        else -> {
+                            toast(t.msg)
+                        }
+                    }
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    loading.dismiss()
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loading.dismiss()
+                }
+            })
     }
 
 
     /**
      * 验证报名约会
+     * //todo 已经报名 直接跳转聊天界面
+     * 	code 202 对方设置高级会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息
      */
-    fun checkApplyForDating(context: Context){
-//        PublishDatingKnowDialog(context).show()
-        DatingOpenPtVipDialog(context,DatingOpenPtVipDialog.TYPE_DATING_PUBLISH,ChatUpBean()).show()
+    fun checkApplyForDating(context: Context, datingBean: DatingBean) {
+        val loading = LoadingDialog(context)
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkDatingapply(UserManager.getSignParams(hashMapOf("dating_id" to datingBean.id)))
+            .excute(object : BaseSubscriber<BaseResp<CheckPublishDatingBean?>>() {
+                override fun onStart() {
+                    super.onStart()
+                    loading.show()
+                }
+
+                override fun onNext(t: BaseResp<CheckPublishDatingBean?>) {
+                    super.onNext(t)
+                    when (t.code) {
+                        200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
+                            loading.dismiss()
+                            DatingOpenPtVipDialog(
+                                context,
+                                DatingOpenPtVipDialog.TYPE_DATING_APPLYFOR,
+                                t.data,
+                                datingBean
+                            ).show()
+                        }
+                        202 -> {//202 对方设置高级会员
+                            DatingOpenPtVipDialog(
+                                context,
+                                DatingOpenPtVipDialog.TYPE_DATING_APPLYFOR_PRIVACY,
+                                t.data,
+                                datingBean
+                            ).show()
+                            loading.dismiss()
+                        }
+                        206 -> {// 206是好友，已经报名
+                            loading.dismiss()
+                            ChatActivity.start(context, datingBean.accid)
+                        }
+                        207 -> {//207 报名成功返回数据（id，title，dating_title，icon）
+                            val attachment =
+                                ChatDatingAttachment(
+                                    t.data!!.content,
+                                    t.data!!.icon,
+                                    t.data!!.datingId
+                                )
+                            val message = MessageBuilder.createCustomMessage(
+                                datingBean.accid,
+                                SessionTypeEnum.P2P,
+                                "",
+                                attachment,
+                                CustomMessageConfig()
+                            )
+                            NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+                                .setCallback(object : RequestCallback<Void?> {
+                                    override fun onSuccess(param: Void?) {
+                                        EventBus.getDefault().post(UpdateApproveEvent())
+                                        EventBus.getDefault().post(UpdateHiEvent())
+                                        EventBus.getDefault().post(UpdateAccostListEvent())
+                                        if (ActivityUtils.getTopActivity() !is ChatActivity) {
+                                            Handler().postDelayed({
+                                                loading.dismiss()
+                                                ChatActivity.start(
+                                                    ActivityUtils.getTopActivity(),
+                                                    datingBean.accid
+                                                )
+                                            }, 400L)
+                                        } else {
+                                            EventBus.getDefault().post(UpdateSendGiftEvent(message))
+                                            loading.dismiss()
+                                        }
+                                    }
+
+                                    override fun onFailed(code: Int) {
+                                        loading.dismiss()
+                                    }
+
+                                    override fun onException(exception: Throwable) {
+                                        loading.dismiss()
+                                    }
+                                })
+                        }
+                        else -> {
+                            toast(t.msg)
+                            loading.dismiss()
+                        }
+                    }
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loading.dismiss()
+                }
+            })
     }
-
-
-
 
 
     /**
@@ -202,22 +333,6 @@ object CommonFunction {
                         }
                         400 -> {
                             toast(t.msg)
-//                            CommonAlertDialog.Builder(context1)
-//                                .setTitle("提示")
-//                                .setContent(t.msg).setCancelIconIsVisibility(false)
-//                                .setConfirmText("知道了").setCancelAble(false)
-//                                .setOnConfirmListener(object : OnConfirmListener {
-//                                    override fun onClick(dialog: Dialog) {
-//                                        dialog.cancel()
-//                                        NIMClient.getService(MsgService::class.java)
-//                                            .deleteRecentContact2(
-//                                                target_accid,
-//                                                SessionTypeEnum.P2P
-//                                            )
-//                                    }
-//                                })
-//                                .create()
-//                                .show()
                         }
                         401 -> {//女性未认证
                             VerifyThenChatDialog(context1).show()

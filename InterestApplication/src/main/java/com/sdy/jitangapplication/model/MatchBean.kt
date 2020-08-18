@@ -42,7 +42,8 @@ data class MatchBean(
     var personal_info: MutableList<DetailUserInfoBean> = mutableListOf(),
     var birth: Int = 0,
     var mv_url: String = "",
-    var mv_faced: Boolean = false
+    var mv_faced: Boolean = false,
+    var dating: DatingBean? = null
 ) : Serializable
 
 
@@ -128,7 +129,6 @@ data class SendGiftBean(
 data class NearPersonBean(
     var accid: String = "",
     var age: Int = 0,
-    var all_c: Int = 0,
     var avatar: String = "",
     var constellation: String = "",
     var contact_way: Int = 0,
@@ -151,8 +151,21 @@ data class NearPersonBean(
     var online_time: String = "",
     var sign: String = "",
     var checked: Boolean = false,
-    var want: MutableList<String> = mutableListOf()
+    var want: MutableList<String> = mutableListOf(),
+
+
+    var dating_title: String = "",
+    var invitation_id: Int = 0,
+    var is_platinum: Int = 0,
+    var ismv: Int = 0,
+    var juli: Int = 0,
+    var mv_url: String = "",
+    var mv_url_state: Int = 0,
+    var platinum_vip_expire: Int = 0,
+    var ranking_level: Int = 0,
+    var title: String = ""
 )
+
 
 data class TodayFateBean(
     val today_pull: Boolean = false,

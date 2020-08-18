@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.item_location.view.*
  *    desc   :
  *    version: 1.0
  */
-class LocationAdapter(var checkPosition: Int = 0) : BaseQuickAdapter<PoiItem, BaseViewHolder>(R.layout.item_location) {
+class LocationAdapter(var checkPosition: Int = 0) :
+    BaseQuickAdapter<PoiItem, BaseViewHolder>(R.layout.item_location) {
 
     override fun convert(holder: BaseViewHolder, item: PoiItem) {
         if (holder.layoutPosition == checkPosition) {
@@ -27,5 +28,6 @@ class LocationAdapter(var checkPosition: Int = 0) : BaseQuickAdapter<PoiItem, Ba
             "${item.title}${if (!item.title.isNullOrEmpty() && !item.snippet.isNullOrEmpty()) {
                 "\n" + (item.cityName ?: "") + (item.adName ?: "") + (item.businessArea ?: "") + (item.snippet ?: "")
             } else {"" }}"
+//            "${(item.cityName ?: "") + (item.adName ?: "")}${item.title}"
     }
 }

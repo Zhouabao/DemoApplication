@@ -283,18 +283,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 }
             }
 
-            if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
-                EventBus.getDefault().post(
-                    UpdateTodayWantEvent(
-                        CheckBean(
-                            icon = nearBean?.today_find?.icon ?: "",
-                            title = nearBean?.today_find?.title ?: "",
-                            checked = true,
-                            id = nearBean!!.today_find!!.id
-                        )
-                    )
-                )
-            }
+
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (refreshPeopleNearby.state == RefreshState.Refreshing) {
                 adapter.data.clear()

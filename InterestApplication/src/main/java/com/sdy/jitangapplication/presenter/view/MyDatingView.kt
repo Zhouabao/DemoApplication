@@ -1,8 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.SquareListBean
+import com.sdy.jitangapplication.model.DatingBean
 
 /**
  *    author : ZFM
@@ -10,5 +9,6 @@ import com.sdy.jitangapplication.model.SquareListBean
  *    desc   :
  *    version: 1.0
  */
-interface MyTagView : BaseView {
+interface MyDatingView : BaseView {
+    fun onGetMyDatingResult(data: MutableList<DatingBean>?)
 }

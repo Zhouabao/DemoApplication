@@ -3,7 +3,9 @@ package com.sdy.jitangapplication.ui.adapter
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.UserRelationshipBean
+import com.sdy.jitangapplication.ui.activity.DatingDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_user_intention.view.*
 import kotlinx.android.synthetic.main.item_user_relationship.view.*
@@ -26,7 +28,10 @@ class UserRelationshipAdapter :
     override fun convert(helper: BaseViewHolder, item: UserRelationshipBean) {
         when (helper.itemViewType) {
             0 -> {
-                helper.itemView.userIntentionContent.text = item.title
+                helper.itemView.userIntentionContent.text = "活动：${item.title}"
+                helper.itemView.userIntentionContent.clickWithTrigger {
+                    DatingDetailActivity.start2Detail(mContext, item.id)
+                }
             }
             1 -> {
                 helper.itemView.relationshipContent.text = item.title

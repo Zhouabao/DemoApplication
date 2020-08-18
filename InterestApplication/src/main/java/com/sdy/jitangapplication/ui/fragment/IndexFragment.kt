@@ -19,8 +19,10 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.EnableRvScrollEvent
+import com.sdy.jitangapplication.event.JumpToDatingEvent
 import com.sdy.jitangapplication.event.TopCardEvent
 import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.model.IndexListBean
@@ -37,6 +39,7 @@ import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
+import kotlinx.android.synthetic.main.item_marquee_recommend_dating.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -99,16 +102,20 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
         //选择今日意向
         todayWantCl.clickWithTrigger {
-            if (UserManager.touristMode)
+            if (UserManager.touristMode) {
                 TouristDialog(activity!!).show()
-            else
-                todayWantDialog.show()
+            } else if (UserManager.getGender() == 1) {
+                EventBus.getDefault().post(JumpToDatingEvent())
+            } else {
+                CommonFunction.checkPublishDating(activity!!)
+            }
         }
 
         GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)
         tobeChoicessBtn.clickWithTrigger {
             ChoicenessOpenPtVipDialog(activity!!).show()
         }
+
 
     }
 
@@ -217,13 +224,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateTodayWantEvent(event: UpdateTodayWantEvent) {
-        if (event.todayWantBean != null) {
-            todayWantContent.text = event.todayWantBean.title
-//            GlideUtil.loadCircleImg(activity!!, event.todayWantBean.icon, todayWantIcon)
-        } else {
-            todayWantContent.text = "选择意向"
-            todayWantIcon.setImageResource(R.drawable.icon_today_want_heart)
-        }
     }
 
 
@@ -252,14 +252,34 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             peopleRecommendTopAdapter.mv_url = data!!.mv_url
             peopleRecommendTopAdapter.isplatinum = data!!.isplatinumvip
 
+            UserManager.saveGender(data.gender)
             if ((data!!.gender == 1 && data!!.isplatinumvip) || (data.gender == 2 && data!!.mv_url)) {
                 tobeChoicenessCl.isVisible = false
             } else {
                 tobeChoicenessCl.isVisible = true
                 recommendUsers.scrollToPosition(1)
             }
+            setRecommendDatingView(data.dating_list)
         }
 
+    }
+
+    private fun setRecommendDatingView(datingList: MutableList<String>) {
+        if (UserManager.getGender() == 1) {
+            todayWantContent.text = "她想约你"
+        } else {
+            todayWantContent.text = "发布活动"
+        }
+        todayWantIcon.removeAllViews()
+        for (data in datingList) {
+            todayWantIcon.addView(getMarqueeView(data))
+        }
+    }
+
+    private fun getMarqueeView(content: String): View {
+        val view = layoutInflater.inflate(R.layout.item_marquee_recommend_dating, null, false)
+        GlideUtil.loadCircleImg(activity!!, content, view.recommendDatingAvator)
+        return view
     }
 
 

@@ -9,9 +9,9 @@
         android:id="@+id/userAppbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp"
         android:background="@color/colorWhite"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="0dp">
 
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -71,8 +71,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="90dp"
                     android:layout_marginLeft="15dp"
-                    android:visibility="gone"
                     android:background="@drawable/icon_top_choiceness"
+                    android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/t1">
 
@@ -112,11 +112,11 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recommendUsers"
                     android:layout_width="0dp"
-                    app:layout_constraintRight_toRightOf="parent"
                     android:layout_height="90dp"
                     android:layout_marginBottom="15dp"
                     android:overScrollMode="never"
                     app:layout_constraintLeft_toRightOf="@id/tobeChoicenessCl"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tobeChoicenessCl" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -149,23 +149,28 @@
                 app:layout_constraintRight_toLeftOf="@id/filterBtn"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ViewFlipper
                     android:id="@+id/todayWantIcon"
                     android:layout_width="23dp"
                     android:layout_height="23dp"
-                    android:src="@drawable/icon_today_want_heart" />
+                    android:autoStart="true"
+                    android:layout_marginLeft="2dp"
+                    android:flipInterval="1000"
+                    android:loopViews="true"
+                    android:inAnimation="@anim/animation_right_in"
+                    android:outAnimation="@anim/animation_right_out" />
 
                 <TextView
                     android:id="@+id/todayWantContent"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="23dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="2dp"
                     android:gravity="center"
-                    android:text="选择意向"
+                    android:text="她想约你"
                     android:textColor="@color/colorWhite"
                     android:textSize="12sp"
                     android:textStyle="bold" />

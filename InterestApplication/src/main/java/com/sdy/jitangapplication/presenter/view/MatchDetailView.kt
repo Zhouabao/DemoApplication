@@ -31,4 +31,7 @@ interface MatchDetailView : BaseView {
      */
     fun onGetSquareListResult(data: RecommendSquareListBean?, result: Boolean, isRefresh: Boolean = false)
 
+    //约会点赞结果
+    fun doLikeResult(b: Boolean, isliked: Boolean)
+
 }

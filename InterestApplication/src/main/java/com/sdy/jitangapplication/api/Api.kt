@@ -1342,5 +1342,60 @@ interface Api {
     @POST("Dating/getMenuList${Constants.END_BASE_URL}")
     fun getDatingTypeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<CheckBean>?>>
 
+    /**
+     * 验证是否可以发布约会
+     */
+    @FormUrlEncoded
+    @POST("Dating/checkReleaseDating${Constants.END_BASE_URL}")
+    fun checkReleaseDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CheckPublishDatingBean?>>
+
+    /**
+     * 约会列表
+     */
+    @FormUrlEncoded
+    @POST("Dating/datingList${Constants.END_BASE_URL}")
+    fun datingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<DatingBean>?>>
+
+    /**
+     * 我的约会
+     */
+    @FormUrlEncoded
+    @POST("Dating/myDating${Constants.END_BASE_URL}")
+    fun myDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<DatingBean>?>>
+
+    /**
+     * 约会详细信息
+     */
+    @FormUrlEncoded
+    @POST("Dating/datingInfo${Constants.END_BASE_URL}")
+    fun datingInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<DatingBean?>>
+
+    /**
+     * 邀约喜欢点赞
+     */
+    @FormUrlEncoded
+    @POST("Dating/doLike${Constants.END_BASE_URL}")
+    fun doLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeBean?>>
+
+    /**
+     * 验证约会报名
+     */
+    @FormUrlEncoded
+    @POST("Dating/checkDatingapply${Constants.END_BASE_URL}")
+    fun checkDatingapply(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CheckPublishDatingBean?>>
+
+    /**
+     * 报名邀约
+     */
+    @FormUrlEncoded
+    @POST("Dating/datingApply${Constants.END_BASE_URL}")
+    fun datingApply(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ApplyDatingBean?>>
+
+    /**
+     * 举报约会
+     */
+    @FormUrlEncoded
+    @POST("Dating/report${Constants.END_BASE_URL}")
+    fun reportDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

@@ -173,7 +173,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("动态", "约会", "兴趣")
+    private val titles = arrayOf("动态", "活动", "兴趣")
 
     private fun initIndicator() {
         tabMySquareAndTag.setBackgroundColor(Color.WHITE)
@@ -290,7 +290,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         setUserPower()
 
         EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
-        EventBus.getDefault().post(UpdateMyDatingEvent( mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
 
         if (!UserManager.isShowGuideVerify()) {

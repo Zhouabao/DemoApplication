@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -107,6 +109,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
         EventBus.getDefault().unregister(this)
     }
 
@@ -143,6 +146,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         btnBack2.setOnClickListener(this)
         notifyAddTagBtn.setOnClickListener(this)
         contactCl.setOnClickListener(this)
+        datingApplyForBtn.setOnClickListener(this)
+        datingZanCnt.setOnClickListener(this)
+        datingZanBtn.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
@@ -437,6 +443,36 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
+        //用户的约会
+        if (matchBean!!.dating == null || matchBean!!.dating!!.id == 0) {
+            datailDatingCl.isVisible = false
+        } else {
+            matchBean!!.dating!!.tempLike = matchBean!!.dating!!.isliked
+            matchBean!!.dating!!.temp_like_cnt = matchBean!!.dating!!.like_cnt
+            datailDatingCl.isVisible = true
+            val dating = matchBean!!.dating
+            setTempLikeState(dating!!.isliked, dating!!.like_cnt)
+            GlideUtil.loadCircleImg(this, dating!!.icon, datingProjectIv)
+            datingProjectText.text = "${if (matchBean!!.gender == 1) {
+                "他"
+            } else {
+                "她"
+            }}想和你：${dating!!.title}"
+            datingProjectDetailText.text = dating!!.dating_title
+            datingPlace.text = dating!!.dating_distance
+            if (dating.content_type == 1) {
+                datingTypeText.isVisible = true
+                datingAudioView.isVisible = false
+                datingTypeText.text = dating.content
+            } else {
+                datingTypeText.visibility = View.INVISIBLE
+                datingAudioView.isVisible = true
+                datingAudioView.prepareAudio(dating.content, dating.duration)
+            }
+
+        }
+
+
         //用户照片
         detailPhotosVp.adapter = photosAdapter
         detailPhotosVp.setScrollable(true)
@@ -682,6 +718,38 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     }
 
+    override fun doLikeResult(result: Boolean, isLiked: Boolean) {
+        if (result) {
+            matchBean!!.dating!!.isliked = isLiked
+            matchBean!!.dating!!.tempLike = isLiked
+            matchBean!!.dating!!.like_cnt = if (matchBean!!.dating!!.isliked) {
+                matchBean!!.dating!!.like_cnt + 1
+            } else {
+                matchBean!!.dating!!.like_cnt - 1
+            }
+            setTempLikeState(isLiked, matchBean!!.dating!!.like_cnt)
+        }
+
+
+    }
+
+
+    private fun setTempLikeState(isLiked: Boolean, likeCnt: Int) {
+        datingZanCnt.text = "$likeCnt"
+        if (isLiked) {
+            if (matchBean!!.dating!!.isliked && matchBean!!.dating!!.isliked == isLiked) {
+                datingZanBtn.progress = 1f
+            } else {
+                datingZanBtn.playAnimation()
+                VibrateUtils.vibrate(50L)
+            }
+        } else {
+            datingZanBtn.progress = 0F
+        }
+    }
+
+    private val handler by lazy { Handler() }
+
     override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.moreBtn,
@@ -725,6 +793,31 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     matchBean!!.accid,
                     matchBean!!.gender ?: 1
                 )
+            }
+            R.id.datingApplyForBtn -> {
+                if (matchBean!!.dating != null)
+                    CommonFunction.checkApplyForDating(this, matchBean!!.dating!!)
+            }
+
+            R.id.datingZanBtn, R.id.datingZanCnt -> {
+                handler.removeCallbacksAndMessages(null)
+                matchBean!!.dating!!.tempLike = !matchBean!!.dating!!.tempLike
+                matchBean!!.dating!!.temp_like_cnt = if (matchBean!!.dating!!.tempLike) {
+                    matchBean!!.dating!!.temp_like_cnt + 1
+                } else {
+                    matchBean!!.dating!!.temp_like_cnt - 1
+                }
+                setTempLikeState(matchBean!!.dating!!.tempLike, matchBean!!.dating!!.temp_like_cnt)
+                handler.postDelayed({
+                    if (matchBean!!.dating!!.tempLike != matchBean!!.dating!!.isliked)
+                        mPresenter.doLike(
+                            matchBean!!.dating!!.id, if (matchBean!!.dating!!.isliked) {
+                                2
+                            } else {
+                                1
+                            }
+                        )
+                }, 1000L)
             }
 //            R.id.videoIntroduce -> {//获取认证视频
 //                CommonFunction.checkUnlockIntroduceVideo(

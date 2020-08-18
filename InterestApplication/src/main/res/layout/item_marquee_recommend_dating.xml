@@ -1,38 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<de.hdodenhof.circleimageview.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="58dp">
+    android:id="@+id/recommendDatingAvator"
+    android:layout_width="23dp"
+    android:layout_height="23dp"
+    android:src="@drawable/icon_default_avator"
+    app:civ_border_color="@color/colorWhite"
+    app:civ_border_width="1dp" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/recommendDatingAvator"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginLeft="15dp"
-        android:src="@drawable/icon_default_avator"
-        app:civ_border_color="@color/colorWhite"
-        app:civ_border_width="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/recommendDatingContent"
-        android:layout_width="0dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/shape_rectangle_transparent_20dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="今天想约个小哥哥吃一顿香香的晚饭，尽..."
-        android:textColor="#ffffffff"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/recommendDatingAvator"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>

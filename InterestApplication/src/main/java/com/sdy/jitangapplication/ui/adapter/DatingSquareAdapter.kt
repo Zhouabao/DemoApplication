@@ -1,18 +1,22 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
+import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.DatingBean
-import com.sdy.jitangapplication.ui.activity.DatingDetailActivity
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_layout_dating_square_man.view.*
 import kotlinx.android.synthetic.main.item_layout_dating_square_woman.view.*
-import org.jetbrains.anko.startActivity
 
 
 /**
@@ -36,31 +40,96 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                 itemview.layoutParams = params
                 GlideUtil.loadRoundImgCenterCrop(
                     mContext,
-                    item.icon,
+                    item.avatar,
                     itemview.datingAvatorWoman,
                     SizeUtils.dp2px(10F)
                 )
-                itemview.datingContentAudioWoman.setUi(
-                    R.drawable.shape_rectangle_gray4df_10dp,
-                    audioTip = "点击播放约会语音描述"
-                )
 
-                itemview.clickWithTrigger {
-                    mContext.startActivity<DatingDetailActivity>()
+
+                //content_type 1 文本 2 语音
+                if (item.content_type == 1) {
+                    itemview.datingContentAudioWoman.isVisible = false
+                    itemview.datingContentTextWoman.isVisible = true
+                    itemview.datingContentTextWoman.text = item.content
+                } else {
+                    itemview.datingContentAudioWoman.isVisible = true
+                    itemview.datingContentTextWoman.isVisible = false
+                    itemview.datingContentAudioWoman.setUi(
+                        R.drawable.shape_rectangle_gray4df_10dp,
+                        audioTip = "点击播放活动语音描述"
+                    )
+                    itemview.datingContentAudioWoman.prepareAudio(item.content, item.duration)
+                }
+                itemview.datingNameWoman.text = item.nickname
+                itemview.datingOnlineDistanceWoman.text = "${item.online_time}\t${item.distance}"
+                SpanUtils.with(itemview.datingProjectWoman)
+                    .append(
+                        "${item.title}${if (item!!.dating_title.isNotEmpty()) {
+                            "·"
+                        } else {
+                            ""
+                        }}"
+                    )
+                    .append(item.dating_title)
+                    .setForegroundColor(Color.parseColor("#FFFF6318"))
+                    .create()
+                itemview.datingPlaceWoman.text = item.dating_distance
+                itemview.datingObjectWoman.text =
+                    "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
+                itemview.datingPlanWoman.text = item.follow_up
+                if (item.accid != UserManager.getAccid()) {
+                    itemview.datingApplyForWomanBtn.isVisible = true
+                } else {
+                    itemview.datingApplyForWomanBtn.visibility = View.INVISIBLE
+                }
+                itemview.datingApplyForWomanBtn.clickWithTrigger {
+                    CommonFunction.checkApplyForDating(mContext, item)
                 }
 
             }
             DatingBean.TYPE_MAN -> {
                 val itemview = helper.itemView
-                GlideUtil.loadCircleImg(mContext, item.icon, itemview.datingAvator)
-
-                itemview.clickWithTrigger {
-                    mContext.startActivity<DatingDetailActivity>()
+                GlideUtil.loadCircleImg(mContext, item.avatar, itemview.datingAvator)
+                //content_type 1 文本 2 语音
+                if (item.content_type == 1) {
+                    itemview.datingContentAudio.isVisible = false
+                    itemview.datingContentText.isVisible = true
+                    itemview.datingContentText.text = item.content
+                } else {
+                    itemview.datingContentAudio.isVisible = true
+                    itemview.datingContentText.isVisible = false
+                    itemview.datingContentAudio.setUi(
+                        R.drawable.shape_rectangle_gray4df_10dp,
+                        audioTip = "点击播放活动语音描述"
+                    )
+                    itemview.datingContentAudio.prepareAudio(item.content, item.duration)
                 }
-                itemview.datingContentAudio.setUi(
-                    R.drawable.shape_rectangle_gray4df_10dp,
-                    audioTip = "点击播放约会语音描述"
-                )
+                itemview.datingName.text = item.nickname
+                itemview.datingOnlineDistance.text = "${item.online_time}\t${item.distance}"
+                SpanUtils.with(itemview.datingProject)
+                    .append(
+                        "${item.title}${if (item!!.dating_title.isNotEmpty()) {
+                            "·"
+                        } else {
+                            ""
+                        }}"
+                    )
+                    .append(item.dating_title)
+                    .setForegroundColor(Color.parseColor("#FFFF6318"))
+                    .create()
+                itemview.datingPlace.text = item.dating_distance
+                itemview.datingObject.text =
+                    "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
+                itemview.datingPlan.text = item.follow_up
+                if (item.accid != UserManager.getAccid()) {
+                    itemview.datingApplyForBtn.isVisible = true
+                } else {
+                    itemview.datingApplyForBtn.visibility = View.INVISIBLE
+                }
+                itemview.datingApplyForBtn.clickWithTrigger {
+                    CommonFunction.checkApplyForDating(mContext, item)
+                }
+
             }
         }
 

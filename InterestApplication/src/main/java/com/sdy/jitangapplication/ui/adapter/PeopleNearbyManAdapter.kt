@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.model.UserRelationshipBean
+import com.sdy.jitangapplication.ui.activity.DatingDetailActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -99,11 +100,14 @@ class PeopleNearbyManAdapter(var fromCard: Boolean = false) :
         } else if (item.isdirectvip) {
             itemView.userVip.setImageResource(R.drawable.icon_direct_vip)
         }
-        if (item.intention_title.isNullOrEmpty()) {
+        if (item.title.isNullOrEmpty()) {
             itemView.userIntention.isVisible = false
         } else {
             itemView.userIntention.isVisible = true
-            itemView.userIntentionContent.text = item.intention_title
+            itemView.userIntentionContent.text ="她想和你：${item.title}·${item.dating_title}"
+            itemView.userIntention.clickWithTrigger {
+                DatingDetailActivity.start2Detail(mContext,item.invitation_id)
+            }
 //            GlideUtil.loadCircleImg(mContext, item.intention_icon, itemView.userIntentionIcon)
         }
 

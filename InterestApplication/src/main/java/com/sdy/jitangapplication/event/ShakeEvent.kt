@@ -42,5 +42,9 @@ class TopCardEvent(val showTop: Boolean)
 class FemaleVideoEvent(val videoState: Int)
 
 
+//点击跳转到约会界面
+class JumpToDatingEvent()
+
+
 
 

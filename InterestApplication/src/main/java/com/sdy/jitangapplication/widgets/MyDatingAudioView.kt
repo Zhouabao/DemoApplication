@@ -10,8 +10,10 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
+import com.sdy.jitangapplication.player.UpdateVoiceTimeThread
 import com.sdy.jitangapplication.utils.UriUtils
 import kotlinx.android.synthetic.main.layout_dating_audio.view.*
+import kotlinx.android.synthetic.main.layout_record_audio.*
 
 /**
  *    author : ZFM
@@ -43,7 +45,7 @@ class MyDatingAudioView @JvmOverloads constructor(
         textColor: Int = Color.WHITE,
         playIcon: Int = R.drawable.icon_play_dating_audio,
         pauseIcon: Int = R.drawable.icon_pause_dating_audio,
-        audioTip: String = "点击试听约会语音描述"
+        audioTip: String = "点击试听活动语音描述"
     ) {
         audioRecordLl.setBackgroundResource(bgResource)
         audioTime.setTextColor(textColor)
@@ -58,7 +60,7 @@ class MyDatingAudioView @JvmOverloads constructor(
     var pauseIcon = -1
     var mediaPlayer: IjkMediaPlayerUtil? = null
     private var filePath = ""
-    private var duration: Int = 0
+    var duration: Int = 0
     private var playState: Int = MEDIA_PREPARE
 
     private fun initAudio() {
@@ -69,21 +71,41 @@ class MyDatingAudioView @JvmOverloads constructor(
         mediaPlayer = IjkMediaPlayerUtil(context, 0, object : OnPlayingListener {
             override fun onPlay(position: Int) {
                 audioPlayBtn.setImageResource(pauseIcon)
+                UpdateVoiceTimeThread.getInstance(
+                    UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).start()
             }
 
             override fun onPause(position: Int) {
                 audioPlayBtn.setImageResource(playIcon)
+                UpdateVoiceTimeThread.getInstance(
+                     UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).pause()
+//                audioTime.stopTime()
             }
 
             override fun onStop(position: Int) {
                 audioPlayBtn.setImageResource(playIcon)
-
+//                audioTime.text = UriUtils.getShowTime(duration)
+                playState = MEDIA_STOP
+                UpdateVoiceTimeThread.getInstance(
+                    UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).stop()
             }
 
             override fun onError(position: Int) {
                 CommonFunction.toast("音频播放出错")
+//                audioTime.text = UriUtils.getShowTime(duration)
+                UpdateVoiceTimeThread.getInstance(
+                    UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).stop()
                 audioPlayBtn.setImageResource(playIcon)
                 mediaPlayer!!.resetMedia()
+                playState = MEDIA_ERROR
             }
 
             override fun onPrepared(position: Int) {
@@ -92,51 +114,65 @@ class MyDatingAudioView @JvmOverloads constructor(
 
             override fun onPreparing(position: Int) {
                 audioPlayBtn.setImageResource(playIcon)
+                UpdateVoiceTimeThread.getInstance(
+                    UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).stop()
             }
 
             override fun onRelease(position: Int) {
-
+                audioPlayBtn.setImageResource(playIcon)
+                UpdateVoiceTimeThread.getInstance(
+                    UriUtils.getShowTime(duration) ,
+                    audioTime
+                ).stop()
+//                audioTime.text = UriUtils.getShowTime(duration)
 //                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
                 audioPlayBtn.setImageResource(playIcon)
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
+                playState = MEDIA_PREPARE
             }
 
         }).getInstance()
+        mediaPlayer!!.setDataSource(filePath)
 
-        audioPlayBtn.clickWithTrigger {
-            if (playState == MEDIA_PREPARE || playState == MEDIA_PAUSE || playState == MEDIA_STOP || playState == MEDIA_ERROR) {
-                playState = MEDIA_PLAY
-            } else if (playState == MEDIA_PLAY) {
-                playState = MEDIA_PAUSE
-            }
-
-            when (playState) {
-                MEDIA_PREPARE, MEDIA_ERROR, MEDIA_STOP -> {
-                    playAudio()
-                }
-                MEDIA_PAUSE -> {
-                    resumeAudio()
-                }
-                MEDIA_PLAY -> {
-                    pauseAudio()
-                }
-
-            }
-        }
     }
 
     fun playAudio() {
+        initAudio()
         audioTime.startTime(duration.toLong(), "3")
         mediaPlayer!!.prepareMedia()
     }
 
+    private var playTime = 0
     fun prepareAudio(path: String, duration: Int) {
         filePath = path
         this.duration = duration
-        initAudio()
-        mediaPlayer!!.setDataSource(path)
+
         audioTime.text = UriUtils.getShowTime(duration)
+        audioPlayBtn.clickWithTrigger {
+            when (playState) {
+                MEDIA_PREPARE, MEDIA_ERROR, MEDIA_STOP -> {
+                    playAudio()
+                    playState = MEDIA_PLAY
+                }
+
+                MEDIA_PAUSE -> {
+                    resumeAudio()
+                    playState = MEDIA_PLAY
+                }
+                MEDIA_PLAY -> {
+                    pauseAudio()
+                    playState = MEDIA_PAUSE
+                }
+            }
+
+//            if (playState == MEDIA_PREPARE || playState == MEDIA_PAUSE || playState == MEDIA_STOP || playState == MEDIA_ERROR) {
+//                playState = MEDIA_PLAY
+//            } else if (playState == MEDIA_PLAY) {
+//                playState = MEDIA_PAUSE
+//            }
+        }
+
     }
 
 
@@ -152,6 +188,9 @@ class MyDatingAudioView @JvmOverloads constructor(
             mediaPlayer!!.pausePlay()
     }
 
+    fun isPlaying(): Boolean {
+        return mediaPlayer != null && mediaPlayer!!.currentState == MEDIA_PLAY
+    }
 
     fun resumeAudio() {
         if (mediaPlayer != null)

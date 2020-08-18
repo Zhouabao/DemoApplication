@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.core.view.isVisible
 import com.alipay.sdk.app.PayTask
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -103,6 +104,11 @@ class ConfirmPayCandyDialog(
                 createOrder(PAY_WECHAT)
             }
         }
+
+        showOtherWayBtn.clickWithTrigger {
+            wechatCl.isVisible = true
+            showOtherWayBtn.isVisible = false
+        }
     }
 
 
@@ -127,6 +133,7 @@ class ConfirmPayCandyDialog(
                     super.onStart()
                     loadingDialog.show()
                 }
+
                 override fun onNext(t: BaseResp<PayBean>) {
                     loadingDialog.dismiss()
                     if (t.code == 200) {
@@ -154,6 +161,7 @@ class ConfirmPayCandyDialog(
                 SDK_PAY_FLAG -> {
                     run {
                         val payResult = PayResult(msg.obj as Map<String, String>)
+
                         /**
                          * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                          */

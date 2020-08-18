@@ -1,32 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.LocationActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        tools:context=".ui.activity.LocationActivity">
+        android:layout_height="match_parent">
 
+        <include layout="@layout/layout_actionbar" />
 
-    <include layout="@layout/layout_actionbar"/>
-
-
-    <com.amap.api.maps.MapView
+        <com.amap.api.maps.MapView
             android:id="@+id/locationMap"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/locationRv"
-            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/locationRv"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/llTitle" />
+
+        <ImageView
+            android:id="@+id/backToMyLocationBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icon_locate_mylocation"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/locationMap"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    <androidx.core.widget.NestedScrollView-->
+    <!--        android:id="@+id/scrollLocationSv"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--&gt;-->
+
+    <LinearLayout
+        android:id="@+id/scrollLocationSv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="263dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchLocation"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            app:searchIcon="@drawable/icon_searchview"
+            android:background="@drawable/shape_rectangle_light_gray_24dp"
+            android:focusable="false"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@null"
+            app:queryHint="搜索地点"
+            app:showDividers="none"
+            app:submitBackground="@null" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/locationRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <!--    </androidx.core.widget.NestedScrollView>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

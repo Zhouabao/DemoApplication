@@ -52,6 +52,7 @@ data class IndexTopBean(
 
 data class IndexListBean(
     var list: MutableList<IndexTopBean> = mutableListOf(),
+    var dating_list: MutableList<String> = mutableListOf(),
     var free_show: Boolean = false,//是否免费查看 true 免费 false 不能查看
     var gender: Int = 0,//我的性别
     var isplatinumvip: Boolean = false,//我是否 钻石会员 true 是 false不是

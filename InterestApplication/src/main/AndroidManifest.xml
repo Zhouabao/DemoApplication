@@ -96,14 +96,30 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.DatingDetailActivity"></activity>
-        <activity android:name=".ui.activity.CompleteDatingInfoActivity" />
-        <activity android:name=".ui.activity.ChooseDatingTypeActivity" />
+        <activity
+            android:name=".ui.activity.PublishDatingKnowActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.WriteDatingContentActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.DatingDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CompleteDatingInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChooseDatingTypeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.RegisterTooManyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.MyInvitedActivity"
             android:launchMode="singleTop"

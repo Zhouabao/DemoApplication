@@ -63,66 +63,83 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/datingName" />
 
-
-    <TextView
-        android:id="@+id/datingProject"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/datingProjectLl"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/shape_rectangle_graye6f_14dp"
-        android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingTop="4dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="4dp"
-        android:text="一起运动·夜跑"
-        android:textColor="#ff24151a"
-        android:textSize="12sp"
-        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/datingAvator"
-        app:layout_constraintTop_toBottomOf="@id/datingOnlineDistance" />
+        app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
+        app:layout_constraintTop_toBottomOf="@id/datingOnlineDistance">
 
+        <TextView
+            android:id="@+id/datingProject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_graye6f_14dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:text="一起运动·夜跑"
+            android:textColor="#ff24151a"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/datingPlace"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:drawableLeft="@drawable/icon_dating_place"
         android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="15km·成都市·吉泰路"
         android:textColor="#ffffffff"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/datingAvator"
-        app:layout_constraintTop_toBottomOf="@id/datingProject" />
+        app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
+        app:layout_constraintTop_toBottomOf="@id/datingProjectLl" />
 
     <TextView
         android:id="@+id/datingObject"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:drawableLeft="@drawable/icon_dating_plan"
+        android:drawableLeft="@drawable/icon_dating_object"
         android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="仅限高级会员丨帅气英俊丨对方支出丨预估5000内"
         android:textColor="#ffffffff"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
         app:layout_constraintTop_toBottomOf="@id/datingPlace" />
 
     <TextView
         android:id="@+id/datingPlan"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/icon_dating_plan"
         android:drawablePadding="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="后续活动看感觉"
         android:textColor="#ffffffff"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/datingAvator"
+        app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
         app:layout_constraintTop_toBottomOf="@id/datingObject" />
 
 
@@ -156,7 +173,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/datingAvator"
         app:layout_constraintRight_toRightOf="@id/datingApplyForBtn"
-        app:layout_constraintTop_toBottomOf="@id/datingPlan"/>
+        app:layout_constraintTop_toBottomOf="@id/datingPlan" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

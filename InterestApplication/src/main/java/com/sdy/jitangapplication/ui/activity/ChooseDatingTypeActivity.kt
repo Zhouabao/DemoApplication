@@ -40,14 +40,14 @@ class ChooseDatingTypeActivity : BaseMvpActivity<ChooseDatingTypePresenter>(),
     /**
      * 添加今日意向
      */
-    private var checkPosi = 0
+    private var checkPosi = -1
 
     private fun initView() {
         mPresenter = ChooseDatingTypePresenter()
         mPresenter.context = this
         mPresenter.mView = this
 
-        hotT1.text = "选择约会类型"
+        hotT1.text = "选择活动类型"
         btnBack.clickWithTrigger {
             finish()
         }
@@ -60,7 +60,8 @@ class ChooseDatingTypeActivity : BaseMvpActivity<ChooseDatingTypePresenter>(),
         }
 
         rightBtn1.clickWithTrigger {
-            startActivity<CompleteDatingInfoActivity>("dating_type" to checkWantId)
+            if (checkPosi != -1)
+                startActivity<CompleteDatingInfoActivity>("dating_type" to adapter.data[checkPosi])
         }
 
 

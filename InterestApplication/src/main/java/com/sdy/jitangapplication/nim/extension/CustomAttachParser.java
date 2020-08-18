@@ -30,6 +30,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.ShareSquare:
                     attachment = new ShareSquareAttachment();
                     break;
+                    case CustomAttachmentType.ChatDating:
+                    attachment = new ChatDatingAttachment();
+                    break;
                 case CustomAttachmentType.SendGift:
                     attachment = new SendGiftAttachment();
                     break;

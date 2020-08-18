@@ -14,7 +14,8 @@ import com.chad.library.adapter.base.entity.MultiItemEntity
  */
 data class UserRelationshipBean(
     var title: String = "",
-    val relationType: Int = 1
+    val relationType: Int = 1,
+    val id: Int = -1
 ) : MultiItemEntity {
     override fun getItemType(): Int {
         return relationType

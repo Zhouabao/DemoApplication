@@ -47,7 +47,19 @@ import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("心动", "发现", "约会", "消息", "我的")
+    private val titles = arrayOf("心动", "发现", "活动", "消息", "我的")
+    companion object {
+        const val REQUEST_LABEL_CODE = 2000
+        const val POSITION_INDEX = 0
+        const val POSITION_CONTENT = 1
+        const val POSITION_DATING = 2
+        const val POSITION_MESSAGE= 3
+        const val POSITION_MINE= 4
+
+        fun start(context: Context, intent: Intent) {
+            context.startActivity(intent.setClass(context, MainActivity::class.java))
+        }
+    }
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
@@ -133,7 +145,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 when (message.sessionType) {
                     SessionTypeEnum.P2P -> {
                         //跳转到消息列表
-                        vpMain.currentItem = 2
+                        vpMain.currentItem = POSITION_MESSAGE
 //                        ChatActivity.start(this, message.sessionId)
                     }
                 }
@@ -178,8 +190,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mStack.add(messageListFragment)
         mStack.add(myFragment)
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
-        vpMain.currentItem = 0
-        switchTab(0)
+        vpMain.currentItem = POSITION_INDEX
+        switchTab(vpMain.currentItem)
         vpMain.setScrollable(false)
         vpMain.offscreenPageLimit = 5
         vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -385,14 +397,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     override fun onClick(view: View) {
         when (view.id) {
             R.id.tabMatchCount -> {
-                vpMain.currentItem = 0
+                vpMain.currentItem = POSITION_INDEX
             }
             R.id.tabSquare -> {
-                vpMain.currentItem = 1
+                vpMain.currentItem = POSITION_CONTENT
             }
             R.id.tabDating -> {
-                if (vpMain.currentItem != 2) {
-                    vpMain.currentItem = 2
+                if (vpMain.currentItem != POSITION_DATING) {
+                    vpMain.currentItem = POSITION_DATING
                 } else {
                     if (UserManager.touristMode) {
                         TouristDialog(this@MainActivity).show()
@@ -405,13 +417,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 if (UserManager.touristMode) {
                     TouristDialog(this).show()
                 } else
-                    vpMain.currentItem = 3
+                    vpMain.currentItem = POSITION_MESSAGE
             }
             R.id.tabMe -> {
                 if (UserManager.touristMode) {
                     TouristDialog(this).show()
                 } else
-                    vpMain.currentItem = 4
+                    vpMain.currentItem = POSITION_MINE
             }
         }
     }
@@ -511,14 +523,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    companion object {
-        const val REQUEST_LABEL_CODE = 2000
-
-        fun start(context: Context, intent: Intent) {
-            context.startActivity(intent.setClass(context, MainActivity::class.java))
-        }
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -534,6 +538,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetMSGEvent(event: GetNewMsgEvent) {
         mPresenter.msgList()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onJumpToDatingEvent(event: JumpToDatingEvent) {
+        vpMain.currentItem = POSITION_DATING
     }
 
 

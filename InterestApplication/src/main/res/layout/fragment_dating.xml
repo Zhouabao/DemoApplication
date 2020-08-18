@@ -17,7 +17,7 @@
         android:background="@color/colorWhite"
         app:srlDisableContentWhenLoading="true"
         app:srlDisableContentWhenRefresh="true"
-        app:srlEnableLoadMore="false"
+        app:srlEnableLoadMore="true"
         app:srlEnableRefresh="true">
 
         <LinearLayout

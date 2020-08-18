@@ -6,12 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQuality
-import com.sdy.jitangapplication.presenter.MyTagPresenter
-import com.sdy.jitangapplication.presenter.view.MyTagView
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.UserCenteTagAdapter
 import kotlinx.android.synthetic.main.empty_my_square_layout.view.*
@@ -25,7 +23,7 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 我的标签特质
  */
-class MyTagFragment : BaseMvpFragment<MyTagPresenter>(), MyTagView {
+class MyTagFragment : BaseFragment(){
     private val tagAdapter by lazy { UserCenteTagAdapter() }
 
     override fun onCreateView(

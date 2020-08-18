@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_weight="1"
-        android:text="点击试听约会语音描述"
+        android:text="点击试听活动语音描述"
         android:textColor="#ffffffff"
         android:textSize="13sp" />
 

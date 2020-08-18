@@ -20,6 +20,7 @@ object Constants {
     //上传文件的类型
     const val AVATOR = "avator/" //头像
     const val PUBLISH = "publish/" //发布
+    const val DATING = "dating/" //约会
     const val USERCENTER = "usecenter/"//个人中心
     const val REPORTUSER = "report/"//舉報用户
     const val CANDYPRODUCT = "candyproduct/"//舉報用户
