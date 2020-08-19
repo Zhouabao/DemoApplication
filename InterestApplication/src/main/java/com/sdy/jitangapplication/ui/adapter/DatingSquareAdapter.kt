@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -52,7 +53,8 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                 if (item.content_type == 1) {
                     itemview.datingContentAudioWoman.isVisible = false
                     itemview.datingContentTextWoman.isVisible = true
-                    itemview.datingContentTextWoman.text = item.content
+                    itemview.datingContentTextWoman.text =
+                        RegexUtils.getReplaceAll(item.content, "\\t|\\r|\\n|\\\\s*", "")
                     myAudioView.add(null)
                 } else {
                     itemview.datingContentAudioWoman.isVisible = true
@@ -111,7 +113,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                 if (item.content_type == 1) {
                     itemview.datingContentAudio.isVisible = false
                     itemview.datingContentText.isVisible = true
-                    itemview.datingContentText.text = item.content
+                    itemview.datingContentText.text =  RegexUtils.getReplaceAll(item.content, "\\t|\\r|\\n|\\\\s*", "")
                     myAudioView.add(null)
                 } else {
                     itemview.datingContentAudio.isVisible = true

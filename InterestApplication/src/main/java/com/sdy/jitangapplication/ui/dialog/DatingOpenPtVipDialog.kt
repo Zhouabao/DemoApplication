@@ -94,7 +94,7 @@ class DatingOpenPtVipDialog(
                                 datingTitle.text = "要报名活动吗"
                                 datingContent.text = "今日免费聊天机会已用完"
                                 applyForDatingBtn.isVisible = false
-                                openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
+                                openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
                                 openPtVipBtn.text = "报名活动（${chatUpBean!!.dating_amount}糖果）"
                                 openPtVipBtn.clickWithTrigger {
                                     datingApply()

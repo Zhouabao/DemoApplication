@@ -268,17 +268,6 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         }
     }
 
-    fun addGrowMarker() {
-        if (growMarker == null) {
-            growMarker = aMap.addMarker(
-                MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .position(LatLng(location!!.latitude, location!!.longitude))
-            )
-        }
-    }
-
-
     override fun onPause() {
         super.onPause()
         locationMap.onPause()

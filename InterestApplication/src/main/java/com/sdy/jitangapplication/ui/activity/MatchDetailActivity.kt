@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.VibrateUtils
@@ -155,6 +156,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         datingApplyForBtn.setOnClickListener(this)
         datingZanCnt.setOnClickListener(this)
         datingZanBtn.setOnClickListener(this)
+        datailDatingCl.setOnClickListener(this)
         clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
@@ -481,7 +483,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 )
                 datingTypeText.isVisible = true
                 datingAudioView.isVisible = false
-                datingTypeText.text = dating.content
+                datingTypeText.text =
+                    RegexUtils.getReplaceAll(dating.content, "\\t|\\r|\\n|\\\\s*", "")
             } else {
                 datingProjectDetailText.setBackgroundResource(R.drawable.shape_rectangle_white_40_11dp)
                 datingProjectDetailText.setPadding(
@@ -818,6 +821,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     matchBean!!.accid,
                     matchBean!!.gender ?: 1
                 )
+            }
+            R.id.datailDatingCl -> {
+                if (matchBean!!.dating != null && matchBean!!.dating!!.id != 0)
+                    DatingDetailActivity.start2Detail(this, matchBean!!.dating!!.id)
             }
             R.id.datingApplyForBtn -> {
                 if (matchBean!!.dating != null)

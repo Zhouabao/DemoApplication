@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -31,10 +32,11 @@ class DatingDetailPresenter : BasePresenter<DatingDetailView>() {
 
                 override fun onNext(t: BaseResp<DatingBean?>) {
                     super.onNext(t)
-                    mView.datingInfoResult(t.data)
-                    if (t.code != 200) {
+                    if (t.code == 400) {
                         CommonFunction.toast(t.msg)
-                    }
+                        (context as Activity).finish()
+                    } else
+                        mView.datingInfoResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {

@@ -25,9 +25,13 @@ class LocationAdapter(var checkPosition: Int = 0) :
             holder.itemView.locationChooseImg.visibility = View.GONE
         }
         holder.itemView.locationName.text =
-            "${item.title}${if (!item.title.isNullOrEmpty() && !item.snippet.isNullOrEmpty()) {
-                "\n" + (item.cityName ?: "") + (item.adName ?: "") + (item.businessArea ?: "") + (item.snippet ?: "")
-            } else {"" }}"
-//            "${(item.cityName ?: "") + (item.adName ?: "")}${item.title}"
+//            "${item.title}${if (!item.title.isNullOrEmpty() && !item.snippet.isNullOrEmpty()) {
+//                "\n" + (item.cityName ?: "") + (item.adName ?: "") + (item.businessArea ?: "") + (item.snippet ?: "")
+//            } else {"" }}"
+            "${(item.title ?: "")}${if (item.snippet.isNotEmpty()) {
+                "\n${item.snippet}"
+            } else {
+                ""
+            }}"
     }
 }

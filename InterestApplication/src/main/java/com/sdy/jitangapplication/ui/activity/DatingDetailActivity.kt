@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -219,7 +220,8 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
             if (datingBean!!.content_type == 1) {
                 datingDescr.isVisible = true
                 myDatingAudioView.isVisible = false
-                datingDescr.text = datingBean!!.content
+                datingDescr.text =
+                    RegexUtils.getReplaceAll(datingBean!!.content, "\\t|\\r|\\n|\\\\s*", "")
             } else {
                 datingDescr.isVisible = false
                 myDatingAudioView.isVisible = true
