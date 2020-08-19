@@ -117,7 +117,7 @@ object CommonFunction {
     /**
      * 验证报名约会
      * //todo 已经报名 直接跳转聊天界面
-     * 	code 202 对方设置高级会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息
+     * 	code 202 对方设置黄金会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息
      */
     fun checkApplyForDating(context: Context, datingBean: DatingBean) {
         val loading = LoadingDialog(context)
@@ -141,7 +141,7 @@ object CommonFunction {
                                 datingBean
                             ).show()
                         }
-                        202 -> {//202 对方设置高级会员
+                        202 -> {//202 对方设置黄金会员
                             DatingOpenPtVipDialog(
                                 context,
                                 DatingOpenPtVipDialog.TYPE_DATING_APPLYFOR_PRIVACY,

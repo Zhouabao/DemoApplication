@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 1.开通高级会员成为精选用户（男性）
+ * 1.开通黄金会员成为精选用户（男性）
  * 2.添加视频介绍成为精选用户（女性）
  */
 class ChoicenessOpenPtVipDialog(val context1: Context) :
@@ -35,7 +35,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
     private fun initChatData() {
         GlideUtil.loadCircleImg(context1, UserManager.getAvator(), chatupAvator)
 
-        // * 1.开通高级会员成为精选用户（男性）
+        // * 1.开通黄金会员成为精选用户（男性）
         // * 2.添加视频介绍成为精选用户（女性）
         if (UserManager.getGender() == 1) {
             choicenessTitle.text = "成为精选用户"

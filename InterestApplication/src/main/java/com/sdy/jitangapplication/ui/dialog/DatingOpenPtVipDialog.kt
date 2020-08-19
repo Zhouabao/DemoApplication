@@ -81,7 +81,7 @@ class DatingOpenPtVipDialog(
                     if (chatUpBean!!.private_chat && !chatUpBean.isplatinum) {
                         openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                         datingTitle.text = "对方仅允许高级用户报名"
-                        datingContent.text = "对方仅允许高级用户报名\n立即成为高级会员，不要错过她"
+                        datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
                         openPtVipBtn.text = "成为黄金会员"
                         applyForDatingBtn.isVisible = false
                         openPtVipBtn.clickWithTrigger {
@@ -134,7 +134,7 @@ class DatingOpenPtVipDialog(
             TYPE_DATING_APPLYFOR_PRIVACY -> {
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 datingTitle.text = "对方仅允许高级用户报名"
-                datingContent.text = "对方仅允许高级用户报名\n立即成为高级会员，不要错过她"
+                datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
                 openPtVipBtn.text = "成为黄金会员"
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
@@ -178,7 +178,7 @@ class DatingOpenPtVipDialog(
     fun datingApply() {
         val loadingDialog = LoadingDialog(context1)
         RetrofitFactory.instance.create(Api::class.java)
-            .datingApply(hashMapOf("dating_id" to datingBean!!.id))
+            .datingApply(UserManager.getSignParams(hashMapOf("dating_id" to datingBean!!.id)))
             .excute(object : BaseSubscriber<BaseResp<ApplyDatingBean?>>(null) {
                 override fun onStart() {
                     super.onStart()
@@ -191,9 +191,9 @@ class DatingOpenPtVipDialog(
                     if (t.code == 200 && t.data != null) {
                         val attachment =
                             ChatDatingAttachment(
-                                "${t.data!!.title}${t.data!!.dating_title}",
+                                "${t.data!!.content}",
                                 t.data!!.icon,
-                                t.data!!.id
+                                t.data!!.datingId
                             )
                         val message = MessageBuilder.createCustomMessage(
                             datingBean.accid,

@@ -20,6 +20,8 @@
         android:visibility="gone" />
 
     <HorizontalScrollView
+        android:id="@+id/shareHsv"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -130,9 +132,11 @@
     </HorizontalScrollView>
 
     <View
+        android:id="@+id/shareHsvView"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="15dp"
+        android:visibility="visible"
         android:layout_marginBottom="15dp"
         android:background="@color/colorDivider" />
 

@@ -23,7 +23,7 @@ data class UserInfoBean(
     val threshold_btn: Boolean = false,//门槛是否开启
     val free_show: Boolean = false,//  true（显示）  false(模糊)
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
-    val platinum_vip_descr: MutableList<VipDescr>? = mutableListOf(),//高级会员权益描述
+    val platinum_vip_descr: MutableList<VipDescr>? = mutableListOf(),//黄金会员权益描述
     val visitlist: MutableList<String>? = mutableListOf()//看过我的头像列表
 )
 

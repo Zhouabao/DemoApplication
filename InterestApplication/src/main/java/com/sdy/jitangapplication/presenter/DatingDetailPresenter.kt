@@ -10,6 +10,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.model.LikeBean
 import com.sdy.jitangapplication.presenter.view.DatingDetailView
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -31,6 +32,9 @@ class DatingDetailPresenter : BasePresenter<DatingDetailView>() {
                 override fun onNext(t: BaseResp<DatingBean?>) {
                     super.onNext(t)
                     mView.datingInfoResult(t.data)
+                    if (t.code != 200) {
+                        CommonFunction.toast(t.msg)
+                    }
                 }
 
                 override fun onError(e: Throwable?) {
@@ -76,14 +80,41 @@ class DatingDetailPresenter : BasePresenter<DatingDetailView>() {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
+                    loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
+                    loadingDialog.dismiss()
                     CommonFunction.toast(t.msg)
                 }
 
                 override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loadingDialog.dismiss()
+                }
+            })
+    }
+
+    private val loadingDialog by lazy { LoadingDialog(context) }
+
+    fun delDating(dating_id: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .delDating(UserManager.getSignParams(hashMapOf<String, Any>("dating_id" to dating_id)))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    loadingDialog.dismiss()
+                    mView.deleteResult(t.code == 200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     super.onError(e)
                 }
             })

@@ -38,6 +38,11 @@ class MoreActionDialog(context: Context, val from: String) : Dialog(context, R.s
             llCollect.visibility = View.GONE
             llShare.visibility = View.GONE
             llDelete.visibility = View.GONE
+        }else if (from == "dating") {//来自匹配详情
+            llCollect.visibility = View.GONE
+            llShare.visibility = View.GONE
+            llLahei.visibility = View.GONE
+            llRemoveRelation.visibility = View.GONE
         }//来自...
     }
 

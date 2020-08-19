@@ -23,6 +23,7 @@ import com.amap.api.services.core.PoiItem
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -383,15 +384,24 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
     override fun onLazyClick(v: View) {
         when (v.id) {
             R.id.datingProjectContentEt -> { //活动内容
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    KeyboardUtils.hideSoftInput(this)
+                }
                 startActivityForResult<WriteDatingContentActivity>(
                     REQUEST_CODE_DATING_CONTENT,
                     "dating_type" to (dating_type?.title ?: "")
                 )
             }
             R.id.chooseDatingPlaceBtn -> { //约会地点
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    KeyboardUtils.hideSoftInput(this)
+                }
                 startActivityForResult<LocationActivity>(REQUEST_CODE_DATING_PLACE)
             }
             R.id.chooseDatingObjectBtn -> {//约会对象
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    KeyboardUtils.hideSoftInput(this)
+                }
                 showConditionPicker(
                     chooseDatingObjectBtn,
                     "dating_target",
@@ -400,6 +410,9 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                 )
             }
             R.id.chooseDatingPayBtn -> {//费用开支
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    KeyboardUtils.hideSoftInput(this)
+                }
                 showConditionPicker(
                     chooseDatingPayBtn,
                     "cost_type",
@@ -410,6 +423,9 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                 )
             }
             R.id.chooseDatingPlanBtn -> {//后续活动
+                if (KeyboardUtils.isSoftInputVisible(this)) {
+                    KeyboardUtils.hideSoftInput(this)
+                }
                 showConditionPicker(
                     chooseDatingPlanBtn,
                     "follow_up",
@@ -427,6 +443,9 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                     changeToNormalState()
                     switchContentTypeBtn.text = "切换语音描述"
                 } else {
+                    if (KeyboardUtils.isSoftInputVisible(this)) {
+                        KeyboardUtils.hideSoftInput(this)
+                    }
                     datingDescrEt.setText("")
                     switchContentTypeBtn.text = "切换文字描述"
                 }
@@ -634,8 +653,11 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         if (success) {
             CommonFunction.toast("活动发布成功")
             EventBus.getDefault().post(UpdateMyDatingEvent())
-            finish()
             //todo 刷新约会列表和我的约会
+            if (ActivityUtils.isActivityExistsInStack(ChooseDatingTypeActivity::class.java)) {
+                ActivityUtils.finishActivity(ChooseDatingTypeActivity::class.java)
+            }
+            finish()
         }
 
     }
@@ -647,37 +669,12 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
     }
 
-    fun checkConfirmEnabled() {
-
-
-//        rightBtn1.isEnabled =
-//            dating_type != -1
-//                    && datingProjectContentEt.text.isNotEmpty()
-//                    && chooseDatingPlaceBtn.text.isNotEmpty()
-//                    && chooseDatingObjectBtn.text.isNotEmpty()
-//                    && chooseDatingPayBtn.text.isNotEmpty()
-//                    && chooseDatingPlanBtn.text.isNotEmpty()
-//                    && (mMediaRecorderHelper.currentFilePath.isNotEmpty() && currentActionState == MediaRecorderHelper.ACTION_COMMPLETE && !mIsRecorder || datingDescrEt.text.isNotEmpty())
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (currentActionState == MediaRecorderHelper.ACTION_RECORDING) {
-            mMediaRecorderHelper.cancel()
-            changeToNormalState()
-        }
-        if (KeyboardUtils.isSoftInputVisible(this)) {
-            KeyboardUtils.hideSoftInput(this)
-        }
-    }
 
     override fun finish() {
         super.finish()
-        if (currentActionState == MediaRecorderHelper.ACTION_RECORDING) {
-            mMediaRecorderHelper.cancel()
-            changeToNormalState()
-        }
+        mMediaRecorderHelper.cancel()
+        changeToNormalState()
+        myDatingAudioView.releaseAudio()
         if (KeyboardUtils.isSoftInputVisible(this)) {
             KeyboardUtils.hideSoftInput(this)
         }

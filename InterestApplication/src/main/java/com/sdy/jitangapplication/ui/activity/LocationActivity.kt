@@ -105,24 +105,25 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         adapter.setOnItemClickListener { _, view, position ->
             adapter.checkPosition = position
             adapter.notifyDataSetChanged()
-//            aMap.clear()
-            startJumpAnimation()
-
-//            moveMapCamera(
-//                adapter.data[position].latLonPoint.latitude,
-//                adapter.data[position].latLonPoint.longitude
-//            )
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            KeyboardUtils.hideSoftInput(this)
-            searchLocation.clearFocus()
+            if (position != 0) {
+                isTouch = false
+                moveMapCamera(
+                    adapter.data[position].latLonPoint.latitude,
+                    adapter.data[position].latLonPoint.longitude
+                )
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                KeyboardUtils.hideSoftInput(this)
+                searchLocation.clearFocus()
+            }
         }
 
-        searchLocation.setOnQueryTextFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
+        KeyboardUtils.registerSoftInputChangedListener(this) {
+            if (it > 0) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
+            Log.d("KeyboardUtils", "$it")
         }
 
 
@@ -140,22 +141,23 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         })
     }
 
+    private var isTouch = false
     private fun initMap(savedInstanceState: Bundle?) {
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         locationMap.onCreate(savedInstanceState)
         //初始化地图控制器对象
         aMap = locationMap.map
         aMap.mapType = AMap.MAP_TYPE_NORMAL
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
+//        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
         aMap.uiSettings.isZoomControlsEnabled = false
 
 
         // 对amap添加移动地图事件监听器
         aMap.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
             override fun onCameraChangeFinish(p0: CameraPosition) {
-//                moveMapCamera(p0.target.latitude, p0.target.longitude)
-                doWhenLocationSuccess(p0.target.latitude, p0.target.longitude)
-
+                if (isTouch)
+                    doWhenLocationSuccess(p0.target.latitude, p0.target.longitude)
+                screenMoveMarker!!.position = LatLng(p0.target.latitude, p0.target.longitude)
                 startJumpAnimation()
             }
 
@@ -165,7 +167,16 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
         })
 
-//        aMap.setOnMapTouchListener(this) // 对amap添加触摸地图事件监听器
+        aMap.setOnMapClickListener {
+            doWhenLocationSuccess(it.latitude, it.longitude)
+            screenMoveMarker!!.position = it
+            startJumpAnimation()
+        }
+
+        // 对amap添加触摸地图事件监听器
+        aMap.setOnMapTouchListener {
+            isTouch = true
+        }
 
     }
 
@@ -210,7 +221,6 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         if (aMap != null) {
             aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), zoom))
         }
-//        screenMoveMarker!!.position = LatLng(latitude, longitude)
 
         startJumpAnimation()
     }
@@ -218,8 +228,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
-//        地名地址信息|道路附属设施|公共设施
-        mQuery = PoiSearch.Query("", "地名地址信息|道路附属设施|公共设施|商务住宅", UserManager.getCity())
+//        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
+        mQuery = PoiSearch.Query("", "", UserManager.getCity())
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)
@@ -301,20 +311,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     override fun onPoiSearched(result: PoiResult?, rCode: Int) {
         if (rCode == 1000) {
             if (result != null && result.query != null) {
-//                mList.clear()
-//                mList.addAll(result.pois)
                 adapter.setNewData(result.pois)
-                //PoiItem(java.lang.String id, LatLonPoint point, java.lang.String title, java.lang.String snippet)
-                adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), "不显示位置", ""))
-//                adapter.addData(
-//                    1,
-//                    PoiItem(
-//                        location!!.buildingId,
-//                        LatLonPoint(location!!.latitude, location!!.longitude),
-//                        location!!.city,
-//                        ""
-//                    )
-//                )
+                adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), "无明确要求", ""))
                 rightBtn1.isEnabled = true
             }
         }
@@ -335,8 +333,10 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
                     it.district,
                     it.cityCode
                 )
-                addGrowMarker()
+//                addGrowMarker()
                 addScreenMoveMarker()
+                adapter.checkPosition = 0
+                adapter.notifyDataSetChanged()
                 doWhenLocationSuccess(location!!.latitude, location!!.longitude)
                 moveMapCamera(location!!.latitude, location!!.longitude)
             } else {

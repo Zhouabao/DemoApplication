@@ -76,43 +76,11 @@
         app:layout_constraintLeft_toLeftOf="@id/userChatBtn"
         app:layout_constraintTop_toBottomOf="@id/userContactBtn" />
 
-    <LinearLayout
-        android:id="@+id/userIntention"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/userNameAge"
-        app:layout_constraintLeft_toLeftOf="@id/userOnline"
-        app:layout_constraintRight_toRightOf="@id/userChatBtn">
-
-
-        <TextView
-            android:id="@+id/userIntentionContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/gradient_orange_11dp"
-            android:drawableRight="@drawable/icon_more_right_white"
-            android:drawablePadding="2dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingLeft="7dp"
-            android:paddingTop="2dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="2dp"
-            android:text="她想和你：一起运动·打羽毛球"
-            android:textColor="#ffffffff"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/userNameAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:text="青青草地 21岁"
         android:textColor="#ffffffff"
         android:textSize="14sp"
@@ -159,7 +127,38 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="@id/userAvator"
+        app:layout_constraintBottom_toTopOf="@id/userIntention"
         app:layout_constraintLeft_toLeftOf="@id/userOnline" />
 
+    <LinearLayout
+        android:id="@+id/userIntention"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/userAvator"
+        app:layout_constraintLeft_toLeftOf="@id/userOnline"
+        app:layout_constraintRight_toRightOf="@id/userChatBtn">
+
+
+        <TextView
+            android:id="@+id/userIntentionContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/gradient_orange_11dp"
+            android:drawableRight="@drawable/icon_more_right_white"
+            android:drawablePadding="2dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingLeft="7dp"
+            android:paddingTop="2dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="2dp"
+            android:text="她想和你：一起运动·打羽毛球"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,18 +14,20 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.UpdateMyDatingEvent
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.presenter.DatingDetailPresenter
 import com.sdy.jitangapplication.presenter.view.DatingDetailView
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_dating_detail.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
-import kotlinx.android.synthetic.main.dialog_more_action_new.*
+import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.dialog_more_action.cancel
 import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.item_layout_dating_square_man.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -76,28 +78,22 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
     /**
      * 展示更多操作对话框
      */
-    private fun showMoreDialog() {
-        val moreActionDialog = MoreActionNewDialog(this, null)
+    private fun showMoreActionDialog() {
+        val moreActionDialog = MoreActionDialog(this, "dating")
         moreActionDialog.show()
+        moreActionDialog.llJubao.isVisible = datingBean?.accid != UserManager.getAccid()
+        moreActionDialog.llDelete.isVisible = datingBean?.accid == UserManager.getAccid()
 
-        if (datingBean?.accid == UserManager.getAccid()) {
-            moreActionDialog.delete.visibility = View.VISIBLE
-            moreActionDialog.report.visibility = View.GONE
-            moreActionDialog.collect.isVisible = false
-        } else {
-            moreActionDialog.delete.visibility = View.GONE
-            moreActionDialog.report.visibility = View.VISIBLE
-            moreActionDialog.collect.isVisible = false
-        }
-        moreActionDialog.delete.onClick {
-            val params = hashMapOf("dating_id" to datingBean!!.id)
-            //todo 删除约会
+
+        //删除
+        moreActionDialog.llDelete.onClick {
+            if (datingBean != null)
+                mPresenter.delDating(datingBean!!.id)
             moreActionDialog.dismiss()
-
         }
 
-
-        moreActionDialog.report.onClick {
+        //举报
+        moreActionDialog.llJubao.clickWithTrigger {
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.title.text = "活动举报"
@@ -110,9 +106,11 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
                     mPresenter.reportDating(datingBean!!.id)
             }
             moreActionDialog.dismiss()
-
         }
 
+        moreActionDialog.cancel.onClick {
+            moreActionDialog.dismiss()
+        }
     }
 
 
@@ -148,7 +146,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
                     MatchDetailActivity.start(this, datingBean!!.accid)
             }
             R.id.datingMoreBtn -> {
-                showMoreDialog()
+                showMoreActionDialog()
             }
         }
 
@@ -156,7 +154,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
 
     private var datingBean: DatingBean? = null
     override fun datingInfoResult(datingBean: DatingBean?) {
-        if (datingBean != null) {
+        if (datingBean != null && datingBean.id != 0) {
             stateDatingDetail.viewState = MultiStateView.VIEW_STATE_CONTENT
             datingBean.tempLike = datingBean.isliked
             datingBean.temp_like_cnt = datingBean.like_cnt
@@ -183,6 +181,13 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
         }
     }
 
+    override fun deleteResult(success: Boolean) {
+        if (success) {
+            finish()
+            EventBus.getDefault().post(UpdateMyDatingEvent())
+        }
+    }
+
     private fun setTempLikeState(isLiked: Boolean, likeCnt: Int) {
         datingZanCnt.text = "${likeCnt}"
         if (isLiked) {
@@ -202,11 +207,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
 
     private fun initData() {
         if (datingBean != null) {
-            datingZanCnt.isVisible = datingBean!!.accid != UserManager.getAccid()
-            datingDianzanAni.isVisible = datingBean!!.accid != UserManager.getAccid()
             applyForDatingBtn.isVisible = datingBean!!.accid != UserManager.getAccid()
-            datingMoreBtn.isVisible = datingBean!!.accid != UserManager.getAccid()
-
 
             GlideUtil.loadCircleImg(this, datingBean!!.avatar, datingAvator)
             datingName.text = datingBean!!.nickname
@@ -237,7 +238,11 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
                 } else {
                     ""
                 }}"
-            datingPlace.text = datingBean!!.place
+            datingPlace.text = if (datingBean!!.dating_distance.isNullOrEmpty()) {
+                "无明确要求"
+            } else {
+                datingBean!!.dating_distance
+            }
             datingObject.text = datingBean!!.dating_target
             datingMoney.text = "${datingBean!!.cost_money}·${datingBean!!.cost_type}"
             datingPlan.text = datingBean!!.follow_up
@@ -246,8 +251,15 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onStop() {
+        super.onStop()
+        myDatingAudioView.releaseAudio()
+    }
+
+    override fun finish() {
+        super.finish()
+        myDatingAudioView.releaseAudio()
         handler.removeCallbacksAndMessages(null)
     }
 }

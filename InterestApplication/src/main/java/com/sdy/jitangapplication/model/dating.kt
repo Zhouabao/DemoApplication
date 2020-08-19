@@ -89,8 +89,8 @@ data class LikeBean(
 
 //id,title,dating_title,icon
 data class ApplyDatingBean(
-    val id: Int,
+    val datingId: Int,
     val title: String,
-    val dating_title: String,
+    val content: String,
     val icon: String
 )

@@ -15,7 +15,8 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UpdateFindByTagEvent
+import com.sdy.jitangapplication.event.DatingOnePlayEvent
+import com.sdy.jitangapplication.event.DatingStopPlayEvent
 import com.sdy.jitangapplication.model.CheckBean
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.presenter.DatingPresenter
@@ -74,7 +75,6 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
         stateDatingSquare.retryBtn.onClick {
             stateDatingSquare.viewState = MultiStateView.VIEW_STATE_LOADING
 //            这个地方还要默认设置选中第一个兴趣来更新数据
-            mPresenter.getIntention()
 
         }
 
@@ -122,9 +122,10 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
 
     private var page = 1
     override fun onRefresh(refreshTagSquare: RefreshLayout) {
+        adapter.resetMyAudioViews()
         refreshTagSquare.resetNoMoreData()
         page = 1
-        mPresenter.getDatingList(page, checkWantId)
+        mPresenter.getIntention()
     }
 
 
@@ -198,10 +199,24 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateFindByTagEvent(eve: UpdateFindByTagEvent) {
-//        refreshDatingSquare.autoRefresh()
+    override fun onStop() {
+        super.onStop()
+        adapter.resetMyAudioViews()
     }
 
+    override fun onPause() {
+        super.onPause()
+        adapter.resetMyAudioViews()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateFindByTagEvent(eve: DatingStopPlayEvent) {
+        adapter.resetMyAudioViews()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDatingOnePlayEvent(eve: DatingOnePlayEvent) {
+        adapter.notifySomeOneAudioView(eve.positionId)
+    }
 
 }

@@ -34,7 +34,6 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleRecommendTopAdapter
 import com.sdy.jitangapplication.ui.dialog.ChoicenessOpenPtVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
-import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
@@ -76,8 +75,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         return inflater.inflate(R.layout.fragment_index, container, false)
     }
 
-    //    val titleAdapter by lazy { IndexSwitchAdapter() }
-    private val todayWantDialog by lazy { TodayWantDialog(activity!!, null) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,7 +97,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 FilterUserDialog(activity!!).show()
         }
 
-        //选择今日意向
+        //约会推荐点击
         todayWantCl.clickWithTrigger {
             if (UserManager.touristMode) {
                 TouristDialog(activity!!).show()
@@ -229,7 +226,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     /**
      * 刷新顶部推荐数据
-     *  //todo 发送通知 上传视频成功 或者充值高级会员，更新首页
+     *  //todo 发送通知 上传视频成功 或者充值黄金会员，更新首页
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
@@ -264,23 +261,46 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     }
 
-    private fun setRecommendDatingView(datingList: MutableList<String>) {
+    private fun setRecommendDatingView(datings: MutableList<String>) {
+        datingList.clear()
+        datingList.addAll(datings)
         if (UserManager.getGender() == 1) {
             todayWantContent.text = "她想约你"
         } else {
             todayWantContent.text = "发布活动"
         }
+
         todayWantIcon.removeAllViews()
-        for (data in datingList) {
-            todayWantIcon.addView(getMarqueeView(data))
+        if (datingList.size % 3 != 0) {
+            datingList.addAll(datingList.subList(0, 3 - datingList.size % 3))
         }
+        datingList.addAll(datingList)
+        datingList.addAll(datingList)
+        datingList.addAll(datingList)
+        val cnt = datingList.size / 3
+        index = 0
+        for (data in 0 until cnt) {
+            todayWantIcon.addView(getMarqueeView(index))
+//            getMarqueeView(data)
+        }
+        setDatingListData(index)
     }
 
-    private fun getMarqueeView(content: String): View {
+    private var index = 0
+    private val datingList by lazy { mutableListOf<String>() }
+    private fun getMarqueeView(index: Int): View {
         val view = layoutInflater.inflate(R.layout.item_marquee_recommend_dating, null, false)
-        GlideUtil.loadCircleImg(activity!!, content, view.recommendDatingAvator)
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3], view.datingIv1)
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 1], view.datingIv2)
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 2], view.datingIv3)
         return view
     }
 
+
+    private fun setDatingListData(index: Int) {
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3], datingIv1)
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 1], datingIv2)
+        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 2], datingIv3)
+    }
 
 }

@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.CheckBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
@@ -37,7 +36,6 @@ import com.sdy.jitangapplication.ui.adapter.PeopleNearbyWomanAdapter
 import com.sdy.jitangapplication.ui.dialog.InviteFriendDialog
 import com.sdy.jitangapplication.ui.dialog.PrivacyDialog
 import com.sdy.jitangapplication.ui.dialog.TodayFateWomanDialog
-import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -276,9 +274,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
                         TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
-                } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
-                    TodayWantDialog(activity!!, nearBean).show()
-                } else if (!nearBean?.today_pull_share && !UserManager.showCompleteUserCenterDialog) {
+                } else if (nearBean?.today_pull_share == false && !UserManager.showCompleteUserCenterDialog) {
                     InviteFriendDialog(activity!!).show()
                 }
             }

@@ -469,7 +469,7 @@
                             <com.sdy.jitangapplication.widgets.MyDatingAudioView
                                 android:id="@+id/datingAudioView"
                                 android:layout_width="0dp"
-                                android:layout_height="0dp"
+                                android:layout_height="wrap_content"
                                 android:visibility="visible"
                                 app:layout_constraintBottom_toBottomOf="@id/datingTypeText"
                                 app:layout_constraintLeft_toLeftOf="@id/datingTypeText"

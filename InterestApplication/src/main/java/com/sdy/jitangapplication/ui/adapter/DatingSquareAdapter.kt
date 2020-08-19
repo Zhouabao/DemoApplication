@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.MyDatingAudioView
 import kotlinx.android.synthetic.main.item_layout_dating_square_man.view.*
 import kotlinx.android.synthetic.main.item_layout_dating_square_woman.view.*
 
@@ -22,8 +23,9 @@ import kotlinx.android.synthetic.main.item_layout_dating_square_woman.view.*
 /**
  * 约会适配器
  */
-class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder>
-    (mutableListOf()) {
+class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder>(mutableListOf()) {
+
+    val myAudioView by lazy { mutableListOf<MyDatingAudioView?>() }
 
     init {
         addItemType(DatingBean.TYPE_WOMAN, R.layout.item_layout_dating_square_woman)
@@ -51,6 +53,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     itemview.datingContentAudioWoman.isVisible = false
                     itemview.datingContentTextWoman.isVisible = true
                     itemview.datingContentTextWoman.text = item.content
+                    myAudioView.add(null)
                 } else {
                     itemview.datingContentAudioWoman.isVisible = true
                     itemview.datingContentTextWoman.isVisible = false
@@ -58,7 +61,12 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                         R.drawable.shape_rectangle_gray4df_10dp,
                         audioTip = "点击播放活动语音描述"
                     )
-                    itemview.datingContentAudioWoman.prepareAudio(item.content, item.duration)
+                    itemview.datingContentAudioWoman.prepareAudio(
+                        item.content,
+                        item.duration,
+                        helper.layoutPosition
+                    )
+                    myAudioView.add(itemview.datingContentAudioWoman)
                 }
                 itemview.datingNameWoman.text = item.nickname
                 itemview.datingOnlineDistanceWoman.text = "${item.online_time}\t${item.distance}"
@@ -73,7 +81,11 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     .append(item.dating_title)
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .create()
-                itemview.datingPlaceWoman.text = item.dating_distance
+                itemview.datingPlaceWoman.text = if (item.dating_distance.isNullOrEmpty()) {
+                    "无明确要求"
+                } else {
+                    item.dating_distance
+                }
                 itemview.datingObjectWoman.text =
                     "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
                 itemview.datingPlanWoman.text = item.follow_up
@@ -95,6 +107,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     itemview.datingContentAudio.isVisible = false
                     itemview.datingContentText.isVisible = true
                     itemview.datingContentText.text = item.content
+                    myAudioView.add(null)
                 } else {
                     itemview.datingContentAudio.isVisible = true
                     itemview.datingContentText.isVisible = false
@@ -102,7 +115,13 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                         R.drawable.shape_rectangle_gray4df_10dp,
                         audioTip = "点击播放活动语音描述"
                     )
-                    itemview.datingContentAudio.prepareAudio(item.content, item.duration)
+                    itemview.datingContentAudio.prepareAudio(
+                        item.content,
+                        item.duration,
+                        item.id
+                    )
+                    myAudioView.add(itemview.datingContentAudio)
+
                 }
                 itemview.datingName.text = item.nickname
                 itemview.datingOnlineDistance.text = "${item.online_time}\t${item.distance}"
@@ -117,7 +136,11 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     .append(item.dating_title)
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .create()
-                itemview.datingPlace.text = item.dating_distance
+                itemview.datingPlace.text = if (item.dating_distance.isNullOrEmpty()) {
+                    "无明确要求"
+                } else {
+                    item.dating_distance
+                }
                 itemview.datingObject.text =
                     "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
                 itemview.datingPlan.text = item.follow_up
@@ -129,9 +152,24 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                 itemview.datingApplyForBtn.clickWithTrigger {
                     CommonFunction.checkApplyForDating(mContext, item)
                 }
-
             }
         }
 
     }
+
+    fun resetMyAudioViews() {
+        for (myaudio in myAudioView) {
+            myaudio?.releaseAudio()
+        }
+    }
+
+    fun notifySomeOneAudioView(positionId: Int) {
+        for (myaudio in myAudioView.withIndex()) {
+            if (myaudio?.value?.positionId != positionId) {
+                myaudio?.value?.releaseAudio()
+            }
+        }
+    }
+
+
 }

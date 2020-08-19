@@ -205,7 +205,7 @@
                     android:layout_width="0dp"
                     app:layout_constraintRight_toRightOf="@id/datingProject"
                     android:layout_height="wrap_content"
-                    android:text="仅限高级会员·帅气英俊"
+                    android:text="仅限黄金会员·帅气英俊"
                     android:textColor="#ff333333"
                     android:textSize="14sp"
                     android:textStyle="bold"

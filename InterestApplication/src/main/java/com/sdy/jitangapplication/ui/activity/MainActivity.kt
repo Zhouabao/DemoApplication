@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -14,7 +13,6 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
@@ -43,18 +41,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
     private val titles = arrayOf("心动", "发现", "活动", "消息", "我的")
+
     companion object {
         const val REQUEST_LABEL_CODE = 2000
         const val POSITION_INDEX = 0
         const val POSITION_CONTENT = 1
         const val POSITION_DATING = 2
-        const val POSITION_MESSAGE= 3
-        const val POSITION_MINE= 4
+        const val POSITION_MESSAGE = 3
+        const val POSITION_MINE = 4
 
         fun start(context: Context, intent: Intent) {
             context.startActivity(intent.setClass(context, MainActivity::class.java))
@@ -207,11 +205,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-                if (UserManager.touristMode && position != 0 && position != 1) {
+                if (UserManager.touristMode && position != POSITION_INDEX && position != POSITION_CONTENT) {
                     TouristDialog(this@MainActivity).show()
                 } else {
-                    if (position == 4) {
+                    if (position == POSITION_MINE) {
                         EventBus.getDefault().postSticky(UserCenterEvent(true))
+                    }
+                    if (position != POSITION_DATING) {
+                        EventBus.getDefault().post(DatingStopPlayEvent())
                     }
                     switchTab(position)
                 }
@@ -521,7 +522,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var incomingMessageObserver: Observer<List<IMMessage>> = Observer {
         mPresenter.msgList()
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

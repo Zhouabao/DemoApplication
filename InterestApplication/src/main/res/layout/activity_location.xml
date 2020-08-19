@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     tools:context=".ui.activity.LocationActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,9 +30,9 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:src="@drawable/icon_locate_mylocation"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/locationMap"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <androidx.core.widget.NestedScrollView-->
@@ -46,6 +47,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg"
+        android:fitsSystemWindows="true"
         android:orientation="vertical"
         app:behavior_hideable="false"
         app:behavior_peekHeight="263dp"
@@ -55,12 +57,11 @@
             android:id="@+id/searchLocation"
             android:layout_width="match_parent"
             android:layout_height="34dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
-            android:layout_gravity="center"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
-            app:searchIcon="@drawable/icon_searchview"
             android:background="@drawable/shape_rectangle_light_gray_24dp"
             android:focusable="false"
             android:focusableInTouchMode="true"
@@ -68,6 +69,7 @@
             app:iconifiedByDefault="false"
             app:queryBackground="@null"
             app:queryHint="搜索地点"
+            app:searchIcon="@drawable/icon_searchview"
             app:showDividers="none"
             app:submitBackground="@null" />
 

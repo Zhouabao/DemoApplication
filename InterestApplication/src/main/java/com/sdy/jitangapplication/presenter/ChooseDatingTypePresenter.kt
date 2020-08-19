@@ -19,7 +19,7 @@ import com.sdy.jitangapplication.utils.UserManager
 class ChooseDatingTypePresenter : BasePresenter<ChooseDatingTypeView>() {
 
     /**
-     * 获取今日意向
+     * 获取约会类型
      */
     fun getIntention() {
         RetrofitFactory.instance.create(Api::class.java)

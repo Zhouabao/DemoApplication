@@ -14,4 +14,6 @@ interface DatingDetailView : BaseView {
 
 
     fun doLikeResult(code: Boolean,isLiked:Boolean)
+
+    fun deleteResult(success: Boolean)
 }

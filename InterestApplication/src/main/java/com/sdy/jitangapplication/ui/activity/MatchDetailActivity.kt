@@ -107,10 +107,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun finish() {
+        super.finish()
+        datingAudioView.releaseAudio()
         handler.removeCallbacksAndMessages(null)
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        datingAudioView.releaseAudio()
     }
 
 
@@ -222,7 +228,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.drawable.shape_rectangle_white_22dp,
             resources.getColor(R.color.colorOrange),
             R.drawable.icon_play_dating_audio_orange,
-            R.drawable.icon_pause_dating_audio_orange
+            R.drawable.icon_pause_dating_audio_orange,
+            "点击播放活动语音描述"
         )
 
     }
@@ -459,12 +466,30 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 "她"
             }}想和你：${dating!!.title}"
             datingProjectDetailText.text = dating!!.dating_title
-            datingPlace.text = dating!!.dating_distance
+            datingPlace.text = if (dating!!.dating_distance.isNullOrEmpty()) {
+                "无明确要求"
+            } else {
+                dating!!.dating_distance
+            }
             if (dating.content_type == 1) {
+                datingProjectDetailText.setBackgroundColor(Color.TRANSPARENT)
+                datingProjectDetailText.setPadding(
+                    SizeUtils.dp2px(0F),
+                    SizeUtils.dp2px(2F),
+                    SizeUtils.dp2px(0F),
+                    SizeUtils.dp2px(2F)
+                )
                 datingTypeText.isVisible = true
                 datingAudioView.isVisible = false
                 datingTypeText.text = dating.content
             } else {
+                datingProjectDetailText.setBackgroundResource(R.drawable.shape_rectangle_white_40_11dp)
+                datingProjectDetailText.setPadding(
+                    SizeUtils.dp2px(5F),
+                    SizeUtils.dp2px(2F),
+                    SizeUtils.dp2px(5F),
+                    SizeUtils.dp2px(2F)
+                )
                 datingTypeText.visibility = View.INVISIBLE
                 datingAudioView.isVisible = true
                 datingAudioView.prepareAudio(dating.content, dating.duration)

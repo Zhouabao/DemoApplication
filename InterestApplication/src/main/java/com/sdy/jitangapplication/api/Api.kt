@@ -1398,4 +1398,11 @@ interface Api {
     @POST("Dating/report${Constants.END_BASE_URL}")
     fun reportDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
+    /**
+     * 举报约会
+     */
+    @FormUrlEncoded
+    @POST("Dating/delDating${Constants.END_BASE_URL}")
+    fun delDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
 }

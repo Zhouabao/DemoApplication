@@ -73,7 +73,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                 e.printStackTrace();
             }
             break;
-        case SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS:// 消息太多？你可以设置私聊权限仅高级会员过滤消息
+        case SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS:// 消息太多？你可以设置私聊权限仅黄金会员过滤消息
             notificationTextView.setText(SpanUtils.with(notificationTextView).append("消息太多？你可以设置")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("私聊权限").setClickSpan(new ClickableSpan() {
                         @Override
@@ -87,12 +87,12 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                             Intent intent = new Intent(context, SettingsActivity.class);
                             context.startActivity(intent);
                         }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("仅高级会员过滤消息")
+                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("仅黄金会员过滤消息")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
             break;
-        case SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP:// 免费消息会被归于对方搭讪列表，可能回复率偏低， 充值高级会员可提升消息回复
+        case SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP:// 免费消息会被归于对方搭讪列表，可能回复率偏低， 充值黄金会员可提升消息回复
             notificationTextView.setText(SpanUtils.with(notificationTextView).append("免费消息会被归于对方搭讪列表，可能回复率偏低，\n")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("充值高级会员")
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("充值黄金会员")
                     .setClickSpan(new ClickableSpan() {
                         @Override
                         public void updateDrawState(@NonNull TextPaint ds) {

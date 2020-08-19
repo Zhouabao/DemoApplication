@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.event
 
+import android.content.Context
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.model.LabelQuality
 
@@ -10,3 +11,10 @@ import com.sdy.jitangapplication.model.LabelQuality
  *    version: 1.0
  */
 class UpdateMyDatingEvent(var tags: MutableList<DatingBean>? = null)
+
+
+
+class DatingStopPlayEvent()
+
+
+class DatingOnePlayEvent(val positionId:Int, val context: Context)

@@ -13,7 +13,6 @@ import com.sdy.jitangapplication.presenter.ChooseDatingTypePresenter
 import com.sdy.jitangapplication.presenter.view.ChooseDatingTypeView
 import com.sdy.jitangapplication.ui.adapter.TodayWantAdapter
 import kotlinx.android.synthetic.main.activity_choose_dating_type.*
-import kotlinx.android.synthetic.main.dialog_today_want.todayWantList
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
