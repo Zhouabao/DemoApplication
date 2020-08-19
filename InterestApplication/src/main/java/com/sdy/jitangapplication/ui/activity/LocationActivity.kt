@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
@@ -30,6 +31,7 @@ import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
+import kotlinx.android.synthetic.main.activity_search_message.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlin.math.sqrt
 
@@ -135,6 +137,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                keyWordSearch(newText ?: "")
                 return true
             }
 
@@ -241,6 +244,12 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
     private fun keyWordSearch(keyword: String) {
+        if (TextUtils.isEmpty(keyword)) {
+//            mLocationClient?.stopLocation()
+            mLocationClient?.startLocation()
+            return
+        }
+
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施
         mQuery = PoiSearch.Query(keyword, "", UserManager.getCity())

@@ -275,6 +275,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         } else {
             todayWantContent.text = "发布活动"
         }
+        todayWantVp.removeAllViews()
         val images = mutableListOf<CircleImageView>()
         for (data in datings) {
             val v = CircleImageView(activity!!)
@@ -286,9 +287,9 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             images.add(v)
         }
         todayWantVp.creatView(activity!!, images)
-        todayWantVp.startLoop()
+        if (images.size >= 3)
+            todayWantVp.startLoop()
     }
-
 
 
     override fun onDestroyView() {

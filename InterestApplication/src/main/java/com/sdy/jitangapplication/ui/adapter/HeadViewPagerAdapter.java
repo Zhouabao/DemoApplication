@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.sdy.jitangapplication.widgets.NoScrollViewPager;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -29,7 +31,11 @@ public class HeadViewPagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return Integer.MAX_VALUE;
+        if (mList.size() >= 3) {
+            return Integer.MAX_VALUE;
+        } else {
+            return mList.size();
+        }
     }
 
     @Override
@@ -43,7 +49,8 @@ public class HeadViewPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         // TODO Auto-generated method stub
         // Log.d("remove", mImageViews[position].hashCode() + "");
-        container.removeView((View) object);
+//        container.removeView((View) object);
+        ((NoScrollViewPager)container).removeView(mList.get(position%mList.size()));
     }
 
     // 添加View
