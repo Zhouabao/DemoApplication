@@ -81,12 +81,12 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    KeyboardUtils.hideSoftInput(this@LocationActivity)
+                }
                 val params = bottomSheet.layoutParams
                 Log.d("slideOffset", "slideOffset=====${params.height}")
-//                if (params.height > SizeUtils.dp2px(263F)) {
-//                    params.height = SizeUtils.dp2px(432F)
-//                    bottomSheet.layoutParams = params
-//                }
             }
 
         })

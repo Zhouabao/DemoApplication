@@ -134,8 +134,8 @@ class ChatUpOpenPtVipDialog(
             /**
              * 1.非黄金会员
              *      1.1设置私聊权限
-             *              a.她仅允许高级用户联系她
-             *              b.立即成为高级用户，不要错过
+             *              a.她仅允许黄金会员联系她
+             *              b.立即成为黄金会员，不要错过
              *              c.成为黄金会员，免费无限次聊天
              *      1.2未设置私聊权限
              *          1.2.1次数未用尽
@@ -194,7 +194,7 @@ class ChatUpOpenPtVipDialog(
 
                     if (chatUpBean.private_chat_btn) {
                         chatupTitle.text = "她设置了等级权限"
-                        chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
+                        chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
                         chatupUnlockChat.isVisible = false
                         openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     } else {
@@ -241,7 +241,7 @@ class ChatUpOpenPtVipDialog(
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                     //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
                     chatupTitle.text = "她设置了等级权限"
-                    chatupContent.text = "她仅允许高级用户联系她\n立即成为高级用户，不要错过她"
+                    chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
                     chatupUnlockChat.isVisible = false
                     openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {

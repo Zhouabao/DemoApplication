@@ -300,7 +300,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
     private var settingsBean: SettingsBean? = null
     private var invisible_state = StateBean()//1 不隐身 2 离线时间隐身 3 一直隐身
-    private var private_chat_state = StateBean()//1 所有用户 2针对高级用户
+    private var private_chat_state = StateBean()//1 所有用户 2针对黄金会员
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {

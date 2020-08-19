@@ -60,7 +60,6 @@ import java.text.ParseException
 object CommonFunction {
     /**
      * 验证发布约会
-     * //todo 历史是否发布过  今日是否发布过
      * 当才code 201 需要充值门槛 202 需要充值黄金会员 200 验证通过了可以发布 203 今日是否发布过
      */
     fun checkPublishDating(context: Context) {
@@ -116,7 +115,6 @@ object CommonFunction {
 
     /**
      * 验证报名约会
-     * //todo 已经报名 直接跳转聊天界面
      * 	code 202 对方设置黄金会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息
      */
     fun checkApplyForDating(context: Context, datingBean: DatingBean) {
@@ -245,7 +243,7 @@ object CommonFunction {
                         200 -> {//amount 解锁糖果 isplatinumvip 是否铂金会员true是 false不是
                             VideoOpenPtVipDialog(context).show()
                         }
-                        201 -> {//todo 跳转内部充值页面已经解锁过
+                        201 -> {
                             startToFootPrice(context)
                         }
                         else -> {
@@ -300,7 +298,6 @@ object CommonFunction {
                                 ).show()
                         }
                         201 -> {//开通门槛会员
-                            //todo 跳转内部充值页面已经解锁过
                             startToFootPrice(context1)
                         }
                         206 -> {
@@ -360,6 +357,7 @@ object CommonFunction {
                     else -> ""
                 }
             is ShareSquareAttachment -> "『动态分享内容』"
+            is ChatDatingAttachment -> "『活动报名』"
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
             is ContactCandyAttachment -> {
                 "『解锁联系方式』"
@@ -405,7 +403,6 @@ object CommonFunction {
                         }
 
                         201 -> {
-                            //todo 跳转内部充值页面已经解锁过
                             startToFootPrice(context)
                         }
                         222 -> {
@@ -470,8 +467,8 @@ object CommonFunction {
         val tip =
             MessageBuilder.createCustomMessage(target_accid, SessionTypeEnum.P2P, attachment)
         val config = CustomMessageConfig()
-        config.enableUnreadCount = true
-        config.enablePush = true
+        config.enableUnreadCount = false
+        config.enablePush = false
         tip.config = config
         NIMClient.getService(MsgService::class.java).sendMessage(tip, false)
     }

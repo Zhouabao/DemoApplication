@@ -69,6 +69,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     myAudioView.add(itemview.datingContentAudioWoman)
                 }
                 itemview.datingNameWoman.text = item.nickname
+                itemview.datingVipWoman.isVisible = item.isplatinumvip
                 itemview.datingOnlineDistanceWoman.text = "${item.online_time}\t${item.distance}"
                 SpanUtils.with(itemview.datingProjectWoman)
                     .append(
@@ -87,7 +88,11 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     item.dating_distance
                 }
                 itemview.datingObjectWoman.text =
-                    "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
+                    "${if (item.private_chat_state.isNotEmpty()) {
+                        "${item.private_chat_state} | "
+                    } else {
+                        ""
+                    }}${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
                 itemview.datingPlanWoman.text = item.follow_up
                 if (item.accid != UserManager.getAccid()) {
                     itemview.datingApplyForWomanBtn.isVisible = true
@@ -124,6 +129,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
 
                 }
                 itemview.datingName.text = item.nickname
+                itemview.datingVip.isVisible = item.isplatinumvip
                 itemview.datingOnlineDistance.text = "${item.online_time}\t${item.distance}"
                 SpanUtils.with(itemview.datingProject)
                     .append(
@@ -142,7 +148,11 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     item.dating_distance
                 }
                 itemview.datingObject.text =
-                    "${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
+                    "${if (item.private_chat_state.isNotEmpty()) {
+                        "${item.private_chat_state} | "
+                    } else {
+                        ""
+                    }}${item.dating_target} | ${item.cost_type} | ${item.cost_money}"
                 itemview.datingPlan.text = item.follow_up
                 if (item.accid != UserManager.getAccid()) {
                     itemview.datingApplyForBtn.isVisible = true

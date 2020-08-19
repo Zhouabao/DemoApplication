@@ -216,7 +216,6 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
     lateinit var moreActionDialog: MoreActionNewDialog
     private fun showShareDialog() {
-        //todo 拉新分享链接
         moreActionDialog =
             MoreActionNewDialog(
                 this,

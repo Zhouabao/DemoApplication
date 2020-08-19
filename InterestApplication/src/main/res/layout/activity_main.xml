@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,122 +10,143 @@
     tools:context=".ui.activity.MainActivity">
 
 
-    <com.sdy.jitangapplication.widgets.NoScrollViewPager
-        android:id="@+id/vpMain"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </com.sdy.jitangapplication.widgets.NoScrollViewPager>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpMain"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </com.sdy.jitangapplication.widgets.NoScrollViewPager>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_gravity="bottom"
+            android:background="@color/colorWhite">
+
+            <TextView
+                android:id="@+id/tabMatchCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_match_checked"
+                android:drawablePadding="5dp"
+                android:gravity="center_horizontal|bottom"
+                android:text="心动"
+                android:textColor="@color/colorOrange"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tabSquare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_square"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="发现"
+                android:textColor="@color/colorGrayCCC"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMatchCount"
+                app:layout_constraintRight_toLeftOf="@id/tabView" />
+
+
+            <ImageView
+                android:id="@+id/tabView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:src="@drawable/icon_tab_dating"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabSquare"
+                app:layout_constraintRight_toLeftOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tabMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_message"
+                android:drawablePadding="@dimen/dp_size_5"
+                android:gravity="center"
+                android:text="消息"
+                android:textColor="@color/colorGrayCCC"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabView"
+                app:layout_constraintRight_toLeftOf="@id/tabMe" />
+
+            <ImageView
+                android:id="@+id/ivNewMsg"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginLeft="28dp"
+                android:background="@drawable/shape_oval_orange"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="@id/tabMessage" />
+
+
+            <TextView
+                android:id="@+id/tabMe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:background="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_me"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="我的"
+                android:textColor="@color/colorGrayCCC"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/tabBg"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/icon_bg_main_tab">
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="49dp"
+        android:src="@drawable/icon_bg_main_tab1" />
+
+    <ImageView
+        android:id="@+id/tabDating"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="6dp"
+        android:src="@drawable/icon_tab_dating" />
 
 
-        <ImageView
-            android:id="@+id/tabBg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_bg_main_tab"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <TextView
-            android:id="@+id/tabMatchCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:drawableTop="@drawable/icon_tab_match_checked"
-            android:drawablePadding="5dp"
-            android:gravity="center_horizontal|bottom"
-            android:text="心动"
-            android:textColor="@color/colorOrange"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tabSquare" />
-
-        <TextView
-            android:id="@+id/tabSquare"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/icon_tab_square"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="发现"
-            android:textColor="@color/colorGrayCCC"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/tabMatchCount"
-            app:layout_constraintRight_toLeftOf="@id/tabDating" />
-
-
-        <ImageView
-            android:id="@+id/tabDating"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:src="@drawable/icon_tab_dating"
-            app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/tabSquare"
-            app:layout_constraintRight_toLeftOf="@id/tabMessage" />
-
-        <TextView
-            android:id="@+id/tabMessage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/icon_tab_message"
-            android:drawablePadding="@dimen/dp_size_5"
-            android:gravity="center"
-            android:text="消息"
-            android:textColor="@color/colorGrayCCC"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/tabDating"
-            app:layout_constraintRight_toLeftOf="@id/tabMe" />
-
-        <ImageView
-            android:id="@+id/ivNewMsg"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="28dp"
-            android:background="@drawable/shape_oval_orange"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@id/tabMessage"
-            app:layout_constraintRight_toRightOf="@id/tabMessage"
-            app:layout_constraintTop_toTopOf="@id/tabMessage" />
-
-
-        <TextView
-            android:id="@+id/tabMe"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/icon_tab_me"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="我的"
-            android:textColor="@color/colorGrayCCC"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tabMatchCount"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintLeft_toRightOf="@id/tabMessage"
-            app:layout_constraintRight_toRightOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</LinearLayout>
+</FrameLayout>

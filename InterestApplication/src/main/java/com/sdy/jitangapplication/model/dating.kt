@@ -24,6 +24,7 @@ data class DatingBean(
     var cost_money: String = "",
     var cost_type: String = "",
     var dating_distance: String = "",
+    var private_chat_state: String = "",
     var dating_target: String = "",
     var dating_title: String = "",
     var distance: String = "",

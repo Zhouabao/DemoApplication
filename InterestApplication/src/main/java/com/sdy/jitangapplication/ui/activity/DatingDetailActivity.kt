@@ -243,7 +243,13 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
             } else {
                 datingBean!!.dating_distance
             }
-            datingObject.text = datingBean!!.dating_target
+
+
+            datingObject.text = "${if (datingBean!!.private_chat_state.isNotEmpty()) {
+                "${datingBean!!.private_chat_state}·"
+            } else {
+                ""
+            }}${datingBean!!.dating_target}"
             datingMoney.text = "${datingBean!!.cost_money}·${datingBean!!.cost_type}"
             datingPlan.text = datingBean!!.follow_up
 

@@ -327,12 +327,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
-                ass.msg = when (loadedRecent.attachment) {
-                    is ShareSquareAttachment -> "『动态分享内容』"
-                    is SendGiftAttachment -> "『礼物消息』"
-                    is SendCustomTipAttachment -> (loadedRecent.attachment as SendCustomTipAttachment).content
-                    else -> loadedRecent.content
-                }
+                ass.msg = CommonFunction.setMessageContent(loadedRecent)
                 ass.count = loadedRecent.unreadCount
                 ass.time = TimeUtil.getTimeShowString(loadedRecent.time, true)
                 ass.id = loadedRecent.contactId

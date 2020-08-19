@@ -204,7 +204,6 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
                 }
             }
             R.id.powerVideo, R.id.changeVideo -> { //视频介绍
-                //todo 还原视频介绍代码
 //                CommonFunction.startToVideoIntroduce(this)
                 if (verify == 1) {
                     if (video == 0) {

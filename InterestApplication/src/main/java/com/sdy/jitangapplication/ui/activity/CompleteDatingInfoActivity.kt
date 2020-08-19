@@ -23,10 +23,7 @@ import com.amap.api.services.core.PoiItem
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.utils.RandomUtils
@@ -246,7 +243,6 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
 
     //恢复成未录制状态
-    //todo 恢复未录制状态 bug
     private fun changeToNormalState() {
         datingAudioPreviewCl.isVisible = false
         datingAudioCl.isVisible = true
@@ -567,7 +563,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
     private fun publishDating(sourceFile: String) {
         params["dating_type"] = dating_type?.id ?: 0
-        params["title"] = datingProjectContentEt.text
+        params["title"] = datingProjectContentEt.text.trim()
         params["dating_target"] = chooseDatingObjectBtn.text
         params["cost_type"] = chooseDatingPayBtn.text.split("·")[0]
         params["content_type"] = if (datingDescrEt.text.isNullOrBlank()) {
@@ -575,7 +571,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         } else {
             1
         }
-        params["content"] = sourceFile
+        params["content"] = RegexUtils.getReplaceAll(sourceFile,"\\t|\\r|\\n|\\\\s*","")
         params["cost_money"] = chooseDatingPayBtn.text.split("·")[1]
         params["follow_up"] = chooseDatingPlanBtn.text
 
@@ -610,7 +606,6 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                     datingProjectContentEt.text = data?.getStringExtra("datingContent")
                 }
                 REQUEST_CODE_DATING_PLACE -> {
-                    //TODO 选择地址
                     if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
                         positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
                         chooseDatingPlaceBtn.text =
@@ -649,11 +644,10 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         }
     }
 
-    override fun onSquareAnnounceResult(success: Boolean, code: Int) {
+    override fun onDatingReleaseResult(success: Boolean, code: Int) {
         if (success) {
             CommonFunction.toast("活动发布成功")
             EventBus.getDefault().post(UpdateMyDatingEvent())
-            //todo 刷新约会列表和我的约会
             if (ActivityUtils.isActivityExistsInStack(ChooseDatingTypeActivity::class.java)) {
                 ActivityUtils.finishActivity(ChooseDatingTypeActivity::class.java)
             }

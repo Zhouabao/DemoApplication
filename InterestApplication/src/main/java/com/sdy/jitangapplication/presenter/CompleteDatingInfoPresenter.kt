@@ -60,12 +60,12 @@ class CompleteDatingInfoPresenter : BasePresenter<CompleteDatingInfoView>() {
     fun uploadFile(filePath: String, imagePath: String) {
         val file = File(filePath)
         if (!file.exists()) {
-            mView.onSquareAnnounceResult(false)
+            mView.onDatingReleaseResult(false)
             return
         }
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
-            mView.onSquareAnnounceResult(false)
+            mView.onDatingReleaseResult(false)
             return
         }
         Log.d("OkHttp", filePath)
@@ -79,7 +79,7 @@ class CompleteDatingInfoPresenter : BasePresenter<CompleteDatingInfoView>() {
                 if (info != null && info.isOK) {
                     mView.onQnUploadResult(true, key)
                 } else {
-                    mView.onSquareAnnounceResult(false)
+                    mView.onDatingReleaseResult(false)
                     loadingDialog.dismiss()
                 }
             }, null
@@ -104,13 +104,13 @@ class CompleteDatingInfoPresenter : BasePresenter<CompleteDatingInfoView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     loadingDialog.dismiss()
-                    mView.onSquareAnnounceResult(t.code == 200, t.code)
+                    mView.onDatingReleaseResult(t.code == 200, t.code)
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     loadingDialog.dismiss()
-                    mView.onSquareAnnounceResult(false)
+                    mView.onDatingReleaseResult(false)
                 }
 
             })

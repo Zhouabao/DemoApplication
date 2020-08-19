@@ -118,7 +118,6 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200)
                         mView.onAddCommentResult(position, t, true)
                     else if (t.code == 202) {
-                        //todo 跳转内部充值页面
                         CommonFunction.startToFootPrice(context)
                     } else if (t.code == 203) {
                         CommentPtVipDialog(context).show()

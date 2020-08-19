@@ -261,10 +261,6 @@ public class SessionHelper {
 
             @Override
             public boolean isShowGiftIcon(IMMessage message) {
-                // todo 根据服务器返回的字段来设置消息是否要消耗糖果
-                // 男的发的并且是(女的收的或者男方自己) 并且控制时间与显示与否
-                // && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
-                // || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
                 if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {
                     return false;
                 } else {

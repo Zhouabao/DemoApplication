@@ -67,8 +67,8 @@ class DatingOpenPtVipDialog(
         when (type) {
             TYPE_DATING_PUBLISH -> { //发布约会
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                datingTitle.text = "仅高级用户能发布活动"
-                datingContent.text = "活动为高级用户独享功能\n成为黄金会员，建立和她的浪漫活动吧"
+                datingTitle.text = "仅黄金会员能发布活动"
+                datingContent.text = "活动为黄金会员独享功能\n成为黄金会员，建立和她的浪漫活动吧"
                 openPtVipBtn.text = "成为黄金会员"
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
@@ -80,8 +80,8 @@ class DatingOpenPtVipDialog(
                 if (chatUpBean != null) {
                     if (chatUpBean!!.private_chat && !chatUpBean.isplatinum) {
                         openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                        datingTitle.text = "对方仅允许高级用户报名"
-                        datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
+                        datingTitle.text = "对方仅允许黄金会员报名"
+                        datingContent.text = "对方仅允许黄金会员报名\n立即成为黄金会员，不要错过她"
                         openPtVipBtn.text = "成为黄金会员"
                         applyForDatingBtn.isVisible = false
                         openPtVipBtn.clickWithTrigger {
@@ -92,7 +92,7 @@ class DatingOpenPtVipDialog(
                         if (chatUpBean!!.residue_cnt <= 0) {
                             if (chatUpBean!!.isplatinum) {
                                 datingTitle.text = "要报名活动吗"
-                                datingContent.text = "用糖果证明活动诚意或许更好哦"
+                                datingContent.text = "今日免费聊天机会已用完"
                                 applyForDatingBtn.isVisible = false
                                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                                 openPtVipBtn.text = "报名活动（${chatUpBean!!.dating_amount}糖果）"
@@ -133,7 +133,7 @@ class DatingOpenPtVipDialog(
 
             TYPE_DATING_APPLYFOR_PRIVACY -> {
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                datingTitle.text = "对方仅允许高级用户报名"
+                datingTitle.text = "对方仅允许黄金会员报名"
                 datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
                 openPtVipBtn.text = "成为黄金会员"
                 applyForDatingBtn.isVisible = false

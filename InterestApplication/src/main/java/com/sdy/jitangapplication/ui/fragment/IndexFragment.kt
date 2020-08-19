@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,8 +38,8 @@ import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_index.*
-import kotlinx.android.synthetic.main.item_marquee_recommend_dating.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -262,45 +263,38 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     }
 
     private fun setRecommendDatingView(datings: MutableList<String>) {
-        datingList.clear()
-        datingList.addAll(datings)
+        todayWantVp.isVisible = datings.isNotEmpty()
+        val params = todayWantContent.layoutParams as LinearLayout.LayoutParams
+        if (todayWantVp.isVisible) {
+            params.leftMargin = SizeUtils.dp2px(0F)
+        } else {
+            params.leftMargin = SizeUtils.dp2px(5F)
+        }
         if (UserManager.getGender() == 1) {
             todayWantContent.text = "她想约你"
         } else {
             todayWantContent.text = "发布活动"
         }
-
-        todayWantIcon.removeAllViews()
-        if (datingList.size % 3 != 0) {
-            datingList.addAll(datingList.subList(0, 3 - datingList.size % 3))
+        val images = mutableListOf<CircleImageView>()
+        for (data in datings) {
+            val v = CircleImageView(activity!!)
+            v.borderColor = Color.WHITE
+            v.borderWidth = SizeUtils.dp2px(1F)
+            val params = ViewGroup.LayoutParams(SizeUtils.dp2px(23F), SizeUtils.dp2px(23F))
+            v.layoutParams = params
+            GlideUtil.loadCircleImg(activity!!, data, v)
+            images.add(v)
         }
-        datingList.addAll(datingList)
-        datingList.addAll(datingList)
-        datingList.addAll(datingList)
-        val cnt = datingList.size / 3
-        index = 0
-        for (data in 0 until cnt) {
-            todayWantIcon.addView(getMarqueeView(index))
-//            getMarqueeView(data)
-        }
-        setDatingListData(index)
-    }
-
-    private var index = 0
-    private val datingList by lazy { mutableListOf<String>() }
-    private fun getMarqueeView(index: Int): View {
-        val view = layoutInflater.inflate(R.layout.item_marquee_recommend_dating, null, false)
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3], view.datingIv1)
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 1], view.datingIv2)
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 2], view.datingIv3)
-        return view
+        todayWantVp.creatView(activity!!, images)
+        todayWantVp.startLoop()
     }
 
 
-    private fun setDatingListData(index: Int) {
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3], datingIv1)
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 1], datingIv2)
-        GlideUtil.loadCircleImg(activity!!, datingList[index * 3 + 2], datingIv3)
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        todayWantVp.stopLoop()
     }
+
 
 }

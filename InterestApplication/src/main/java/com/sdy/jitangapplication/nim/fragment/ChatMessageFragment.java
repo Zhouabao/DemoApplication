@@ -497,7 +497,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private boolean isSendChargePtVip = false;
 
     private void setTargetInfoData() {
-        // todo 获取服务器展示糖果的时间
         UserManager.INSTANCE.setShowCandyMessage(nimBean.getChat_expend_amount() > 0);
         UserManager.INSTANCE.setShowCandyTime(nimBean.getChat_expend_time());
         // UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(),
@@ -555,7 +554,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             nimBean.setUnlock_popup_str("");
         }
 
-        // todo 男性是否充值了黄金会员，如果没有充值，就提醒
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && UserManager.INSTANCE.getGender() == 2 && !isSendChargePtVip
                 && !messageListPanel.getItems().isEmpty() && messageListPanel.getItems()
                         .get(messageListPanel.getItems().size() - 1).getDirect() == MsgDirectionEnum.In) {
@@ -611,7 +609,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                         nimBeanBaseResp.getData().getRet_tips_arr());
                             nimBean.set_send_msg(true);
 
-                            // todo 男性是否充值了黄金会员，如果没有充值，就提醒
                             if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
                                     && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
                                 ArrayList<SendTipBean> tips = new ArrayList<>();

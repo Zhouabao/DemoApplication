@@ -305,7 +305,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)
-            //todo 跳转结果页面
             OneKeyLoginManager.getInstance().finishAuthActivity()
             OneKeyLoginManager.getInstance().removeAllListener()
             isOpenAuth = true

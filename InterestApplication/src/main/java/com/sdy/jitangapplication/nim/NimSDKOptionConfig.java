@@ -14,6 +14,7 @@ import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
@@ -175,6 +176,8 @@ public class NimSDKOptionConfig {
                 return "『糖果礼物』";
             } else if (message.getAttachment() instanceof WishHelpAttachment) {
                 return "『心愿助力』";
+            } else if (message.getAttachment() instanceof ChatDatingAttachment) {
+                return "『活动报名』";
             }
 
             return null;
