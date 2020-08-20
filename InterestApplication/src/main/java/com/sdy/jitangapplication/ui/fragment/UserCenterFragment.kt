@@ -70,6 +70,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         const val REQUEST_ID_VERIFY = 13
         const val REQUEST_PUBLISH = 14
         const val REQUEST_INTENTION = 15
+
+        const val POSITION_SQUARE = 0
+        const val POSITION_DATING = 1
+        const val POSITION_TAG = 2
     }
 
     //我的访客adapter
@@ -165,9 +169,9 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         mStack.add(myTagFragment)   //我的兴趣
         vpMySquareAndTag.adapter =
             MainPagerAdapter(childFragmentManager, mStack, titles)
-        vpMySquareAndTag.offscreenPageLimit = 2
+        vpMySquareAndTag.offscreenPageLimit = 3
         initIndicator()
-        vpMySquareAndTag.currentItem = 0
+        vpMySquareAndTag.currentItem = POSITION_SQUARE
     }
 
 
@@ -195,12 +199,15 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                 simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
                 simplePagerTitleView.onClick {
                     vpMySquareAndTag.currentItem = index
-                    if (index == 1)
+                    if (index == POSITION_TAG)
                         EventBus.getDefault().post(
                             UpdateMyLabelEvent(
                                 userInfoBean?.label_quality ?: mutableListOf()
                             )
                         )
+                    if (index != POSITION_DATING) {
+                        EventBus.getDefault().post(DatingStopPlayEvent())
+                    }
 
                 }
                 return simplePagerTitleView
@@ -233,7 +240,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == 1) {
+                if (position != POSITION_DATING) {
+                    EventBus.getDefault().post(DatingStopPlayEvent())
+                }
+                if (position == POSITION_TAG) {
                     EventBus.getDefault().post(
                         UpdateMyLabelEvent(
                             userInfoBean?.label_quality ?: mutableListOf()
@@ -289,7 +299,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         checkVip()
         setUserPower()
 
-        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault()
+            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
 
         if (!UserManager.isShowGuideVerify()) {

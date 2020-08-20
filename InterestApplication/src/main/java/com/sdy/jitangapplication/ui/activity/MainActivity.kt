@@ -3,8 +3,6 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -226,7 +224,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     if (position == POSITION_MINE) {
                         EventBus.getDefault().postSticky(UserCenterEvent(true))
                     }
-                    if (position != POSITION_DATING) {
+                    if (position != POSITION_DATING || position != POSITION_MINE) {
                         EventBus.getDefault().post(DatingStopPlayEvent())
                     }
                     switchTab(position)

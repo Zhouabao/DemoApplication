@@ -13,6 +13,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.DatingOnePlayEvent
+import com.sdy.jitangapplication.event.DatingStopPlayEvent
 import com.sdy.jitangapplication.event.UpdateMyDatingEvent
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.presenter.MyDatingPresenter
@@ -126,4 +128,26 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
     override fun onRefresh(refreshLayout: RefreshLayout) {
         mPresenter.myDating()
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateFindByTagEvent(eve: DatingStopPlayEvent) {
+        datingSquareAdapter.resetMyAudioViews()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDatingOnePlayEvent(eve: DatingOnePlayEvent) {
+        datingSquareAdapter.notifySomeOneAudioView(eve.positionId)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        datingSquareAdapter.resetMyAudioViews()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        datingSquareAdapter.resetMyAudioViews()
+    }
+
 }
