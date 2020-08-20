@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.DatingOptionsBean
 
 /**
  *    author : ZFM
@@ -11,6 +12,6 @@ import com.sdy.jitangapplication.model.CheckBean
  */
 interface ChooseDatingTypeView : BaseView {
 
-    fun onGetIntentionResult(result: MutableList<CheckBean>?)
+    fun onGetIntentionResult(result: DatingOptionsBean?)
 
 }

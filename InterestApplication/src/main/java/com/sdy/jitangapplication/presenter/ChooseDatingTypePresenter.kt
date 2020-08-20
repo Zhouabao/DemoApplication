@@ -7,6 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.DatingOptionsBean
 import com.sdy.jitangapplication.presenter.view.ChooseDatingTypeView
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -23,9 +24,9 @@ class ChooseDatingTypePresenter : BasePresenter<ChooseDatingTypeView>() {
      */
     fun getIntention() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getDatingTypeList(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<CheckBean>?>>() {
-                override fun onNext(t: BaseResp<MutableList<CheckBean>?>) {
+            .datingOptions(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<DatingOptionsBean?>>() {
+                override fun onNext(t: BaseResp<DatingOptionsBean?>) {
                     super.onNext(t)
                     mView.onGetIntentionResult(t.data)
                 }

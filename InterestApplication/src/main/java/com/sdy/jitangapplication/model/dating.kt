@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import java.io.Serializable
 
 /**
  *    author : ZFM
@@ -64,11 +65,12 @@ data class DatingBean(
 }
 
 data class DatingOptionsBean(
+    val dating_type: MutableList<CheckBean> = mutableListOf(),
     var cost_money: MutableList<String> = mutableListOf(),
     var cost_type: MutableList<String> = mutableListOf(),
     var dating_target: MutableList<String> = mutableListOf(),
     var follow_up: MutableList<String> = mutableListOf()
-)
+):Serializable
 
 data class CheckPublishDatingBean(
     var is_publish: Boolean = false,

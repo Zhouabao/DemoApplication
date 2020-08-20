@@ -8,7 +8,7 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.DatingOptionsBean
 import com.sdy.jitangapplication.presenter.ChooseDatingTypePresenter
 import com.sdy.jitangapplication.presenter.view.ChooseDatingTypeView
 import com.sdy.jitangapplication.ui.adapter.TodayWantAdapter
@@ -76,12 +76,12 @@ class ChooseDatingTypeActivity : BaseMvpActivity<ChooseDatingTypePresenter>(),
         }
     }
 
-    override fun onGetIntentionResult(result: MutableList<CheckBean>?) {
-        if (!result.isNullOrEmpty()) {
+    override fun onGetIntentionResult(result: DatingOptionsBean?) {
+        if (result != null) {
             stateDatingType.viewState = MultiStateView.VIEW_STATE_CONTENT
             var hasCheck = false
             if (checkWantId != -1) {
-                for (data in result!!.withIndex()) {
+                for (data in result!!.dating_type.withIndex()) {
                     if (data.value.id == checkWantId) {
                         data.value.checked = true
                         checkPosi = data.index
@@ -92,12 +92,12 @@ class ChooseDatingTypeActivity : BaseMvpActivity<ChooseDatingTypePresenter>(),
                 }
             }
             if (!hasCheck) {
-                result!![0].checked = true
+                result.dating_type[0].checked = true
                 checkPosi = 0
-                checkWantId = result!![0].id
+                checkWantId = result.dating_type[0].id
                 rightBtn1.isEnabled = true
             }
-            adapter.setNewData(result)
+            adapter.setNewData(result.dating_type)
         } else {
             stateDatingType.viewState = MultiStateView.VIEW_STATE_ERROR
         }
