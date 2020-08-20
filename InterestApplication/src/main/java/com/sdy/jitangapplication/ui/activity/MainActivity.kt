@@ -23,6 +23,8 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.presenter.MainPresenter
@@ -178,9 +180,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initFragment() {
         tabMatchCount.setOnClickListener(this)
         tabSquare.setOnClickListener(this)
-        tabDating.setOnClickListener(this)
         tabMe.setOnClickListener(this)
         tabMessage.setOnClickListener(this)
+        tabDating.clickWithTrigger {
+            if (vpMain.currentItem != POSITION_DATING) {
+                vpMain.currentItem = POSITION_DATING
+            } else {
+                if (UserManager.touristMode) {
+                    TouristDialog(this@MainActivity).show()
+                } else {
+                    CommonFunction.checkPublishDating(this)
+                }
+            }
+        }
 
         mStack.add(indexFragment)
         mStack.add(contentFragment)
@@ -402,17 +414,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             R.id.tabSquare -> {
                 vpMain.currentItem = POSITION_CONTENT
-            }
-            R.id.tabDating -> {
-                if (vpMain.currentItem != POSITION_DATING) {
-                    vpMain.currentItem = POSITION_DATING
-                } else {
-                    if (UserManager.touristMode) {
-                        TouristDialog(this@MainActivity).show()
-                    } else {
-                        CommonFunction.checkPublishDating(this)
-                    }
-                }
             }
             R.id.tabMessage -> {
                 if (UserManager.touristMode) {
@@ -645,4 +646,5 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
         }
     }
+
 }

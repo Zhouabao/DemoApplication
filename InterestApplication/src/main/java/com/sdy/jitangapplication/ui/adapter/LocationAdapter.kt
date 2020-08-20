@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
 import android.view.View
 import com.amap.api.services.core.PoiItem
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
@@ -24,14 +26,17 @@ class LocationAdapter(var checkPosition: Int = 0) :
             holder.itemView.locationName.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
             holder.itemView.locationChooseImg.visibility = View.GONE
         }
-        holder.itemView.locationName.text =
-//            "${item.title}${if (!item.title.isNullOrEmpty() && !item.snippet.isNullOrEmpty()) {
-//                "\n" + (item.cityName ?: "") + (item.adName ?: "") + (item.businessArea ?: "") + (item.snippet ?: "")
-//            } else {"" }}"
-            "${(item.title ?: "")}${if (item.snippet.isNotEmpty()) {
+
+
+        SpanUtils.with(holder.itemView.locationName)
+            .append("${(item.title ?: "")}")
+            .append("${if (item.snippet.isNotEmpty()) {
                 "\n${item.snippet}"
             } else {
                 ""
-            }}"
+            }}")
+            .setForegroundColor(Color.parseColor("#FFC8C8C8"))
+            .setFontSize(12,true)
+            .create()
     }
 }

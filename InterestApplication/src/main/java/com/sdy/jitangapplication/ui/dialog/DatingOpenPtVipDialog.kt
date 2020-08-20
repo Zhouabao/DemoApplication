@@ -187,7 +187,6 @@ class DatingOpenPtVipDialog(
 
                 override fun onNext(t: BaseResp<ApplyDatingBean?>) {
                     super.onNext(t)
-                    //todo 如果报名成功 就发送报名成功消息,跳转聊天页面
                     if (t.code == 200 && t.data != null) {
                         val attachment =
                             ChatDatingAttachment(

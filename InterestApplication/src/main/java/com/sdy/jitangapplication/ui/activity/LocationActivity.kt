@@ -229,10 +229,11 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
+    private val poiCode  = "商务住宅|餐饮服务|生活服务|地名地址信息"
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
-        mQuery = PoiSearch.Query("", "", "")
+        mQuery = PoiSearch.Query("", poiCode, "")
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)
@@ -252,7 +253,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施
-        mQuery = PoiSearch.Query(keyword, "", UserManager.getCity())
+        mQuery = PoiSearch.Query(keyword, poiCode, UserManager.getCity())
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)

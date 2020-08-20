@@ -239,7 +239,6 @@ class ChatUpOpenPtVipDialog(
                 chatupContact.isVisible = true
                 if (chatUpBean.private_chat_btn && !chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                    //todo 对方设置了聊天权限 则成为钻石会员才能开启聊天
                     chatupTitle.text = "她设置了等级权限"
                     chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
                     chatupUnlockChat.isVisible = false
