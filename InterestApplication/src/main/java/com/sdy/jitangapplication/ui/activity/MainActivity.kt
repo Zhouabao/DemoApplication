@@ -3,6 +3,8 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,7 +25,6 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
@@ -86,6 +87,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
         initView()
+
+//        CommonFunction.toast(getChannel(this))
 
         //启动时间统计
         if (!UserManager.touristMode)
@@ -646,5 +649,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
         }
     }
+
+//    fun getChannel(context: Context): String {
+//        try {
+//            val pm: PackageManager = context.packageManager
+//            val appInfo: ApplicationInfo =
+//                pm.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+//            return appInfo.metaData.getString("UMENG_CHANNEL") ?: ""
+//        } catch (ignored: PackageManager.NameNotFoundException) {
+//            return ""
+//        }
+//    }
 
 }
