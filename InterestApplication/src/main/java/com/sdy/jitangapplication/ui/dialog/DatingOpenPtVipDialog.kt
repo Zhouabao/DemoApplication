@@ -63,9 +63,9 @@ class DatingOpenPtVipDialog(
 
 
     private fun initChatData() {
-        GlideUtil.loadCircleImg(context1, UserManager.getAvator(), datingAvator)
         when (type) {
             TYPE_DATING_PUBLISH -> { //发布约会
+                GlideUtil.loadCircleImg(context1, UserManager.getAvator(), datingAvator)
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 datingTitle.text = "仅黄金会员能发布活动"
                 datingContent.text = "活动为黄金会员独享功能\n成为黄金会员，建立和她的浪漫活动吧"
@@ -78,6 +78,7 @@ class DatingOpenPtVipDialog(
             TYPE_DATING_APPLYFOR -> {
                 //1.先判断有无高级限制
                 if (chatUpBean != null) {
+                    GlideUtil.loadCircleImg(context1, datingBean?.avatar, datingAvator)
                     if (chatUpBean!!.private_chat && !chatUpBean.isplatinum) {
                         openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                         datingTitle.text = "对方仅允许黄金会员报名"
@@ -119,7 +120,8 @@ class DatingOpenPtVipDialog(
                             openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
                             applyForDatingBtn.isVisible = false
                             datingTitle.text = "要报名活动吗"
-                            datingContent.text = "报名消耗一次聊天机会\n今日还有${chatUpBean!!.residue_cnt}次免费聊天机会"
+                            datingContent.text =
+                                "报名消耗一次聊天机会\n今日还有${chatUpBean!!.residue_cnt}次免费聊天机会"
                             openPtVipBtn.text = "报名活动"
                             openPtVipBtn.clickWithTrigger {
                                 datingApply()
@@ -132,6 +134,7 @@ class DatingOpenPtVipDialog(
             }
 
             TYPE_DATING_APPLYFOR_PRIVACY -> {
+                GlideUtil.loadCircleImg(context1, datingBean?.avatar, datingAvator)
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 datingTitle.text = "对方仅允许黄金会员报名"
                 datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
