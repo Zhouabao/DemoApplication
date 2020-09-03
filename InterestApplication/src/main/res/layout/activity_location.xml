@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
-    android:animateLayoutChanges="true"
     tools:context=".ui.activity.LocationActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +19,7 @@
             android:id="@+id/locationMap"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="253dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llTitle" />
@@ -28,11 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="15dp"
             android:src="@drawable/icon_locate_mylocation"
             app:layout_constraintBottom_toBottomOf="@id/locationMap"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <androidx.core.widget.NestedScrollView-->
@@ -44,14 +44,21 @@
     <LinearLayout
         android:id="@+id/scrollLocationSv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
+        android:layout_height="432dp"
         android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg"
-        android:fitsSystemWindows="true"
         android:orientation="vertical"
         app:behavior_hideable="false"
         app:behavior_peekHeight="263dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <ImageView
+            android:id="@+id/expandBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_search_expand" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchLocation"
@@ -59,7 +66,6 @@
             android:layout_height="34dp"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/shape_rectangle_light_gray_24dp"

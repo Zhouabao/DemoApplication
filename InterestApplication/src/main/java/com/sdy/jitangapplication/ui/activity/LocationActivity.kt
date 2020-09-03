@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -31,7 +30,6 @@ import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
-import kotlinx.android.synthetic.main.activity_search_message.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlin.math.sqrt
 
@@ -75,7 +73,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         rightBtn1.setOnClickListener(this)
         backToMyLocationBtn.setOnClickListener(this)
 
-        bottomSheetBehavior.peekHeight = SizeUtils.dp2px(263F)
+//        bottomSheetBehavior.peekHeight = SizeUtils.dp2px(263F)
         bottomSheetBehavior.setBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -86,9 +84,16 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     KeyboardUtils.hideSoftInput(this@LocationActivity)
+                    expandBtn.setImageResource(R.drawable.icon_search_expand)
+                } else {
+                    expandBtn.setImageResource(R.drawable.icon_search_collapsed)
                 }
-                val params = bottomSheet.layoutParams
-                Log.d("slideOffset", "slideOffset=====${params.height}")
+//                val params = bottomSheet.layoutParams
+//                if (params.height > SizeUtils.dp2px(432F)) {
+//                    params.height = SizeUtils.dp2px(432F)
+//                    bottomSheet.layoutParams = params
+//                }
+//                Log.d("slideOffset", "slideOffset=====${params.height}")
             }
 
         })
@@ -105,27 +110,29 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         )
         locationRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
-            adapter.checkPosition = position
-            adapter.notifyDataSetChanged()
-            if (position != 0) {
-                isTouch = false
-                moveMapCamera(
-                    adapter.data[position].latLonPoint.latitude,
-                    adapter.data[position].latLonPoint.longitude
-                )
+            if (adapter.checkPosition != position) {
+                adapter.checkPosition = position
+                adapter.notifyDataSetChanged()
+                if (position != 0) {
+                    isTouch = false
+                    moveMapCamera(
+                        adapter.data[position].latLonPoint.latitude,
+                        adapter.data[position].latLonPoint.longitude
+                    )
+                }
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 KeyboardUtils.hideSoftInput(this)
                 searchLocation.clearFocus()
             }
         }
 
-        KeyboardUtils.registerSoftInputChangedListener(this) {
-            if (it > 0) {
+
+        searchLocation.setOnQueryTextFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
-            Log.d("KeyboardUtils", "$it")
         }
 
 
@@ -199,10 +206,13 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
 
     fun startJumpAnimation() {
+        if (screenMoveMarker == null) {
+            addScreenMoveMarker()
+        }
         if (screenMoveMarker != null) {
             val latLng = screenMoveMarker!!.position
             val point = aMap.projection.toScreenLocation(latLng)
-            point.y = point.y - SizeUtils.dp2px(125F)
+//            point.y = point.y - SizeUtils.dp2px(253F)
 
             val target = aMap.projection.fromScreenLocation(point)
             val animation = TranslateAnimation(target)
@@ -229,7 +239,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
-    private val poiCode  = "商务住宅|餐饮服务|生活服务|地名地址信息|体育休闲服务|购物服务|住宿服务|风景名胜|交通设施服务|事件活动|通行设施"
+    private val poiCode = "商务住宅|餐饮服务|生活服务|地名地址信息|体育休闲服务|购物服务|住宿服务|风景名胜|交通设施服务|事件活动|通行设施"
+
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
@@ -313,6 +324,13 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
                 adapter.setNewData(result.pois)
                 adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), "无明确要求", ""))
                 rightBtn1.isEnabled = true
+
+                if (adapter.data.size > 1) {
+                    adapter.checkPosition = 1
+                } else {
+                    adapter.checkPosition = 0
+                }
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -334,10 +352,10 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
                 )
 //                addGrowMarker()
                 addScreenMoveMarker()
-                adapter.checkPosition = 0
-                adapter.notifyDataSetChanged()
+
                 doWhenLocationSuccess(location!!.latitude, location!!.longitude)
                 moveMapCamera(location!!.latitude, location!!.longitude)
+
             } else {
                 //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
             }
