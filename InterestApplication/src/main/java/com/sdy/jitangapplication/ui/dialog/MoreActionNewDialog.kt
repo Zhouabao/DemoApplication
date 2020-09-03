@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import androidx.core.view.isVisible
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -75,6 +76,7 @@ class MoreActionNewDialog(
 
 
     private fun initView() {
+        transpondFriend.isVisible = type != TYPE_SHARE_VIP_URL
         transpondFriend.setOnClickListener(this)
         transpondWechat.setOnClickListener(this)
         transpondWechatZone.setOnClickListener(this)
