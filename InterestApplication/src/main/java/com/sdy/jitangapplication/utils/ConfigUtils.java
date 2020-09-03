@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chuanglan.shanyan_sdk.tool.ShanYanUIConfig;
-import com.kotlin.base.common.BaseConstant;
+import com.sdy.baselibrary.common.BaseConstant;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;

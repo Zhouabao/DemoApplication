@@ -20,7 +20,8 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 /**
  * 变更账号
  */
-class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeAccountView, View.OnClickListener {
+class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeAccountView,
+    View.OnClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,7 +113,12 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
             }
             //获取验证码
             verifycodeBtn -> {
-                mPresenter.sendSms(hashMapOf<String, Any>("phone" to newPhoneEt.text.toString(), "scene" to "register"))
+                mPresenter.sendSms(
+                    hashMapOf<String, Any>(
+                        "phone" to newPhoneEt.text.toString(),
+                        "scene" to "register"
+                    )
+                )
             }
             //确认变更
             confirmChangeBtn -> {
@@ -138,8 +144,8 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
      */
     fun checkConfirmBtnEnable() {
         confirmChangeBtn.isEnabled =
-            newPhoneEt.text.isNotEmpty() && newPhoneEt.text.length == 11 &&
-                    newVerifyCodeEt.text.isNotEmpty() && newVerifyCodeEt.text.length == 6
+            newPhoneEt.text.isNotEmpty() && newPhoneEt.text.length == 11
+                    && newVerifyCodeEt.text.isNotEmpty() && newVerifyCodeEt.text.length == 4
     }
 
 

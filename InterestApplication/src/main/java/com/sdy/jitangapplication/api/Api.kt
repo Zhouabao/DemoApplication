@@ -23,7 +23,7 @@ interface Api {
      * 获取消息总的个数汇总数据
      */
     @FormUrlEncoded
-    @POST("Index/msgListV2${Constants.END_BASE_URL}")
+    @POST("Index/msgListend${Constants.END_BASE_URL}")
     fun msgList(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<AllMsgCount?>>
 
 
@@ -618,14 +618,14 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensusCandyV21${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensuscandyend${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
      * 广场消息列表
      */
     @FormUrlEncoded
-    @POST("tidings/squareListsV2${Constants.END_BASE_URL}")
+    @POST("tidings/squareListsEnd${Constants.END_BASE_URL}")
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
 
     /**

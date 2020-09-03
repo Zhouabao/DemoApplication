@@ -51,7 +51,6 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                 helper.itemView.choosePhoto.visibility = View.GONE
                 helper.itemView.choosePhoto.setImageResource(R.drawable.icon_way_camera)
             } else {
-                helper.itemView.choosePhotoDel.visibility = View.VISIBLE
                 if (item.ischecked) {
                     helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_checked_video)
                 } else {

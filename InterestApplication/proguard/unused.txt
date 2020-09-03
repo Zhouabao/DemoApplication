@@ -371,7 +371,7 @@ com.xiaomi.mipush.sdk.MiPushClient4Hybrid
     private static short getDeviceStatus(com.xiaomi.mipush.sdk.MiPushMessage,boolean)
 com.google.android.exoplayer2.text.SubtitleDecoder
 rx.internal.operators.OperatorReplay$ReplayBuffer
-com.kotlin.base.common.BaseConstant
+com.sdy.baselibrary.common.BaseConstant
 com.amap.api.mapcore.util.kx
 org.jetbrains.anko.db.SqlTypeImpl
 rx.internal.operators.OperatorTimeoutBase$FirstTimeoutStub
@@ -1620,7 +1620,7 @@ com.chad.library.adapter.base.util.ItemProviderException
 com.shuyu.gsyvideoplayer.x86.BuildConfig
 com.sdy.jitangapplication.nim.uikit.api.UIKitOptions
     public static com.sdy.jitangapplication.nim.uikit.api.UIKitOptions buildForIndependentChatRoom()
-com.kotlin.base.common.BaseConstant$Companion
+com.sdy.baselibrary.common.BaseConstant$Companion
 com.bumptech.glide.util.MarkEnforcingInputStream
     private static final int UNSET
     private static final int END_OF_STREAM

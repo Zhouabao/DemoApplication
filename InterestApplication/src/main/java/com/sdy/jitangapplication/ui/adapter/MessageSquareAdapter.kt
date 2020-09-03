@@ -51,8 +51,8 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
             3 -> {
                 "赞了你的评论"
             }
-            4 -> {
-                "发布了动态@了你"
+            4 -> {  //活动点赞
+                "赞了你的活动"
             }
             else -> {
                 ""
@@ -90,6 +90,7 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
                 holder.itemView.squareType.visibility = View.VISIBLE
                 holder.itemView.squareType.setImageResource(R.drawable.icon_type_audio)
             }
+
         }
 
     }

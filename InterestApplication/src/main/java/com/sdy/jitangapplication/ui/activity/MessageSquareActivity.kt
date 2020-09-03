@@ -99,6 +99,10 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                 2, 3 -> {//点击评论进入评论详情
                     SquareCommentDetailActivity.start(this, squareId = item.id ?: 0)
                 }
+
+                4 -> { //点击进入活动详情
+                    DatingDetailActivity.start2Detail(this, item.id ?: 0)
+                }
             }
         }
         adapter.setOnItemLongClickListener { _, view, position ->
@@ -152,6 +156,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
 
     private var unread = -1
     private var his = -1
+
     /**
      * 广场列表数据回调
      */

@@ -29,6 +29,7 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.sdy.baselibrary.utils.ChannelUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
@@ -380,11 +381,8 @@ class MyApplication : BaseApplication() {
 //                UMConfigure.DEVICE_TYPE_PHONE,
 //                Constants.UMENG_SECRET
 //            )
-            var channel = "test"
-            if (ChannelReaderUtil.getChannel(this) != null) {
-                channel = ChannelReaderUtil.getChannel(this)
-            }
-            UMConfigure.init(this, null, channel, UMConfigure.DEVICE_TYPE_PHONE, null)
+
+            UMConfigure.init(this, null, ChannelUtils.getChannel(this), UMConfigure.DEVICE_TYPE_PHONE, null)
 
             /**
              * 设置组件化的Log开关
@@ -482,7 +480,7 @@ class MyApplication : BaseApplication() {
             if (NIMUtil.isMainProcess(this)) {
                 val option = SmAntiFraud.SmOption()
                 option.organization = Constants.SM_ORGANIZATION
-                option.channel = ChannelReaderUtil.getChannel(this) ?: ""
+                option.channel = ChannelUtils.getChannel(this)
                 //            option.channel ="debug"
                 option.publicKey = Constants.SM_PUBLICKEY
                 option.ainfoKey = Constants.SM_AINFOKEY
