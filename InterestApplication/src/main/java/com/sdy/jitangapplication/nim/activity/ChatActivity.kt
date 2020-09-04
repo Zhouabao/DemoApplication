@@ -290,7 +290,10 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         }
         //打开聊天信息
         chatMore.onClick {
-            MessageInfoActivity.startActivity(this, sessionId)
+            if (fragment().nimBean != null)
+                MessageInfoActivity.startActivity(this, sessionId, fragment().nimBean.stared)
+            else
+                MessageInfoActivity.startActivity(this, sessionId)
         }
     }
 

@@ -29,6 +29,7 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
@@ -349,7 +350,33 @@ object CommonFunction {
     /**
      * 返回云信的消息
      */
-    fun setMessageContent(item: RecentContact): String {
+    fun getRecentContent(item: RecentContact): String {
+        return when (item.attachment) {
+            is ChatHiAttachment ->
+                when ((item.attachment as ChatHiAttachment).showType) {
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
+                    else -> ""
+                }
+            is ShareSquareAttachment -> "『动态分享内容』"
+            is ChatDatingAttachment -> "『活动报名』"
+            is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
+            is ContactCandyAttachment -> {
+                "『解锁联系方式』"
+            }
+            is SendCustomTipAttachment -> if ((item.attachment as SendCustomTipAttachment).content.isNullOrEmpty()) {
+                "『消息提醒』"
+            } else {
+                (item.attachment as SendCustomTipAttachment).content
+            }
+            else -> item.content
+        }
+    }
+
+
+    /**
+     * 返回云信的消息
+     */
+    fun getMessageContent(item: IMMessage): String {
         return when (item.attachment) {
             is ChatHiAttachment ->
                 when ((item.attachment as ChatHiAttachment).showType) {

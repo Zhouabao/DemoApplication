@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.StarEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
+import com.sdy.jitangapplication.event.UpdateStarEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.business.session.helper.MessageListPanelHelper
@@ -64,10 +65,11 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         private const val EXTRA_ACCOUNT = "EXTRA_ACCOUNT"
         private const val IS_STAR = "IS_STAR"
         private const val IS_FRIEND = "IS_FRIEND"
+
         @JvmStatic
-        fun startActivity(context: Context, sessionId: String) {
+        fun startActivity(context: Context, sessionId: String, star: Boolean = false) {
             context.startActivity<MessageInfoActivity>(
-                EXTRA_ACCOUNT to sessionId
+                EXTRA_ACCOUNT to sessionId, "star" to star
             )
         }
     }
@@ -267,6 +269,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         star = false
                         friendStar.isChecked = false
                         EventBus.getDefault().post(UpdateContactBookEvent())
+                        EventBus.getDefault().post(UpdateStarEvent(false))
                     } else {
                         CommonFunction.toast(t.msg)
                     }
@@ -292,6 +295,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         star = true
                         friendStar.isChecked = true
                         EventBus.getDefault().post(UpdateContactBookEvent())
+                        EventBus.getDefault().post(UpdateStarEvent(true))
                     } else {
                         CommonFunction.toast(t.msg)
                     }

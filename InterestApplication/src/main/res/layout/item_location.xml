@@ -26,10 +26,9 @@
     <ImageView
             android:id="@+id/locationChooseImg"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_gou"
-            android:layout_width="24dp"
-            android:scaleType="centerInside"
+            android:src="@drawable/icon_check_location"
+            android:layout_width="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_marginRight="15dp"/>
 </RelativeLayout>

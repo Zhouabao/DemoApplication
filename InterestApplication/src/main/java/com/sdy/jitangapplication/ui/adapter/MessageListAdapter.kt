@@ -1,9 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.graphics.Color
 import android.view.View
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.netease.nimlib.sdk.msg.model.RecentContact
@@ -11,13 +9,11 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MessageGiftBean
-import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.nim.uikit.business.recent.RecentContactsFragment
 import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
 import com.sdy.jitangapplication.nim.uikit.common.CommonUtil
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.TimeUtil
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
@@ -57,7 +53,7 @@ class MessageListAdapter :
 
 
         holder.itemView.msgNew.isVisible = false
-        holder.itemView.text.text = CommonFunction.setMessageContent(item)
+        holder.itemView.text.text = CommonFunction.getRecentContent(item)
 
         holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)
         if (item.unreadCount == 0) {

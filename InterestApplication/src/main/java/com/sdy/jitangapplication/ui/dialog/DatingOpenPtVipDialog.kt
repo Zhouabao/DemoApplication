@@ -217,7 +217,7 @@ class DatingOpenPtVipDialog(
                                                 ActivityUtils.getTopActivity(),
                                                 datingBean.accid
                                             )
-                                        }, 400L)
+                                        }, 600L)
                                     } else {
                                         EventBus.getDefault().post(UpdateSendGiftEvent(message))
                                         loadingDialog.dismiss()

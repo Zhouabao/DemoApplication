@@ -37,8 +37,6 @@ import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
-import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
-import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.api.model.contact.ContactChangedObserver
 import com.sdy.jitangapplication.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -327,7 +325,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
-                ass.msg = CommonFunction.setMessageContent(loadedRecent)
+                ass.msg = CommonFunction.getRecentContent(loadedRecent)
                 ass.count = loadedRecent.unreadCount
                 ass.time = TimeUtil.getTimeShowString(loadedRecent.time, true)
                 ass.id = loadedRecent.contactId

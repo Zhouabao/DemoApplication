@@ -39,6 +39,7 @@ import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
+import com.sdy.jitangapplication.event.UpdateStarEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.model.SendTipBean;
@@ -247,6 +248,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         unlockContactLl.setVisibility(View.GONE);
         nimBean.set_unlock_contact(true);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateStarEvent(UpdateStarEvent event) {
+        nimBean.setStared(event.getStar());
     }
 
     /**

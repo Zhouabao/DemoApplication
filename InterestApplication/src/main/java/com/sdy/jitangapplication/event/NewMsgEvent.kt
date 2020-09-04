@@ -41,6 +41,9 @@ class UpdateAccostListEvent()
 
 class HideContactLlEvent()
 
+
+class UpdateStarEvent(val star: Boolean)
+
 /**
  * 更新发送礼物的事件
  */

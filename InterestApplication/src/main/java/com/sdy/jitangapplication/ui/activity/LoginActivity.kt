@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.blankj.utilcode.util.ZipUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.chuanglan.shanyan_sdk.view.CmccLoginActivity
 import com.chuanglan.shanyan_sdk.view.ShanYanOneKeyActivity
@@ -40,7 +40,7 @@ import java.lang.ref.WeakReference
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener {
 
-    private val syCode by lazy { intent.getIntExtra("syCode", 0) }
+    private var syCode = 0
 
     companion object {
         public var weakrefrece: WeakReference<LoginActivity>? = null
@@ -65,6 +65,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        syCode = intent.getIntExtra("syCode", 0)
 //        BarUtils.setStatusBarLightMode(this,true)
 //        ScreenUtils.setFullScreen(this)
         initView()
@@ -89,25 +90,30 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         //闪验预取号code为1022即为成功
         if (syCode == 0) {
             OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
+                syCode = p0
                 if (p0 == 1022) {
                     onekeyLoginBtn.isVisible = true
-                    phoneLoginBtn.visibility = View.INVISIBLE
-                    wechatLoginBtn.visibility = View.INVISIBLE
+                    phoneLoginBtn.isInvisible = true
+                    wechatLoginBtn.isInvisible = true
+                    t2.isVisible = false
                 } else {
                     onekeyLoginBtn.isVisible = false
                     phoneLoginBtn.isVisible = true
                     wechatLoginBtn.isVisible = true
+                    t2.isVisible = true
                 }
             }
         } else {
             if (syCode == 1022) {
                 onekeyLoginBtn.isVisible = true
-                phoneLoginBtn.visibility = View.INVISIBLE
-                wechatLoginBtn.visibility = View.INVISIBLE
+                phoneLoginBtn.isInvisible = true
+                wechatLoginBtn.isInvisible = true
+                t2.isVisible = false
             } else {
                 onekeyLoginBtn.isVisible = false
                 phoneLoginBtn.isVisible = true
                 wechatLoginBtn.isVisible = true
+                t2.isVisible = true
             }
         }
 
@@ -284,8 +290,13 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             UserManager.registerFileBean = data
             if (data?.tourists) {
                 touristBtn.visibility = View.VISIBLE
-            } else
-                touristBtn.visibility = View.INVISIBLE
+            } else {
+                if (syCode == 1022) {
+                    touristBtn.isInvisible = true
+                } else {
+                    touristBtn.isVisible = false
+                }
+            }
         }
 
     }

@@ -54,18 +54,10 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/icon_login_with_wechat"
-                android:scaleType="centerCrop" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="微信登录"
-                android:textColor="#ffffffff"
-                android:textSize="14sp" />
+                android:src="@drawable/icon_login_with_wechat" />
+
         </LinearLayout>
 
 
@@ -78,17 +70,11 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/icon_login_with_phone" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="验证码登录"
-                android:textColor="#ffffffff"
-                android:textSize="14sp" />
+                android:src="@drawable/icon_login_with_phone" />
+
+
         </LinearLayout>
 
     </LinearLayout>

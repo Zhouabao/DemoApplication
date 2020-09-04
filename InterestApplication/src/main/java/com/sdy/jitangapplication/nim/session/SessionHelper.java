@@ -154,7 +154,7 @@ public class SessionHelper {
 
                 @Override
                 public void onClick(Context context, View view, String sessionId) {
-                    MessageInfoActivity.startActivity(context, sessionId); // 打开聊天信息
+                    MessageInfoActivity.startActivity(context, sessionId,false); // 打开聊天信息
                 }
             };
             infoButton.iconId = R.drawable.icon_more_black;

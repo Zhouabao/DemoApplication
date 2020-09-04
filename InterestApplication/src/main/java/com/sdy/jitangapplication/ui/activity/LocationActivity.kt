@@ -73,7 +73,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         rightBtn1.setOnClickListener(this)
         backToMyLocationBtn.setOnClickListener(this)
 
-//        bottomSheetBehavior.peekHeight = SizeUtils.dp2px(263F)
+        bottomSheetBehavior.peekHeight = SizeUtils.dp2px(263F)
         bottomSheetBehavior.setBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -110,20 +110,18 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         )
         locationRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
-            if (adapter.checkPosition != position) {
-                adapter.checkPosition = position
-                adapter.notifyDataSetChanged()
-                if (position != 0) {
-                    isTouch = false
-                    moveMapCamera(
-                        adapter.data[position].latLonPoint.latitude,
-                        adapter.data[position].latLonPoint.longitude
-                    )
-                }
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                KeyboardUtils.hideSoftInput(this)
-                searchLocation.clearFocus()
+//            if (adapter.checkPosition != position) {
+            adapter.checkPosition = position
+            adapter.notifyDataSetChanged()
+            if (position != 0) {
+                isTouch = false
+                moveMapCamera(
+                    adapter.data[position].latLonPoint.latitude,
+                    adapter.data[position].latLonPoint.longitude
+                )
             }
+            searchLocation.clearFocus()
+//            }
         }
 
 
@@ -131,15 +129,15 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
             if (hasFocus) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                KeyboardUtils.hideSoftInput(this)
             }
         }
 
 
         searchLocation.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                KeyboardUtils.hideSoftInput(searchLocation)
                 keyWordSearch(query ?: "")
+                searchLocation.clearFocus()
                 return true
             }
 
@@ -205,30 +203,6 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
-    fun startJumpAnimation() {
-        if (screenMoveMarker == null) {
-            addScreenMoveMarker()
-        }
-        if (screenMoveMarker != null) {
-            val latLng = screenMoveMarker!!.position
-            val point = aMap.projection.toScreenLocation(latLng)
-//            point.y = point.y - SizeUtils.dp2px(253F)
-
-            val target = aMap.projection.fromScreenLocation(point)
-            val animation = TranslateAnimation(target)
-            animation.setInterpolator { it ->
-                (if (it <= 0.5f) {
-                    0.5F - 2 * (0.5f - it) * (0.5f - it)
-                } else {
-                    0.5F - sqrt((it - 0.5F) * (1.5f - it))
-                })
-            }
-            animation.setDuration(600)
-            screenMoveMarker!!.setAnimation(animation)
-            screenMoveMarker!!.startAnimation()
-        }
-    }
-
     private val zoom = 19f//地图缩放级别
     private fun moveMapCamera(latitude: Double, longitude: Double) {
         if (aMap != null) {
@@ -289,6 +263,32 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         }
     }
 
+    fun startJumpAnimation() {
+        if (screenMoveMarker == null) {
+            addScreenMoveMarker()
+        } else
+            if (screenMoveMarker != null) {
+                val latLng = screenMoveMarker!!.position
+                val point = aMap.projection.toScreenLocation(latLng)
+                point.y = point.y - SizeUtils.dp2px(125F)
+
+                val target = aMap.projection.fromScreenLocation(point)
+                val animation = TranslateAnimation(target)
+                animation.setInterpolator { it ->
+                    (if (it <= 0.5f) {
+                        0.5F - 2 * (0.5f - it) * (0.5f - it)
+                    } else {
+                        0.5F - sqrt((it - 0.5F) * (1.5f - it))
+                    })
+                }
+                animation.setDuration(600)
+                screenMoveMarker!!.setAnimation(animation)
+                screenMoveMarker!!.startAnimation()
+            }
+
+    }
+
+
     override fun onPause() {
         super.onPause()
         locationMap.onPause()
@@ -310,7 +310,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         locationMap.onDestroy()
         if (null != mLocationClient) {
             mLocationClient!!.stopLocation()
-            mLocationClient!!.onDestroy();
+            mLocationClient!!.onDestroy()
             mLocationClient = null
         }
     }
@@ -350,12 +350,9 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
                     it.district,
                     it.cityCode
                 )
-//                addGrowMarker()
                 addScreenMoveMarker()
-
                 doWhenLocationSuccess(location!!.latitude, location!!.longitude)
                 moveMapCamera(location!!.latitude, location!!.longitude)
-
             } else {
                 //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
             }
@@ -365,6 +362,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     override fun onClick(view: View) {
         when (view.id) {
             R.id.backToMyLocationBtn -> {
+                mLocationClient?.stopLocation()
                 mLocationClient?.startLocation()
             }
             R.id.rightBtn1 -> {

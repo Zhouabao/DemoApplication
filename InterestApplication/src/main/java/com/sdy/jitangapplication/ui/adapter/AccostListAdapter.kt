@@ -44,9 +44,13 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
         val recent = NIMClient.getService(MsgService::class.java)
             .queryRecentContact(item.accid, SessionTypeEnum.P2P)
 
+        val message = NIMClient.getService(MsgService::class.java).queryLastMessage(item.accid, SessionTypeEnum.P2P)
         holder.itemView.text.text = when {
             recent != null -> {
-                CommonFunction.setMessageContent(recent)
+                CommonFunction.getRecentContent(recent)
+            }
+            message != null -> {
+                CommonFunction.getMessageContent(message)
             }
             item.content.isNotEmpty() -> {
                 item.content
