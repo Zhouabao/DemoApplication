@@ -500,7 +500,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * verifyLl
      */
 
-    private boolean isSendChargePtVip = false;
+    private boolean isSendChargePtVip = false; // 是否发送过此条tip
+    private boolean isDirectIn = false; // 是否存在回复消息
 
     private void setTargetInfoData() {
         UserManager.INSTANCE.setShowCandyMessage(nimBean.getChat_expend_amount() > 0);
@@ -569,6 +570,26 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             CommonFunction.INSTANCE.sendTips(sessionId, tips);
             isSendChargePtVip = true;
         }
+
+        if (UserManager.INSTANCE.getGender() == 1) {
+            for (int i = 0; i < messageListPanel.getItems().size(); i++) {
+                IMMessage message = messageListPanel.getItems().get(i);
+                if (message.getDirect() == MsgDirectionEnum.In) {
+                    isDirectIn = true;
+                    break;
+                }
+            }
+            for (int i = 0; i < messageListPanel.getItems().size(); i++) {
+                IMMessage message = messageListPanel.getItems().get(i);
+                if (message.getAttachment() instanceof SendCustomTipAttachment
+                        && ((SendCustomTipAttachment) message.getAttachment())
+                                .getShowType() == SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP) {
+                    isSendChargePtVip = true;
+                    break;
+                }
+            }
+        }
+
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid) {

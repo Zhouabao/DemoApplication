@@ -42,23 +42,18 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
         holder.itemView.layoutParams = params
 
         holder.itemView.vipLong.text = item.ename ?: ""
-        holder.itemView.monthPrice.typeface =
-            Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        holder.itemView.vipNowPrice.text = "${item.unit_price}/月"
-
+        holder.itemView.vipNowPrice.text = "¥${if (item.type == 1) {
+            BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)
+        } else {
+            BigDecimal(item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)
+        }}"
         SpanUtils.with(holder.itemView.monthPrice)
-            .append("¥")
-            .setFontSize(14, true)
-            .setBold()
-            .append(
-                "${if (item.type == 1) {
-                    BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)
-                } else {
-                    BigDecimal(item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)
-                }}"
-            )
+            .append("${item.unit_price}")
             .setFontSize(30, true)
+            .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
             .setBold()
+            .append("/月")
+            .setFontSize(14, true)
             .create()
 
 
