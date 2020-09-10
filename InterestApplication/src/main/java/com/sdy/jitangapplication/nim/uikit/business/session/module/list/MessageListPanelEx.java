@@ -1123,7 +1123,7 @@ public class MessageListPanelEx {
 
     // 删除消息
     private void deleteItem(IMMessage messageItem, boolean isRelocateTime) {
-        NIMClient.getService(MsgService.class).deleteChattingHistory(messageItem);
+        NIMClient.getService(MsgService.class).deleteMsgSelf(messageItem,"");
         List<IMMessage> messages = new ArrayList<>();
         for (IMMessage message : items) {
             if (message.getUuid().equals(messageItem.getUuid())) {

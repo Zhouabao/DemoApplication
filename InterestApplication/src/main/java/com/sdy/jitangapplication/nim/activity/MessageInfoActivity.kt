@@ -142,7 +142,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
                     NIMClient.getService(MsgService::class.java)
-                        .clearChattingHistory(account, SessionTypeEnum.P2P)
+                        .clearServerHistory(account, SessionTypeEnum.P2P, true)
                     MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
                     dialog.dismiss()
                 }

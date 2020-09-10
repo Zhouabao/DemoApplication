@@ -49,7 +49,6 @@ import java.util.Set;
 
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
-
 /**
  * 最近联系人列表(会话列表)
  * <p/>
@@ -102,7 +101,6 @@ public class RecentContactsFragment extends TFragment {
         emptyBg.setVisibility(empty ? View.VISIBLE : View.GONE);
         emptyHint.setHint("还没有会话，在通讯录中找个人聊聊吧！");
     }
-
 
     @Override
     public void onDestroy() {
@@ -225,7 +223,7 @@ public class RecentContactsFragment extends TFragment {
             return;
         }
         NimUIKitImpl.getOnlineStateChangeObservable().registerOnlineStateChangeListeners(onlineStateChangeObserver,
-                                                                                         register);
+                register);
     }
 
     private void showLongClickMenu(final RecentContact recent, final int position) {
@@ -238,8 +236,8 @@ public class RecentContactsFragment extends TFragment {
             public void onClick() {
                 // 删除会话，删除后，消息历史被一起删除
                 NIMClient.getService(MsgService.class).deleteRecentContact(recent);
-                NIMClient.getService(MsgService.class).clearChattingHistory(recent.getContactId(),
-                                                                            recent.getSessionType());
+                NIMClient.getService(MsgService.class).clearServerHistory(recent.getContactId(),
+                        recent.getSessionType(), true);
                 adapter.remove(position);
                 postRunnable(new Runnable() {
 
@@ -250,8 +248,8 @@ public class RecentContactsFragment extends TFragment {
                 });
             }
         });
-        title = (CommonUtil.isTagSet(recent, RECENT_TAG_STICKY) ? getString(
-                R.string.main_msg_list_clear_sticky_on_top) : getString(R.string.main_msg_list_sticky_on_top));
+        title = (CommonUtil.isTagSet(recent, RECENT_TAG_STICKY) ? getString(R.string.main_msg_list_clear_sticky_on_top)
+                : getString(R.string.main_msg_list_sticky_on_top));
         alertDialog.addItem(title, new CustomAlertDialog.onSeparateItemClickListener() {
 
             @Override
@@ -269,9 +267,9 @@ public class RecentContactsFragment extends TFragment {
 
             @Override
             public void onClick() {
-                NIMClient.getService(MsgService.class).deleteRoamingRecentContact(recent.getContactId(),
-                                                                                  recent.getSessionType()).setCallback(
-                        new RequestCallback<Void>() {
+                NIMClient.getService(MsgService.class)
+                        .deleteRoamingRecentContact(recent.getContactId(), recent.getSessionType())
+                        .setCallback(new RequestCallback<Void>() {
 
                             @Override
                             public void onSuccess(Void param) {
@@ -306,8 +304,8 @@ public class RecentContactsFragment extends TFragment {
                     return;
                 }
                 // 查询最近联系人列表数据
-                NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(
-                        new RequestCallbackWrapper<List<RecentContact>>() {
+                NIMClient.getService(MsgService.class).queryRecentContacts()
+                        .setCallback(new RequestCallbackWrapper<List<RecentContact>>() {
 
                             @Override
                             public void onResult(int code, List<RecentContact> recents, Throwable exception) {
@@ -349,7 +347,7 @@ public class RecentContactsFragment extends TFragment {
                 unreadNum += r.getUnreadCount();
             }
             // 方式二：直接从SDK读取（相对慢）
-            //int unreadNum = NIMClient.getService(MsgService.class).getTotalUnreadCount();
+            // int unreadNum = NIMClient.getService(MsgService.class).getTotalUnreadCount();
             if (callback != null) {
                 callback.onUnreadCountChange(unreadNum);
             }
@@ -399,7 +397,6 @@ public class RecentContactsFragment extends TFragment {
         }
     }
 
-
     private void registerDropCompletedListener(boolean register) {
         if (register) {
             DropManager.getInstance().addDropCompletedListener(dropCompletedListener);
@@ -411,7 +408,7 @@ public class RecentContactsFragment extends TFragment {
     // 暂存消息，当RecentContact 监听回来时使用，结束后清掉
     private Map<String, Set<IMMessage>> cacheMessages = new HashMap<>();
 
-    //监听在线消息中是否有@我
+    // 监听在线消息中是否有@我
     private Observer<List<IMMessage>> messageReceiverObserver = new Observer<List<IMMessage>>() {
 
         @Override
@@ -449,8 +446,8 @@ public class RecentContactsFragment extends TFragment {
         for (RecentContact r : recentContacts) {
             index = -1;
             for (int i = 0; i < items.size(); i++) {
-                if (r.getContactId().equals(items.get(i).getContactId()) && r.getSessionType() == (items.get(i)
-                                                                                                        .getSessionType())) {
+                if (r.getContactId().equals(items.get(i).getContactId())
+                        && r.getSessionType() == (items.get(i).getSessionType())) {
                     index = i;
                     break;
                 }
@@ -509,8 +506,8 @@ public class RecentContactsFragment extends TFragment {
         public void onEvent(RecentContact recentContact) {
             if (recentContact != null) {
                 for (RecentContact item : items) {
-                    if (TextUtils.equals(item.getContactId(), recentContact.getContactId()) &&
-                        item.getSessionType() == recentContact.getSessionType()) {
+                    if (TextUtils.equals(item.getContactId(), recentContact.getContactId())
+                            && item.getSessionType() == recentContact.getSessionType()) {
                         items.remove(item);
                         refreshMessages(true);
                         break;

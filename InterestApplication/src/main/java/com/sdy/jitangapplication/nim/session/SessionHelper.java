@@ -369,8 +369,8 @@ public class SessionHelper {
 
                             @Override
                             public void doOkAction() {
-                                NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
-                                        item.getSessionTypeEnum());
+                                NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
+                                        item.getSessionTypeEnum(),true);
                                 MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                             }
                         }).show();
@@ -383,8 +383,8 @@ public class SessionHelper {
 
                     @Override
                     public void onClick() {
-                        NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
-                                item.getSessionTypeEnum());
+                        NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
+                                item.getSessionTypeEnum(),true);
                         MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                     }
                 });
@@ -393,8 +393,8 @@ public class SessionHelper {
 
                     @Override
                     public void onClick() {
-                        NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
-                                item.getSessionTypeEnum());
+                        NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
+                                item.getSessionTypeEnum(),false);
                         MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                     }
                 });

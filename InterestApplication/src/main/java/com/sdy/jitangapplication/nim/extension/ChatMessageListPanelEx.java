@@ -312,7 +312,7 @@ public class ChatMessageListPanelEx {
                         && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend)
                         || (message.getAttachment() instanceof ContactAttachment
                                 && message.getDirect() == MsgDirectionEnum.Out)) {
-                    NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                    NIMClient.getService(MsgService.class).deleteMsgSelf(message,"");
                     iterator.remove();
                 }
             }
@@ -635,7 +635,7 @@ public class ChatMessageListPanelEx {
                                     && ((SendCustomTipAttachment) message.getAttachment())
                                             .getIfSendUserShow() != isSend)
                                     || (message.getAttachment() instanceof ContactAttachment && isSend)) {
-                                NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                                NIMClient.getService(MsgService.class).deleteMsgSelf(message,"");
                                 iterator.remove();
                             }
                         }
@@ -1267,7 +1267,7 @@ public class ChatMessageListPanelEx {
 
     // 删除消息
     private void deleteItem(IMMessage messageItem, boolean isRelocateTime) {
-        NIMClient.getService(MsgService.class).deleteChattingHistory(messageItem);
+        NIMClient.getService(MsgService.class).deleteMsgSelf(messageItem,"");
         List<IMMessage> messages = new ArrayList<>();
         for (IMMessage message : items) {
             if (message.getUuid().equals(messageItem.getUuid())) {

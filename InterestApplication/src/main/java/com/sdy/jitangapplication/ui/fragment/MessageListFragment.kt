@@ -164,6 +164,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
                 //删除会话
                 R.id.menuDetele -> {
                     // 删除会话，删除后，消息历史被一起删除
+                    NIMClient.getService(MsgService::class.java).clearServerHistory(recentContact.contactId,recentContact.sessionType,true)
                     NIMClient.getService(MsgService::class.java).deleteRecentContact(recentContact)
 //                    NIMClient.getService(MsgService::class.java).deleteRoamingRecentContact(recentContact.contactId,recentContact.sessionType)
                     adapter.remove(position)
@@ -458,7 +459,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
                     if ((message.attachment is SendCustomTipAttachment && (message.attachment as SendCustomTipAttachment).ifSendUserShow != isSend)
                         || (message.attachment is ContactAttachment && message.direct == MsgDirectionEnum.Out)
                     ) {
-                        NIMClient.getService(MsgService::class.java).deleteChattingHistory(message)
+                        NIMClient.getService(MsgService::class.java).deleteMsgSelf(message,"")
                     }
                 }
             }
