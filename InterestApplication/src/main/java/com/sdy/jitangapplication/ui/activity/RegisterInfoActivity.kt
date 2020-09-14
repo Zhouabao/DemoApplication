@@ -594,7 +594,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                             .launch()
                     }
                 }
-                //快速签名
+                //快速签名setResult
                 100 -> {
 //                    LabelQualityBean
                     if (data?.getSerializableExtra("quickSign") != null) {
