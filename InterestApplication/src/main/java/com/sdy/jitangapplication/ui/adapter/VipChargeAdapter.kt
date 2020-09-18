@@ -57,15 +57,16 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
             .create()
 
 
-        if (item.giving_amount > 0) {
-            holder.itemView.vipSendCandy.text = "赠送${item.giving_amount}糖果"
-            holder.itemView.vipSendCandy.isVisible = true
-        } else {
-            holder.itemView.vipSendCandy.isVisible = false
-        }
-
-
         if (type == VipPowerBean.TYPE_GOLD_VIP) {
+
+
+            if (item.giving_amount > 0) {
+                holder.itemView.vipSendCandy.text = "赠送${item.giving_amount}糖果"
+                holder.itemView.vipSendCandy.isVisible = true
+            } else {
+                holder.itemView.vipSendCandy.isVisible = false
+            }
+
             if (item.is_promote) {
                 holder.itemView.vipLong.setTextColor(Color.parseColor("#FFF2B769"))
                 holder.itemView.monthPrice.setTextColor(Color.parseColor("#FFF2B769"))
@@ -82,6 +83,13 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
                 holder.itemView.vipSendCandy.setBackgroundResource(R.drawable.shape_rectangle_light_gray_bottom_10_corners_bg)
             }
         } else {
+            if (item.giving_gold_day.isNotEmpty()) {
+                holder.itemView.vipSendCandy.text = item.giving_gold_day
+                holder.itemView.vipSendCandy.isVisible = true
+            } else {
+                holder.itemView.vipSendCandy.isVisible = false
+            }
+
             if (item.is_promote) {
                 holder.itemView.vipLong.setTextColor(Color.parseColor("#FFD4D7DF"))
                 holder.itemView.monthPrice.setTextColor(Color.parseColor("#FFD4D7DF"))

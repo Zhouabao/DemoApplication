@@ -16,7 +16,6 @@ import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
-import com.leon.channel.helper.ChannelReaderUtil
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.StatusCode
@@ -263,6 +262,9 @@ class MyApplication : BaseApplication() {
                     106 -> {//门槛支付成功
 
                     }
+                    300, 301 -> {//300通过甜心认证,301甜心认证不通过
+                        EventBus.getDefault().post(RefreshSweetEvent())
+                    }
 
                 }
 
@@ -337,7 +339,7 @@ class MyApplication : BaseApplication() {
         //nim
         initUIKit()
         //bugly初始化
-        Bugly.init(this, Constants.BUGLY_APP_ID, false)
+        Bugly.init(this, Constants.BUGLY_APP_ID, true)
 
         initFFmpegBinary()
 
@@ -382,7 +384,13 @@ class MyApplication : BaseApplication() {
 //                Constants.UMENG_SECRET
 //            )
 
-            UMConfigure.init(this, null, ChannelUtils.getChannel(this), UMConfigure.DEVICE_TYPE_PHONE, null)
+            UMConfigure.init(
+                this,
+                null,
+                ChannelUtils.getChannel(this),
+                UMConfigure.DEVICE_TYPE_PHONE,
+                null
+            )
 
             /**
              * 设置组件化的Log开关

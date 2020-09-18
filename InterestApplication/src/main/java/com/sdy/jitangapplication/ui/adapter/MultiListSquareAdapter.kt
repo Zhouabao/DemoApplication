@@ -1,14 +1,15 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
@@ -23,6 +24,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.leochuan.ScaleLayoutManager
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
@@ -39,8 +41,6 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
-import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
@@ -120,13 +120,6 @@ class MultiListSquareAdapter(
 //            holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
             holder.itemView.view.isVisible = holder.layoutPosition - headerLayoutCount != 0
 
-            if (!item.tags.isNullOrEmpty()) {
-                holder.itemView.squareTagName.text = item.tags
-                holder.itemView.squareTagLl.isVisible = true
-            } else {
-                holder.itemView.squareTagLl.isVisible = false
-            }
-
 
             //设置点赞状态
             setLikeStatus(
@@ -134,7 +127,6 @@ class MultiListSquareAdapter(
                 item.like_cnt,
                 holder.itemView.squareDianzanBtn1,
                 holder.itemView.squareDianzanAni,
-                holder.itemView.squareDianzanImg,
                 false
             )
             //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
@@ -154,20 +146,81 @@ class MultiListSquareAdapter(
                 holder.itemView.squareContent1.visibility = View.VISIBLE
                 holder.itemView.squareContent1.setContent(item.descr)
             }
+            //todo sweet heart
+            if (item.approve_type != 0) {
+                holder.itemView.squareTagLl.isVisible = false
+                holder.itemView.squareLocationAndTime1Ll.isVisible = false
+                holder.itemView.squareTagName.isVisible = false
+                holder.itemView.squareUserSweetLogo.isVisible = true
+                holder.itemView.squareSweetVerifyContent.isVisible = true
+                val params =
+                    holder.itemView.squareSweetVerifyContent.layoutParams as ConstraintLayout.LayoutParams
+                params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+                params.height = (params.width * (177 / 1035F)).toInt()
+
+                //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
+                if (item.approve_type == 1 || item.approve_type == 2) {
+                    holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
+                    holder.itemView.squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                    holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                    holder.itemView.squareUserSweetLogo.playAnimation()
+                } else {
+                    holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFF7CA8"))
+                    holder.itemView.squareUserSweetLogo.imageAssetsFolder =
+                        "images_sweet_logo_woman"
+                    holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                    holder.itemView.squareUserSweetLogo.playAnimation()
+                }
+
+                holder.itemView.squareSweetVerifyContent.setImageResource(
+                    when (item.approve_type) {
+                        1 -> {
+                            R.drawable.icon_sweet_type_wealth
+                        }
+
+                        2 -> {
+                            R.drawable.icon_sweet_type_car
+                        }
+                        3 -> {
+                            R.drawable.icon_sweet_type_figure
+                        }
+                        else -> {
+                            R.drawable.icon_sweet_type_profession
+                        }
+                    }
+                )
+            } else {
+                holder.itemView.squareUserSweetLogo.isVisible = false
+                holder.itemView.squareSweetVerifyContent.isVisible = false
+                holder.itemView.squareContent1.setTextColor(Color.parseColor("#FF191919"))
+
+                if (item.puber_address.isNullOrEmpty()) {
+                    holder.itemView.squareLocationAndTime1Ll.visibility = View.INVISIBLE
+                } else {
+                    holder.itemView.squareLocationAndTime1Ll.isVisible = true
+                }
+
+                if (!item.tags.isNullOrEmpty()) {
+                    holder.itemView.squareTagName.text = item.tags
+                    holder.itemView.squareTagLl.isVisible = true
+                } else {
+                    holder.itemView.squareTagLl.isVisible = false
+                }
+
+            }
 
             holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
-            holder.itemView.squareUserVipIv1.isVisible = item.isplatinumvip || item.isdirectvip
+            holder.itemView.squareUserVipIv1.isVisible =
+                (item.isplatinumvip || item.isdirectvip) && !item.issweet
+
+
             if (item.isplatinumvip) {
                 holder.itemView.squareUserVipIv1.setImageResource(R.drawable.icon_vip)
             } else if (item.isdirectvip) {
                 holder.itemView.squareUserVipIv1.setImageResource(R.drawable.icon_direct_vip)
             }
             holder.itemView.squareLocation.text = "${item.puber_address}"
-            if (item.puber_address.isNullOrEmpty()) {
-                holder.itemView.squareLocationAndTime1Ll.visibility = View.INVISIBLE
-            } else {
-                holder.itemView.squareLocationAndTime1Ll.isVisible = true
-            }
+
             holder.itemView.squareTime.text = item.out_time
 
             //点击跳转评论详情
@@ -226,26 +279,16 @@ class MultiListSquareAdapter(
                 } else
                     clickZan(
                         holder.itemView.squareDianzanAni,
-                        holder.itemView.squareDianzanImg,
                         holder.itemView.squareDianzanBtn1,
                         holder.layoutPosition - headerLayoutCount
                     )
             }
-            holder.itemView.squareDianzanImg.onClick {
-                if (UserManager.touristMode) {
-                    TouristDialog(mContext).show()
-                } else
-                    clickZan(
-                        holder.itemView.squareDianzanAni,
-                        holder.itemView.squareDianzanImg,
-                        holder.itemView.squareDianzanBtn1,
-                        holder.layoutPosition - headerLayoutCount
-                    )
-            }
+
 
 
             //标题跳转
-            holder.itemView.squareTitleRv.isVisible = !item.title_list.isNullOrEmpty()
+            holder.itemView.squareTitleRv.isVisible =
+                !item.title_list.isNullOrEmpty() && !item.issweet
             val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
             manager.alignItems = AlignItems.STRETCH
             manager.justifyContent = JustifyContent.FLEX_START
@@ -287,16 +330,16 @@ class MultiListSquareAdapter(
                     if (item.photo_json != null && item.photo_json!!.size > 0) {
                         holder.itemView.squareUserPics1.visibility = View.VISIBLE
                         holder.itemView.squareUserPics1.layoutManager =
-                            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+                            ScaleLayoutManager(mContext, 0)
                         val adapter =
                             ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
                         holder.itemView.squareUserPics1.adapter = adapter
 
                         //分页滑动效果
                         holder.itemView.squareUserPics1.onFlingListener = null
-                        CustomPagerSnapHelper().attachToRecyclerView(holder.itemView.squareUserPics1)
+                        PagerSnapHelper().attachToRecyclerView(holder.itemView.squareUserPics1)
                         //滑动动画
-                        holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
+//                        holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
                         adapter.setOnItemClickListener { adapter, view, position ->
                             if (UserManager.touristMode) {
                                 TouristDialog(mContext).show()
@@ -304,7 +347,6 @@ class MultiListSquareAdapter(
                                 if (data[holder.layoutPosition - headerLayoutCount].isliked != 1)
                                     clickZan(
                                         holder.itemView.squareDianzanAni,
-                                        holder.itemView.squareDianzanImg,
                                         holder.itemView.squareDianzanBtn1,
                                         holder.layoutPosition - headerLayoutCount
                                     )
@@ -469,25 +511,18 @@ class MultiListSquareAdapter(
         likeCount: Int,
         likeView: TextView,
         likeAni: LottieAnimationView,
-        likeImg: ImageView,
         animated: Boolean = true
     ) {
-        likeAni.isVisible = isliked == 1 && animated
-        likeImg.visibility = if (likeAni.isVisible) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
 
         if (isliked == 1) {
             if (animated) {
                 likeAni.playAnimation()
                 VibrateUtils.vibrate(50L)
             } else {
-                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+                likeAni.progress = 1F
             }
         } else {
-            likeImg.setImageResource(R.drawable.icon_zan_normal)
+            likeAni.progress = 0F
         }
 
         likeView.text = "${if (likeCount < 0) {
@@ -502,7 +537,6 @@ class MultiListSquareAdapter(
      */
     private fun clickZan(
         likeAni: LottieAnimationView,
-        likeImg: ImageView,
         likeBtn: TextView,
         position: Int
     ) {
@@ -513,7 +547,7 @@ class MultiListSquareAdapter(
             data[position].isliked = 1
             data[position].like_cnt = data[position].like_cnt!!.plus(1)
         }
-        setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn, likeAni, likeImg)
+        setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn, likeAni)
 
         likeBtn.postDelayed({
             if (data.isEmpty() || data.size - 1 < position)
@@ -521,7 +555,7 @@ class MultiListSquareAdapter(
             if (data[position].originalLike == data[position].isliked) {
                 return@postDelayed
             }
-            val params = hashMapOf(
+            val params = hashMapOf<String, Any>(
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "type" to if (data[position].isliked == 0) {
@@ -621,7 +655,7 @@ class MultiListSquareAdapter(
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to data[position].id!!
@@ -635,7 +669,7 @@ class MultiListSquareAdapter(
         moreActionDialog.collect.onClick {
 
             //发起收藏请求
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (data[position].iscollected == 0) {
@@ -658,7 +692,7 @@ class MultiListSquareAdapter(
             dialog.confirm.onClick {
                 dialog.dismiss()
                 //发起举报请求
-                val params = hashMapOf(
+                val params = hashMapOf<String,Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (data[position].iscollected == 0) {

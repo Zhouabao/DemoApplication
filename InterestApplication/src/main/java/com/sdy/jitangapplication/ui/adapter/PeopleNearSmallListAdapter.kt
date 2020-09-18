@@ -1,7 +1,8 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -15,7 +16,7 @@ import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.item_people_nearby_woman.view.*
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.*
 
 /**
  *    author : ZFM
@@ -23,23 +24,52 @@ import kotlinx.android.synthetic.main.item_people_nearby_woman.view.*
  *    desc   :
  *    version: 1.0
  */
-class PeopleNearbyWomanAdapter() :
-    BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby_woman) {
+class PeopleNearSmallListAdapter :
+    BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby_small_list) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
-        val params = itemView.layoutParams as RecyclerView.LayoutParams
+        val params = itemView.userContentCl.layoutParams as ConstraintLayout.LayoutParams
         if (helper.layoutPosition == 0) {
             params.topMargin = SizeUtils.dp2px(8F)
         } else {
             params.topMargin = 0
         }
 
-        itemView.layoutParams = params
+        itemView.userContentCl.layoutParams = params
+
+
+        //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
+        if (item.assets_audit_way != 0) {
+            if (item.assets_audit_way == 1 || item.assets_audit_way == 2|| item.assets_audit_way == 5) {
+                itemView.userContentCl.setBackgroundResource(R.drawable.icon_sweet_heart_bg_list_man)
+                itemView.userNameAge.setTextColor(Color.parseColor("#FFCD52"))
+                itemView.userOnline.setTextColor(Color.parseColor("#66FFCE52"))
+                itemView.userAgeDistance.setTextColor(Color.parseColor("#66FFCE52"))
+                itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
+                itemView.sweetAnimation.setAnimation("data_sweet_style_list_man.json")
+                itemView.sweetAnimation.playAnimation()
+            } else {
+                itemView.userContentCl.setBackgroundResource(R.drawable.icon_sweet_heart_bg_list_woman)
+                itemView.userNameAge.setTextColor(Color.parseColor("#FFFFFFFF"))
+                itemView.userOnline.setTextColor(Color.parseColor("#80ffffff"))
+                itemView.userAgeDistance.setTextColor(Color.parseColor("#80ffffff"))
+                itemView.userChatBtn.setImageResource(R.drawable.icon_chat_woman)
+                itemView.sweetAnimation.setAnimation("data_sweet_style_list_woman.json")
+                itemView.sweetAnimation.playAnimation()
+            }
+        } else {
+            itemView.userContentCl.setBackgroundResource(R.drawable.icon_bg_near_people_woman)
+            itemView.userNameAge.setTextColor(Color.parseColor("#191919"))
+            itemView.userOnline.setTextColor(Color.parseColor("#FFC5C6C8"))
+            itemView.userAgeDistance.setTextColor(Color.parseColor("#FFC5C6C8"))
+            itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
+        }
 
 
         GlideUtil.loadCircleImg(mContext, item.avatar, itemView.userAvator)
 
         itemView.userNameAge.text = item.nickname
+
         itemView.userAgeDistance.text = "${if (item.gender == 1) {
             "男"
         } else {
@@ -78,23 +108,53 @@ class PeopleNearbyWomanAdapter() :
             ""
         }}"
 
-        if (!item.want.isNullOrEmpty() || !item.intention_title.isNullOrEmpty()) {
+        ////0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
+        if (item.assets_audit_way != 0 || !item.want.isNullOrEmpty() || !item.intention_title.isNullOrEmpty()) {
             itemView.userRelationshipRv.isVisible = true
             val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
             manager.alignItems = AlignItems.STRETCH
             manager.justifyContent = JustifyContent.FLEX_START
             itemView.userRelationshipRv.layoutManager = manager
-            val adapter = UserRelationshipAdapter()
+            val adapter = UserRelationshipAdapter(item.assets_audit_way)
             itemView.userRelationshipRv.adapter = adapter
 
             val datas = mutableListOf<UserRelationshipBean>()
             if (!item.title.isNullOrEmpty())
                 datas.add(UserRelationshipBean(item.title, 0, item.invitation_id))
+
+            if (item.assets_audit_way != 0)
+                datas.add(
+                    UserRelationshipBean(
+                        when (item.assets_audit_way) {
+                            1 -> {
+                                "资产认证进入甜心圈"
+                            }
+                            2 -> {
+                                "豪车认证进入甜心圈"
+                            }
+                            3 -> {
+                                "身材认证进入甜心圈"
+                            }
+                            4 -> {
+                                "职业认证进入甜心圈"
+                            }
+                            else -> {
+                                "高额充值进入甜心圈"
+                            }
+                        },
+                        2,
+                        item.assets_audit_way
+                    )
+                )
+
             for (data in item.want) {
                 datas.add(UserRelationshipBean(data, 1))
             }
             adapter.setNewData(datas)
-            itemView.userRelationshipRv.setOnTouchListener { v, event ->
+            if (adapter.data.size > 5) {
+                adapter.remove(adapter.data.size - 1)
+            }
+            itemView.userRelationshipRv.setOnTouchListener { _, event ->
                 itemView.onTouchEvent(event)
             }
         } else {

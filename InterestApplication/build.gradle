@@ -244,6 +244,7 @@ dependencies {
     implementation 'org.wysaid:gpuimage-plus:2.6.3'
     implementation 'com.youth.banner:banner:2.1.0'
     implementation 'com.qhutch.bottomsheetlayout:bottomsheetlayout:0.1.9'
+    implementation  'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.22'
 
 
 }

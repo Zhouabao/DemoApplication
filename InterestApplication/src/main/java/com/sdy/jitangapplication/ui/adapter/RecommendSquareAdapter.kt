@@ -1,12 +1,11 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
+import android.graphics.Color
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -63,11 +62,66 @@ class RecommendSquareAdapter :
         helper.itemView.squareOnlyTextContent.layoutParams = params
 
 
+        if (item.approve_type != 0) {
+            helper.itemView.squareDistanceLl.isVisible = false
+            helper.itemView.squareSweet.isVisible = true
+            helper.itemView.squareSweetLogo.isVisible = true
+
+            //0普通动态 1 资产 2豪车 3身材 4职业
+            helper.itemView.squareSweet.text = when (item.approve_type) {
+                1 -> {
+                    "资产认证"
+                }
+                2 -> {
+                    "豪车认证"
+                }
+                3 -> {
+                    "身材认证"
+                }
+                4 -> {
+                    "职业认证"
+                }
+                else -> {
+                    ""
+                }
+            }
+
+            if (item.approve_type == 1 || item.approve_type == 2) {
+                helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_man.json")
+                helper.itemView.squareSweetLogo.playAnimation()
+
+                helper.itemView.squareSweet.setTextColor(Color.parseColor("#FFFFCD52"))
+                helper.itemView.squareSweet.setBackgroundResource(R.drawable.shape_black_9dp)
+                helper.itemView.squareContent.setTextColor(Color.parseColor("#FFFFCD52"))
+            } else {
+                helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
+                helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                helper.itemView.squareSweetLogo.playAnimation()
+
+                helper.itemView.squareSweet.setTextColor(Color.WHITE)
+                helper.itemView.squareSweet.setBackgroundResource(R.drawable.shape_pink_9dp)
+                helper.itemView.squareContent.setTextColor(Color.parseColor("#FFFF7CA8"))
+            }
+        } else {
+            helper.itemView.squareSweet.isVisible = false
+            helper.itemView.squareSweetLogo.isVisible = false
+            if (!item.is_elite) {
+                helper.itemView.squareDistanceLl.isVisible = !item.distance.isNullOrEmpty()
+                helper.itemView.squareDistance.text = "${item.distance}"
+            } else {
+                helper.itemView.squareDistanceLl.isVisible = true
+                helper.itemView.squareDistance.text = "推荐"
+            }
+        }
+
+
         if (item.type == 0) {//纯文本
             helper.itemView.squareImg.visibility = View.INVISIBLE
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareOnlyTextContent.isVisible = true
             helper.itemView.squareVideoState.isVisible = false
+
             helper.itemView.squareOnlyTextContent.text = "${item.descr}"
         } else if (item.type == 3) {//语音
             helper.itemView.squareOnlyTextContent.isVisible = false
@@ -109,16 +163,9 @@ class RecommendSquareAdapter :
             )
         }
 
-        if (!item.is_elite) {
-            helper.itemView.squareDistance.isVisible = !item.distance.isNullOrEmpty()
-            helper.itemView.squareDistance.text = "${item.distance}"
-        } else {
-            helper.itemView.squareDistance.isVisible = true
-            helper.itemView.squareDistance.text = "推荐"
-        }
 
-        helper.itemView.squareContent.isVisible =
-            item.type != 0 && (!item.descr.isNullOrEmpty())
+
+        helper.itemView.squareContent.isVisible = !item.descr.isNullOrEmpty()
         helper.itemView.squareContent.text = "${item.descr}"
         helper.itemView.squareLike.text = "${item.like_cnt}"
         helper.itemView.squareName.text = item.nickname
@@ -127,31 +174,16 @@ class RecommendSquareAdapter :
         setLikeStatus(
             item.isliked,
             item.like_cnt,
-            helper.itemView.clickZanViewImg,
             helper.itemView.clickZanViewAni,
             helper.itemView.squareLike, false
         )
-        //点赞
-        helper.itemView.clickZanViewImg.onClick {
-            if (UserManager.touristMode) {
-                TouristDialog(mContext).show()
-            } else
-                if (item.accid != UserManager.getAccid()) {
-                    clickZan(
-                        helper.itemView.clickZanViewImg,
-                        helper.itemView.clickZanViewAni,
-                        helper.itemView.squareLike,
-                        helper.layoutPosition - headerLayoutCount
-                    )
-                }
-        }
+
         helper.itemView.clickZanViewAni.onClick {
             if (UserManager.touristMode) {
                 TouristDialog(mContext).show()
             } else
                 if (item.accid != UserManager.getAccid()) {
                     clickZan(
-                        helper.itemView.clickZanViewImg,
                         helper.itemView.clickZanViewAni,
                         helper.itemView.squareLike,
                         helper.layoutPosition - headerLayoutCount
@@ -184,7 +216,6 @@ class RecommendSquareAdapter :
                     if (item.type == 1) {
                         if (item.accid != UserManager.getAccid() && !item.isliked)
                             clickZan(
-                                helper.itemView.clickZanViewImg,
                                 helper.itemView.clickZanViewAni,
                                 helper.itemView.squareLike,
                                 helper.layoutPosition - headerLayoutCount
@@ -216,22 +247,20 @@ class RecommendSquareAdapter :
     private fun setLikeStatus(
         isliked: Boolean,
         likeCount: Int,
-        likeImg: ImageView,
         likeAnim: LottieAnimationView,
         likeView: TextView,
         animate: Boolean = true
     ) {
-        likeAnim.isVisible = isliked && animate
-        likeImg.isVisible = !likeAnim.isVisible
+        likeAnim.isVisible = true
         if (isliked) {
             if (animate) {
                 likeAnim.playAnimation()
                 VibrateUtils.vibrate(50L)
             } else {
-                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+                likeAnim.progress = 1F
             }
         } else {
-            likeImg.setImageResource(R.drawable.icon_zan_normal)
+            likeAnim.progress = 0F
         }
 
         likeView.text = "${if (likeCount < 0) {
@@ -246,7 +275,6 @@ class RecommendSquareAdapter :
      * 点赞按钮
      */
     private fun clickZan(
-        likeImg: ImageView,
         likeAnim: LottieAnimationView,
         likeBtn: TextView,
         position: Int
@@ -258,7 +286,7 @@ class RecommendSquareAdapter :
             data[position].isliked = !data[position].isliked
             data[position].like_cnt = data[position].like_cnt!!.plus(1)
         }
-        setLikeStatus(data[position].isliked, data[position].like_cnt, likeImg, likeAnim, likeBtn)
+        setLikeStatus(data[position].isliked, data[position].like_cnt, likeAnim, likeBtn)
 
         likeBtn.postDelayed({
             if (data.isEmpty() || data.size - 1 < position)

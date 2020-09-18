@@ -349,6 +349,7 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
                 if (data!!.list != null && data!!.list!!.size > 0) {
                     adapter.isUseEmpty(false)
                     for (tempData in 0 until data!!.list!!.size) {
+                        data!!.list!![tempData].issweet = tempData % 3 == 1
                         data!!.list!![tempData].type = when {
                             !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
                             !data!!.list!![tempData].audio_json.isNullOrEmpty() -> {

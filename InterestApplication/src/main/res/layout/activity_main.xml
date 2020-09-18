@@ -148,5 +148,112 @@
         android:layout_marginBottom="6dp"
         android:src="@drawable/icon_tab_dating" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/guideBrowseStyleCl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorHalfBlack"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="140dp"
+            android:layout_marginRight="46dp"
+            android:background="@drawable/shape_oval_white"
+            android:scaleType="center"
+            android:src="@drawable/icon_style_card"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_guide_change_style"
+            app:layout_constraintRight_toRightOf="@id/iv1"
+            app:layout_constraintTop_toBottomOf="@id/iv1" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="点击切换浏览模式"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="@id/iv2"
+            app:layout_constraintTop_toBottomOf="@id/iv2" />
+
+        <TextView
+            android:id="@+id/nextBtn1"
+            android:layout_width="92dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_rectangle_gray_20dp"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@id/tv1"
+            app:layout_constraintRight_toRightOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv1" />
+
+        <ImageView
+            android:id="@+id/iv11"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="140dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shape_oval_white"
+            android:scaleType="center"
+            android:src="@drawable/icon_filter"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_guide_change_style"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="@id/iv11"
+            app:layout_constraintTop_toBottomOf="@id/iv11" />
+
+        <TextView
+            android:id="@+id/tv11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="新增筛选项「位置漫游」和「上线时间」"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="@id/iv21"
+            app:layout_constraintTop_toBottomOf="@id/iv21" />
+
+        <TextView
+            android:id="@+id/nextBtn11"
+            android:layout_width="92dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_rectangle_gray_20dp"
+            android:gravity="center"
+            android:text="好的"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="@id/tv11"
+            app:layout_constraintTop_toBottomOf="@id/tv11" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

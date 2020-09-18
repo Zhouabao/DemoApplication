@@ -11,6 +11,7 @@
         android:id="@+id/statePeopleNearby"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading"
@@ -42,9 +43,9 @@
                 android:id="@+id/lieAvatorLl"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:visibility="gone"
                 android:background="#1AFF6318"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/lieAvatorContent"
@@ -85,6 +86,159 @@
         </FrameLayout>
 
     </com.kennyc.view.MultiStateView>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sweetHeartCl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/sweetHeartTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:text="达成要求自动进入甜心圈"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/sweetVerifyRequset1"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sweetHeartTitle">
+
+            <TextView
+                android:id="@+id/verifyNowNum1"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/circle_pink"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/verifyTitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="上传认证视频"
+                android:textColor="#ff191919"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/verifyNowBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="9dp"
+                android:paddingTop="4dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="4dp"
+                android:text="立即认证"
+                android:textColor="#FFC5C6C8"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sweetVerifyRequset2"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sweetVerifyRequset1">
+
+            <TextView
+                android:id="@+id/verifyNowNum2"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/circle_pink"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="认证职业或身材"
+                android:textColor="#ff191919"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/verifyNowBtn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_pink_13dp"
+                android:paddingLeft="9dp"
+                android:paddingTop="4dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="4dp"
+                android:text="立即认证"
+                android:textColor="#ffffffff"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/sweetVerifyIconMan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_sweet_heart_verify_condition_man"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/sweetVerifyRequset2"
+            app:layout_constraintLeft_toLeftOf="@id/sweetHeartTitle"
+            app:layout_constraintTop_toTopOf="@id/sweetVerifyRequset1" />
+
+        <ImageView
+            android:id="@+id/sweetPowerIv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_sweet_power"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sweetVerifyRequset2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

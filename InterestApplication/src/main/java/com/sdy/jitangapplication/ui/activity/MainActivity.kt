@@ -3,8 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,9 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.leon.channel.helper.ChannelReaderUtil
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
 import com.netease.nimlib.sdk.Observer
@@ -90,6 +89,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         initView()
 
+
         Log.d("channel", ChannelUtils.getChannel(this))
 
         //启动时间统计
@@ -130,6 +130,32 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //        }
 
 
+        if (!UserManager.isGuideBrowseStyleCl()) {
+            initGuideCl()
+        } else {
+            guideBrowseStyleCl.isVisible = false
+        }
+    }
+
+    private fun initGuideCl() {
+        BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorHalfBlack))
+        guideBrowseStyleCl.isVisible = true
+        nextBtn1.clickWithTrigger {
+            iv1.isVisible = false
+            iv2.isVisible = false
+            tv1.isVisible = false
+            nextBtn1.isVisible = false
+
+            iv11.isVisible = true
+            iv21.isVisible = true
+            tv11.isVisible = true
+            nextBtn11.isVisible = true
+        }
+        nextBtn11.clickWithTrigger {
+            guideBrowseStyleCl.isVisible = false
+            BarUtils.setStatusBarColor(this, Color.WHITE)
+            UserManager.saveGuideBrowseStyleCl(true)
+        }
     }
 
 
@@ -651,7 +677,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
         }
     }
-
 
 
 }

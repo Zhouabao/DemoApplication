@@ -211,44 +211,20 @@
                             app:layout_constraintTop_toTopOf="@id/detailUserName" />
 
 
-                        <LinearLayout
-                            android:id="@+id/detailUserIntention1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/detailUserSweetState"
+                            android:layout_width="172dp"
+                            android:layout_height="20dp"
                             android:layout_marginLeft="5dp"
-                            android:background="@drawable/gradient_orange_11dp"
-                            android:orientation="horizontal"
-                            android:visibility="visible"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
                             app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                             app:layout_constraintLeft_toRightOf="@id/detailUserVip"
-                            app:layout_constraintTop_toTopOf="@id/detailUserName">
+                            app:layout_constraintTop_toTopOf="@id/detailUserName"/>
 
 
-                            <com.airbnb.lottie.LottieAnimationView
-                                android:id="@+id/matchAimIv"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                app:lottie_autoPlay="true"
-                                app:lottie_fileName="data_want_heart.json"
-                                app:lottie_imageAssetsFolder="images_want_heart/"
-                                app:lottie_loop="false" />
 
-                            <TextView
-                                android:id="@+id/detailUserIntention"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginTop="2dp"
-                                android:layout_marginRight="5dp"
-                                android:layout_marginBottom="2dp"
-                                android:gravity="center"
-                                android:text="一起运动"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="10sp"
-                                android:visibility="visible" />
 
-                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/detailUserVerify"

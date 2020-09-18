@@ -3,28 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/userIntention"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="21dp"
     android:layout_gravity="center"
-    android:layout_marginRight="5dp"
     android:layout_marginTop="10dp"
+    android:layout_marginRight="5dp"
     android:background="@drawable/gradient_orange_11dp"
     android:orientation="horizontal"
     android:visibility="visible">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:src="@drawable/icon_today_want_heart" />
 
     <TextView
         android:id="@+id/userIntentionContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="3dp"
+        android:drawableRight="@drawable/icon_more_right_white"
+        android:drawablePadding="1dp"
         android:gravity="center"
         android:textColor="@color/colorWhite"
         android:textSize="12sp"

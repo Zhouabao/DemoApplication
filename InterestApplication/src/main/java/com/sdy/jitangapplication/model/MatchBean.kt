@@ -29,7 +29,7 @@ data class MatchBean(
     var nickname: String? = null,
     var contact_way: Int = 0,
     var mv_btn: Boolean = false, //是否有视频
-    var photos: MutableList<String>? = null,
+    var photos: ArrayList<String>? = null,
     var sign: String? = null,
     var constellation: String? = null,
     var isfriend: Int?,
@@ -41,6 +41,8 @@ data class MatchBean(
     var intention_title: String = "",
     var personal_info: MutableList<DetailUserInfoBean> = mutableListOf(),
     var birth: Int = 0,
+    var assets_audit_way: Int = 0,
+    var approve_square_id: Int = 0,
     var mv_url: String = "",
     var mv_faced: Boolean = false,
     var dating: DatingBean? = null
@@ -109,7 +111,21 @@ data class NearBean(
     var today_pull_share: Boolean = false,
     var has_face_url: Boolean = false,  //是否进行过人脸验证，true验证过 false未验证
     val complete_percent: Int,//（我的资料完整度）
-    val complete_percent_normal: Int//（标准完整度新的）
+    val complete_percent_normal: Int,//（标准完整度新的）
+
+
+    val is_honey: Boolean = false,
+    val progress: SweetProgressBean = SweetProgressBean()
+)
+
+
+data class SweetProgressBean(
+    val now_money: Int = 0,
+    val normal_money: Int = 0,
+    val gender: Int = 0,
+    val assets_audit_state: Int = 0,
+    val img: String="",
+    val female_mv_state: Int = 0
 )
 
 data class UnlockBean(
@@ -146,6 +162,7 @@ data class NearPersonBean(
     var isplatinumvip: Boolean = false,
     var isdirectvip: Boolean = false,
     var isfriend: Boolean = false,
+    var assets_audit_way: Int = 0,//0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
     var member_level: Int = 0,
     var nickname: String = "",
     var online_time: String = "",

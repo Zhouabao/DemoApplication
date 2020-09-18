@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,22 +13,21 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.VibrateUtils
+import com.blankj.utilcode.util.*
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.leochuan.ScaleLayoutManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -58,7 +58,6 @@ import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -90,6 +89,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     OnRefreshListener, OnLoadMoreListener {
     private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
+
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
     private val adapter: MultiListCommentAdapter by lazy {
@@ -103,20 +103,24 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private var page = 1
 
-    private val commentParams = hashMapOf(
+    private val commentParams = hashMapOf<String,Any>(
         "token" to UserManager.getToken(),
         "accid" to UserManager.getAccid(),
         "square_id" to "",
         "page" to page,
         "pagesize" to Constants.PAGESIZE
     )
+    private val type by lazy { intent.getIntExtra("type", TYPE_SQUARE) }
 
     companion object {
+        const val TYPE_SQUARE = 1
+        const val TYPE_SWEET = 2
         fun start(
             context: Context,
             squareBean: SquareBean? = null,
             squareId: Int? = null,
-            position: Int? = 0
+            position: Int? = 0,
+            type: Int = TYPE_SQUARE, gender: Int = 0
         ) {
             context.startActivity<SquareCommentDetailActivity>(
                 if (squareBean != null) {
@@ -129,7 +133,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 } else {
                     "" to ""
                 },
-                "position" to position
+                "position" to position,
+                "type" to type,
+                "gender" to gender
             )
         }
 
@@ -156,7 +162,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     )
                 )
             }, 700L)
-
         }
 
     }
@@ -212,7 +217,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareBean!!.like_cnt,
             squareDianzanBtn1,
             squareDianzanAni,
-            squareDianzanImg,
             false
         )
 
@@ -235,6 +239,70 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (!squareBean!!.descr.isNullOrEmpty()) {
             squareContent1.setContent("${squareBean!!.descr}")
         }
+
+        //todo sweet heart
+        if (squareBean!!.approve_type != 0) {
+            squareTagLl.isVisible = false
+            squareLocationAndTime1Ll.isVisible = false
+            squareTagName.isVisible = false
+            squareUserSweetLogo.isVisible = true
+            squareSweetVerifyContent.isVisible = true
+            val params =
+                squareSweetVerifyContent.layoutParams as ConstraintLayout.LayoutParams
+            params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+            params.height = (params.width * (177 / 1035F)).toInt()
+
+            //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
+            if (squareBean!!.approve_type == 1 || squareBean!!.approve_type == 2) {
+                squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
+                squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                squareUserSweetLogo.playAnimation()
+            } else {
+                squareContent1.setTextColor(Color.parseColor("#FFFF7CA8"))
+                squareUserSweetLogo.imageAssetsFolder =
+                    "images_sweet_logo_woman"
+                squareUserSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                squareUserSweetLogo.playAnimation()
+            }
+
+            squareSweetVerifyContent.setImageResource(
+                when (squareBean!!.approve_type) {
+                    1 -> {
+                        R.drawable.icon_sweet_type_wealth
+                    }
+
+                    2 -> {
+                        R.drawable.icon_sweet_type_car
+                    }
+                    3 -> {
+                        R.drawable.icon_sweet_type_figure
+                    }
+                    else -> {
+                        R.drawable.icon_sweet_type_profession
+                    }
+                }
+            )
+        } else {
+            squareUserSweetLogo.isVisible = false
+            squareSweetVerifyContent.isVisible = false
+            squareContent1.setTextColor(Color.parseColor("#FF191919"))
+
+            if (squareBean!!.puber_address.isNullOrEmpty()) {
+                squareLocationAndTime1Ll.visibility = View.INVISIBLE
+            } else {
+                squareLocationAndTime1Ll.isVisible = true
+            }
+
+            if (!squareBean!!.tags.isNullOrEmpty()) {
+                squareTagName.text = squareBean!!.tags
+                squareTagLl.isVisible = true
+            } else {
+                squareTagLl.isVisible = false
+            }
+
+        }
+
 
 
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
@@ -271,11 +339,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         squareTime.text = "${squareBean!!.out_time}"
         headSquareTime.text = "${squareBean!!.out_time}"
         squareLocation.text = "${squareBean!!.puber_address}"
-        if (squareBean!!.puber_address.isNullOrEmpty()) {
-            squareLocationAndTime1Ll.visibility = View.INVISIBLE
-        } else {
-            squareLocationAndTime1Ll.isVisible = true
-        }
     }
 
     private fun setLikeStatus(
@@ -283,25 +346,17 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         likeCount: Int,
         likeView: TextView,
         likeAni: LottieAnimationView,
-        likeImg: ImageView,
         animated: Boolean = true
     ) {
-        likeAni.isVisible = isliked == 1 && animated
-        likeImg.visibility = if (likeAni.isVisible) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
-
         if (isliked == 1) {
             if (animated) {
                 likeAni.playAnimation()
                 VibrateUtils.vibrate(50L)
             } else {
-                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+                likeAni.progress = 1F
             }
         } else {
-            likeImg.setImageResource(R.drawable.icon_zan_normal)
+            likeAni.progress = 0F
         }
 
         likeView.text = "${if (likeCount < 0) {
@@ -311,7 +366,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }}"
     }
 
-
+    private val gender by lazy { intent.getIntExtra("gender", 1) }
     private fun initView() {
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
@@ -336,22 +391,108 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
         }
 
-        refreshLayout.setOnRefreshListener(this)
-        refreshLayout.setOnLoadMoreListener(this)
+        if (type == TYPE_SWEET) {
+            hotT1.text = "动态详情"
+            refreshLayout.setEnableRefresh(false)
+            refreshLayout.setEnableLoadMore(false)
+            commentList.isVisible = false
+            showCommentLl.isVisible = false
+        } else {
+            hotT1.text = "${if (gender == 1) {
+                "他"
+            } else {
+                "她"
+            }}的认证资料"
+            refreshLayout.setOnRefreshListener(this)
+            refreshLayout.setOnLoadMoreListener(this)
 
-        commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        commentList.adapter = adapter
+            commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+            commentList.adapter = adapter
 //        commentList.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL_LIST,SizeUtils.dp2px(15F),Color.WHITE))
-        adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
+            adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
+            adapter.emptyView.allT2.isVisible = false
 
-        adapter.emptyView.allT2.isVisible = false
 
-        hotT1.text = "动态详情"
+            adapter.setOnItemLongClickListener { adapter, view, position ->
+                showCommentDialog(position)
+                true
+            }
+
+            adapter.setOnItemClickListener { _, view, position ->
+                reply = true
+                reply_id = adapter.data[position].id!!.toInt()
+                showCommentEt.isFocusable = true
+                showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+                KeyboardUtils.showSoftInput(showCommentEt)
+            }
+
+
+            adapter.setOnItemChildClickListener { _, view, position ->
+                when (view.id) {
+                    R.id.commentUser -> {
+                        if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
+                            MatchDetailActivity.start(
+                                this,
+                                adapter.data[position].member_accid ?: ""
+                            )
+//                    reply = true
+//                    reply_id = adapter.data[position].reply_id!!
+//                    showCommentEt.isFocusable = true
+//                    showCommentEt.hint = "『回复\t${adapter.data[position].replyed_nickname}：』"
+//                    KeyboardUtils.showSoftInput(showCommentEt)
+                    }
+                    R.id.llCommentDianzanBtn -> {
+                        mPresenter.getCommentLike(
+                            hashMapOf(
+                                "token" to UserManager.getToken(),
+                                "accid" to UserManager.getAccid(),
+                                "reply_id" to adapter.data[position].id!!,
+                                "type" to if (adapter.data[position].isliked == 0) {
+                                    1
+                                } else {
+                                    2
+                                }
+                            )
+                            , position
+                        )
+
+                    }
+                    R.id.commentReplyBtn -> {
+                        reply = true
+                        reply_id = adapter.data[position].id!!
+                        showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
+                        KeyboardUtils.showSoftInput(showCommentEt)
+                    }
+                }
+            }
+
+            showCommentEt.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(charSequence: Editable?) {
+                    if (charSequence.toString().isNotEmpty()) {
+                        sendCommentBtn.isEnabled = true
+                        sendCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
+                    } else {
+                        sendCommentBtn.isEnabled = false
+                        sendCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
+                    }
+                }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+            })
+        }
+
+
+
+
         btnBack.setOnClickListener(this)
         headBtnBack.setOnClickListener(this)
         squareZhuanfaBtn1.setOnClickListener(this)
         squareDianzanAni.setOnClickListener(this)
-        squareDianzanImg.setOnClickListener(this)
         squareCommentBtn1.setOnClickListener(this)
         squareChatBtn1.setOnClickListener(this)
         headSquareChatBtn1.setOnClickListener(this)
@@ -361,75 +502,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         sendCommentBtn.setOnClickListener(this)
         view.isVisible = false
 
-        showCommentEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(charSequence: Editable?) {
-                if (charSequence.toString().isNotEmpty()) {
-                    sendCommentBtn.isEnabled = true
-                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
-                } else {
-                    sendCommentBtn.isEnabled = false
-                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-        })
 
 
-        adapter.setOnItemLongClickListener { adapter, view, position ->
-            showCommentDialog(position)
-            true
-        }
 
-        adapter.setOnItemClickListener { _, view, position ->
-            reply = true
-            reply_id = adapter.data[position].id!!.toInt()
-            showCommentEt.isFocusable = true
-            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
-            KeyboardUtils.showSoftInput(showCommentEt)
-        }
-
-
-        adapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.commentUser -> {
-                    if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
-                        MatchDetailActivity.start(this, adapter.data[position].member_accid ?: "")
-//                    reply = true
-//                    reply_id = adapter.data[position].reply_id!!
-//                    showCommentEt.isFocusable = true
-//                    showCommentEt.hint = "『回复\t${adapter.data[position].replyed_nickname}：』"
-//                    KeyboardUtils.showSoftInput(showCommentEt)
-                }
-                R.id.llCommentDianzanBtn -> {
-                    mPresenter.getCommentLike(
-                        hashMapOf(
-                            "token" to UserManager.getToken(),
-                            "accid" to UserManager.getAccid(),
-                            "reply_id" to adapter.data[position].id!!,
-                            "type" to if (adapter.data[position].isliked == 0) {
-                                1
-                            } else {
-                                2
-                            }
-                        )
-                        , position
-                    )
-
-                }
-                R.id.commentReplyBtn -> {
-                    reply = true
-                    reply_id = adapter.data[position].id!!
-                    showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
-                    KeyboardUtils.showSoftInput(showCommentEt)
-                }
-            }
-        }
 
         squareScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             if (scrollY >= SizeUtils.dp2px(56F)) {
@@ -579,12 +654,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private fun initPics() {
         if (squareBean!!.photo_json != null && squareBean!!.photo_json!!.size > 0) {
-            squareUserPics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+            squareUserPics.layoutManager = ScaleLayoutManager(this, 0)
             squareUserPics.adapter = imgsAdapter
 
             //分页滑动效果
             squareUserPics.onFlingListener = null
-            CustomPagerSnapHelper().attachToRecyclerView(squareUserPics)
+            PagerSnapHelper().attachToRecyclerView(squareUserPics)
             //滑动动画
             squareUserPics.addOnScrollListener(GalleryOnScrollListener())
             imgsAdapter.setOnItemClickListener { _, view, position ->
@@ -643,8 +718,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             squareBean = data
             initData()
-            commentParams["square_id"] = "${squareBean!!.id}"
-            mPresenter.getCommentList(commentParams, true)
+            if (type == TYPE_SQUARE) {
+                commentParams["square_id"] = "${squareBean!!.id}"
+                mPresenter.getCommentList(commentParams, true)
+            }
         } else {
             CommonFunction.toast("该动态已被删除")
             finish()
@@ -725,7 +802,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareBean!!.like_cnt,
                 squareDianzanBtn1,
                 squareDianzanAni,
-                squareDianzanImg,
                 true
             )
 
@@ -808,8 +884,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             R.id.btnBack, R.id.headBtnBack -> {
                 onBackPressed()
             }
-            R.id.squareDianzanAni, R.id.squareDianzanImg -> {
-                val params = hashMapOf(
+            R.id.squareDianzanAni -> {
+                val params = hashMapOf<String,Any>(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "type" to if (squareBean!!.isliked == 1) {
@@ -888,7 +964,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to squareBean!!.id!!
@@ -901,7 +977,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         moreActionDialog.collect.onClick {
             //发起收藏请求
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (squareBean!!.iscollected == 0) {
@@ -925,7 +1001,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             dialog.confirm.onClick {
                 dialog.dismiss()
                 //发起举报请求
-                val params = hashMapOf(
+                val params = hashMapOf<String,Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (squareBean!!.iscollected == 0) {

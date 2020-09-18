@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="15dp"
         android:ellipsize="end"
         android:lineSpacingMultiplier="1.4"
         android:textColor="#FF191919"
@@ -43,6 +43,16 @@
         app:layout_constraintTop_toBottomOf="@id/squareTitleRv"
         tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品" />
 
+    <ImageView
+        android:id="@+id/squareSweetVerifyContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_sweet_type_figure"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+        app:layout_constraintRight_toRightOf="@id/squareContent1"
+        app:layout_constraintTop_toBottomOf="@id/squareContent1" />
+
 
     <LinearLayout
         android:id="@+id/squareLocationAndTime1Ll"
@@ -52,7 +62,7 @@
         android:layout_marginTop="15dp"
         app:layout_constraintLeft_toRightOf="@id/squareTagLl"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/squareContent1">
+        app:layout_constraintTop_toBottomOf="@id/squareSweetVerifyContent">
 
         <TextView
             android:id="@+id/squareLocation"
@@ -81,7 +91,7 @@
         android:layout_marginTop="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
-        app:layout_constraintTop_toBottomOf="@id/squareContent1">
+        app:layout_constraintTop_toBottomOf="@id/squareSweetVerifyContent">
 
         <TextView
             android:id="@+id/squareTagName"
@@ -111,15 +121,6 @@
         app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
         app:lottie_fileName="data_click_zan.json" />
 
-    <ImageView
-        android:id="@+id/squareDianzanImg"
-        android:layout_width="17dp"
-        android:layout_height="17dp"
-        android:src="@drawable/icon_zan_normal"
-        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-        app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1" />
-
     <TextView
         android:id="@+id/squareDianzanBtn1"
         android:layout_width="wrap_content"
@@ -130,7 +131,7 @@
         android:textColor="@color/colorBlack6f"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@id/squareDianzanImg"
+        app:layout_constraintLeft_toRightOf="@id/squareDianzanAni"
         app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
         tools:text="123" />
 

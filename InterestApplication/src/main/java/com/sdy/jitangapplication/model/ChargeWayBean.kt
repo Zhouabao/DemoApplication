@@ -59,6 +59,7 @@ data class ChargeWayBean(
     var original_price: Double = 0.0,
     val title: String? = "",
     val giving_amount: Int = 0,
+    val giving_gold_day: String = "",
     val descr: String? = "",//限时折扣文案
     var type: Int?,//	1 原价售卖 2折扣价售卖 3限时折扣
     var unit_price: String = "",//单价(显示)
@@ -76,6 +77,7 @@ data class ChargeWayBean(
         parcel.readDouble(),
         parcel.readString(),
         parcel.readInt(),
+        parcel.readString() ?: "",
         parcel.readString(),
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString() ?: "",
@@ -95,6 +97,7 @@ data class ChargeWayBean(
         parcel.writeDouble(original_price)
         parcel.writeString(title)
         parcel.writeInt(giving_amount)
+        parcel.writeString(giving_gold_day)
         parcel.writeString(descr)
         parcel.writeValue(type)
         parcel.writeString(unit_price)

@@ -1373,7 +1373,7 @@ public class ChatMessageListPanelEx {
         targetSquareAdapter = new ChatTaregetSquareAdapter();
         targetSquare.setAdapter(targetSquareAdapter);
         targetSquareAdapter.setOnItemClickListener((adapter, view, position) -> SquareCommentDetailActivity.Companion
-                .start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), -1));
+                .start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), -1,SquareCommentDetailActivity.TYPE_SQUARE,1));
         return headView;
     }
 

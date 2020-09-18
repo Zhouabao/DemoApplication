@@ -41,7 +41,7 @@ public class ChatPickImageAction extends ChatBaseAction {
         int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
 
         CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode,
-                PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true, false, false, -1, -1);
+                PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true, false, false, -1, -1,4,5);
 
     }
 

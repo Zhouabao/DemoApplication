@@ -791,7 +791,7 @@ interface Api {
      * 门槛支付列表
      */
     @FormUrlEncoded
-    @POST("PayOrder/getThresholdV23${Constants.END_BASE_URL}")
+    @POST("PayOrder/getThresholdEnd${Constants.END_BASE_URL}")
     fun getThreshold(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 
@@ -1405,4 +1405,38 @@ interface Api {
     @POST("Dating/delDating${Constants.END_BASE_URL}")
     fun delDating(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
+
+    /**
+     * 甜心圈
+     *
+     */
+    @FormUrlEncoded
+    @POST("Sweetheart/indexList${Constants.END_BASE_URL}")
+    fun indexList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
+
+
+    /**
+     * 甜心圈上传认证
+     *
+     */
+    @FormUrlEncoded
+    @POST("Sweetheart/uploadData${Constants.END_BASE_URL}")
+    fun uploadData(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 上传图片模板
+     *
+     */
+    @FormUrlEncoded
+    @POST("Sweetheart/getPicTpl${Constants.END_BASE_URL}")
+    fun getPicTpl(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ArrayList<String>?>>
+
+    /**
+     * 男性加入甜心圈
+     *
+     */
+    @FormUrlEncoded
+    @POST("Sweetheart/joinSweetApply${Constants.END_BASE_URL}")
+    fun joinSweetApply(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 }

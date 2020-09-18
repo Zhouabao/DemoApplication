@@ -108,6 +108,24 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                             }
                         })
                 }
+                PeopleNearbyFragment.TYPE_SWEET_HEART-> {
+                    RetrofitFactory.instance.create(Api::class.java)
+                        .indexList(UserManager.getSignParams(params))
+                        .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                            override fun onNext(t: BaseResp<NearBean?>) {
+                                super.onNext(t)
+                                mView.nearlyIndexResult(t.code == 200, t.data)
+                            }
+
+                            override fun onError(e: Throwable?) {
+                                super.onError(e)
+                                if (e is BaseException) {
+                                    TickDialog(context).show()
+                                } else
+                                    mView.nearlyIndexResult(false, null)
+                            }
+                        })
+                }
             }
 
     }
@@ -134,6 +152,28 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                     mView.onTodayRecommendResult(null)
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
+                }
+
+            })
+    }
+
+    /**
+     * 男性充值加入甜心圈
+     */
+    fun joinSweetApply() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .joinSweetApply(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<Any?>>() {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    mView.joinSweetApplyResult(t.code==200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.joinSweetApplyResult(false)
                 }
 
             })

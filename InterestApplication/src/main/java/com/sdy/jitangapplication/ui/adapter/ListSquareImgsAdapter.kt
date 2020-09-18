@@ -46,10 +46,10 @@ class ListSquareImgsAdapter(
                 val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
                 layoutParams.width = SizeUtils.dp2px(250F)
                 layoutParams.height = SizeUtils.dp2px(250F)
-                layoutParams.leftMargin = SizeUtils.dp2px(15F)
-                if (position == datas.size - 1) {
-                    layoutParams.rightMargin = SizeUtils.dp2px(15F)
-                }
+//                layoutParams.leftMargin = SizeUtils.dp2px(15F)
+//                if (position == datas.size - 1) {
+//                    layoutParams.rightMargin = SizeUtils.dp2px(15F)
+//                }
                 holder.itemView.ivUser.layoutParams = layoutParams
                 GlideUtil.loadRoundImgCenterCrop(
                     mContext,

@@ -165,8 +165,6 @@ object UserManager {
     }
 
 
-
-
     /**
      * 清除发布的参数
      */
@@ -496,6 +494,42 @@ object UserManager {
      */
     fun isShowGuideVerify(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideVerify", false)
+    }
+
+    /**
+     * 是否是列表形式展示
+     */
+    fun isStyleList(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("styleList", getGender() != 1)
+    }
+
+
+    fun saveStyleList(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("styleList", isShow)
+    }
+
+
+    /**
+     * 是否引导过列表切换
+     */
+    fun saveGuideBrowseStyleCl(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("guideBrowseStyleCl", isShow)
+    }
+
+    fun isGuideBrowseStyleCl(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("guideBrowseStyleCl", false)
+    }
+
+
+    /**
+     * 是否展示认证提醒
+     */
+    fun isShowSweetHeartNew(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("sweetHeartNew", false)
+    }
+
+    fun saveShowSweetHeartNew(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("sweetHeartNew", isShow)
     }
 
     fun saveShowGuideVerify(isShow: Boolean) {

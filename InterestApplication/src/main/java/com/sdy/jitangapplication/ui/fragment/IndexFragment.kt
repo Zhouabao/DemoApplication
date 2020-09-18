@@ -22,10 +22,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.EnableRvScrollEvent
-import com.sdy.jitangapplication.event.JumpToDatingEvent
-import com.sdy.jitangapplication.event.TopCardEvent
-import com.sdy.jitangapplication.event.UpdateTodayWantEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.IndexTopBean
 import com.sdy.jitangapplication.presenter.IndexPresenter
@@ -59,13 +56,15 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("推荐", "附近") }
+    private val titles by lazy { arrayOf("推荐", "附近", "甜心圈") }
 
     //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }
 
     //    private val findByTagFragment by lazy { FindByTagFragment() }
     private val sameCityFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_SAMECITY) }
+
+    private val sweetHeartFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_SWEET_HEART) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,14 +82,28 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         mPresenter.indexTop()
     }
 
+    private var styleList: Boolean = true
     fun loadData() {
         mPresenter = IndexPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
         EventBus.getDefault().register(this)
         EventBus.getDefault().post(EnableRvScrollEvent(false))
+
+        styleList = UserManager.isStyleList()
+        changeListStyle(styleList)
+        sweetHeartNew.isVisible = !UserManager.isShowSweetHeartNew()
+
         initHeadRecommendUser()
         initFragments()
+
+        changeStyleBtn.clickWithTrigger {
+            //todo 改变列表的样式
+            styleList = !styleList
+            changeListStyle(styleList)
+            EventBus.getDefault().post(ChangeListStyleEvent())
+        }
+
         filterBtn.clickWithTrigger {
             if (UserManager.touristMode)
                 TouristDialog(activity!!).show()
@@ -115,6 +128,18 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         }
 
 
+    }
+
+
+    private fun changeListStyle(styleList: Boolean) {
+        UserManager.saveStyleList(styleList)
+        if (styleList) {
+            changeStyleBtn.setImageResource(R.drawable.icon_style_card)
+            //TODO 设置为列表样式
+        } else {
+            changeStyleBtn.setImageResource(R.drawable.icon_style_list)
+            //TODO 设置为卡片样式
+        }
     }
 
     private var taged = false
@@ -143,9 +168,10 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
         fragments.add(recommendFragment)
         fragments.add(sameCityFragment)
+        fragments.add(sweetHeartFragment)
 
         vpIndex.setScrollable(!UserManager.touristMode)
-        vpIndex.offscreenPageLimit = 2
+        vpIndex.offscreenPageLimit = fragments.size
         vpIndex.adapter = MainPagerAdapter(childFragmentManager, fragments)
         vpIndex.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
@@ -164,6 +190,11 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                     TouristDialog(activity!!).show()
                     vpIndex.currentItem = 0
                 }
+                if (position == 2) {
+                    UserManager.saveShowSweetHeartNew(true)
+                    sweetHeartNew.isVisible = false
+                }
+
             }
         })
 
@@ -257,7 +288,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 tobeChoicenessCl.isVisible = true
                 recommendUsers.scrollToPosition(1)
             }
-            setRecommendDatingView(data.dating_list)
+            //  setRecommendDatingView(data.dating_list)
         }
 
     }

@@ -3,15 +3,19 @@ package com.sdy.jitangapplication.ui.fragment
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -27,12 +31,14 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.NearBean
+import com.sdy.jitangapplication.model.SweetProgressBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
-import com.sdy.jitangapplication.ui.adapter.PeopleNearbyManAdapter
-import com.sdy.jitangapplication.ui.adapter.PeopleNearbyWomanAdapter
+import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
+import com.sdy.jitangapplication.ui.adapter.PeopleNearBigCardAdapter
+import com.sdy.jitangapplication.ui.adapter.PeopleNearSmallListAdapter
 import com.sdy.jitangapplication.ui.dialog.InviteFriendDialog
 import com.sdy.jitangapplication.ui.dialog.PrivacyDialog
 import com.sdy.jitangapplication.ui.dialog.TodayFateWomanDialog
@@ -54,21 +60,21 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     companion object {
         const val TYPE_RECOMMEND = 1
         const val TYPE_SAMECITY = 2
+        const val TYPE_SWEET_HEART = 3
     }
 
-    private val adapter by lazy {
-        if (UserManager.getGender() == 1) {
-            PeopleNearbyManAdapter()
-        } else {
-            PeopleNearbyWomanAdapter()
-        }
+    private var adapter = if (UserManager.isStyleList()) {
+        PeopleNearSmallListAdapter()
+    } else {
+        PeopleNearBigCardAdapter()
     }
+
     private var firstLoad = true
     private var ranking_level: Int = 0
     private var page = 1
     private var isLoadingMore = false
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String, Any>(
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_name" to UserManager.getCity(),
@@ -161,6 +167,141 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 mPresenter.nearlyIndex(params, type, firstLoad)
         } else {
             mPresenter.nearlyIndex(params, type, firstLoad)
+        }
+
+
+    }
+
+
+    /**
+     * 如果是甜心圈切没有加入甜心圈
+     */
+    private fun initSweetHeartView(isHoney: Boolean, progressBean: SweetProgressBean) {
+        if (type == TYPE_SWEET_HEART && !isHoney) {
+            statePeopleNearby.isVisible = false
+            sweetHeartCl.isVisible = true
+
+            //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
+            //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
+            //now_money 	男性充值的钱
+            //normal_money 	标准充值的钱
+
+            if (progressBean.gender == 1) {
+                sweetHeartTitle.gravity = Gravity.CENTER
+                verifyNowNum1.isVisible = false
+                verifyNowNum2.isVisible = false
+                sweetVerifyIconMan.isVisible = true
+                verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
+
+                if (progressBean.now_money > progressBean.normal_money) {
+                    verifyNowBtn1.setTextColor(Color.parseColor("FF212225"))
+                    verifyNowBtn1.setBackgroundResource(R.drawable.shape_light_orange_13dp)
+                    verifyNowBtn1.text = "立即加入"
+                    verifyNowBtn1.clickWithTrigger {
+                        mPresenter.joinSweetApply()
+                    }
+                } else {
+                    verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
+                    verifyNowBtn1.setBackgroundColor(Color.WHITE)
+                    verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
+                }
+
+
+                when (progressBean.assets_audit_state) {
+                    1 -> {
+                        verifyNowBtn2.setTextColor(Color.parseColor("#FFFFCD52"))
+                        verifyNowBtn2.setBackgroundResource(R.drawable.shape_black_13dp)
+                        verifyNowBtn2.text = "立即认证"
+                    }
+                    2 -> {
+                        verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn2.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn2.text = "认证中"
+                        verifyNowBtn2.isEnabled = false
+                    }
+                    3 -> {
+                        verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn2.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn2.text = "认证通过"
+                        verifyNowBtn2.isEnabled = false
+                    }
+                }
+            } else {
+                verifyNowNum1.isVisible = true
+                verifyNowNum2.isVisible = true
+                sweetVerifyIconMan.isVisible = false
+                //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
+                //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
+                //now_money 	男性充值的钱
+                //normal_money 	标准充值的钱
+
+                when (progressBean.female_mv_state) {
+                    1 -> {
+                        verifyNowBtn1.setTextColor(Color.WHITE)
+                        verifyNowBtn1.setBackgroundResource(R.drawable.shape_pink_13dp)
+                        verifyNowBtn1.text = "立即认证"
+                    }
+                    2 -> {
+                        verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn1.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn1.text = "审核中"
+                        verifyNowBtn1.isEnabled = false
+                    }
+                    3 -> {
+                        verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn1.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn1.text = "认证通过"
+                        verifyNowBtn1.isEnabled = false
+                    }
+
+                }
+
+
+                when (progressBean.assets_audit_state) {
+                    1 -> {
+                        verifyNowBtn2.setTextColor(Color.WHITE)
+                        verifyNowBtn2.setBackgroundResource(R.drawable.shape_pink_13dp)
+                        verifyNowBtn2.text = "立即认证"
+                    }
+                    2 -> {
+                        verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn2.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn2.text = "认证中"
+                        verifyNowBtn2.isEnabled = false
+                    }
+                    3 -> {
+                        verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
+                        verifyNowBtn2.setBackgroundColor(Color.WHITE)
+                        verifyNowBtn2.text = "认证通过"
+                        verifyNowBtn2.isEnabled = false
+                    }
+                }
+
+            }
+
+
+            verifyNowBtn1.clickWithTrigger {
+                //todo 先判断是否通过人脸认证 没通过就跳人脸认证，通过就跳视频录制
+                CommonFunction.startToFace(activity!!)
+            }
+            verifyNowBtn2.clickWithTrigger {
+                startActivity<SweetHeartVerifyActivity>()
+            }
+
+
+            val params = sweetPowerIv.layoutParams as ConstraintLayout.LayoutParams
+            params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
+            params.height = (params.width * (588 / 1035f)).toInt()
+            GlideUtil.loadRoundImgCenterCrop(
+                activity!!,
+                progressBean.img,
+                sweetPowerIv,
+                SizeUtils.dp2px(10F)
+            )
+
+        } else {
+            statePeopleNearby.isVisible = true
+            sweetHeartCl.isVisible = false
         }
 
     }
@@ -280,7 +421,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             }
 
 
+
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_CONTENT
+            if (refreshPeopleNearby.state != RefreshState.Loading) {
+                initSweetHeartView(nearBean!!.is_honey, nearBean!!.progress)
+            }
             if (refreshPeopleNearby.state == RefreshState.Refreshing) {
                 adapter.data.clear()
                 adapter.notifyDataSetChanged()
@@ -292,6 +437,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             } else {
                 refreshPeopleNearby.finishLoadMore(true)
             }
+
 
             //头像等级
             ranking_level = nearBean!!.ranking_level
@@ -324,14 +470,18 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 else {
                     lieAvatorLl.isVisible = false
                 }
+
+
                 firstLoad = false
             }
 
-            adapter.addData(nearBean?.list ?: mutableListOf())
+
+            adapter.addData(nearBean?.list)
 
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
             }
+
         } else {
             refreshPeopleNearby.finishLoadMore(false)
             refreshPeopleNearby.finishRefresh(false)
@@ -355,6 +505,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     }
 
 
+    /**
+     * 男性充值加入甜心圈
+     */
+    override fun joinSweetApplyResult(success: Boolean) {
+        onRefreshSweetEvent(RefreshSweetEvent())
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
@@ -369,6 +527,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     fun onUpdateNearPeopleParamsEvent(event: UpdateNearPeopleParamsEvent) {
         updateFilterParams()
         refreshPeopleNearby.autoRefresh()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSweetEvent(event: RefreshSweetEvent) {
+        if (type == TYPE_SWEET_HEART)
+            refreshPeopleNearby.autoRefresh()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -393,6 +557,19 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin = 0
         lieAvatorLl.isVisible = false
         firstLoad = false
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onChangeListStyleEvent(event: ChangeListStyleEvent) {
+        val data = adapter.data
+        adapter = if (UserManager.isStyleList()) {
+            PeopleNearSmallListAdapter()
+        } else {
+            PeopleNearBigCardAdapter()
+        }
+        adapter.setNewData(data)
+        rvPeopleNearby.adapter = adapter
     }
 
     private fun updateFilterParams() {

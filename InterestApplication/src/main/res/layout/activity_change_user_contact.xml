@@ -83,7 +83,7 @@
             android:id="@+id/t11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的联系方式是否隐藏"
+            android:text="联系方式是否公开"
             android:textColor="#ff959a9e"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"

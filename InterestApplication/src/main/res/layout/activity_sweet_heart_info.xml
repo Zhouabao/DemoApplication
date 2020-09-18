@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.SweetHeartInfoActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <com.kennyc.view.MultiStateView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="content">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sweetHeartInfoRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:overScrollMode="never"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sweetHeartInfoContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="我通过了甜心圈「身材认证」"
+                android:textColor="#ffff7ca8"
+                android:textSize="16sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sweetHeartInfoRv" />
+
+            <ImageView
+                android:id="@+id/sweetHeartIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/icon_sweet_type_figure"
+                app:layout_constraintLeft_toLeftOf="@id/sweetHeartInfoContent"
+                app:layout_constraintTop_toBottomOf="@id/sweetHeartInfoContent" />
+
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/squareDianzanAni"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+                app:layout_constraintLeft_toLeftOf="@id/sweetHeartInfoContent"
+                app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+                app:lottie_fileName="data_click_zan.json" />
+
+            <TextView
+                android:id="@+id/squareDianzanBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:textColor="@color/colorBlack6f"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/squareDianzanAni"
+                app:layout_constraintTop_toBottomOf="@id/sweetHeartIv"
+                android:text="123" />
+
+
+            <TextView
+                android:id="@+id/squareCommentBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="18dp"
+                android:drawableLeft="@drawable/icon_comment"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:textColor="@color/colorBlack6f"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+                app:layout_constraintLeft_toRightOf="@id/squareDianzanBtn1"
+                app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+                android:text="123" />
+
+
+            <TextView
+                android:id="@+id/squareZhuanfaBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:drawableLeft="@drawable/icon_zhuanfa"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorBlack6f"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+                app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
+                app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+                tools:text="123" />
+
+
+            <ImageView
+                android:id="@+id/squareMoreBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:src="@drawable/icon_more_black"
+                app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+                app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
+                app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.kennyc.view.MultiStateView>
+
+</LinearLayout>

@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -365,30 +364,47 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         userVideoCl.isVisible = matchBean!!.mv_btn
         //钻石或者女性可以免费看
         GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
-        if (matchBean!!.intention_title.isNullOrEmpty()) {
-            detailUserIntention1.isVisible = false
+        if (matchBean!!.assets_audit_way == 0) {
+            detailUserSweetState.isVisible = false
         } else {
-            detailUserIntention1.isVisible = true
-            detailUserIntention.text = matchBean!!.intention_title
-            matchAimIv.addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(animation: Animator?) {
+            detailUserSweetState.isVisible = true
 
+            //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
+            when (matchBean!!.assets_audit_way) {
+                1 -> {
+                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_wealth"
+                    detailUserSweetState.setAnimation("data_sweet_detail_wealth.json")
                 }
+                2 -> {
+                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_car"
+                    detailUserSweetState.setAnimation("data_sweet_detail_car.json")
+                }
+                3 -> {
+                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_figure"
+                    detailUserSweetState.setAnimation("data_sweet_detail_figure.json")
+                }
+                4 -> {
+                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_profession"
+                    detailUserSweetState.setAnimation("data_sweet_detail_profession.json")
+                }
+                5 -> {
+                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_charge"
+                    detailUserSweetState.setAnimation("data_sweet_detail_charge.json")
+                }
+            }
 
-                override fun onAnimationEnd(animation: Animator?) {
-                    matchAimIv.postDelayed({
-                        matchAimIv.playAnimation()
-                    }, 1000L)
-                }
-
-                override fun onAnimationCancel(animation: Animator?) {
-                }
-
-                override fun onAnimationStart(animation: Animator?) {
-                }
-            })
-            matchAimIv.playAnimation()
+//            detailUserSweetState.playAnimation()
         }
+
+        if (matchBean!!.assets_audit_way != 0 && matchBean!!.assets_audit_way != 5)
+            detailUserSweetState.clickWithTrigger {
+                SquareCommentDetailActivity.start(
+                    this,
+                    squareId = matchBean!!.approve_square_id,
+                    type = SquareCommentDetailActivity.TYPE_SWEET,
+                    gender = matchBean!!.gender!!
+                )
+            }
         if (matchBean!!.online_time.isNullOrEmpty()) {
             detailUserOnline.isVisible = false
         } else {

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6F6"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.SweetHeartVerifyActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="选择认证方式"
+        android:textColor="#ff191919"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle" />
+
+
+    <TextView
+        android:id="@+id/sweetVerifyWay1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:drawableTop="@drawable/icon_sweet_verify_wealth_unchecked"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:text="资产认证"
+        android:textColor="@color/colorBlack19"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/sweetVerifyWay2"
+        app:layout_constraintTop_toBottomOf="@id/t1" />
+
+
+    <TextView
+        android:id="@+id/sweetVerifyWay2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="55dp"
+        android:drawableTop="@drawable/icon_sweet_verify_car_unchecked"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:text="豪车认证"
+        android:textColor="@color/colorBlack19"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/sweetVerifyWay1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sweetVerifyWay1" />
+
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/sweetVerifyTip"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_rectangle_light_orange_15dp"
+        android:gravity="center"
+        android:text="身材认证仅接受比基尼/私房写真\n
+身材是您个人魅力的提现\n
+认证后关注度会大幅提高"
+        android:textColor="#ffff6318"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/sweetVerifyWay1" />
+
+    <TextView
+        android:id="@+id/applyForSweetBtn"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="106dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/selector_confirm_btn_25dp"
+        android:gravity="center"
+        android:text="申请认证"
+        android:enabled="false"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

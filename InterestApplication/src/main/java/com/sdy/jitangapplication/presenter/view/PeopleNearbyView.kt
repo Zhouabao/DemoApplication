@@ -16,4 +16,6 @@ interface PeopleNearbyView : BaseView {
 
     fun onTodayRecommendResult(data: TodayFateBean?)
 
+    fun joinSweetApplyResult(success: Boolean)
+
 }

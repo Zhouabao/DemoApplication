@@ -2,10 +2,10 @@ package com.sdy.jitangapplication.common
 
 object Constants {
     //云信新账号
-    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
+//    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
 //    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
 
-//    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
+    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
     //是否处于测试环境
     const val TEST = false
 
@@ -20,6 +20,7 @@ object Constants {
     //上传文件的类型
     const val AVATOR = "avator/" //头像
     const val PUBLISH = "publish/" //发布
+    const val SWEETHEART = "sweetheart/" //甜心圈
     const val DATING = "dating/" //约会
     const val USERCENTER = "usecenter/"//个人中心
     const val REPORTUSER = "report/"//舉報用户

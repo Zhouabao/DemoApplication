@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/squareImg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="169dp"
+            android:layout_height="225dp"
             android:scaleType="centerCrop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -62,23 +62,53 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/squareDistance"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/squareDistanceLl"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_white_3dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/squareImg"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/squareDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle_white_3dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingLeft="4dp"
+                android:paddingTop="1dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="1dp"
+                android:text="300Km"
+                android:textColor="#FF191919"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/squareSweet"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shape_pink_9dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:paddingLeft="4dp"
             android:paddingTop="1dp"
-            android:paddingRight="4dp"
             android:paddingBottom="1dp"
-            android:text="300Km"
-            android:textColor="#FF191919"
+            android:text="身材认证"
+            android:textColor="@color/colorWhite"
             android:textSize="10sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/squareImg"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -117,7 +147,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="3dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -126,19 +156,20 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/squareLike"
             app:layout_constraintLeft_toRightOf="@id/squareAvator"
-            app:layout_constraintRight_toLeftOf="@id/squareLike"
-            app:layout_constraintTop_toTopOf="@id/squareLike" />
+            app:layout_constraintRight_toLeftOf="@id/squareSweetLogo"
+            app:layout_constraintTop_toTopOf="@id/squareLike"
+            app:layout_goneMarginRight="15dp" />
 
-
-        <ImageView
-            android:id="@+id/clickZanViewImg"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:layout_marginRight="3dp"
-            android:src="@drawable/icon_zan_normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/squareLike"
-            app:layout_constraintTop_toBottomOf="@id/squareContent" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/squareSweetLogo"
+            android:layout_width="36dp"
+            android:layout_height="11dp"
+            android:layout_marginRight="7dp"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            app:layout_constraintBottom_toBottomOf="@id/clickZanViewAni"
+            app:layout_constraintRight_toLeftOf="@id/clickZanViewAni"
+            app:layout_constraintTop_toTopOf="@id/clickZanViewAni" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/clickZanViewAni"

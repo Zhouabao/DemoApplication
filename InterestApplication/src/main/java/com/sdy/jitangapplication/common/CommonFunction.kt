@@ -683,7 +683,7 @@ object CommonFunction {
         rotateEnable: Boolean = false,
         cropEnable: Boolean = false,
         minSeconds: Int = -1,
-        maxSeconds: Int = -1
+        maxSeconds: Int = -1, aspect_ratio_x: Int = 4, aspect_ratio_Y: Int = 5
     ) {
         PictureSelector.create(context as Activity)
             .openGallery(chooseMode)
@@ -713,7 +713,7 @@ object CommonFunction {
             .loadImageEngine(GlideEngine.createGlideEngine())// 自定义图片加载引擎
             .rotateEnabled(rotateEnable)
 //            .cropImageWideHigh(4, 5)
-            .withAspectRatio(4, 5)
+            .withAspectRatio(aspect_ratio_x, aspect_ratio_Y)
             .compressSavePath(UriUtils.getCacheDir(context))
             .openClickSound(false)
             .forResult(requestCode)

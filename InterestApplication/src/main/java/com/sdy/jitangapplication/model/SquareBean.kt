@@ -58,11 +58,14 @@ data class SquareBean(
     var category_type: Int = 1,
     var duration: Long = 0L,
     var clickTime: Int = 0,
+    var gender: Int = 2,
     var originalLike: Int = 0,
     var originalLikeCount: Int = 0,
     var isgreeted: Boolean = true,//招呼是否仍然有效
     var member_id: Int? = null,
-    var title_list: MutableList<TopicBean>? = mutableListOf()
+    var title_list: MutableList<TopicBean>? = mutableListOf(),
+    var approve_type: Int = 0,// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
+    var issweet: Boolean = true//是否是甜心圈
 ) :
     Serializable, MultiItemEntity {
 
@@ -217,6 +220,7 @@ data class RecommendSquareBean(
     var height: Int = 0,
     var width: Int = 0,
     var is_elite: Boolean = false,
+    var approve_type: Int = 0,//新增字段 ：0普通动态 1 资产 2豪车 3身材 4职业
     var title_list: MutableList<TopicBean>? = mutableListOf()
 )
 

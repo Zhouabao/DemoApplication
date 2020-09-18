@@ -64,6 +64,7 @@ class ChatUpOpenPtVipDialog(
     companion object {
         const val TYPE_CHAT = 1
         const val TYPE_CONTACT = 2
+        const val TYPE_ROAMING = 3
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,8 @@ class ChatUpOpenPtVipDialog(
 
 
     private fun initChatData() {
-        GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
+        if (chatUpBean.avatar.isNotEmpty())
+            GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
 
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
         when (chatUpBean.contact_way) {
@@ -134,9 +136,16 @@ class ChatUpOpenPtVipDialog(
             /**
              * 1.非黄金会员
              *      1.1设置私聊权限
+             *
+             *          1.1.1 仅高级用户能联系（非甜心圈）
              *              a.她仅允许黄金会员联系她
              *              b.立即成为黄金会员，不要错过
              *              c.成为黄金会员，免费无限次聊天
+             *          1.2.1  仅高级用户能联系 （甜心圈）
+             *              a.当前会员等级无法与她联系
+             *              b.因避免甜心圈用户被骚扰，普通会员不能直接与甜心圈用户建立联系
+             *              c.升级黄金会员，立即与她取得联系
+             *
              *      1.2未设置私聊权限
              *          1.2.1次数未用尽
              *              a.获得聊天机会
@@ -193,6 +202,15 @@ class ChatUpOpenPtVipDialog(
                     }
 
                     if (chatUpBean.private_chat_btn) {
+                        //TODO 1.对方用户是甜心圈用户
+                        chatupAvator.setImageResource(R.drawable.icon_sweet_chat_privacy)
+                        chatupTitle.text = "当前会员等级无法与她联系"
+                        chatupContent.text = "因避免甜心圈用户被骚扰\n普通会员不能直接与甜心圈用户建立联系"
+                        chatupUnlockChat.isVisible = false
+                        openPtVipBtn.text = "升级黄金会员，立即与她取得联系"
+
+
+                        //2.对方用户是普通用户
                         chatupTitle.text = "她设置了等级权限"
                         chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
                         chatupUnlockChat.isVisible = false
@@ -282,6 +300,18 @@ class ChatUpOpenPtVipDialog(
                             CommonFunction.startToVip(context1, 1)
                         }
                     }
+                }
+            }
+            TYPE_ROAMING -> {
+                chatupUnlockChat.isVisible = false
+                chatupContact.isVisible = false
+                chatupAvator.setImageResource(R.drawable.icon_vip_roaming)
+                chatupTitle.text = "全国位置漫游"
+                chatupContent.text = "位置随时变更，提前跟其他地方的人打个招呼"
+                openPtVipBtn.text = "获取黄金会员，开启位置漫游"
+                openPtVipBtn.clickWithTrigger {
+                    CommonFunction.startToVip(context1)
+                    dismiss()
                 }
             }
 

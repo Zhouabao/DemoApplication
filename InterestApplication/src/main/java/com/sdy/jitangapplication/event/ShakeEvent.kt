@@ -46,5 +46,12 @@ class FemaleVideoEvent(val videoState: Int)
 class JumpToDatingEvent()
 
 
+//点击切换列表模式
+class ChangeListStyleEvent()
+
+//刷新甜心圈认证状态
+class RefreshSweetEvent()
+
+
 
 

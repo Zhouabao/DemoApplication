@@ -1,7 +1,6 @@
 package com.kotlin.base.ui.activity
 
 import android.annotation.TargetApi
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -32,7 +31,7 @@ open class BaseActivity : SwipeBackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.transparentStatusBar(this)
             BarUtils.setStatusBarLightMode(this, true)
         } else {
 //            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏

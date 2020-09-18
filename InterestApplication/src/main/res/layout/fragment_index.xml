@@ -138,6 +138,17 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/sweetHeartNew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="170dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/icon_new_white"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/titleIndex" />
+
             <LinearLayout
                 android:id="@+id/todayWantCl"
                 android:layout_width="wrap_content"
@@ -145,19 +156,19 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/gradient_orange_14dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/filterBtn"
                 app:layout_constraintTop_toTopOf="parent">
 
 
-
                 <com.sdy.jitangapplication.widgets.HeadViewPager
                     android:id="@+id/todayWantVp"
                     android:layout_width="57dp"
-                    android:visibility="gone"
+                    android:layout_height="23dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:layout_height="23dp" />
+                    android:visibility="gone" />
 
 
                 <TextView
@@ -176,11 +187,21 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/changeStyleBtn"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_style_card"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/filterBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/filterBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_marginRight="15dp"
                 android:background="@drawable/icon_filter"
                 android:textColor="#FF191919"

@@ -14,13 +14,13 @@ import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
-import com.sdy.jitangapplication.ui.activity.VipPowerActivity
+import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -85,6 +85,12 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             btnVerify.visibility = View.VISIBLE
             switchShowVerify.visibility = View.GONE
         }
+
+        currentLocation.clickWithTrigger {
+            ChatUpOpenPtVipDialog(context1, "", ChatUpOpenPtVipDialog.TYPE_ROAMING, ChatUpBean()).show()
+            dismiss()
+        }
+
 
         btnGoVip.onClick {
             CommonFunction.startToVip(context1)
