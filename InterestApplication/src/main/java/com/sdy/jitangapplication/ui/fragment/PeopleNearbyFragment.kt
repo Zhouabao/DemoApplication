@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -44,6 +43,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import kotlin.random.Random
 
 /**
  * 附近的人
@@ -68,7 +68,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     private var page = 1
     private var isLoadingMore = false
     private val params by lazy {
-        hashMapOf<String,Any>(
+        hashMapOf<String, Any>(
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_name" to UserManager.getCity(),
@@ -168,10 +168,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     private fun showOpenVipCl(isvip: Boolean) {
         if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
             openVipCl.isVisible = true
-            t2.text = "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
-                "people_amount",
-                0
-            )}名糖宝女孩\n满足你的需求"
+//
+            t2.text =
+                "在${UserManager.getCity()}共有${UserManager.registerFileBean?.people_amount ?:0}名糖宝女孩\n满足你的需求"
 
             openVipBtn.text = "开通会员联系她们"
 
