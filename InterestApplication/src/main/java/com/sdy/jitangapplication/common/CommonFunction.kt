@@ -804,7 +804,7 @@ object CommonFunction {
             EventBus.getDefault().postSticky(RefreshEvent(true))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
             EventBus.getDefault().post(CloseDialogEvent())
-            EventBus.getDefault().post(UpdateSameCityVipEvent())
+            EventBus.getDefault().post(UpdateSameCityVipEvent(true))
             EventBus.getDefault().post(RefreshTodayFateEvent())
             //刷新顶部精选数据
             EventBus.getDefault().post(TopCardEvent(true))

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -308,11 +309,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     private fun showOpenVipCl(isvip: Boolean) {
         if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
+            statePeopleNearby.isInvisible = true
             openVipCl.isVisible = true
-            t2.text = "在${UserManager.getCity()}共有${SPUtils.getInstance(Constants.SPNAME).getInt(
-                "people_amount",
-                0
-            )}名糖宝女孩\n满足你的需求"
+//
+            t2.text =
+                "在${UserManager.getCity()}共有${UserManager.registerFileBean?.people_amount ?:0}名糖宝女孩\n满足你的需求"
 
             openVipBtn.text = "开通会员联系她们"
 
@@ -383,6 +384,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
         } else {
             openVipCl.isVisible = false
+            statePeopleNearby.isInvisible = false
         }
     }
 
@@ -438,7 +440,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 refreshPeopleNearby.finishLoadMore(true)
             }
 
-
             //头像等级
             ranking_level = nearBean!!.ranking_level
             //保存是否上传过视频介绍
@@ -482,8 +483,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 adapter.isUseEmpty(true)
             }
 
-            if (type == TYPE_SAMECITY)
-                showOpenVipCl(nearBean.isvip)
+            //根据是否是会员判断是否显示会员页面
+            EventBus.getDefault().post(UpdateSameCityVipEvent(nearBean.isvip))
+
         } else {
             refreshPeopleNearby.finishLoadMore(false)
             refreshPeopleNearby.finishRefresh(false)
@@ -550,7 +552,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
         if (type == TYPE_SAMECITY)
-            showOpenVipCl(true)
+            showOpenVipCl(event.isVip)
     }
 
 

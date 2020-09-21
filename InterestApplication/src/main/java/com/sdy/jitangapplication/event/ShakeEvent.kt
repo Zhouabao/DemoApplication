@@ -22,8 +22,8 @@ class UpdateFindByTagListEvent(var position: Int = -1, var accid: String = "")
 class UpdateNearPeopleParamsEvent()
 
 
-//更新附近的人筛选参数
-class UpdateSameCityVipEvent()
+//更新附近的人充值会员付费
+class UpdateSameCityVipEvent(val isVip:Boolean)
 
 //更新头部横幅
 class UpdateShowTopAlert()

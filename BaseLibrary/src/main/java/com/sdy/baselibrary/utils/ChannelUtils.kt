@@ -17,6 +17,7 @@ object ChannelUtils {
             val appInfo: ApplicationInfo =
                 pm.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
             return appInfo.metaData.getString("UMENG_CHANNEL") ?: ""
+
         } catch (ignored: PackageManager.NameNotFoundException) {
             return "debug"
         }
