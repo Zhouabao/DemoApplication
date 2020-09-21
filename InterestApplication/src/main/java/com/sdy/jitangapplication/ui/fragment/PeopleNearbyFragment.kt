@@ -68,7 +68,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     private var page = 1
     private var isLoadingMore = false
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_name" to UserManager.getCity(),
@@ -326,6 +326,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 }
                 firstLoad = false
             }
+
+            if (type == TYPE_SAMECITY)
+                showOpenVipCl(nearBean.isvip)
 
             adapter.addData(nearBean?.list ?: mutableListOf())
 
