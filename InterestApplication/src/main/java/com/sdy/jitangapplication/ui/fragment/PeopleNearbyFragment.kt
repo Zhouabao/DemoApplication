@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -167,6 +168,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     private fun showOpenVipCl(isvip: Boolean) {
         if (!isvip && type == TYPE_SAMECITY && UserManager.getGender() == 1) {
+            statePeopleNearby.isInvisible = true
             openVipCl.isVisible = true
 //
             t2.text =
@@ -241,6 +243,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
         } else {
             openVipCl.isVisible = false
+            statePeopleNearby.isInvisible = false
         }
     }
 
@@ -326,14 +329,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 firstLoad = false
             }
 
-            if (type == TYPE_SAMECITY)
-                showOpenVipCl(nearBean.isvip)
-
             adapter.addData(nearBean?.list ?: mutableListOf())
-
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
             }
+
+            //根据是否是会员判断是否显示会员页面
+            EventBus.getDefault().post(UpdateSameCityVipEvent(nearBean.isvip))
+
         } else {
             refreshPeopleNearby.finishLoadMore(false)
             refreshPeopleNearby.finishRefresh(false)
@@ -386,7 +389,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
         if (type == TYPE_SAMECITY)
-            showOpenVipCl(true)
+            showOpenVipCl(event.isVip)
     }
 
 
