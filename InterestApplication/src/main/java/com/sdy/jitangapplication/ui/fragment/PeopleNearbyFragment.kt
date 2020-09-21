@@ -482,6 +482,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 adapter.isUseEmpty(true)
             }
 
+            if (type == TYPE_SAMECITY)
+                showOpenVipCl(nearBean.isvip)
         } else {
             refreshPeopleNearby.finishLoadMore(false)
             refreshPeopleNearby.finishRefresh(false)

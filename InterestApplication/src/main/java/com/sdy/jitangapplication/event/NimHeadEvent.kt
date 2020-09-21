@@ -16,7 +16,7 @@ class NimHeadEvent(val nimBean: NimBean, val showChatLeftTimes: Boolean)
  * 是否能启用图片和定位
  * @param enable true启用 false关闭
  */
-class EnablePicEvent(val enable: Boolean)
+class EnablePicEvent(val count: Int)
 
 
 /**

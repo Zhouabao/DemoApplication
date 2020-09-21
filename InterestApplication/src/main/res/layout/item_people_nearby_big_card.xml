@@ -200,6 +200,6 @@
         app:layout_constraintLeft_toLeftOf="@id/itemBgIv"
         app:layout_constraintRight_toRightOf="@id/itemBgIv"
         app:layout_constraintTop_toTopOf="@id/itemBgIv"
-        app:lottie_autoPlay="true"
+        app:lottie_autoPlay="false"
         app:lottie_loop="true" />
 </androidx.constraintlayout.widget.ConstraintLayout>

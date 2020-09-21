@@ -359,6 +359,7 @@ object CommonFunction {
                 }
             is ShareSquareAttachment -> "『动态分享内容』"
             is ChatDatingAttachment -> "『活动报名』"
+            is SendGiftAttachment -> "『礼物消息』"
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
             is ContactCandyAttachment -> {
                 "『解锁联系方式』"

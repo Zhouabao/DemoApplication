@@ -39,7 +39,8 @@ data class NimBean(
     var isdirect: Boolean = false,
     var unlock_contact_way: Int = 0, //是否有联系方式
     var unlock_popup_str: String = "", //	我是否被别人解锁弹框 大于0 弹框显示糖果数目
-    var is_unlock_contact: Boolean = false//是否解锁过联系方式
+    var is_unlock_contact: Boolean = false,//是否解锁过联系方式
+    var target_ishoney: Boolean = false//	true 是甜心圈 fals 不是甜心圈
 ) : Serializable
 
 data class ChatGiftStateBean(

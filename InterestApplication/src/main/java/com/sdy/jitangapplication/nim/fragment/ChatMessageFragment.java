@@ -34,6 +34,7 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
+import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.event.HideContactLlEvent;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
@@ -47,6 +48,7 @@ import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
+import com.sdy.jitangapplication.nim.session.ChatChooseGiftAction;
 import com.sdy.jitangapplication.nim.session.ChatContactAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
@@ -435,7 +437,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         actions.add(new ChatTakeImageAction()); // 拍照
         actions.add(new MyLocationAction()); // 位置
         actions.add(new ChatContactAction()); // 联系方式
-        // actions.add(new ChatChooseGiftAction()); // 礼物
+        actions.add(new ChatChooseGiftAction()); // 礼物
         // actions.add(new PhoneCallAction()); //语音通话
 
         return actions;
@@ -588,6 +590,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     break;
                 }
             }
+
+            if (nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2 && nimBean.getTarget_ishoney()) {
+                EventBus.getDefault().post(new EnablePicEvent(5));
+            }
         }
 
     }
@@ -693,6 +699,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private void sendMsgS(IMMessage content, boolean requestMsg) {
         appendPushConfig(content);
         // send message to server and save to db
+
         NIMClient.getService(MsgService.class).sendMessage(content, false).setCallback(new RequestCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

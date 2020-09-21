@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +48,7 @@ class PeopleNearBigCardAdapter :
             itemView.itemBgIv.isVisible = true
             itemView.itemBgIvAnimation.isVisible = true
 
+
             itemView.sweetHeartContent.text = when (item.assets_audit_way) {
                 1 -> {
                     "资产认证进入甜心圈"
@@ -80,7 +82,7 @@ class PeopleNearBigCardAdapter :
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_woman.json")
 
             }
-//            itemView.itemBgIvAnimation.playAnimation()
+
 
 
             val itemBgIvParams = (itemView.itemBgIv.layoutParams as ConstraintLayout.LayoutParams)
@@ -251,5 +253,28 @@ class PeopleNearBigCardAdapter :
         }
 
 
+    }
+
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        val itemView = holder.itemView
+
+        if (itemView.itemBgIvAnimation.tag != null) {
+            itemView.itemBgIvAnimation.removeOnAttachStateChangeListener(itemView.itemBgIvAnimation.tag as View.OnAttachStateChangeListener)
+        }
+
+        val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(v: View?) {
+
+                itemView.itemBgIvAnimation.pauseAnimation()
+            }
+
+            override fun onViewAttachedToWindow(v: View?) {
+                itemView.itemBgIvAnimation.playAnimation()
+
+            }
+        }
+        itemView.itemBgIvAnimation.addOnAttachStateChangeListener(onAttachStateChangeListener)
+        itemView.itemBgIvAnimation.tag = onAttachStateChangeListener
     }
 }
