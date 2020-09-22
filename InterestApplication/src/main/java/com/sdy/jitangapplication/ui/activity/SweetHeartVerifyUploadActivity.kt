@@ -66,15 +66,22 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         btnBack.clickWithTrigger {
             finish()
         }
-        hotT1.text = "豪车认证"
+
         if (type == TYPE_FIGURE || type == TYPE_PROFESSION) {
+            hotT1.text = if (type == TYPE_FIGURE) {
+                "身材认证"
+            } else {
+                "职业认证"
+            }
             t1.text = "首先上传手持身份证及身份证正面\n请确保与本人头像一致，此流程不对外公开"
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_woman)
         } else if (type == TYPE_CAR) {
+            hotT1.text = "豪车认证"
             t1.text = "首先上传手持身份证及驾驶证\n请确保与本人头像一致，照片不会对外公开"
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_car)
 
         } else {
+            hotT1.text = "资产认证"
             t1.text = "首先上传手持身份证及证明资产所有权\n如房产证、公司注册、存款明细等\n照片不会对外公开"
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_wealth)
         }

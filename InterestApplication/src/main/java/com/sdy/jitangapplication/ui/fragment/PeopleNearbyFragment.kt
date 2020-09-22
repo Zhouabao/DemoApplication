@@ -15,7 +15,6 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
@@ -107,7 +106,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     }
 
     fun loadData() {
-
 
         EventBus.getDefault().register(this)
 
@@ -205,6 +203,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
                     verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
+                    verifyNowBtn1.clickWithTrigger {
+                        CommonFunction.startToVip(activity!!)
+                    }
                 }
 
 
@@ -226,6 +227,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         verifyNowBtn2.text = "认证通过"
                         verifyNowBtn2.isEnabled = false
                     }
+                }
+                verifyNowBtn2.clickWithTrigger {
+                    startActivity<SweetHeartVerifyActivity>()
                 }
             } else {
                 verifyNowNum1.isVisible = true
@@ -278,15 +282,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     }
                 }
 
-            }
+                verifyNowBtn1.clickWithTrigger {
+                    //todo 先判断是否通过人脸认证 没通过就跳人脸认证，通过就跳视频录制
+                    CommonFunction.startToFace(activity!!)
+                }
+                verifyNowBtn2.clickWithTrigger {
+                    startActivity<SweetHeartVerifyActivity>()
+                }
 
-
-            verifyNowBtn1.clickWithTrigger {
-                //todo 先判断是否通过人脸认证 没通过就跳人脸认证，通过就跳视频录制
-                CommonFunction.startToFace(activity!!)
-            }
-            verifyNowBtn2.clickWithTrigger {
-                startActivity<SweetHeartVerifyActivity>()
             }
 
 
@@ -313,7 +316,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             openVipCl.isVisible = true
 //
             t2.text =
-                "在${UserManager.getCity()}共有${UserManager.registerFileBean?.people_amount ?:0}名糖宝女孩\n满足你的需求"
+                "在${UserManager.getCity()}共有${UserManager.registerFileBean?.people_amount ?: 0}名糖宝女孩\n满足你的需求"
 
             openVipBtn.text = "开通会员联系她们"
 
@@ -476,7 +479,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 firstLoad = false
             }
 
-
+            for (data in nearBean?.list) {
+                data.assets_audit_way = 2
+            }
             adapter.addData(nearBean?.list)
 
             if (adapter.data.isNullOrEmpty()) {
@@ -573,6 +578,17 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             PeopleNearBigCardAdapter()
         }
         adapter.setNewData(data)
+
+        adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
+        adapter.isUseEmpty(false)
+        adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
+        adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+        adapter.setHeaderAndEmpty(true)
+
+        if (adapter.data.isEmpty()) {
+            adapter.isUseEmpty(true)
+        }
         rvPeopleNearby.adapter = adapter
     }
 
@@ -580,6 +596,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         //加入本地的筛选对话框的筛选条件
         if (params["audit_only"] != null)
             params.remove("audit_only")
+        if (params["roaming_city"] != null)
+            params.remove("roaming_city")
+        if (params["online_type"] != null)
+            params.remove("online_type")
 //        if (params["local_only"] != null)
 //            params.remove("local_only")
         val params1 = UserManager.getFilterConditions()

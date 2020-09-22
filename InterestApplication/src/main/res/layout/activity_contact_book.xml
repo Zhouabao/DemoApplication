@@ -1,99 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.ContactBookActivity">
+
+
+    <include layout="@layout/layout_actionbar" />
+
+    <com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        tools:context=".ui.activity.ContactBookActivity">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading">
 
-
-    <include layout="@layout/layout_actionbar"/>
-
-    <com.kennyc.view.MultiStateView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/stateview"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle"
-            app:msv_emptyView="@layout/empty_layout"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorWhite"
-                tools:context=".ui.activity.ContactBookActivity">
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            tools:context=".ui.activity.ContactBookActivity">
 
             <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/shape_rectangle_gray_9dp"
-                    app:iconifiedByDefault="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:queryBackground="@null"
-                    app:queryHint="搜索联系人"
-                    app:showDividers="none"
-                    app:submitBackground="@null"
-                    />
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/shape_rectangle_gray_9dp"
+                android:focusable="false"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                app:iconifiedByDefault="false"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:queryBackground="@null"
+                app:queryHint="搜索联系人"
+                app:showDividers="none"
+                app:submitBackground="@null" />
 
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/contactsRv"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/searchView"/>
+                android:id="@+id/contactsRv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchView" />
 
 
             <com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
-                    android:id="@+id/indexBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:paddingRight="15dp"
-                    android:background="@color/colorTransparent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/contactsRv"
-                    app:sidebar_lazy_respond="false"
-                    app:sidebar_position="right"
-                    app:sidebar_text_color="@color/colorBlack"/>
+                android:id="@+id/indexBar"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@color/colorTransparent"
+                android:paddingRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/contactsRv"
+                app:sidebar_lazy_respond="false"
+                app:sidebar_position="right"
+                app:sidebar_text_color="@color/colorBlack"
+                app:sidebar_type="star" />
 
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/searchContactsRv"
-                    android:background="@color/colorWhite"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/searchView"/>
+                android:id="@+id/searchContactsRv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorWhite"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.kennyc.view.MultiStateView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,11 +16,15 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.SetRoamingLocationEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
-import com.sdy.jitangapplication.model.ChatUpBean
+import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -58,6 +62,26 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         filterAge.text =
             "${seekBarAge.leftSeekBar.progress.toInt()}-${seekBarAge.rightSeekBar.progress.toInt()}岁"
 
+        rgOnlineTime.check(
+            when (sp.getInt("online_type")) {
+                1 -> {
+                    R.id.timeOneDay
+                }
+                2 -> {
+                    R.id.timeThreeDay
+                }
+                3 -> {
+                    R.id.timeSevenDay
+                }
+                5 -> {
+                    R.id.timeNoLimit
+                }
+                else -> {
+                    R.id.timeFifteenDay
+                }
+            }
+        )
+
         rbSexAll.check(
             when (sp.getInt("filter_gender", 3)) {
                 1 -> R.id.switchSexMan
@@ -66,10 +90,29 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             }
         )
 
+        if (sp.getString("roaming_city").isNotEmpty()) {
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                context1.resources.getDrawable(R.drawable.icon_location_airplane),
+                null,
+                null,
+                null
+            )
+            currentLocation.text = sp.getString("roaming_city")
+        } else {
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                context1.resources.getDrawable(R.drawable.icon_location_orange),
+                null,
+                null,
+                null
+            )
+            currentLocation.text = "当前位置"
+        }
+
         switchOnLine.isVisible = UserManager.isUserVip()
         switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
-
+//  SPUtils.getInstance(Constants.SPNAME).remove("online_type")
+//        SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
 
         if (UserManager.isUserVerify() == 1) {
             btnVerify.visibility = View.GONE
@@ -87,8 +130,17 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
         currentLocation.clickWithTrigger {
-            ChatUpOpenPtVipDialog(context1, "", ChatUpOpenPtVipDialog.TYPE_ROAMING, ChatUpBean()).show()
-            dismiss()
+//            if (UserManager.isUserVip()) {
+            context1.startActivity<RoamingLocationActivity>()
+//            } else {
+//            ChatUpOpenPtVipDialog(
+//                context1,
+//                "",
+//                ChatUpOpenPtVipDialog.TYPE_ROAMING,
+//                ChatUpBean()
+//            ).show()
+//            dismiss()
+//            }
         }
 
 
@@ -139,13 +191,37 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                     sp.put("filter_gender", 3)
                 }
             }
+
+            //	1天内 2三天内 3七天内  4十五天内 5不限
+            when (rgOnlineTime.checkedRadioButtonId) {
+                R.id.timeOneDay -> {
+                    sp.put("online_type", 1)
+                }
+                R.id.timeSevenDay -> {
+                    sp.put("online_type", 2)
+                }
+                R.id.timeThreeDay -> {
+                    sp.put("online_type", 3)
+                }
+                R.id.timeFifteenDay -> {
+                    sp.put("online_type", 4)
+                }
+                R.id.timeNoLimit -> {
+                    sp.put("online_type", 5)
+                }
+            }
+            if (currentLocation.text != "当前位置") {
+                sp.put("roaming_city", currentLocation.text.toString())
+            } else {
+                SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
+            }
 //            if (switchSameCity.isChecked) {
 //                sp.put("local_only", 2)
 //                sp.put("city_code", UserManager.getCityCode())
 //            } else {
 //                sp.put("local_only", 1)
 //            }
-            if (UserManager.isUserVerify() == 1)
+            if (UserManager.isUserVerify() == 1){}
                 if (switchShowVerify.isChecked) {
                     sp.put("audit_only", 2)
                 } else {
@@ -163,6 +239,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             dismiss()
         }
 
+
     }
 
     private fun initWindow() {
@@ -179,4 +256,36 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         //点击外部可取消
         setCanceledOnTouchOutside(true)
     }
+
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSetRoamingLocationEvent(event: SetRoamingLocationEvent) {
+        if (!event.cityBean.name.isNullOrEmpty()) {
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                context1.resources.getDrawable(R.drawable.icon_location_airplane),
+                null,
+                null,
+                null
+            )
+            currentLocation.text = "${event.cityBean.provinceName},${event.cityBean.name}"
+        } else {
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                context1.resources.getDrawable(R.drawable.icon_location_orange),
+                null,
+                null,
+                null
+            )
+            currentLocation.text = "当前位置"
+        }
+    }
+
 }

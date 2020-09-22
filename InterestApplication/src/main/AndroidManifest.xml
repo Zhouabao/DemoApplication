@@ -97,6 +97,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
         <activity
+            android:name=".ui.activity.RoamingLocationActivity"
+            android:launchMode="singleTop"/>
+        <activity
             android:name=".ui.activity.SweetHeartVerifyingActivity"
             android:launchMode="singleTop" />
         <activity
@@ -501,6 +504,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.AppCompat.Transitions"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
         <activity

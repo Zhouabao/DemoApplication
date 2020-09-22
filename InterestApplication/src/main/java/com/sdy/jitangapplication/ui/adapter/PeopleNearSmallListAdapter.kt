@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
@@ -16,7 +17,16 @@ import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.item_people_nearby_big_card.view.*
 import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.*
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userAvator
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userChatBtn
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userContactBtn
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userNameAge
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userOnline
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userRelationshipRv
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userVerify
+import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userVip
 
 /**
  *    author : ZFM
@@ -47,7 +57,6 @@ class PeopleNearSmallListAdapter :
                 itemView.userAgeDistance.setTextColor(Color.parseColor("#66FFCE52"))
                 itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
                 itemView.sweetAnimation.setAnimation("data_sweet_style_list_man.json")
-                itemView.sweetAnimation.playAnimation()
             } else {
                 itemView.userContentCl.setBackgroundResource(R.drawable.icon_sweet_heart_bg_list_woman)
                 itemView.userNameAge.setTextColor(Color.parseColor("#FFFFFFFF"))
@@ -55,8 +64,25 @@ class PeopleNearSmallListAdapter :
                 itemView.userAgeDistance.setTextColor(Color.parseColor("#80ffffff"))
                 itemView.userChatBtn.setImageResource(R.drawable.icon_chat_woman)
                 itemView.sweetAnimation.setAnimation("data_sweet_style_list_woman.json")
-                itemView.sweetAnimation.playAnimation()
             }
+
+
+            if (itemView.sweetAnimation.tag != null) {
+                itemView.sweetAnimation.removeOnAttachStateChangeListener(itemView.sweetAnimation.tag as View.OnAttachStateChangeListener)
+            }
+
+            val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
+                override fun onViewDetachedFromWindow(v: View?) {
+                    itemView.sweetAnimation.pauseAnimation()
+                }
+
+                override fun onViewAttachedToWindow(v: View?) {
+                    itemView.sweetAnimation.playAnimation()
+
+                }
+            }
+            itemView.sweetAnimation.addOnAttachStateChangeListener(onAttachStateChangeListener)
+            itemView.sweetAnimation.tag = onAttachStateChangeListener
         } else {
             itemView.userContentCl.setBackgroundResource(R.drawable.icon_bg_near_people_woman)
             itemView.userNameAge.setTextColor(Color.parseColor("#191919"))

@@ -26,10 +26,13 @@ import java.util.Arrays;
 
 public class WaveSideBarView extends View {
     private final static int DEFAULT_TEXT_SIZE = 14; // sp
-    private final static int DEFAULT_MAX_OFFSET = 80; //dp
+    private final static int DEFAULT_MAX_OFFSET = 80; // dp
 
-    private final static String[] DEFAULT_INDEX_ITEMS = {"☆", "A", "B", "C", "D", "E", "F", "G", "H", "I",
-            "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"};
+    private final static String[] DEFAULT_INDEX_ITEMS = { "☆", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+            "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#" };
+
+    private final static String[] COMMON_INDEX_ITEMS = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#" };
 
     private String[] mIndexItems;
 
@@ -103,6 +106,9 @@ public class WaveSideBarView extends View {
     public static final int TEXT_ALIGN_RIGHT = 2;
 
 
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_STAR = 1;
+
     /**
      * observe the current selected index item
      */
@@ -117,7 +123,6 @@ public class WaveSideBarView extends View {
      * for {@link #dp2px(int)} and {@link #sp2px(int)}
      */
     private DisplayMetrics mDisplayMetrics;
-
 
     public WaveSideBarView(Context context) {
         this(context, null);
@@ -137,11 +142,17 @@ public class WaveSideBarView extends View {
         mMaxOffset = typedArray.getDimension(R.styleable.WaveSideBarView_sidebar_max_offset, dp2px(DEFAULT_MAX_OFFSET));
         mSideBarPosition = typedArray.getInt(R.styleable.WaveSideBarView_sidebar_position, POSITION_RIGHT);
         mTextAlignment = typedArray.getInt(R.styleable.WaveSideBarView_sidebar_text_alignment, TEXT_ALIGN_CENTER);
+        int type = typedArray.getInt(R.styleable.WaveSideBarView_sidebar_type, TYPE_STAR);
+        if (type == TYPE_STAR) {
+            mIndexItems = DEFAULT_INDEX_ITEMS;
+        } else {
+            mIndexItems = COMMON_INDEX_ITEMS;
+        }
         typedArray.recycle();
 
         mTextSize = sp2px(DEFAULT_TEXT_SIZE);
 
-        mIndexItems = DEFAULT_INDEX_ITEMS;
+
 
         initPaint();
     }
@@ -152,15 +163,15 @@ public class WaveSideBarView extends View {
         mPaint.setColor(mTextColor);
         mPaint.setTextSize(mTextSize);
         switch (mTextAlignment) {
-            case TEXT_ALIGN_CENTER:
-                mPaint.setTextAlign(Paint.Align.CENTER);
-                break;
-            case TEXT_ALIGN_LEFT:
-                mPaint.setTextAlign(Paint.Align.LEFT);
-                break;
-            case TEXT_ALIGN_RIGHT:
-                mPaint.setTextAlign(Paint.Align.RIGHT);
-                break;
+        case TEXT_ALIGN_CENTER:
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            break;
+        case TEXT_ALIGN_LEFT:
+            mPaint.setTextAlign(Paint.Align.LEFT);
+            break;
+        case TEXT_ALIGN_RIGHT:
+            mPaint.setTextAlign(Paint.Align.RIGHT);
+            break;
         }
     }
 
@@ -184,16 +195,11 @@ public class WaveSideBarView extends View {
         float areaRight = (mSideBarPosition == POSITION_LEFT) ? (getPaddingLeft() + areaLeft + mBarWidth) : width;
         float areaTop = height / 2 - mBarHeight / 2;
         float areaBottom = areaTop + mBarHeight;
-        mStartTouchingArea.set(
-                areaLeft,
-                areaTop,
-                areaRight,
-                areaBottom);
+        mStartTouchingArea.set(areaLeft, areaTop, areaRight, areaBottom);
 
         // the baseline Y of the first item' text to draw
         mFirstItemBaseLineY = (height / 2 - mIndexItems.length * mIndexItemHeight / 2)
-                + (mIndexItemHeight / 2 - (fontMetrics.descent - fontMetrics.ascent) / 2)
-                - fontMetrics.ascent;
+                + (mIndexItemHeight / 2 - (fontMetrics.descent - fontMetrics.ascent) / 2) - fontMetrics.ascent;
     }
 
     @Override
@@ -215,34 +221,33 @@ public class WaveSideBarView extends View {
             float baseLineX = 0f;
             if (mSideBarPosition == POSITION_LEFT) {
                 switch (mTextAlignment) {
-                    case TEXT_ALIGN_CENTER:
-                        baseLineX = getPaddingLeft() + mBarWidth / 2 + mMaxOffset * scale;
-                        break;
-                    case TEXT_ALIGN_LEFT:
-                        baseLineX = getPaddingLeft() + mMaxOffset * scale;
-                        break;
-                    case TEXT_ALIGN_RIGHT:
-                        baseLineX = getPaddingLeft() + mBarWidth + mMaxOffset * scale;
-                        break;
+                case TEXT_ALIGN_CENTER:
+                    baseLineX = getPaddingLeft() + mBarWidth / 2 + mMaxOffset * scale;
+                    break;
+                case TEXT_ALIGN_LEFT:
+                    baseLineX = getPaddingLeft() + mMaxOffset * scale;
+                    break;
+                case TEXT_ALIGN_RIGHT:
+                    baseLineX = getPaddingLeft() + mBarWidth + mMaxOffset * scale;
+                    break;
                 }
             } else {
                 switch (mTextAlignment) {
-                    case TEXT_ALIGN_CENTER:
-                        baseLineX = getWidth() - getPaddingRight() - mBarWidth / 2 - mMaxOffset * scale;
-                        break;
-                    case TEXT_ALIGN_RIGHT:
-                        baseLineX = getWidth() - getPaddingRight() - mMaxOffset * scale;
-                        break;
-                    case TEXT_ALIGN_LEFT:
-                        baseLineX = getWidth() - getPaddingRight() - mBarWidth - mMaxOffset * scale;
-                        break;
+                case TEXT_ALIGN_CENTER:
+                    baseLineX = getWidth() - getPaddingRight() - mBarWidth / 2 - mMaxOffset * scale;
+                    break;
+                case TEXT_ALIGN_RIGHT:
+                    baseLineX = getWidth() - getPaddingRight() - mMaxOffset * scale;
+                    break;
+                case TEXT_ALIGN_LEFT:
+                    baseLineX = getWidth() - getPaddingRight() - mBarWidth - mMaxOffset * scale;
+                    break;
                 }
             }
 
             // draw
-            canvas.drawText(
-                    mIndexItems[i], //item text to draw
-                    baseLineX, //baseLine X
+            canvas.drawText(mIndexItems[i], // item text to draw
+                    baseLineX, // baseLine X
                     baseLineY, // baseLine Y
                     mPaint);
         }
@@ -279,35 +284,35 @@ public class WaveSideBarView extends View {
         mCurrentIndex = getSelectedIndex(eventY);
 
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (mStartTouchingArea.contains(eventX, eventY)) {
-                    mStartTouching = true;
-                    if (!mLazyRespond && onSelectIndexItemListener != null) {
-                        onSelectIndexItemListener.onSelectIndexItem(mIndexItems[mCurrentIndex]);
-                    }
-                    invalidate();
-                    return true;
-                } else {
-                    mCurrentIndex = -1;
-                    return false;
-                }
-
-            case MotionEvent.ACTION_MOVE:
-                if (mStartTouching && !mLazyRespond && onSelectIndexItemListener != null) {
+        case MotionEvent.ACTION_DOWN:
+            if (mStartTouchingArea.contains(eventX, eventY)) {
+                mStartTouching = true;
+                if (!mLazyRespond && onSelectIndexItemListener != null) {
                     onSelectIndexItemListener.onSelectIndexItem(mIndexItems[mCurrentIndex]);
                 }
                 invalidate();
                 return true;
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if (mLazyRespond && onSelectIndexItemListener != null) {
-                    onSelectIndexItemListener.onSelectIndexItem(mIndexItems[mCurrentIndex]);
-                }
+            } else {
                 mCurrentIndex = -1;
-                mStartTouching = false;
-                invalidate();
-                return true;
+                return false;
+            }
+
+        case MotionEvent.ACTION_MOVE:
+            if (mStartTouching && !mLazyRespond && onSelectIndexItemListener != null) {
+                onSelectIndexItemListener.onSelectIndexItem(mIndexItems[mCurrentIndex]);
+            }
+            invalidate();
+            return true;
+
+        case MotionEvent.ACTION_UP:
+        case MotionEvent.ACTION_CANCEL:
+            if (mLazyRespond && onSelectIndexItemListener != null) {
+                onSelectIndexItemListener.onSelectIndexItem(mIndexItems[mCurrentIndex]);
+            }
+            mCurrentIndex = -1;
+            mStartTouching = false;
+            invalidate();
+            return true;
         }
 
         return super.onTouchEvent(event);
@@ -368,18 +373,18 @@ public class WaveSideBarView extends View {
             return;
         }
         switch (align) {
-            case TEXT_ALIGN_CENTER:
-                mPaint.setTextAlign(Paint.Align.CENTER);
-                break;
-            case TEXT_ALIGN_LEFT:
-                mPaint.setTextAlign(Paint.Align.LEFT);
-                break;
-            case TEXT_ALIGN_RIGHT:
-                mPaint.setTextAlign(Paint.Align.RIGHT);
-                break;
-            default:
-                throw new IllegalArgumentException(
-                        "the alignment must be TEXT_ALIGN_CENTER, TEXT_ALIGN_LEFT or TEXT_ALIGN_RIGHT");
+        case TEXT_ALIGN_CENTER:
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            break;
+        case TEXT_ALIGN_LEFT:
+            mPaint.setTextAlign(Paint.Align.LEFT);
+            break;
+        case TEXT_ALIGN_RIGHT:
+            mPaint.setTextAlign(Paint.Align.RIGHT);
+            break;
+        default:
+            throw new IllegalArgumentException(
+                    "the alignment must be TEXT_ALIGN_CENTER, TEXT_ALIGN_LEFT or TEXT_ALIGN_RIGHT");
         }
         mTextAlignment = align;
         invalidate();

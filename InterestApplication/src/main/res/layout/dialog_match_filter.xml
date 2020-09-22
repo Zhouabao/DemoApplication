@@ -221,7 +221,7 @@
             android:textSize="13sp" />
 
         <RadioButton
-            android:id="@+id/fifteenDay"
+            android:id="@+id/timeFifteenDay"
             android:layout_width="54dp"
             android:layout_height="26dp"
             android:layout_marginLeft="15dp"

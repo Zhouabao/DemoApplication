@@ -34,6 +34,24 @@ class PeopleNearBigCardAdapter :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby_big_card) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
+
+        if (itemView.itemBgIvAnimation.tag != null) {
+            itemView.itemBgIvAnimation.removeOnAttachStateChangeListener(itemView.itemBgIvAnimation.tag as View.OnAttachStateChangeListener)
+        }
+
+        val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(v: View?) {
+                itemView.itemBgIvAnimation.pauseAnimation()
+            }
+
+            override fun onViewAttachedToWindow(v: View?) {
+                itemView.itemBgIvAnimation.playAnimation()
+
+            }
+        }
+        itemView.itemBgIvAnimation.addOnAttachStateChangeListener(onAttachStateChangeListener)
+        itemView.itemBgIvAnimation.tag = onAttachStateChangeListener
+
         val userAvatorPrams = itemView.userAvator.layoutParams as ConstraintLayout.LayoutParams
         userAvatorPrams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
         userAvatorPrams.height = userAvatorPrams.width
@@ -82,6 +100,7 @@ class PeopleNearBigCardAdapter :
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_woman.json")
 
             }
+
 
 
 
@@ -259,22 +278,6 @@ class PeopleNearBigCardAdapter :
         super.onBindViewHolder(holder, position)
         val itemView = holder.itemView
 
-        if (itemView.itemBgIvAnimation.tag != null) {
-            itemView.itemBgIvAnimation.removeOnAttachStateChangeListener(itemView.itemBgIvAnimation.tag as View.OnAttachStateChangeListener)
-        }
 
-        val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
-            override fun onViewDetachedFromWindow(v: View?) {
-
-                itemView.itemBgIvAnimation.pauseAnimation()
-            }
-
-            override fun onViewAttachedToWindow(v: View?) {
-                itemView.itemBgIvAnimation.playAnimation()
-
-            }
-        }
-        itemView.itemBgIvAnimation.addOnAttachStateChangeListener(onAttachStateChangeListener)
-        itemView.itemBgIvAnimation.tag = onAttachStateChangeListener
     }
 }

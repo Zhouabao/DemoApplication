@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.RoamingLocationActivity">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/icon_return"
+        app:layout_constraintBottom_toBottomOf="@id/searchLocation"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchLocation" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchLocation"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_rectangle_light_gray_24dp"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        app:iconifiedByDefault="false"
+        app:layout_constraintLeft_toRightOf="@id/btnBack"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryBackground="@null"
+        app:queryHint="搜索地点"
+        app:showDividers="none"
+        app:submitBackground="@null" />
+
+
+    <TextView
+        android:id="@+id/currentLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:drawableLeft="@drawable/icon_location_roaming"
+        android:drawablePadding="5dp"
+        android:text="当前定位 成都市"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/btnBack"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchLocation" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#FFF6F6F6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentLocation" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/roamingLocationRv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentLocation" />
+
+
+    <com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
+        android:id="@+id/indexBar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
+        android:paddingRight="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/roamingLocationRv"
+        app:sidebar_lazy_respond="false"
+        app:sidebar_position="right"
+        app:sidebar_text_color="@color/colorBlack"
+        app:sidebar_type="normal" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

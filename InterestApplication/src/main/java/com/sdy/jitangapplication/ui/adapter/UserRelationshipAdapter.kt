@@ -49,11 +49,11 @@ class UserRelationshipAdapter(val from_sweet_heart: Int = 0) :
                     }
                 } else {
                     helper.itemView.relationshipContent.setTextColor(Color.parseColor("#ff191919"))
-                    if (UserManager.getGender() == 1) {
-                        helper.itemView.setBackgroundResource(R.drawable.shape_rectangle_white80_14dp)
-                    } else {
                         helper.itemView.setBackgroundResource(R.drawable.shape_rectangle_f4_14dp)
-                    }
+//                    if (UserManager.getGender() == 1) {
+//                    } else {
+//                        helper.itemView.setBackgroundResource(R.drawable.shape_rectangle_white80_14dp)
+//                    }
                 }
 
             }

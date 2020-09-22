@@ -392,17 +392,17 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         if (type == TYPE_SWEET) {
-            hotT1.text = "动态详情"
-            refreshLayout.setEnableRefresh(false)
-            refreshLayout.setEnableLoadMore(false)
-            commentList.isVisible = false
-            showCommentLl.isVisible = false
-        } else {
             hotT1.text = "${if (gender == 1) {
                 "他"
             } else {
                 "她"
             }}的认证资料"
+            refreshLayout.setEnableRefresh(false)
+            refreshLayout.setEnableLoadMore(false)
+            commentList.isVisible = false
+            showCommentLl.isVisible = false
+        } else {
+            hotT1.text = "动态详情"
             refreshLayout.setOnRefreshListener(this)
             refreshLayout.setOnLoadMoreListener(this)
 

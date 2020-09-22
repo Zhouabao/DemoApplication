@@ -113,6 +113,10 @@
             <enum name="right" value="0" />
             <enum name="left" value="1" />
         </attr>
+        <attr name="sidebar_type" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="star" value="1" />
+        </attr>
         <attr name="sidebar_text_alignment" format="enum">
             <enum name="center" value="0" />
             <enum name="left" value="1" />

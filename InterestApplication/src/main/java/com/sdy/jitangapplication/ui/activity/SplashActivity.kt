@@ -31,22 +31,44 @@ class SplashActivity : BaseActivity() {
 //            BarUtils.setStatusBarVisibility(this, false)
 //        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
-            (!PermissionUtils.isGranted(PermissionConstants.LOCATION) ||
-                    !PermissionUtils.isGranted(PermissionConstants.PHONE) ||
-                    !PermissionUtils.isGranted(PermissionConstants.STORAGE)
+            (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.LOCATION)) ||
+                    !PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.PHONE
+                        )
+                    ) ||
+                    !PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.STORAGE
+                        )
+                    )
                     )
         ) {
             //定位权限
             PermissionUtils.permission(PermissionConstants.STORAGE) //内存卡
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
-                        if (PermissionUtils.isGranted(PermissionConstants.PHONE)) {//手機狀態
-                            if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位
+                        if (PermissionUtils.isGranted(
+                                *PermissionConstants.getPermissions(
+                                    PermissionConstants.PHONE
+                                )
+                            )
+                        ) {//手機狀態
+                            if (PermissionUtils.isGranted(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.LOCATION
+                                    )
+                                )
+                            ) {//定位
                                 AMapManager.initLocation(this@SplashActivity)
                                 start2login()
                             } else {
                                 //请求phone_state权限
-                                PermissionUtils.permission(PermissionConstants.LOCATION)
+                                PermissionUtils.permission(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.LOCATION
+                                    )
+                                )
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
                                             AMapManager.initLocation(this@SplashActivity)
@@ -64,7 +86,12 @@ class SplashActivity : BaseActivity() {
                             PermissionUtils.permission(PermissionConstants.PHONE)
                                 .callback(object : PermissionUtils.SimpleCallback {
                                     override fun onGranted() {
-                                        if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {
+                                        if (PermissionUtils.isGranted(
+                                                *PermissionConstants.getPermissions(
+                                                    PermissionConstants.LOCATION
+                                                )
+                                            )
+                                        ) {
                                             AMapManager.initLocation(this@SplashActivity)
                                             start2login()
                                         } else {
@@ -94,8 +121,18 @@ class SplashActivity : BaseActivity() {
                     }
 
                     override fun onDenied() {
-                        if (PermissionUtils.isGranted(PermissionConstants.PHONE)) {//手機狀態
-                            if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位
+                        if (PermissionUtils.isGranted(
+                                *PermissionConstants.getPermissions(
+                                    PermissionConstants.PHONE
+                                )
+                            )
+                        ) {//手機狀態
+                            if (PermissionUtils.isGranted(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.LOCATION
+                                    )
+                                )
+                            ) {//定位
                                 AMapManager.initLocation(this@SplashActivity)
                                 start2login()
                             } else {
@@ -118,7 +155,12 @@ class SplashActivity : BaseActivity() {
                             PermissionUtils.permission(PermissionConstants.PHONE)
                                 .callback(object : PermissionUtils.SimpleCallback {
                                     override fun onGranted() {
-                                        if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {
+                                        if (PermissionUtils.isGranted(
+                                                *PermissionConstants.getPermissions(
+                                                    PermissionConstants.LOCATION
+                                                )
+                                            )
+                                        ) {
                                             AMapManager.initLocation(this@SplashActivity)
                                             start2login()
                                         } else {
@@ -205,7 +247,6 @@ class SplashActivity : BaseActivity() {
         }
 
     }
-
 
 
     override fun onDestroy() {

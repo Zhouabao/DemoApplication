@@ -362,6 +362,13 @@ object UserManager {
         if (sp.getInt("online_only", -1) != -1) {
             parmas["online_only"] = sp.getInt("online_only", -1)
         }
+
+        if (sp.getInt("online_type", -1) != -1) {
+            parmas["online_type"] = sp.getInt("online_type", -1)
+        }
+        if (sp.getString("roaming_city").isNotEmpty()) {
+            parmas["roaming_city"] = sp.getString("roaming_city").split(",")[1]
+        }
 //        if (sp.getInt("filter_gender", -1) != -1) {
 //            parmas["gender"] = sp.getInt("filter_gender", -1)
 //        }
@@ -424,6 +431,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("online_only")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+        SPUtils.getInstance(Constants.SPNAME).remove("online_type")
+        SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
 
         //敏感词
         SPUtils.getInstance(Constants.SPNAME).remove("sensitive")
@@ -461,6 +470,14 @@ object UserManager {
 
         SPUtils.getInstance(Constants.SPNAME).remove("switchDianzan")
         SPUtils.getInstance(Constants.SPNAME).remove("switchComment")
+
+
+        /**
+         * 甜心圈
+         */
+        SPUtils.getInstance(Constants.SPNAME).remove("styleList")
+
+
         EventBus.getDefault().removeAllStickyEvents()//移除全部
     }
 
@@ -591,6 +608,7 @@ object UserManager {
         if (params["_signature"] != null)
             params.remove("_signature")
         params.putAll(getBaseParams())
+        params.putAll(getLocationParams())
         var sign = "ppsns${AppUtils.getAppVersionName()}dcyfyf"
         var params1 = params
         for (param in params.toSortedMap()) {
@@ -605,6 +623,7 @@ object UserManager {
         if (params["_signature"] != null)
             params.remove("_signature")
         params.putAll(getBaseParams())
+        params.putAll(getLocationParams())
         var sign = "ppsns${AppUtils.getAppVersionName()}dcyfyf"
         var params1 = params
         for (param in params.toSortedMap()) {

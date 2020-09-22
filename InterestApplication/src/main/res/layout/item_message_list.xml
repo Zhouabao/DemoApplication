@@ -56,6 +56,16 @@
             app:layout_constraintLeft_toRightOf="@id/msgIcon"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/sweetLogo"
+            android:layout_width="59dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/icon_sweet_logo_man"
+            app:layout_constraintBottom_toBottomOf="@id/msgTitle"
+            app:layout_constraintLeft_toRightOf="@id/msgTitle"
+            app:layout_constraintTop_toTopOf="@id/msgTitle" />
+
 
         <TextView
             android:id="@+id/latelyTime"

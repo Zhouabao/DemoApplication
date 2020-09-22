@@ -59,15 +59,19 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     private fun initData() {
         when (type) {
             1 -> {
+                hotT1.text = "资产认证"
                 uploadType.text = "照片中资产大于200万"
             }
             2 -> {
+                hotT1.text = "豪车认证"
                 uploadType.text = "豪车照片或人车合照"
             }
             3 -> {
+                hotT1.text = "身材认证"
                 uploadType.text = "游泳装或者私房写真照"
             }
             4 -> {
+                hotT1.text = "职业认证"
                 uploadType.text = "职业为规定职业中的一种"
             }
 
@@ -81,7 +85,6 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         mPresenter.mView = this
 
         BarUtils.setStatusBarColor(this, Color.WHITE)
-        hotT1.text = "豪车认证"
         rightBtn.isVisible = true
         rightBtn.text = "提交"
         rightBtn.setTextColor(resources.getColor(R.color.colorOrange))

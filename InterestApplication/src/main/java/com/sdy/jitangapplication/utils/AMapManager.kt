@@ -6,7 +6,11 @@ import android.util.Log
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.PermissionUtils
+import com.sdy.jitangapplication.event.UpdateRoamingLocationEvent
+import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -21,7 +25,12 @@ object AMapManager {
 
     //设置定位
     fun initLocation(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !PermissionUtils.isGranted(
+                *PermissionConstants.getPermissions(
+                    PermissionConstants.LOCATION
+                )
+            )
+        ) {//定位权限
             PermissionUtils.permission(PermissionConstants.LOCATION)
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
@@ -86,6 +95,9 @@ object AMapManager {
                         "location===",
                         "${it.city},      ${it.cityCode},      ${it.latitude},      ${it.longitude}"
                     )
+                    if (ActivityUtils.getTopActivity() is RoamingLocationActivity) {
+                        EventBus.getDefault().post(UpdateRoamingLocationEvent())
+                    }
                 } else {
                     Log.d(
                         "location===",

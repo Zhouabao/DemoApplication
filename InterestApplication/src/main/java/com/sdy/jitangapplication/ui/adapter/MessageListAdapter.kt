@@ -1,14 +1,17 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.netease.nimlib.sdk.msg.model.RecentContact
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MessageGiftBean
+import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.business.recent.RecentContactsFragment
 import com.sdy.jitangapplication.nim.uikit.business.uinfo.UserInfoHelper
 import com.sdy.jitangapplication.nim.uikit.common.CommonUtil
@@ -64,12 +67,26 @@ class MessageListAdapter :
         }
         holder.itemView.msgOnLineState.isVisible =
             NimUIKitImpl.enableOnlineState()
-                    && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).isNullOrEmpty()
-                    && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).contains(
-                "在线"
-            )
+                    && !NimUIKitImpl.getOnlineStateContentProvider()
+                .getSimpleDisplay(item.contactId).isNullOrEmpty()
+                    && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId)
+                .contains(
+                    "在线"
+                )
 
 
+        //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
+        val extensionMap = (NimUIKit.getUserInfoProvider().getUserInfo(item.contactId) as NimUserInfo).extensionMap
+        if (!extensionMap.isNullOrEmpty() && extensionMap["assets_audit_way"] != null && extensionMap["assets_audit_way"] != 0) {
+            holder.itemView.sweetLogo.isVisible = true
+            if (extensionMap["assets_audit_way"] == 1 || extensionMap["assets_audit_way"] == 2|| extensionMap["assets_audit_way"] == 5) {
+                holder.itemView.sweetLogo.setImageResource(R.drawable.icon_sweet_logo_woman)
+            } else {
+                holder.itemView.sweetLogo.setImageResource(R.drawable.icon_sweet_logo_man)
+            }
+        } else {
+            holder.itemView.sweetLogo.isVisible = false
+        }
     }
 
 }
