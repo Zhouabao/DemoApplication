@@ -617,7 +617,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     private var page = 1
     private val params1 by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,

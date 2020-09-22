@@ -1348,7 +1348,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         for (data in choosedTitleAdapter.data) {
             titles.add(data.content)
         }
-        val param = hashMapOf(
+        val param = hashMapOf<String,Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",
@@ -1517,7 +1517,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         for (data in choosedTitleAdapter.data) {
             titles.add(data.content)
         }
-        val param = hashMapOf(
+        val param = hashMapOf<String,Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",

@@ -118,7 +118,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
 
     override fun onUploadImgResult(b: Boolean, qnPath: String) {
         if (b) {
-            val param = hashMapOf(
+            val param = hashMapOf<String,Any>(
                 "token" to UserManager.getToken(),
                 "accid" to UserManager.getAccid(),
                 "descr" to "",
