@@ -192,7 +192,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 sweetVerifyIconMan.isVisible = true
                 verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
 
-                if (progressBean.now_money > progressBean.normal_money) {
+                if (progressBean.now_money.toFloat() > progressBean.normal_money.toFloat()) {
                     verifyNowBtn1.setTextColor(Color.parseColor("FF212225"))
                     verifyNowBtn1.setBackgroundResource(R.drawable.shape_light_orange_13dp)
                     verifyNowBtn1.text = "立即加入"

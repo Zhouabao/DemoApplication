@@ -80,13 +80,34 @@ class MessageListAdapter :
         if (!extensionMap.isNullOrEmpty() && extensionMap["assets_audit_way"] != null && extensionMap["assets_audit_way"] != 0) {
             holder.itemView.sweetLogo.isVisible = true
             if (extensionMap["assets_audit_way"] == 1 || extensionMap["assets_audit_way"] == 2|| extensionMap["assets_audit_way"] == 5) {
-                holder.itemView.sweetLogo.setImageResource(R.drawable.icon_sweet_logo_woman)
+                holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                holder.itemView.sweetLogo.setAnimation("data_sweet_logo_man.json")
             } else {
-                holder.itemView.sweetLogo.setImageResource(R.drawable.icon_sweet_logo_man)
+                holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
+                holder.itemView.sweetLogo.setAnimation("data_sweet_logo_woman.json")
             }
+
+            if (holder.itemView.sweetLogo.tag != null) {
+                holder.itemView.sweetLogo.removeOnAttachStateChangeListener(holder.itemView.sweetLogo.tag as View.OnAttachStateChangeListener)
+            }
+
+            val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
+                override fun onViewDetachedFromWindow(v: View?) {
+                    holder.itemView.sweetLogo.pauseAnimation()
+                }
+
+                override fun onViewAttachedToWindow(v: View?) {
+                    holder.itemView.sweetLogo.playAnimation()
+
+                }
+            }
+            holder.itemView.sweetLogo.addOnAttachStateChangeListener(onAttachStateChangeListener)
+            holder.itemView.sweetLogo.tag = onAttachStateChangeListener
         } else {
             holder.itemView.sweetLogo.isVisible = false
         }
+
+
     }
 
 }

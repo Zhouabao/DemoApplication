@@ -17,16 +17,7 @@ import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.item_people_nearby_big_card.view.*
 import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.*
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userAvator
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userChatBtn
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userContactBtn
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userNameAge
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userOnline
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userRelationshipRv
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userVerify
-import kotlinx.android.synthetic.main.item_people_nearby_small_list.view.userVip
 
 /**
  *    author : ZFM
@@ -50,22 +41,21 @@ class PeopleNearSmallListAdapter :
 
         //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
         if (item.assets_audit_way != 0) {
-            if (item.assets_audit_way == 1 || item.assets_audit_way == 2|| item.assets_audit_way == 5) {
+            if (item.assets_audit_way == 1 || item.assets_audit_way == 2 || item.assets_audit_way == 5) {
                 itemView.userContentCl.setBackgroundResource(R.drawable.icon_sweet_heart_bg_list_man)
                 itemView.userNameAge.setTextColor(Color.parseColor("#FFCD52"))
                 itemView.userOnline.setTextColor(Color.parseColor("#66FFCE52"))
                 itemView.userAgeDistance.setTextColor(Color.parseColor("#66FFCE52"))
                 itemView.userChatBtn.setImageResource(R.drawable.icon_hi_heartbeat)
-                itemView.sweetAnimation.setAnimation("data_sweet_style_list_man.json")
             } else {
                 itemView.userContentCl.setBackgroundResource(R.drawable.icon_sweet_heart_bg_list_woman)
                 itemView.userNameAge.setTextColor(Color.parseColor("#FFFFFFFF"))
                 itemView.userOnline.setTextColor(Color.parseColor("#80ffffff"))
                 itemView.userAgeDistance.setTextColor(Color.parseColor("#80ffffff"))
                 itemView.userChatBtn.setImageResource(R.drawable.icon_chat_woman)
-                itemView.sweetAnimation.setAnimation("data_sweet_style_list_woman.json")
             }
 
+            itemView.sweetAnimation.setAnimation("data_sweet_style_list.json")
 
             if (itemView.sweetAnimation.tag != null) {
                 itemView.sweetAnimation.removeOnAttachStateChangeListener(itemView.sweetAnimation.tag as View.OnAttachStateChangeListener)
