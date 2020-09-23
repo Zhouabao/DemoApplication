@@ -128,22 +128,39 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-            <net.lucode.hackware.magicindicator.MagicIndicator
+
+            <com.flyco.tablayout.SlidingScaleTabLayout
                 android:id="@+id/titleIndex"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="38dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="7.5dp"
                 android:background="@color/colorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tl_iconVisible="false"
+                app:tl_indicator_color="@color/colorOrange"
+                app:tl_indicator_corner_radius="2dp"
+                app:tl_indicator_gravity="BOTTOM"
+                app:tl_indicator_height="4dp"
+                app:tl_indicator_margin_top="2dp"
+                app:tl_indicator_style="NORMAL"
+                app:tl_indicator_width="16dp"
+                app:tl_openTextDmg="true"
+                app:tl_tab_padding="7.5dp"
+                app:tl_tab_space_equal="false"
+                app:tl_textBold="SELECT"
+                app:tl_textSelectColor="#333333"
+                app:tl_textSelectSize="24sp"
+                app:tl_textUnSelectColor="#191919"
+                app:tl_textUnSelectSize="16sp" />
 
             <ImageView
                 android:id="@+id/sweetHeartNew"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="170dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="11dp"
                 android:src="@drawable/icon_new_white"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"

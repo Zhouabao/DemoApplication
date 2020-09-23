@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,14 +12,24 @@
     <include layout="@layout/layout_actionbar" />
 
 
-    <net.lucode.hackware.magicindicator.MagicIndicator
+    <com.flyco.tablayout.SlidingScaleTabLayout
         android:id="@+id/tabMyVisit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/colorWhite" />
+        android:background="@color/colorWhite"
+        app:tl_indicator_color="@color/colorOrange"
+        app:tl_indicator_corner_radius="2dp"
+        app:tl_indicator_height="4dp"
+        app:tl_indicator_width="25dp"
+        app:tl_tab_space_equal="true"
+        app:tl_textBold="SELECT"
+        app:tl_textSelectColor="#333333"
+        app:tl_textSelectSize="18sp"
+        app:tl_textUnSelectColor="#191919"
+        app:tl_textUnSelectSize="16sp" />
 
     <View
         android:id="@+id/viewVisit"

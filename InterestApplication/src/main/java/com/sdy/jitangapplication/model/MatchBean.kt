@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import com.flyco.tablayout.listener.CustomTabEntity
+import com.sdy.jitangapplication.R
 import java.io.Serializable
 
 /**
@@ -8,6 +10,20 @@ import java.io.Serializable
  *    desc   :
  *    version: 1.0
  */
+
+data class TabEntity(val title: String) : CustomTabEntity {
+    override fun getTabUnselectedIcon(): Int {
+        return R.drawable.icon_logo
+    }
+
+    override fun getTabSelectedIcon(): Int {
+        return R.drawable.icon_logo
+    }
+
+    override fun getTabTitle(): String {
+        return title
+    }
+}
 
 /**
  * 匹配用户
@@ -120,11 +136,11 @@ data class NearBean(
 
 
 data class SweetProgressBean(
-    val now_money: String="0",
-    val normal_money: String="0",
+    val now_money: String = "0",
+    val normal_money: String = "0",
     val gender: Int = 0,
     val assets_audit_state: Int = 0,
-    val img: String="",
+    val img: String = "",
     val female_mv_state: Int = 0
 )
 

@@ -247,4 +247,6 @@ dependencies {
     implementation  'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.22'
 
 
+
+
 }

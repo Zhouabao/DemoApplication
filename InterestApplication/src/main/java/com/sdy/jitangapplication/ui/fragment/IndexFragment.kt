@@ -1,14 +1,11 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,7 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
-import com.kotlin.base.ext.onClick
+import com.flyco.tablayout.listener.CustomTabEntity
+import com.flyco.tablayout.listener.OnTabSelectListener
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -25,6 +23,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.IndexTopBean
+import com.sdy.jitangapplication.model.TabEntity
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
@@ -34,16 +33,8 @@ import com.sdy.jitangapplication.ui.dialog.ChoicenessOpenPtVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_index.*
-import net.lucode.hackware.magicindicator.ViewPagerHelper
-import net.lucode.hackware.magicindicator.buildins.UIUtil
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -194,56 +185,14 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                     UserManager.saveShowSweetHeartNew(true)
                     sweetHeartNew.isVisible = false
                 }
-
             }
         })
 
-        initIndicator()
         vpIndex.currentItem = 0
+        titleIndex.setTitle(titles)
+        titleIndex.setViewPager(vpIndex)
     }
 
-    private fun initIndicator() {
-        val commonNavigator = CommonNavigator(activity!!)
-        commonNavigator.adapter = object : CommonNavigatorAdapter() {
-            override fun getCount(): Int {
-                return fragments.size
-            }
-
-            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                val simplePagerTitleView = CustomScaleTransitionPagerTitleView(context)
-                simplePagerTitleView.text = titles[index]
-                simplePagerTitleView.minScale = 0.66F
-                simplePagerTitleView.textSize = 24F
-                simplePagerTitleView.normalColor = Color.parseColor("#191919")
-                simplePagerTitleView.selectedColor = Color.parseColor("#FF333333")
-                simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
-                simplePagerTitleView.onClick {
-                    if (UserManager.touristMode && index == 1) {//游客模式不能查看附近的人
-                        TouristDialog(activity!!).show()
-                        vpIndex.currentItem = 0
-                    } else {
-                        vpIndex.currentItem = index
-                    }
-                }
-                return simplePagerTitleView
-            }
-
-            override fun getIndicator(context: Context): IPagerIndicator {
-                val indicator = LinePagerIndicator(context)
-                indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
-                indicator.lineWidth = UIUtil.dip2px(context, 16.0).toFloat()
-                indicator.setPadding(SizeUtils.dp2px(15F), 0, 0, 0)
-                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
-                indicator.startInterpolator = AccelerateInterpolator()
-                indicator.endInterpolator = DecelerateInterpolator(1.0f)
-                indicator.setColors(resources.getColor(R.color.colorOrange))
-                return indicator
-            }
-        }
-        titleIndex.navigator = commonNavigator
-        ViewPagerHelper.bind(titleIndex, vpIndex)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

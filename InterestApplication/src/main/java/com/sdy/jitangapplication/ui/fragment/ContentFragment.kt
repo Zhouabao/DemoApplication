@@ -32,16 +32,8 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.TouristDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
-import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_content.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_gender.view.*
-import net.lucode.hackware.magicindicator.ViewPagerHelper
-import net.lucode.hackware.magicindicator.buildins.UIUtil
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -224,47 +216,11 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
             }
 
         })
-        initIndicator()
+
+        rgSquare.setViewPager(squareVp,titles)
         squareVp.currentItem = 1
     }
 
-    private fun initIndicator() {
-        val commonNavigator = CommonNavigator(activity!!)
-        commonNavigator.adapter = object : CommonNavigatorAdapter() {
-            override fun getCount(): Int {
-                return mStack.size
-            }
-
-            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                val simplePagerTitleView = CustomScaleTransitionPagerTitleView(context)
-                simplePagerTitleView.text = titles[index]
-                simplePagerTitleView.minScale = 0.66F
-                simplePagerTitleView.textSize = 24F
-                simplePagerTitleView.normalColor = Color.parseColor("#191919")
-                simplePagerTitleView.selectedColor = Color.parseColor("#FF6318")
-                simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
-                simplePagerTitleView.onClick {
-                    squareVp.currentItem = index
-                    filterGenderBtn.isVisible = index != 2
-                }
-                return simplePagerTitleView
-            }
-
-            override fun getIndicator(context: Context): IPagerIndicator {
-                val indicator = LinePagerIndicator(context)
-                indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
-                indicator.lineWidth = UIUtil.dip2px(context, 16.0).toFloat()
-                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
-                indicator.startInterpolator = AccelerateInterpolator()
-                indicator.endInterpolator = DecelerateInterpolator(1.0f)
-                indicator.setColors(resources.getColor(R.color.colorOrange))
-                return indicator
-            }
-        }
-        rgSquare.navigator = commonNavigator
-        ViewPagerHelper.bind(rgSquare, squareVp)
-    }
 
 
     override fun onDestroy() {
