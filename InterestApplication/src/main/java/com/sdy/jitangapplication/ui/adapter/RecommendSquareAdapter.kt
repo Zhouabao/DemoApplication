@@ -86,7 +86,7 @@ class RecommendSquareAdapter :
                 }
             }
 
-            if (item.approve_type == 1 || item.approve_type == 2) {
+            if (item.approve_type == 1 || item.approve_type == 2 || item.approve_type == 5) {
                 helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
                 helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_man.json")
                 helper.itemView.squareSweetLogo.playAnimation()
@@ -224,7 +224,13 @@ class RecommendSquareAdapter :
                     SquareCommentDetailActivity.start(
                         mContext,
                         squareId = item.id,
-                        position = helper.layoutPosition - headerLayoutCount
+                        position = helper.layoutPosition - headerLayoutCount,
+                        type = if (item.approve_type != 0) {
+                            SquareCommentDetailActivity.TYPE_SWEET
+                        } else {
+                            SquareCommentDetailActivity.TYPE_SQUARE
+                        },
+                        gender = item.gender
                     )
 
                 }

@@ -158,7 +158,7 @@ class MultiListSquareAdapter(
                 params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
                 params.height = (params.width * (177 / 1035F)).toInt()
 
-                //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
+                //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5充值认证
                 if (item.approve_type == 1 || item.approve_type == 2) {
                     holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
                     holder.itemView.squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
@@ -211,7 +211,7 @@ class MultiListSquareAdapter(
 
             holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
             holder.itemView.squareUserVipIv1.isVisible =
-                (item.isplatinumvip || item.isdirectvip) && !item.issweet
+                (item.isplatinumvip || item.isdirectvip)
 
 
             if (item.isplatinumvip) {
@@ -233,8 +233,14 @@ class MultiListSquareAdapter(
                 } else
                     SquareCommentDetailActivity.start(
                         mContext!!,
-                        data[holder.layoutPosition - headerLayoutCount],
-                        position = holder.layoutPosition - headerLayoutCount
+                        item,
+                        position = holder.layoutPosition - headerLayoutCount, squareId = item.id,
+                        type = if (item.approve_type != 0) {
+                            SquareCommentDetailActivity.TYPE_SWEET
+                        } else {
+                            SquareCommentDetailActivity.TYPE_SQUARE
+                        },
+                        gender = item.gender
                     )
             }
             //更多弹窗
@@ -285,10 +291,9 @@ class MultiListSquareAdapter(
             }
 
 
-
             //标题跳转
             holder.itemView.squareTitleRv.isVisible =
-                !item.title_list.isNullOrEmpty() && !item.issweet
+                !item.title_list.isNullOrEmpty() && item.approve_type == 0
             val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
             manager.alignItems = AlignItems.STRETCH
             manager.justifyContent = JustifyContent.FLEX_START
@@ -655,7 +660,7 @@ class MultiListSquareAdapter(
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf<String,Any>(
+            val params = hashMapOf<String, Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to data[position].id!!
@@ -669,7 +674,7 @@ class MultiListSquareAdapter(
         moreActionDialog.collect.onClick {
 
             //发起收藏请求
-            val params = hashMapOf<String,Any>(
+            val params = hashMapOf<String, Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (data[position].iscollected == 0) {
@@ -692,7 +697,7 @@ class MultiListSquareAdapter(
             dialog.confirm.onClick {
                 dialog.dismiss()
                 //发起举报请求
-                val params = hashMapOf<String,Any>(
+                val params = hashMapOf<String, Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (data[position].iscollected == 0) {

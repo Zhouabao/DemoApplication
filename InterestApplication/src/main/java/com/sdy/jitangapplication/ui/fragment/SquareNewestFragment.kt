@@ -91,7 +91,7 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
 
     //请求广场的参数 TODO要更新tagid
     private val listParams by lazy {
-        hashMapOf(
+        hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "page" to page,
@@ -178,7 +178,14 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
                 SquareCommentDetailActivity.start(
                     activity!!,
                     adapter.data[position],
-                    position = position
+                    position = position,
+                    squareId = adapter.data[position].id,
+                    type = if (adapter.data[position].approve_type != 0) {
+                        SquareCommentDetailActivity.TYPE_SWEET
+                    } else {
+                        SquareCommentDetailActivity.TYPE_SQUARE
+                    },
+                    gender = adapter.data[position].gender
                 )
                 view.postDelayed({ view.isEnabled = true }, 1000L)
             }
@@ -349,7 +356,6 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
                 if (data!!.list != null && data!!.list!!.size > 0) {
                     adapter.isUseEmpty(false)
                     for (tempData in 0 until data!!.list!!.size) {
-                        data!!.list!![tempData].issweet = tempData % 3 == 1
                         data!!.list!![tempData].type = when {
                             !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
                             !data!!.list!![tempData].audio_json.isNullOrEmpty() -> {
