@@ -25,7 +25,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_visit.*
 import kotlinx.android.synthetic.main.item_today_visit_headview.view.*
-import org.jetbrains.anko.support.v4.startActivity
 
 /**
  *
@@ -40,7 +39,7 @@ class MyTodayVisitFragment(val todayCount: Int, var freeShow: Boolean = false) :
     //    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("freeShow", false)) }
     private val visitAdapter by lazy { MyTodayVisitAdater(freeShow) }
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String, Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
@@ -83,7 +82,7 @@ class MyTodayVisitFragment(val todayCount: Int, var freeShow: Boolean = false) :
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            CommonFunction.startToVip(activity!!)
+            CommonFunction.startToVip(activity!!, VipPowerActivity.SOURCE_VISITED_ME)
 
         }
 

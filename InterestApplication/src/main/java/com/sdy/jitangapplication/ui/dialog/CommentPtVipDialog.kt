@@ -46,7 +46,7 @@ class CommentPtVipDialog(
         setCanceledOnTouchOutside(true)
 
         openPtVipBtn.clickWithTrigger {
-            CommonFunction.startToVip(context1)
+            CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_COMMENT_PRIVACY)
         }
 
     }

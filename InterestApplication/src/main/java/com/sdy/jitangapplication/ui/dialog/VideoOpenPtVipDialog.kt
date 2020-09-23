@@ -20,12 +20,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.event.MatchByWishHelpEvent
-import com.sdy.jitangapplication.model.ChatUpBean
-import com.sdy.jitangapplication.model.VipPowerBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.dialog_video_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -51,7 +45,7 @@ class VideoOpenPtVipDialog(val context1: Context) :
 
     private fun initView() {
         openPtVipBtn.clickWithTrigger {
-            CommonFunction.startToVip(context1)
+            CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_VIDEO_INTRODUCE)
         }
     }
 

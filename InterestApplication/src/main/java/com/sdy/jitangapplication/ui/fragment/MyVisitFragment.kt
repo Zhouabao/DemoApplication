@@ -46,7 +46,7 @@ class MyVisitFragment(
     //    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("freeShow", false)) }
     private val visitAdapter by lazy { MyVisitAdater(freeShow) }
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
@@ -92,7 +92,7 @@ class MyVisitFragment(
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            CommonFunction.startToVip(activity!!)
+            CommonFunction.startToVip(activity!!,VipPowerActivity.SOURCE_VISITED_ME)
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

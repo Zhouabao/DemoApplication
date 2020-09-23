@@ -48,7 +48,7 @@ import org.greenrobot.eventbus.ThreadMode
 class ConfirmPayCandyDialog(
     val myContext: Context,
     val chargeBean: ChargeWayBean,
-    val payways: MutableList<PaywayBean>
+    val payways: MutableList<PaywayBean>, val source_type: Int = -1
 ) : Dialog(myContext, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,6 +124,9 @@ class ConfirmPayCandyDialog(
                 params["pay_id"] = payway.id
                 break
             }
+        }
+        if (source_type != -1) {
+            params["source_type"] = source_type
         }
         params["product_id"] = chargeBean.id
         RetrofitFactory.instance.create(Api::class.java)

@@ -29,6 +29,7 @@ import com.sdy.jitangapplication.model.CheckPublishDatingBean
 import com.sdy.jitangapplication.model.DatingBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_dating_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -72,7 +73,7 @@ class DatingOpenPtVipDialog(
                 openPtVipBtn.text = "成为黄金会员"
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
-                    CommonFunction.startToVip(context1)
+                    CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)
                 }
             }
             TYPE_DATING_APPLYFOR -> {
@@ -86,7 +87,7 @@ class DatingOpenPtVipDialog(
                         openPtVipBtn.text = "成为黄金会员"
                         applyForDatingBtn.isVisible = false
                         openPtVipBtn.clickWithTrigger {
-                            CommonFunction.startToVip(context1)
+                            CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)
                         }
                     } else {
                         //2.再判断有无次数
@@ -108,7 +109,10 @@ class DatingOpenPtVipDialog(
                                 datingContent.text = "用糖果证明活动诚意或许更好哦"
                                 openPtVipBtn.text = "成为黄金会员，更多免费机会"
                                 openPtVipBtn.clickWithTrigger {
-                                    CommonFunction.startToVip(context1)
+                                    CommonFunction.startToVip(
+                                        context1,
+                                        VipPowerActivity.SOURCE_FREE_DATING
+                                    )
                                 }
                                 applyForDatingBtn.clickWithTrigger {
                                     datingApply()
@@ -141,7 +145,7 @@ class DatingOpenPtVipDialog(
                 openPtVipBtn.text = "成为黄金会员"
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
-                    CommonFunction.startToVip(context1)
+                    CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)
                 }
             }
         }

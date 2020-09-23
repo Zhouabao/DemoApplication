@@ -20,6 +20,7 @@ import com.sdy.jitangapplication.event.SetRoamingLocationEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
 import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
@@ -109,12 +110,6 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             currentLocation.text = "当前位置"
         }
 
-        switchOnLine.isVisible = UserManager.isUserVip()
-        switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
-        btnGoVip1.isVisible = !UserManager.isUserVip()
-//  SPUtils.getInstance(Constants.SPNAME).remove("online_type")
-//        SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
-
         if (UserManager.isUserVerify() == 1) {
             btnVerify.visibility = View.GONE
             switchShowVerify.visibility = View.VISIBLE
@@ -145,14 +140,6 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
 
-        btnGoVip.onClick {
-            CommonFunction.startToVip(context1)
-
-        }
-        btnGoVip1.onClick {
-            CommonFunction.startToVip(context1)
-
-        }
         btnVerify.onClick {
             if (UserManager.isUserVerify() == 2) {
                 CommonFunction.toast("认证正在审核中，请耐心等待哦~")
@@ -216,12 +203,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             } else {
                 SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
             }
-//            if (switchSameCity.isChecked) {
-//                sp.put("local_only", 2)
-//                sp.put("city_code", UserManager.getCityCode())
-//            } else {
-//                sp.put("local_only", 1)
-//            }
+
             if (UserManager.isUserVerify() == 1) {
             }
             if (switchShowVerify.isChecked) {
@@ -230,12 +212,6 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 sp.put("audit_only", 1)
             }
 
-            //添加在线用户筛选
-            if (switchOnLine.isChecked) {
-                sp.put("online_only", 2)
-            } else {
-                sp.put("online_only", 1)
-            }
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
             dismiss()

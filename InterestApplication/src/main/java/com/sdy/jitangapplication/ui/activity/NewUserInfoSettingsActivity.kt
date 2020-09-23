@@ -101,7 +101,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_user_info_settings)
         initView()
-        updateScoreLayout()
         mPresenter.personalInfo(params)
         setSwipeBackEnable(false)
     }
@@ -117,8 +116,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userBirth.setOnClickListener(this)
         userNickSign.setOnClickListener(this)
         saveBtn.setOnClickListener(this)
-        userScore80.setOnClickListener(this)
-        userScoreVip.setOnClickListener(this)
         userContact.setOnClickListener(this)
 
 
@@ -146,8 +143,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             )
         }
 
-        userScore80.setBackgroundResource(R.drawable.shape_rectangle_gray_white_11dp)
-        userScore80.tvAddScoreSmile.setTextColor(Color.parseColor("#FFD1D1DB"))
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.personalInfo(params)
@@ -272,28 +267,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             userBirth.text = "${data.birth}/${data.constellation}"
 
-            if (UserManager.isUserVip()) {
-                userScore80.isVisible = false
-                userScoreVip.isVisible = false
-                userScoreVip.setImageResource(R.drawable.icon_vip_score_highlight)
-                userScoreVip.isEnabled = false
-            } else {
-//                userScore80.isVisible = true
-//                userScoreVip.isVisible = true
-                userScore80.isVisible = false
-                userScoreVip.isVisible = false
-                userScoreVip.setImageResource(R.drawable.icon_vip_score)
-                userScoreVip.isEnabled = true
-            }
+
 
             //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
             //verifyNotice.isVisible = data.mv_faced == 3
             //updateVerifyState(data.mv_faced)
 
             if (data.score_rule != null) {
-                userScore80.tvAddScoreSmile.text =
-                    "${data.score_rule.base_total + data.score_rule.base}"
-                userScore80.ivAddScoreSmile.setImageResource(R.drawable.icon_xiaolian_gray)
                 var scorePhoto = 0
                 if (!data.photos_wall.isNullOrEmpty()) {
                     scorePhoto = (data.photos_wall.size - 1) * data.score_rule.photo
@@ -796,16 +776,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 ReminderScoreDialog(this, 20).show()
 //                userScore20.setImageResource(R.drawable.icon_twenty_click)
             }
-            R.id.userScoreVip -> {
-                CommonFunction.startToVip(this)
-            }
-            R.id.userScore80 -> {
-                ReminderScoreDialog(
-                    this,
-                    ((data?.score_rule?.base_total ?: 0) + (data?.score_rule?.base ?: 0))
-                ).show()
-//                userScore80.setImageResource(R.drawable.icon_eighty_click)
-            }
             R.id.userNickName -> {//昵称
                 startActivityForResult<NickNameActivity>(
                     102,
@@ -1052,25 +1022,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         translate.duration = 100
         translate.start()
 
-        if (!UserManager.isUserVip()) {
-//            userScore80.isVisible = (progress < 80)
-            userScore80.isVisible = false
-        }
-
-    }
-
-
-    /**
-     * 更新分数的位置
-     */
-    private fun updateScoreLayout() {
-        val layoutmanager80 = userScore80.layoutParams as RelativeLayout.LayoutParams
-        layoutmanager80.rightMargin =
-            (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
-//        userScore80.layoutParams = layoutmanager80
 
 
     }
+
 
 
     /**

@@ -257,7 +257,7 @@
         android:layout_marginBottom="30dp"
         android:drawableRight="@drawable/icon_vip"
         android:drawablePadding="5dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text="位置漫游"
         android:textColor="#ff191919"
         android:textSize="17sp"
@@ -333,103 +333,6 @@
         app:layout_constraintTop_toTopOf="@id/tv8" />
 
 
-    <TextView
-        android:id="@+id/tv3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:drawableRight="@drawable/icon_vip"
-        android:drawablePadding="5dp"
-        android:text="同城"
-        android:textColor="#ff191919"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/tv1"
-        app:layout_constraintTop_toBottomOf="@id/tv8" />
-
-
-    <TextView
-        android:id="@+id/tv4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:drawablePadding="5dp"
-        android:gravity="center_vertical"
-        android:text="开启后仅显示同城用户"
-        android:textColor="#ffc5c6c8"
-        android:textSize="13sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/tv1"
-        app:layout_constraintTop_toBottomOf="@id/tv3" />
-
-    <Switch
-        android:layout_width="44dp"
-        android:layout_height="26dp"
-        android:checked="false"
-        android:showText="false"
-        android:thumb="@drawable/switch_ios_thumb"
-        android:track="@drawable/selector_switch_ios_track"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/filterAge"
-        app:layout_constraintTop_toTopOf="@id/tv4" />
-
-
-    <TextView
-        android:id="@+id/btnGoVip"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:background="@color/colorWhite"
-        android:gravity="center_vertical"
-        android:text="开通会员"
-        android:textColor="@color/colorOrange"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/filterAge"
-        app:layout_constraintTop_toTopOf="@id/tv4" />
-
-
-    <TextView
-        android:id="@+id/tvHigh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="30dp"
-        android:drawableRight="@drawable/icon_vip"
-        android:drawablePadding="5dp"
-        android:gravity="center_vertical"
-        android:text="仅显示在线用户"
-        android:textColor="#ff191919"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv1"
-        app:layout_constraintTop_toBottomOf="@id/tv4" />
-
-    <Switch
-        android:id="@+id/switchOnLine"
-        android:layout_width="44dp"
-        android:layout_height="26dp"
-        android:checked="false"
-        android:showText="false"
-        android:thumb="@drawable/switch_ios_thumb"
-        android:track="@drawable/selector_switch_ios_track"
-        app:layout_constraintEnd_toEndOf="@id/filterAge"
-        app:layout_constraintTop_toTopOf="@id/tvHigh" />
-
-
-    <TextView
-        android:id="@+id/btnGoVip1"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:background="@color/colorWhite"
-        android:gravity="center_vertical"
-        android:text="开通黄金会员"
-        android:textColor="@color/colorOrange"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/filterAge"
-        app:layout_constraintTop_toTopOf="@id/tvHigh" />
-
     <Button
         android:id="@+id/btnCompleteFilter"
         android:layout_width="0dp"
@@ -447,7 +350,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHigh" />
+        app:layout_constraintTop_toBottomOf="@+id/tv8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

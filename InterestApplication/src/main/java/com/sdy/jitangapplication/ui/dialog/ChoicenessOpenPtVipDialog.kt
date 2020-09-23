@@ -10,6 +10,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_choiceness_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -43,7 +44,7 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
             openPtVipBtn.text = "开通黄金会员"
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
-                CommonFunction.startToVip(context1)
+                CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_MORE_EXPODE)
             }
         } else {
             choicenessTitle.text = "成为精选用户"

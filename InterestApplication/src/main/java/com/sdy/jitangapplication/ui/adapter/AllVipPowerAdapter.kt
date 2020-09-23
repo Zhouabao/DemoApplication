@@ -23,68 +23,7 @@ class AllVipPowerAdapter :
     BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout.item_power_pt_vip) {
     var threshold_btn: Boolean = false //门槛开关
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
-        val itemview = helper.itemView
         setPriceData(helper, data)
-//        val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
-//        val chargeManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-//        itemview.vipPriceRv.layoutManager = chargeManager
-//        itemview.vipPriceRv.adapter = chargePriceAdapter
-//        chargePriceAdapter.setNewData(data.list)
-//        chargePriceAdapter.setOnItemClickListener { _, view, position ->
-//            for (data in chargePriceAdapter.data) {
-//                data.is_promote = data == chargePriceAdapter.data[position]
-//            }
-//            itemview.openVipBtn.text = "¥${if (chargePriceAdapter.data[position].type == 1) {
-//                BigDecimal(chargePriceAdapter.data[position].original_price).setScale(
-//                    0,
-//                    BigDecimal.ROUND_HALF_UP
-//                )
-//            } else {
-//                BigDecimal(chargePriceAdapter.data[position].discount_price).setScale(
-//                    0,
-//                    BigDecimal.ROUND_HALF_UP
-//                )
-//            }} 获取${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-//                "黄金"
-//            } else {
-//                "钻石"
-//            }}会员"
-//            chargePriceAdapter.notifyDataSetChanged()
-//            notifyDataSetChanged()
-//        }
-//
-//
-//        itemview.openVipBtn.clickWithTrigger {
-//            var position: ChargeWayBean? = null
-//            for (data in chargePriceAdapter.data) {
-//                if (data.is_promote) {
-//                    position = data
-//                    break
-//                }
-//            }
-//            if (position != null)
-//                ConfirmPayCandyDialog(mContext, position, data.payway).show()
-//        }
-//
-//
-//        val vipPowerAdapter = VipPowerAdapter(data.type)
-//        val manager = GridLayoutManager(mContext!!, 2, RecyclerView.VERTICAL, false)
-//        itemview.vipPowerRv.layoutManager = manager
-//        itemview.vipPowerRv.adapter = vipPowerAdapter
-//        vipPowerAdapter.setNewData(data.icon_list)
-//
-//        when (data.type) {
-//            VipPowerBean.TYPE_PT_VIP -> {
-//                itemview.openVipBtn.setBackgroundResource(R.drawable.gradient_pt_vip_24dp)
-//                itemview.vipLogo.setImageResource(R.drawable.icon_logo_pt_vip)
-//            }
-//            VipPowerBean.TYPE_GOLD_VIP -> {
-//                itemview.vipLogo.setImageResource(R.drawable.icon_logo_gold_vip)
-//                itemview.openVipBtn.setBackgroundResource(R.drawable.gradient_light_orange_24dp)
-//
-//            }
-//        }
-
     }
 
 
@@ -111,10 +50,10 @@ class AllVipPowerAdapter :
         } else {
             "获取"
         }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-            "黄金"
+            "黄金会员"
         } else {
-            "钻石"
-        }}会员"
+            "至尊直联卡"
+        }}"
         val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
         val chargeManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         helper.itemView.vipPriceRv.layoutManager = chargeManager
@@ -139,10 +78,10 @@ class AllVipPowerAdapter :
             } else {
                 "获取"
             }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-                "黄金"
+                "黄金会员"
             } else {
-                "钻石"
-            }}会员"
+                "至尊直联卡"
+            }}"
             chargePriceAdapter.notifyDataSetChanged()
         }
 

@@ -31,6 +31,7 @@ import com.sdy.jitangapplication.model.UnlockBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_chat_up_open_pt_vip.*
 import org.greenrobot.eventbus.EventBus
@@ -197,7 +198,7 @@ class ChatUpOpenPtVipDialog(
                 } else {
                     //成为黄金会员
                     openPtVipBtn.clickWithTrigger {
-                        CommonFunction.startToVip(context1)
+                        CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_FREE_CHAT)
                         dismiss()
                     }
                     if (chatUpBean.ishoney) {
@@ -260,7 +261,7 @@ class ChatUpOpenPtVipDialog(
                     chatupUnlockChat.isVisible = false
                     openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
-                        CommonFunction.startToVip(context1)
+                        CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCK_WECHAT)
                         dismiss()
                     }
 
@@ -292,10 +293,10 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.clickWithTrigger {
                             unlockContact()
                         }
-                        openPtVipBtn.text = "成为钻石会员，免费解锁联系方式"
+                        openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            CommonFunction.startToVip(context1, 1)
+                            CommonFunction.startToVip(context1, 1,VipPowerActivity.SOURCE_LOCK_WECHAT)
                         }
                     }
                 }
@@ -308,7 +309,7 @@ class ChatUpOpenPtVipDialog(
                 chatupContent.text = "位置随时变更，提前跟其他地方的人打个招呼"
                 openPtVipBtn.text = "获取黄金会员，开启位置漫游"
                 openPtVipBtn.clickWithTrigger {
-                    CommonFunction.startToVip(context1)
+                    CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCATION_ROAMING)
                     dismiss()
                 }
             }

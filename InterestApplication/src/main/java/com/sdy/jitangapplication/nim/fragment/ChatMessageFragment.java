@@ -563,13 +563,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             nimBean.setUnlock_popup_str("");
         }
 
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && UserManager.INSTANCE.getGender() == 2 && !isSendChargePtVip
-                && !messageListPanel.getItems().isEmpty() && messageListPanel.getItems()
-                        .get(messageListPanel.getItems().size() - 1).getDirect() == MsgDirectionEnum.In) {
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && UserManager.INSTANCE.getGender() == 2
+                && !nimBean.getPrivate_chat_state() && !isSendChargePtVip && !messageListPanel.getItems().isEmpty()
+                && messageListPanel.getItems().get(messageListPanel.getItems().size() - 1)
+                        .getDirect() == MsgDirectionEnum.In) {
             ArrayList<SendTipBean> tips = new ArrayList<>();
             tips.add(new SendTipBean("消息太多？你可以设置私聊权限仅黄金会员过滤消息", true,
                     SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
             CommonFunction.INSTANCE.sendTips(sessionId, tips);
+            isSendChargePtVip = true;
+        } else {
             isSendChargePtVip = true;
         }
 

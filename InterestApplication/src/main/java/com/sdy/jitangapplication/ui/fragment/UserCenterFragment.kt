@@ -364,7 +364,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             //会员权益
             R.id.isVipPowerBtn -> {
                 //无门槛 非会员 开通会员(灰色)
-                startActivity<VipPowerActivity>("type" to VipPowerBean.TYPE_GOLD_VIP)
+                VipPowerActivity.start(activity!!,VipPowerActivity.SOURCE_SUPER_VIP_LOGO)
             }
             //我的兴趣
             R.id.publishCl -> {

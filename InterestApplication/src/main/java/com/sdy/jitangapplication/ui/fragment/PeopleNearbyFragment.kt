@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
+import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.ui.adapter.PeopleNearBigCardAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleNearSmallListAdapter
 import com.sdy.jitangapplication.ui.dialog.InviteFriendDialog
@@ -205,7 +206,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
                     verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
                     verifyNowBtn1.clickWithTrigger {
-                        CommonFunction.startToVip(activity!!)
+                        CommonFunction.startToVip(activity!!,VipPowerActivity.SOURCE_BIG_CHARGE)
                     }
                 }
 

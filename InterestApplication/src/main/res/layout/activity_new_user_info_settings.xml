@@ -378,26 +378,6 @@
                     android:textStyle="bold" />
 
 
-                <include
-                    android:id="@+id/userScore80"
-                    layout="@layout/layout_add_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="22dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="90dp"
-                    android:src="@drawable/icon_eighty_unclick"
-                    android:visibility="gone" />
-
-
-                <ImageView
-                    android:id="@+id/userScoreVip"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/icon_vip_score" />
 
 
                 <TextView

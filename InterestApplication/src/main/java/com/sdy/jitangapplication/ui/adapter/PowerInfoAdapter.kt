@@ -69,7 +69,7 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
             }
 
             VipPowerBean.TYPE_PT_VIP -> {
-                itemview.vipPowerNickname.text = "钻石会员"
+                itemview.vipPowerNickname.text = "至尊直联卡"
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_vip_10dp)
                 itemview.vipOutTime.setTextColor(Color.parseColor("#FF5E6473"))
                 itemview.vipPowerNickname.setTextColor(Color.parseColor("#FF5E6473"))
