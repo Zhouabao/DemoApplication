@@ -51,6 +51,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.event.ShowSendGiftEvent;
 import com.sdy.jitangapplication.nim.adapter.ChatEmojAdapter;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
@@ -1006,7 +1007,13 @@ public class ChatInputPanel implements IAudioRecordCallback {
 
         // 初始化底部面板
         initBottomActionPanel(view, actions.subList(0, event.getCount()), event.getCount());
+        actionPanelBottomLayoutHasSetup = true;
+    }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showSendGiftEvent(ShowSendGiftEvent event) {
+        // 初始化底部面板
         PopupWindow popupWindow = new PopupWindow(container.activity);
         View view1 = LayoutInflater.from(view.getContext()).inflate(R.layout.popupwindow_sweet_gift, null, false);
         ImageView giftIcon = view1.findViewById(R.id.giftIcon);
@@ -1023,8 +1030,6 @@ public class ChatInputPanel implements IAudioRecordCallback {
         popupWindow.setOutsideTouchable(true);
         popupWindow.setOnDismissListener(() -> view1.clearAnimation());
         popupWindow.showAtLocation(view, Gravity.BOTTOM | Gravity.RIGHT, SizeUtils.dp2px(12F), SizeUtils.dp2px(50F));
-        // popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM | Gravity.RIGHT);
-        actionPanelBottomLayoutHasSetup = true;
     }
 
 }

@@ -18,6 +18,8 @@ class NimHeadEvent(val nimBean: NimBean, val showChatLeftTimes: Boolean)
  */
 class EnablePicEvent(val count: Int)
 
+class ShowSendGiftEvent(val unlock:Boolean)
+
 
 /**
  * 星标好友事件

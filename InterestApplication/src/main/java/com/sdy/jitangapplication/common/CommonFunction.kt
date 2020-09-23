@@ -505,7 +505,7 @@ object CommonFunction {
     /**
      * 支付会员
      */
-    fun startToVip(context: Context, position: Int = 0, source_type: Int = -1) {
+    fun startToVip(context: Context, source_type: Int = -1, position: Int = 0) {
         VipPowerActivity.start(context, source_type, position)
     }
 

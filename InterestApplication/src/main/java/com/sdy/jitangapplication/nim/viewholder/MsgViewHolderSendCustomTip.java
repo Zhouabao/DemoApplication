@@ -103,7 +103,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                         @Override
                         public void onClick(@NonNull View widget) {
-                            CommonFunction.INSTANCE.startToVip(context,0, VipPowerActivity.SOURCE_FREE_CHAT);
+                            CommonFunction.INSTANCE.startToVip(context, VipPowerActivity.SOURCE_FREE_CHAT,0);
                         }
                     }).setForegroundColor(Color.parseColor("#FF6796FA")).append("可提升消息回复")
                     .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());

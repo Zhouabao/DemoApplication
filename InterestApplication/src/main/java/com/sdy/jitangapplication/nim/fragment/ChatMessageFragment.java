@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.event.HideContactLlEvent;
 import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.event.ShowSendGiftEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
@@ -504,6 +505,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     private boolean isSendChargePtVip = false; // 是否发送过此条tip
     private boolean isDirectIn = false; // 是否存在回复消息
+    private boolean showSendGift = false;// 显示过发送礼物
 
     private void setTargetInfoData() {
         UserManager.INSTANCE.setShowCandyMessage(nimBean.getChat_expend_amount() > 0);
@@ -596,7 +598,12 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
             if (nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2 && nimBean.getTarget_ishoney()) {
                 EventBus.getDefault().post(new EnablePicEvent(5));
+                if (nimBean.is_unlock_contact() && !showSendGift) {
+                    EventBus.getDefault().post(new ShowSendGiftEvent(true));
+                    showSendGift = true;
+                }
             }
+
         }
 
     }

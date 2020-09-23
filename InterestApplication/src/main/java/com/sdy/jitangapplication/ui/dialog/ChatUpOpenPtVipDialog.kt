@@ -296,7 +296,7 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            CommonFunction.startToVip(context1, 1,VipPowerActivity.SOURCE_LOCK_WECHAT)
+                            CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCK_WECHAT,1)
                         }
                     }
                 }
@@ -309,7 +309,7 @@ class ChatUpOpenPtVipDialog(
                 chatupContent.text = "位置随时变更，提前跟其他地方的人打个招呼"
                 openPtVipBtn.text = "获取黄金会员，开启位置漫游"
                 openPtVipBtn.clickWithTrigger {
-                    CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCATION_ROAMING)
+                    CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCATION_ROAMING,0)
                     dismiss()
                 }
             }
