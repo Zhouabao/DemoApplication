@@ -200,16 +200,14 @@ class ChatUpOpenPtVipDialog(
                         CommonFunction.startToVip(context1)
                         dismiss()
                     }
-
-                    if (chatUpBean.private_chat_btn) {
+                    if (chatUpBean.ishoney) {
                         //TODO 1.对方用户是甜心圈用户
                         chatupAvator.setImageResource(R.drawable.icon_sweet_chat_privacy)
                         chatupTitle.text = "当前会员等级无法与她联系"
                         chatupContent.text = "因避免甜心圈用户被骚扰\n普通会员不能直接与甜心圈用户建立联系"
                         chatupUnlockChat.isVisible = false
                         openPtVipBtn.text = "升级黄金会员，立即与她取得联系"
-
-
+                    } else if (chatUpBean.private_chat_btn) {
                         //2.对方用户是普通用户
                         chatupTitle.text = "她设置了等级权限"
                         chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"

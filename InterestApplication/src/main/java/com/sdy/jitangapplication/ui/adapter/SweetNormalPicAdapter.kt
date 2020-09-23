@@ -44,7 +44,7 @@ class SweetNormalPicAdapter :
             mContext,
             item,
             helper.itemView as ImageView,
-            SizeUtils.dp2px(15F)
+            SizeUtils.dp2px(10F)
         )
 
 

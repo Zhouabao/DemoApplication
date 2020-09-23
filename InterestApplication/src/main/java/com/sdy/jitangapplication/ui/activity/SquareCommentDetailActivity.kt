@@ -103,7 +103,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private var page = 1
 
-    private val commentParams = hashMapOf<String,Any>(
+    private val commentParams = hashMapOf<String, Any>(
         "token" to UserManager.getToken(),
         "accid" to UserManager.getAccid(),
         "square_id" to "",
@@ -167,6 +167,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     private fun initData() {
+        if (type == TYPE_SWEET && squareBean!!.accid==UserManager.getAccid()) {
+            hotT1.text = "我的认证资料"
+        }
 
         when {
             squareBean!!.type == 1 -> {
@@ -885,7 +888,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 onBackPressed()
             }
             R.id.squareDianzanAni -> {
-                val params = hashMapOf<String,Any>(
+                val params = hashMapOf<String, Any>(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "type" to if (squareBean!!.isliked == 1) {
@@ -964,7 +967,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf<String,Any>(
+            val params = hashMapOf<String, Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to squareBean!!.id!!
@@ -977,7 +980,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         moreActionDialog.collect.onClick {
             //发起收藏请求
-            val params = hashMapOf<String,Any>(
+            val params = hashMapOf<String, Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (squareBean!!.iscollected == 0) {
@@ -1001,7 +1004,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             dialog.confirm.onClick {
                 dialog.dismiss()
                 //发起举报请求
-                val params = hashMapOf<String,Any>(
+                val params = hashMapOf<String, Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (squareBean!!.iscollected == 0) {

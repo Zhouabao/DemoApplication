@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.SetRoamingLocationEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
+import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
@@ -130,17 +131,17 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
         currentLocation.clickWithTrigger {
-//            if (UserManager.isUserVip()) {
-            context1.startActivity<RoamingLocationActivity>()
-//            } else {
-//            ChatUpOpenPtVipDialog(
-//                context1,
-//                "",
-//                ChatUpOpenPtVipDialog.TYPE_ROAMING,
-//                ChatUpBean()
-//            ).show()
-//            dismiss()
-//            }
+            if (UserManager.isUserVip()) {
+                context1.startActivity<RoamingLocationActivity>()
+            } else {
+                ChatUpOpenPtVipDialog(
+                    context1,
+                    "",
+                    ChatUpOpenPtVipDialog.TYPE_ROAMING,
+                    ChatUpBean()
+                ).show()
+                dismiss()
+            }
         }
 
 
@@ -221,12 +222,13 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 //            } else {
 //                sp.put("local_only", 1)
 //            }
-            if (UserManager.isUserVerify() == 1){}
-                if (switchShowVerify.isChecked) {
-                    sp.put("audit_only", 2)
-                } else {
-                    sp.put("audit_only", 1)
-                }
+            if (UserManager.isUserVerify() == 1) {
+            }
+            if (switchShowVerify.isChecked) {
+                sp.put("audit_only", 2)
+            } else {
+                sp.put("audit_only", 1)
+            }
 
             //添加在线用户筛选
             if (switchOnLine.isChecked) {
