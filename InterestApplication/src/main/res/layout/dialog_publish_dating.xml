@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@id/accountDangerTitle" />
 
         <TextView
-            android:id="@+id/accountDangerBtn"
+            android:id="@+id/publishDatingBtn"
             android:layout_width="232dp"
             android:layout_height="40dp"
             android:layout_gravity="center"

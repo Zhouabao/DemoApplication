@@ -124,7 +124,8 @@ data class NearBean(
     var is_full: Boolean = false,//兴趣是否完整
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var today_find_pull: Boolean = false,
-    var today_pull_share: Boolean = false,
+    var today_pull_share: Boolean = true,
+    var today_pull_dating: Boolean = true,
     var has_face_url: Boolean = false,  //是否进行过人脸验证，true验证过 false未验证
     val complete_percent: Int,//（我的资料完整度）
     val complete_percent_normal: Int,//（标准完整度新的）

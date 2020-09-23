@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import kotlinx.android.synthetic.main.dialog_publish_dating.*
 
 /**
@@ -29,6 +30,11 @@ class PublishDatingDialog(val context1: Context) : Dialog(context1, R.style.MyDi
             dismiss()
         }
 
+        publishDatingBtn.clickWithTrigger {
+            CommonFunction.checkPublishDating(context1)
+            dismiss()
+        }
+
     }
 
     override fun dismiss() {
@@ -46,7 +52,6 @@ class PublishDatingDialog(val context1: Context) : Dialog(context1, R.style.MyDi
         window?.attributes = params
 
     }
-
 
 
 }
