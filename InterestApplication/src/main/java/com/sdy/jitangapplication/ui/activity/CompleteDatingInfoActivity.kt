@@ -452,7 +452,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
             R.id.startRecordBtn -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
-                        Manifest.permission.RECORD_AUDIO
+                        *PermissionConstants.getPermissions(PermissionConstants.MICROPHONE)
                     )
                 ) {
                     PermissionUtils.permission(PermissionConstants.MICROPHONE)

@@ -143,10 +143,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             data.moveToFirst()
             if (count > 0) {
                 do {
-                    val imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0])) ?: ""
+                    val imagePath =
+                        data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0])) ?: ""
                     val size = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1])) / 1024L
                     val id = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]))
-                    val displayName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3])) ?: ""
+                    val displayName =
+                        data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3])) ?: ""
                     val width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]))
                     val height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]))
                     allPhotoAdapter.addData(
@@ -190,11 +192,15 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             //申请权限
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
                 1
             )
         } else {
-            LoaderManager.getInstance(this@PublishActivity).initLoader(0, null, this@PublishActivity)
+            LoaderManager.getInstance(this@PublishActivity)
+                .initLoader(0, null, this@PublishActivity)
             //获取所有的视频封面
             allVideoThumbAdapter.setNewData(getAllVideoInfos(this@PublishActivity))
             allVideoThumbAdapter.data.add(0, MediaBean(-1, MediaBean.TYPE.VIDEO))
@@ -203,13 +209,18 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         initData()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
             if (grantResults.isNotEmpty()) {
                 for (i in 0 until grantResults.size) {
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        LoaderManager.getInstance(this@PublishActivity).initLoader(0, null, this@PublishActivity)
+                        LoaderManager.getInstance(this@PublishActivity)
+                            .initLoader(0, null, this@PublishActivity)
                         //获取所有的视频封面
                         allVideoThumbAdapter.setNewData(getAllVideoInfos(this@PublishActivity))
                         allVideoThumbAdapter.data.add(0, MediaBean(-1, MediaBean.TYPE.VIDEO))
@@ -235,7 +246,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 
         //从广场标题引导进入发布，默认选中兴趣
         if (!intent.getStringExtra("title").isNullOrEmpty()) {
-            choosedTitleAdapter.addData(LabelQualityBean(intent.getStringExtra("title"), isfuse = true))
+            choosedTitleAdapter.addData(
+                LabelQualityBean(
+                    intent.getStringExtra("title"),
+                    isfuse = true
+                )
+            )
             choosedTitleAdapter.notifyDataSetChanged()
             titleState.setImageResource(R.drawable.icon_topic_blue)
             chooseTitle.isVisible = false
@@ -259,7 +275,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 .setConfirmText("是")
                 .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                     override fun onClick(dialog: Dialog) {
-                        publishContent.setText(SPUtils.getInstance(Constants.SPNAME).getString("draft", ""))
+                        publishContent.setText(
+                            SPUtils.getInstance(Constants.SPNAME).getString("draft", "")
+                        )
                         publishContent.setSelection(publishContent.length())
                         SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
                         dialog.cancel()
@@ -347,7 +365,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                     emojRv.isVisible = false
                 }
                 1 -> {//语音
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(PermissionConstants.MICROPHONE)
+                        )
+                    ) {
                         PermissionUtils.permission(PermissionConstants.MICROPHONE)
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
@@ -592,7 +613,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
-                    allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
+                    allPhotoAdapter.data[position].ischecked =
+                        !(allPhotoAdapter.data[position].ischecked)
                     if (!allPhotoAdapter.data[position].ischecked) {
                         for (photo in pickedPhotos) {
                             if (photo.id == allPhotoAdapter.data[position].id) {
@@ -619,7 +641,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(PermissionConstants.CAMERA))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(PermissionConstants.CAMERA)
+                        )
+                    )
                         PermissionUtils.permission(PermissionConstants.CAMERA)
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
@@ -667,7 +692,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         return@setOnItemChildClickListener
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(PermissionConstants.CAMERA))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(PermissionConstants.CAMERA)
+                        )
+                    )
                         PermissionUtils.permission(PermissionConstants.CAMERA)
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
@@ -835,6 +863,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     /**************** * 初始化录音控件 录音时间在5S~3M之间********************/
     private var mIsRecorder = false
     private var mIsPreview = false
+
     //是否显示顶部预览
     private var isTopPreview = false
     private var countTimeThread: CountDownTimer? = null
@@ -842,6 +871,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     private lateinit var mMediaRecorderHelper: MediaRecorderHelper
     private var totalSecond = 0
     private var currentActionState = ACTION_NORMAL
+
     //判断是否是第一次点击上部分预览界面的播放按钮
     private var click = false
 
@@ -911,14 +941,16 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             currentActionState = ACTION_PLAYING
             //开启预览倒计时
             if (isTopPreview) {
-                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), audioTime)
+                mPreviewTimeThread =
+                    UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), audioTime)
                 audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
                 voicePlayView.playAnimation()
             } else {
                 //预览播放录音
                 recordTv.text = "播放中.."
                 recordProgress.update(0, 100)
-                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), recordTime)
+                mPreviewTimeThread =
+                    UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), recordTime)
                 startRecordBtn.setImageResource(R.drawable.icon_record_pause)
             }
             mPreviewTimeThread?.start()
@@ -1224,9 +1256,15 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         Log.e("dml", "this video size < 0 $filePath")
                         size = File(filePath).length() / 1024
                     }
-                    val displayName = cursor.getString(cursor.getColumnIndex(Video.Media.DISPLAY_NAME))
+                    val displayName =
+                        cursor.getString(cursor.getColumnIndex(Video.Media.DISPLAY_NAME))
                     //提前生成缩略图，再获取：http://stackoverflow.com/questions/27903264/how-to-get-the-video-thumbnail-path-and-not-the-bitmap
-                    Video.Thumbnails.getThumbnail(contentResolver, id.toLong(), Video.Thumbnails.MICRO_KIND, null)
+                    Video.Thumbnails.getThumbnail(
+                        contentResolver,
+                        id.toLong(),
+                        Video.Thumbnails.MICRO_KIND,
+                        null
+                    )
                     val projection = arrayOf(
                         Video.Thumbnails._ID,
                         Video.Thumbnails.DATA,
@@ -1244,7 +1282,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                     var width = 0
                     var height = 0
                     while (thumCursor!!.moveToNext()) {
-                        thumbPath = thumCursor.getString(thumCursor.getColumnIndex(Video.Thumbnails.DATA))
+                        thumbPath =
+                            thumCursor.getString(thumCursor.getColumnIndex(Video.Thumbnails.DATA))
                         width = cursor.getInt(cursor.getColumnIndex(Video.Thumbnails.WIDTH))
                         height = cursor.getInt(cursor.getColumnIndex(Video.Thumbnails.HEIGHT))
                     }
@@ -1261,7 +1300,16 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         //pickedPhotoAdapter.data.add(0,MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true))
                         allVideoThumbAdapter.data.add(
                             1,
-                            MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
+                            MediaBean(
+                                id,
+                                MediaBean.TYPE.VIDEO,
+                                filePath,
+                                displayName,
+                                thumbPath,
+                                duration,
+                                size,
+                                true
+                            )
                         )
                         videoCheckIndex = 1
                         pickedPhotoAdapter.notifyDataSetChanged()
@@ -1282,7 +1330,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
                     positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
                     locationCity.text =
-                        (positionItem!!.cityName ?: "") + if (!positionItem!!.cityName.isNullOrEmpty()) {
+                        (positionItem!!.cityName
+                            ?: "") + if (!positionItem!!.cityName.isNullOrEmpty()) {
                             "·"
                         } else {
                             ""
@@ -1334,21 +1383,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         for (i in 0 until checkTags.size) {
             checkIds.add(checkTags[i].id)
         }
-        val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-            0
-        } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-            3
-        } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
-            1
-        } else {
-            2
-        }
+        val type =
+            if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                0
+            } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                3
+            } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
+                1
+            } else {
+                2
+            }
 
         val titles = mutableListOf<String>()
         for (data in choosedTitleAdapter.data) {
             titles.add(data.content)
         }
-        val param = hashMapOf<String,Any>(
+        val param = hashMapOf<String, Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",
@@ -1406,9 +1456,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             )
             //TODO上传音频
             val audioQnPath =
-                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                    "accid"
-                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                    .getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                     16
                 )}"
             mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
@@ -1473,9 +1524,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             )
             //TODO上传视频
             val videoQnPath =
-                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                    "accid"
-                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                    .getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                     16
                 )}"
             mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
@@ -1489,6 +1541,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 
     //msg.what  0代表是文本，就上传文本    1：代表上传多个图片     2代表上传视频  3代表上传录音文件成功
     private var uploadCount = 0
+
     /**
      * 设置发布的参数
      */
@@ -1503,21 +1556,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         for (i in 0 until checkTags.size) {
             checkIds.add(checkTags[i].id)
         }
-        val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-            0
-        } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-            3
-        } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
-            1
-        } else {
-            2
-        }
+        val type =
+            if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                0
+            } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                3
+            } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
+                1
+            } else {
+                2
+            }
 
         val titles = mutableListOf<String>()
         for (data in choosedTitleAdapter.data) {
             titles.add(data.content)
         }
-        val param = hashMapOf<String,Any>(
+        val param = hashMapOf<String, Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",
@@ -1571,13 +1625,20 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     private fun uploadPictures() {
         //上传图片
         val imagePath =
-            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                "accid"
-            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME)
+                .getString(
+                    "accid"
+                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
             )}"
         Log.d("uploadPictures", "${imagePath}")
-        mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
+        mPresenter.uploadFile(
+            pickedPhotos.size,
+            uploadCount + 1,
+            pickedPhotos[uploadCount].filePath,
+            imagePath,
+            1
+        )
     }
 
 
@@ -1642,7 +1703,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 
         if (success) {
             if (intent.getIntExtra("from", 1) == 2) {
-                EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = UploadEvent.FROM_USERCENTER))
+                EventBus.getDefault()
+                    .postSticky(UploadEvent(1, 1, 1.0, from = UploadEvent.FROM_USERCENTER))
             }
             if (!this.isFinishing)
                 finish()

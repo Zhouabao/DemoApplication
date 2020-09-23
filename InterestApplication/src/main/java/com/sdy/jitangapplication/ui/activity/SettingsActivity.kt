@@ -193,7 +193,12 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                     mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken())
                 } else {
                     // 请求接口看是否已经屏蔽过通讯录
-                    if (!PermissionUtils.isGranted(PermissionConstants.CONTACTS)) {
+                    if (!PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(
+                                PermissionConstants.CONTACTS
+                            )
+                        )
+                    ) {
                         PermissionUtils.permission(PermissionConstants.CONTACTS)
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
@@ -305,8 +310,10 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
             this.settingsBean = settingsBean
-            SPUtils.getInstance(Constants.SPNAME).put("switchDianzan", settingsBean?.notify_square_like_state ?: true)
-            SPUtils.getInstance(Constants.SPNAME).put("switchComment", settingsBean?.notify_square_comment_state ?: true)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("switchDianzan", settingsBean?.notify_square_like_state ?: true)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("switchComment", settingsBean?.notify_square_comment_state ?: true)
 
 
             stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT

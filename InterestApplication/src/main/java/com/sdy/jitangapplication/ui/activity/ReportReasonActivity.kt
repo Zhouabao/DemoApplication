@@ -35,7 +35,8 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 /**
  * 举报理由页面
  */
-class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportResonView, View.OnClickListener {
+class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportResonView,
+    View.OnClickListener {
     private val loading by lazy { LoadingDialog(this) }
     private val reportResonAdapter by lazy { ReportResonAdapter() }
     private val reportParams: HashMap<String, Any> by lazy {
@@ -114,13 +115,21 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
         reportPicAdapter.setOnItemClickListener { _, view, position ->
             if (reportPicAdapter.data[position] == "") {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
-                            !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                    (!PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.CAMERA
+                        )
+                    ) ||
+                            !PermissionUtils.isGranted(
+                                *PermissionConstants.getPermissions(
+                                    PermissionConstants.STORAGE
+                                )
+                            ))
                 ) {
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                                if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {
@@ -223,7 +232,10 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
     override fun uploadImgResult(success: Boolean, imageName: String, uploadedNum: Int) {
         if (success) {
             photosNameArray.add(imageName)
-            if ((uploadedNum + 1) == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains("")) {
+            if ((uploadedNum + 1) == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains(
+                        ""
+                    )
+                ) {
                     1
                 } else {
                     0
@@ -268,7 +280,11 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                             "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}"
-                        mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
+                        mPresenter.uploadProfile(
+                            reportPicAdapter.data[photosNum],
+                            imageName,
+                            photosNum
+                        )
                     }
                 } else {
                     mPresenter.reportUser(reportParams, photosNameArray)

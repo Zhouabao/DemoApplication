@@ -165,13 +165,13 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             //上传照片
             publishImage -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
-                            !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                    (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.CAMERA)) ||
+                            !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
                 ) {
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                                if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {

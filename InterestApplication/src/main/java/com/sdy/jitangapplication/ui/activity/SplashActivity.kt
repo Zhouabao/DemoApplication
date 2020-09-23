@@ -65,9 +65,7 @@ class SplashActivity : BaseActivity() {
                             } else {
                                 //请求phone_state权限
                                 PermissionUtils.permission(
-                                    *PermissionConstants.getPermissions(
-                                        PermissionConstants.LOCATION
-                                    )
+                                    PermissionConstants.LOCATION
                                 )
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {

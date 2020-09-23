@@ -13,7 +13,6 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -35,12 +34,12 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_login_help_reason.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.startActivity
 
 /**
  * 问题反馈填写界面
  */
-class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), LoginHelpResonView, View.OnClickListener {
+class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), LoginHelpResonView,
+    View.OnClickListener {
     private val loading by lazy { LoadingDialog(this) }
 
     private val reportResonAdapter by lazy { ReportResonAdapter() }
@@ -83,13 +82,21 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
         reportPicAdapter.setOnItemClickListener { _, view, position ->
             if (reportPicAdapter.data[position] == "") {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
-                            !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                    (!PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.CAMERA
+                        )
+                    ) ||
+                            !PermissionUtils.isGranted(
+                                *PermissionConstants.getPermissions(
+                                    PermissionConstants.STORAGE
+                                )
+                            ))
                 ) {
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                                if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {
@@ -179,7 +186,9 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
 
     fun checkConfirm() {
         helpConfirm.isEnabled =
-            !helpContent.text.trim().toString().isNullOrEmpty() && RegexUtils.isMobileSimple(helpPhone.text)
+            !helpContent.text.trim().toString().isNullOrEmpty() && RegexUtils.isMobileSimple(
+                helpPhone.text
+            )
     }
 
 
@@ -221,14 +230,21 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     override fun uploadImgResult(success: Boolean, imageName: String, uploadedNum: Int) {
         if (success) {
             photosNameArray.add(imageName)
-            if ((uploadedNum + 1) == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains("")) {
+            if ((uploadedNum + 1) == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains(
+                        ""
+                    )
+                ) {
                     1
                 } else {
                     0
                 })
             ) {
                 loading.dismiss()
-                mPresenter.feedback(helpContent.text.toString(), helpPhone.text.toString(), photosNameArray)
+                mPresenter.feedback(
+                    helpContent.text.toString(),
+                    helpPhone.text.toString(),
+                    photosNameArray
+                )
             } else {
                 photosNum++
                 if (reportPicAdapter.data[photosNum] != "") {
@@ -236,7 +252,12 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                         "${Constants.FILE_NAME_INDEX}${Constants.FEEDBACK}${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
                         )}"
-                    mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum, qnToken)
+                    mPresenter.uploadProfile(
+                        reportPicAdapter.data[photosNum],
+                        imageName,
+                        photosNum,
+                        qnToken
+                    )
                 }
             }
         }
@@ -265,10 +286,19 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                             "${Constants.FILE_NAME_INDEX}${Constants.FEEDBACK}${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}"
-                        mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum, qnToken)
+                        mPresenter.uploadProfile(
+                            reportPicAdapter.data[photosNum],
+                            imageName,
+                            photosNum,
+                            qnToken
+                        )
                     }
                 } else {
-                    mPresenter.feedback(helpContent.text.toString(), helpPhone.text.toString(), photosNameArray)
+                    mPresenter.feedback(
+                        helpContent.text.toString(),
+                        helpPhone.text.toString(),
+                        photosNameArray
+                    )
                 }
             }
         }

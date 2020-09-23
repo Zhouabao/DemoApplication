@@ -166,13 +166,13 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         mCloseView.isVisible = type != TYPE_LIVE_CAPTURE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
-                    !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+            (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.CAMERA)) ||
+                    !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
         ) {
             PermissionUtils.permission(PermissionConstants.CAMERA)
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
-                        if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                        if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
                         }
                         PermissionUtils.permission(PermissionConstants.STORAGE)
                             .callback(object : PermissionUtils.SimpleCallback {

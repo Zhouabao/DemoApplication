@@ -513,12 +513,12 @@ public class ChatInputPanel implements IAudioRecordCallback {
     // 切换成音频，收起键盘，按钮切换成键盘
     private void switchToAudioLayout() {
         // 获取权限后录语音
-        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE)
-                || !PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+        if (!PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.MICROPHONE))
+                || !PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
             PermissionUtils.permission(PermissionConstants.MICROPHONE).callback(new PermissionUtils.SimpleCallback() {
                 @Override
                 public void onGranted() {
-                    if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                    if (!PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
                         PermissionUtils.permission(PermissionConstants.STORAGE)
                                 .callback(new PermissionUtils.SimpleCallback() {
                                     @Override
