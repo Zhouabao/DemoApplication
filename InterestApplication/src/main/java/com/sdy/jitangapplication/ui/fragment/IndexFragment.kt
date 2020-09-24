@@ -89,7 +89,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         initFragments()
 
         changeStyleBtn.clickWithTrigger {
-            //todo 改变列表的样式
             styleList = !styleList
             changeListStyle(styleList)
             EventBus.getDefault().post(ChangeListStyleEvent())
@@ -126,10 +125,8 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         UserManager.saveStyleList(styleList)
         if (styleList) {
             changeStyleBtn.setImageResource(R.drawable.icon_style_card)
-            //TODO 设置为列表样式
         } else {
             changeStyleBtn.setImageResource(R.drawable.icon_style_list)
-            //TODO 设置为卡片样式
         }
     }
 
@@ -207,7 +204,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     /**
      * 刷新顶部推荐数据
-     *  //todo 发送通知 上传视频成功 或者充值黄金会员，更新首页
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {

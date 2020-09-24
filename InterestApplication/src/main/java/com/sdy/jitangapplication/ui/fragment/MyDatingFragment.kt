@@ -74,7 +74,6 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
         datingSquareAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_my_square)
         datingSquareAdapter.emptyView.emptyMySquareTip.text = "您还没有发布过活动\n快发布你的第一次活动吧"
         datingSquareAdapter.emptyView.emptyPublishBtn.onClick {
-            //todo 发布约会
             CommonFunction.checkPublishDating(activity!!)
         }
 
@@ -105,7 +104,6 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
         headDating.publishImg.setImageResource(R.drawable.icon_update_dating)
         headDating.publishBtn.text = "更新活动"
         headDating.publishCl.onClick {
-            //todo 传递约会信息
             CommonFunction.checkPublishDating(activity!!)
         }
         return headDating

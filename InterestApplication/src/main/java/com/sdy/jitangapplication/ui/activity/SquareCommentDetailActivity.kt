@@ -243,7 +243,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareContent1.setContent("${squareBean!!.descr}")
         }
 
-        //todo sweet heart
         if (squareBean!!.approve_type != 0) {
             squareTagLl.isVisible = false
             squareLocationAndTime1Ll.isVisible = false
@@ -256,7 +255,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             params.height = (params.width * (177 / 1035F)).toInt()
 
             //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
-            if (squareBean!!.approve_type == 1 || squareBean!!.approve_type == 2) {
+            if (squareBean!!.approve_type == 1 || squareBean!!.approve_type == 2 || squareBean!!.approve_type == 5) {
                 squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
                 squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
                 squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
@@ -274,7 +273,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     1 -> {
                         R.drawable.icon_sweet_type_wealth
                     }
-
                     2 -> {
                         R.drawable.icon_sweet_type_car
                     }

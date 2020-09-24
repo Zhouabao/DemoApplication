@@ -30,7 +30,6 @@ public class HeadViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         if (mList.size() >= 3) {
             return Integer.MAX_VALUE;
         } else {
@@ -40,14 +39,12 @@ public class HeadViewPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View arg0, Object arg1) {
-        // TODO Auto-generated method stub
         return arg0 == arg1;
     }
 
     // 当缓存view的数量超过上限时，会销毁最先的一个
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        // TODO Auto-generated method stub
         // Log.d("remove", mImageViews[position].hashCode() + "");
 //        container.removeView((View) object);
         ((NoScrollViewPager)container).removeView(mList.get(position%mList.size()));
@@ -56,7 +53,6 @@ public class HeadViewPagerAdapter extends PagerAdapter {
     // 添加View
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        // TODO Auto-generated method stub
         int newPosition = position % mList.size();
         CircleImageView civ = mList.get(newPosition);
         container.addView(civ);

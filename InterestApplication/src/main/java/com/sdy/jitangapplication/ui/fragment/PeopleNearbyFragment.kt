@@ -285,7 +285,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 }
 
                 verifyNowBtn1.clickWithTrigger {
-                    //todo 先判断是否通过人脸认证 没通过就跳人脸认证，通过就跳视频录制
                     CommonFunction.startToFace(activity!!)
                 }
                 verifyNowBtn2.clickWithTrigger {

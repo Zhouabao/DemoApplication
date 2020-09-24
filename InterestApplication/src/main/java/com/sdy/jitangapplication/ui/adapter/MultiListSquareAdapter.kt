@@ -146,7 +146,6 @@ class MultiListSquareAdapter(
                 holder.itemView.squareContent1.visibility = View.VISIBLE
                 holder.itemView.squareContent1.setContent(item.descr)
             }
-            //todo sweet heart
             if (item.approve_type != 0) {
                 holder.itemView.squareTagLl.isVisible = false
                 holder.itemView.squareLocationAndTime1Ll.isVisible = false
@@ -159,7 +158,7 @@ class MultiListSquareAdapter(
                 params.height = (params.width * (177 / 1035F)).toInt()
 
                 //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5充值认证
-                if (item.approve_type == 1 || item.approve_type == 2) {
+                if (item.approve_type == 1 || item.approve_type == 2|| item.approve_type == 5) {
                     holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
                     holder.itemView.squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
                     holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
