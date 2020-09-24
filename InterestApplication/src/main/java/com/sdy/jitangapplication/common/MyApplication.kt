@@ -259,10 +259,9 @@ class MyApplication : BaseApplication() {
                             )
 
                     }
-                    106 -> {//门槛支付成功
-
-                    }
-                    300, 301 -> {//300通过甜心认证,301甜心认证不通过
+                    106, 300, 301 -> {
+                        //106门槛支付成功
+                        //300通过甜心认证,301甜心认证不通过
                         EventBus.getDefault().post(RefreshSweetEvent())
                     }
 

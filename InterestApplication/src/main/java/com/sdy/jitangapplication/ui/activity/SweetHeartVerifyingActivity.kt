@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
+import androidx.core.view.isInvisible
 import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -22,7 +23,9 @@ class SweetHeartVerifyingActivity : BaseActivity() {
     }
 
     private fun initView() {
+        setSwipeBackEnable(false)
         hotT1.text = "甜心圈认证"
+        btnBack.isInvisible = true
         btnBack.clickWithTrigger { clearActivity() }
         okBtn.clickWithTrigger {
             clearActivity()

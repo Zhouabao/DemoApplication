@@ -86,6 +86,7 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
         datingSquareAdapter.setNewData(datas)
         if (datingSquareAdapter.data.size == 0) {
             datingSquareAdapter.isUseEmpty(true)
+            refreshMyDating.finishLoadMoreWithNoMoreData()
         } else {
             datingSquareAdapter.removeAllHeaderView()
             datingSquareAdapter.addHeaderView(initHeadDating())
@@ -124,6 +125,7 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        refreshLayout.resetNoMoreData()
         mPresenter.myDating()
     }
 

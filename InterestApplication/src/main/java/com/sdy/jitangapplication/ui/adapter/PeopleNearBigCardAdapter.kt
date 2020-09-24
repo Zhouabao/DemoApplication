@@ -85,14 +85,14 @@ class PeopleNearBigCardAdapter :
                 }
             }
             if (item.gender == 1) {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_man_bg)
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_man_big_bg)
                 itemView.sweetHeartContent.setTextColor(Color.parseColor("#FFFFCD52"))
 
                 itemView.itemBgIvAnimation.imageAssetsFolder = "images_sweet_style_card_man"
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_man.json")
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_man_bg)
             } else {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_woman_bg)
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_woman_big_bg)
                 itemView.sweetHeartContent.setTextColor(Color.WHITE)
 
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_woman_bg)

@@ -208,6 +208,7 @@ class MySquareFragment : BaseMvpFragment<MySquarePresenter>(), MySquareView,
 
         if (adapter.data.size == 0) {
             adapter.isUseEmpty(true)
+            refreshMySquare.finishLoadMoreWithNoMoreData()
         } else {
             adapter.setHeaderView(initHeadPublish())
             adapter.isUseEmpty(false)

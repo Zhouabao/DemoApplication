@@ -366,6 +366,7 @@ object UserManager {
         }
         if (sp.getString("roaming_city").isNotEmpty()) {
             parmas["roaming_city"] = sp.getString("roaming_city").split(",")[1]
+            parmas["is_roaming"] = 2  //1不是漫游, 2 是漫游
         }
 //        if (sp.getInt("filter_gender", -1) != -1) {
 //            parmas["gender"] = sp.getInt("filter_gender", -1)

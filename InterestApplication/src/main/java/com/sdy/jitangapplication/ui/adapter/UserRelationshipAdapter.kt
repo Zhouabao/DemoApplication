@@ -7,7 +7,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.UserRelationshipBean
 import com.sdy.jitangapplication.ui.activity.DatingDetailActivity
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_sweet_heart_verify.view.*
 import kotlinx.android.synthetic.main.item_user_intention.view.*
 import kotlinx.android.synthetic.main.item_user_relationship.view.*
@@ -61,10 +60,10 @@ class UserRelationshipAdapter(val from_sweet_heart: Int = 0) :
                 ////0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
                 helper.itemView.userSweetContent.text = item.title
                 if (from_sweet_heart == 1 || from_sweet_heart == 2 || from_sweet_heart == 5) {
-                    helper.itemView.userSweetBg.setImageResource(R.drawable.icon_sweet_heart_verify_man_bg)
+                    helper.itemView.userSweetBg.setImageResource(R.drawable.icon_sweet_heart_verify_man_small_bg)
                     helper.itemView.userSweetContent.setTextColor(Color.parseColor("#ffffcd52"))
                 } else {
-                    helper.itemView.userSweetBg.setImageResource(R.drawable.icon_sweet_heart_verify_woman_bg)
+                    helper.itemView.userSweetBg.setImageResource(R.drawable.icon_sweet_heart_verify_woman_small_bg)
                     helper.itemView.userSweetContent.setTextColor(Color.WHITE)
                 }
             }

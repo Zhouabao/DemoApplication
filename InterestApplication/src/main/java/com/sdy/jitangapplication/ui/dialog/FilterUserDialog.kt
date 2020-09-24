@@ -125,9 +125,24 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             switchShowVerify.visibility = View.GONE
         }
 
+        if (UserManager.getGender() == 1) {
+            tvLocationRoming.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                context1.resources.getDrawable(R.drawable.icon_vip),
+                null
+            )
+        } else {
+            tvLocationRoming.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                null,
+                null
+            )
+        }
         currentLocation.clickWithTrigger {
             if (UserManager.isUserVip()) {
-                context1.startActivity<RoamingLocationActivity>()
+                RoamingLocationActivity.startToRoaming(context1,sp.getString("roaming_city"))
             } else {
                 ChatUpOpenPtVipDialog(
                     context1,

@@ -35,7 +35,7 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     View.OnClickListener,
     SweetHeartVerifyUploadView {
     companion object {
-        const val MAX_COUNT = 9
+        const val MAX_COUNT = 6
         const val REQUEST_SQUARE_PIC = 1002
     }
 
@@ -88,6 +88,7 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         rightBtn.isVisible = true
         rightBtn.text = "提交"
         rightBtn.setTextColor(resources.getColor(R.color.colorOrange))
+        rightBtn.isEnabled = false
 
         ClickUtils.applySingleDebouncing(
             arrayOf<View>(seeUploadNormalBtn, btnBack, normalCloseBtn, rightBtn),

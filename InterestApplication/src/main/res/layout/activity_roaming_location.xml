@@ -8,31 +8,24 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.activity.RoamingLocationActivity">
 
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginLeft="15dp"
-        android:src="@drawable/icon_return"
-        app:layout_constraintBottom_toBottomOf="@id/searchLocation"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/searchLocation" />
+
+    <include layout="@layout/layout_actionbar" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchLocation"
         android:layout_width="0dp"
         android:layout_height="34dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_rectangle_light_gray_24dp"
         android:focusable="false"
         android:focusableInTouchMode="true"
         android:gravity="center_vertical"
         app:iconifiedByDefault="false"
-        app:layout_constraintLeft_toRightOf="@id/btnBack"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle"
         app:queryBackground="@null"
         app:queryHint="搜索地点"
         app:showDividers="none"
@@ -40,24 +33,45 @@
 
 
     <TextView
+        android:id="@+id/roamingLocation"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:drawableLeft="@drawable/icon_location_airplane"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:text="当前漫游 阿尔山市"
+        android:textColor="@color/colorOrange"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/searchLocation"
+        app:layout_constraintRight_toRightOf="@id/searchLocation"
+        app:layout_constraintTop_toBottomOf="@id/searchLocation" />
+
+    <View
+        android:id="@+id/roamingDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#FFF6F6F6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roamingLocation" />
+
+    <TextView
         android:id="@+id/currentLocation"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="15dp"
+        android:layout_height="48dp"
         android:drawableLeft="@drawable/icon_location_roaming"
         android:drawablePadding="5dp"
-        android:text="当前定位 成都市"
+        android:gravity="center_vertical"
+        android:text="当前定位  "
         android:textColor="#ff191919"
         android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@id/btnBack"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchLocation" />
+        app:layout_constraintLeft_toLeftOf="@id/searchLocation"
+        app:layout_constraintRight_toRightOf="@id/searchLocation"
+        app:layout_constraintTop_toBottomOf="@id/roamingDivider" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="15dp"
         android:background="#FFF6F6F6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -67,7 +81,6 @@
         android:id="@+id/roamingLocationRv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

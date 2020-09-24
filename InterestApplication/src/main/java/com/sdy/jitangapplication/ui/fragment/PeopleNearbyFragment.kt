@@ -193,6 +193,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 verifyNowNum2.isVisible = false
                 sweetVerifyIconMan.isVisible = true
                 verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
+                verifyTitle2.text = "通过资产认证"
 
                 if (progressBean.now_money.toFloat() > progressBean.normal_money.toFloat()) {
                     verifyNowBtn1.setTextColor(Color.parseColor("#FF212225"))
@@ -206,7 +207,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
                     verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
                     verifyNowBtn1.clickWithTrigger {
-                        CommonFunction.startToVip(activity!!,VipPowerActivity.SOURCE_BIG_CHARGE)
+                        CommonFunction.startToVip(activity!!, VipPowerActivity.SOURCE_BIG_CHARGE)
                     }
                 }
 
@@ -216,6 +217,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFFFCD52"))
                         verifyNowBtn2.setBackgroundResource(R.drawable.shape_black_13dp)
                         verifyNowBtn2.text = "立即认证"
+                        verifyNowBtn2.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
@@ -237,6 +239,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 verifyNowNum1.isVisible = true
                 verifyNowNum2.isVisible = true
                 sweetVerifyIconMan.isVisible = false
+                verifyTitle1.text = "上传认证视频"
+                verifyTitle2.text = "认证职业或身材"
                 //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
                 //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
                 //now_money 	男性充值的钱
@@ -269,6 +273,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         verifyNowBtn2.setTextColor(Color.WHITE)
                         verifyNowBtn2.setBackgroundResource(R.drawable.shape_pink_13dp)
                         verifyNowBtn2.text = "立即认证"
+                        verifyNowBtn2.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
@@ -285,7 +290,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 }
 
                 verifyNowBtn1.clickWithTrigger {
-                    CommonFunction.startToFace(activity!!)
+                    CommonFunction.startToVideoIntroduce(activity!!)
                 }
                 verifyNowBtn2.clickWithTrigger {
                     startActivity<SweetHeartVerifyActivity>()
@@ -488,10 +493,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
+                refreshPeopleNearby.finishLoadMoreWithNoMoreData()
             }
 
             //根据是否是会员判断是否显示会员页面
-            EventBus.getDefault().post(UpdateSameCityVipEvent(nearBean.isvip))
+            showOpenVipCl(nearBean.isvip)
+//            EventBus.getDefault().post(UpdateSameCityVipEvent(nearBean.isvip))
 
         } else {
             refreshPeopleNearby.finishLoadMore(false)
@@ -559,7 +566,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSameCityVipEvent(event: UpdateSameCityVipEvent) {
         if (type == TYPE_SAMECITY)
-            showOpenVipCl(event.isVip)
+            refreshPeopleNearby.autoRefresh()
     }
 
 

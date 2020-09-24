@@ -73,7 +73,7 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
     var page = 1
     //请求广场的参数 TODO要更新tagid
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "type" to type,

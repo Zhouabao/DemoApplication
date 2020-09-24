@@ -91,7 +91,9 @@ class VipPowerActivity() :
         initVp2()
     }
 
-    private val powerPriceAdapter by lazy { AllVipPowerAdapter() }
+    private val powerPriceAdapter by lazy { AllVipPowerAdapter().apply {
+        source_type = this@VipPowerActivity.source_type
+    } }
     private val powerInfoAdapter by lazy { PowerInfoAdapter() }
 
     var lastPosition = false

@@ -1,10 +1,12 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
@@ -25,9 +27,11 @@ import com.sdy.jitangapplication.widgets.sortcontacts.Cn2Spell
 import com.sdy.jitangapplication.widgets.sortcontacts.PinnedHeaderDecoration
 import com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
 import kotlinx.android.synthetic.main.activity_roaming_location.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import org.json.JSONArray
 import java.util.*
 
@@ -36,10 +40,16 @@ import java.util.*
  */
 class RoamingLocationActivity : BaseActivity() {
 
+    private val roaming by lazy { intent.getStringExtra("roaming") }
+
     companion object {
         private const val MSG_LOAD_DATA = 0x0001
         private const val MSG_LOAD_SUCCESS = 0x0002
         private const val MSG_LOAD_FAILED = 0x0003
+
+        fun startToRoaming(context: Context, roaming: String) {
+            context.startActivity<RoamingLocationActivity>("roaming" to roaming)
+        }
     }
 
 
@@ -123,6 +133,7 @@ class RoamingLocationActivity : BaseActivity() {
     private fun initView() {
         EventBus.getDefault().register(this)
 
+        hotT1.text = "位置漫游"
         btnBack.clickWithTrigger {
             finish()
         }
@@ -142,6 +153,18 @@ class RoamingLocationActivity : BaseActivity() {
 
         currentLocation.clickWithTrigger {
             EventBus.getDefault().post(SetRoamingLocationEvent(CityBean()))
+            finish()
+        }
+
+        roamingLocation.clickWithTrigger {
+            EventBus.getDefault().post(
+                SetRoamingLocationEvent(
+                    CityBean(
+                        roaming.split(",")[1],
+                        roaming.split(",")[0]
+                    )
+                )
+            )
             finish()
         }
 
@@ -178,6 +201,16 @@ class RoamingLocationActivity : BaseActivity() {
             }
 
         })
+
+
+        if (roaming.isNotEmpty()) {
+            roamingDivider.isVisible = true
+            roamingLocation.isVisible = true
+            roamingLocation.text = "当前漫游 ${roaming}"
+        } else {
+            roamingDivider.isVisible = false
+            roamingLocation.isVisible = false
+        }
     }
 
 
@@ -209,5 +242,27 @@ class RoamingLocationActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateRoamingLocationEvent(event: UpdateRoamingLocationEvent) {
         currentLocation.text = "当前位置\t${UserManager.getCity()},${UserManager.getDistrict()}"
+        if (roaming.isNullOrEmpty()) {
+            currentLocation.setTextColor(resources.getColor(R.color.colorOrange))
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(
+                    R.drawable.icon_location_orange
+                ),
+                null,
+                null,
+                null
+            )
+        } else {
+            currentLocation.setTextColor(resources.getColor(R.color.colorBlack19))
+            currentLocation.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(
+                    R.drawable.icon_location_roaming
+                ),
+                null,
+                null,
+                null
+            )
+        }
+
     }
 }

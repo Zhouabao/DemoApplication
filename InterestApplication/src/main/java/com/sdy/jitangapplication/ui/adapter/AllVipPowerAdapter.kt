@@ -22,6 +22,7 @@ import java.math.BigDecimal
 class AllVipPowerAdapter :
     BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout.item_power_pt_vip) {
     var threshold_btn: Boolean = false //门槛开关
+    var source_type: Int =-1
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
         setPriceData(helper, data)
     }
@@ -95,7 +96,7 @@ class AllVipPowerAdapter :
                 }
             }
             if (position != null)
-                ConfirmPayCandyDialog(mContext, position, data.payway).show()
+                ConfirmPayCandyDialog(mContext, position, data.payway,source_type).show()
         }
 
 

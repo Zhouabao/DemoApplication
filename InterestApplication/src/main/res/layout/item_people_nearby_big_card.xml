@@ -126,17 +126,17 @@
 
     <TextView
         android:id="@+id/sweetHeartContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/icon_sweet_heart_verify_woman_bg"
+        android:layout_width="142dp"
+        android:layout_height="21dp"
+        android:background="@drawable/icon_sweet_heart_verify_woman_big_bg"
         android:gravity="center_vertical"
         android:paddingLeft="25dp"
         android:text="身材认证进入甜心圈"
         android:textColor="#ffffffff"
         android:textSize="12sp"
-        app:layout_goneMarginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/userRelationshipRv"
-        app:layout_constraintLeft_toLeftOf="@id/userOnline" />
+        app:layout_constraintLeft_toLeftOf="@id/userOnline"
+        app:layout_goneMarginBottom="10dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRelationshipRv"
@@ -181,7 +181,6 @@
     </LinearLayout>
 
 
-
     <ImageView
         android:id="@+id/itemBgIv"
         android:layout_width="0dp"
@@ -191,6 +190,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/itemBgIvAnimation"
         android:layout_width="0dp"

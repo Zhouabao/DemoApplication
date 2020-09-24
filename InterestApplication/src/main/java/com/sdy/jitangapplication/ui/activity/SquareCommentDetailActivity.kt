@@ -398,95 +398,90 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             } else {
                 "她"
             }}的认证资料"
-            refreshLayout.setEnableRefresh(false)
-            refreshLayout.setEnableLoadMore(false)
-            commentList.isVisible = false
-            showCommentLl.isVisible = false
         } else {
             hotT1.text = "动态详情"
-            refreshLayout.setOnRefreshListener(this)
-            refreshLayout.setOnLoadMoreListener(this)
+        }
+        refreshLayout.setOnRefreshListener(this)
+        refreshLayout.setOnLoadMoreListener(this)
 
-            commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            commentList.adapter = adapter
+        commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        commentList.adapter = adapter
 //        commentList.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL_LIST,SizeUtils.dp2px(15F),Color.WHITE))
-            adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
-            adapter.emptyView.allT2.isVisible = false
+        adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
+        adapter.emptyView.allT2.isVisible = false
 
 
-            adapter.setOnItemLongClickListener { adapter, view, position ->
-                showCommentDialog(position)
-                true
-            }
+        adapter.setOnItemLongClickListener { adapter, view, position ->
+            showCommentDialog(position)
+            true
+        }
 
-            adapter.setOnItemClickListener { _, view, position ->
-                reply = true
-                reply_id = adapter.data[position].id!!.toInt()
-                showCommentEt.isFocusable = true
-                showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
-                KeyboardUtils.showSoftInput(showCommentEt)
-            }
+        adapter.setOnItemClickListener { _, view, position ->
+            reply = true
+            reply_id = adapter.data[position].id!!.toInt()
+            showCommentEt.isFocusable = true
+            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+            KeyboardUtils.showSoftInput(showCommentEt)
+        }
 
 
-            adapter.setOnItemChildClickListener { _, view, position ->
-                when (view.id) {
-                    R.id.commentUser -> {
-                        if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
-                            MatchDetailActivity.start(
-                                this,
-                                adapter.data[position].member_accid ?: ""
-                            )
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.commentUser -> {
+                    if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
+                        MatchDetailActivity.start(
+                            this,
+                            adapter.data[position].member_accid ?: ""
+                        )
 //                    reply = true
 //                    reply_id = adapter.data[position].reply_id!!
 //                    showCommentEt.isFocusable = true
 //                    showCommentEt.hint = "『回复\t${adapter.data[position].replyed_nickname}：』"
 //                    KeyboardUtils.showSoftInput(showCommentEt)
-                    }
-                    R.id.llCommentDianzanBtn -> {
-                        mPresenter.getCommentLike(
-                            hashMapOf(
-                                "token" to UserManager.getToken(),
-                                "accid" to UserManager.getAccid(),
-                                "reply_id" to adapter.data[position].id!!,
-                                "type" to if (adapter.data[position].isliked == 0) {
-                                    1
-                                } else {
-                                    2
-                                }
-                            )
-                            , position
+                }
+                R.id.llCommentDianzanBtn -> {
+                    mPresenter.getCommentLike(
+                        hashMapOf(
+                            "token" to UserManager.getToken(),
+                            "accid" to UserManager.getAccid(),
+                            "reply_id" to adapter.data[position].id!!,
+                            "type" to if (adapter.data[position].isliked == 0) {
+                                1
+                            } else {
+                                2
+                            }
                         )
+                        , position
+                    )
 
-                    }
-                    R.id.commentReplyBtn -> {
-                        reply = true
-                        reply_id = adapter.data[position].id!!
-                        showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
-                        KeyboardUtils.showSoftInput(showCommentEt)
-                    }
+                }
+                R.id.commentReplyBtn -> {
+                    reply = true
+                    reply_id = adapter.data[position].id!!
+                    showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
+                    KeyboardUtils.showSoftInput(showCommentEt)
+                }
+            }
+        }
+
+        showCommentEt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(charSequence: Editable?) {
+                if (charSequence.toString().isNotEmpty()) {
+                    sendCommentBtn.isEnabled = true
+                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
+                } else {
+                    sendCommentBtn.isEnabled = false
+                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
                 }
             }
 
-            showCommentEt.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(charSequence: Editable?) {
-                    if (charSequence.toString().isNotEmpty()) {
-                        sendCommentBtn.isEnabled = true
-                        sendCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
-                    } else {
-                        sendCommentBtn.isEnabled = false
-                        sendCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
-                    }
-                }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                }
-            })
-        }
-
+            }
+        })
 
 
 
@@ -692,6 +687,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        refreshLayout.resetNoMoreData()
         page = 1
         adapter.data.clear()
         commentParams["page"] = page
@@ -770,6 +766,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
             }
             refreshLayout.finishLoadMore(true)
+        }
+        if (adapter.data.isNullOrEmpty() || adapter.data.size < Constants.PAGESIZE) {
+            refreshLayout.finishLoadMoreWithNoMoreData()
         }
     }
 
