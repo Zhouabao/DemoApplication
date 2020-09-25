@@ -35,10 +35,7 @@ import com.sdy.jitangapplication.camera_filter.listener.StartRecordingFilterCall
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
-import com.sdy.jitangapplication.event.FemaleVideoEvent
-import com.sdy.jitangapplication.event.TopCardEvent
-import com.sdy.jitangapplication.event.UpdateApproveEvent
-import com.sdy.jitangapplication.event.VideoTrimmerEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CopyMvBean
 import com.sdy.jitangapplication.model.VideoVerifyBannerBean
 import com.sdy.jitangapplication.nim.uikit.common.ToastHelper
@@ -541,6 +538,9 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                 //更新录制视频介绍
                 UserManager.my_mv_url = true
                 EventBus.getDefault().post(FemaleVideoEvent(2))
+
+                //更新甜心圈认证状态
+                EventBus.getDefault().post(RefreshSweetEvent())
             }
         }
 

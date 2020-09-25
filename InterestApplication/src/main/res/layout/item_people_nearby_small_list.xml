@@ -2,206 +2,185 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/userContentCl"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:background="@drawable/icon_bg_near_people_woman"
+    android:paddingBottom="17dp">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/userContentCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/icon_bg_near_people_woman"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userAvator"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/icon_default_avator"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userNameAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLength="6"
+        android:text="青青草地 21岁"
+        android:textColor="#ff191919"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/userAvator"
+        app:layout_constraintTop_toTopOf="@id/userAvator" />
+
+    <TextView
+        android:id="@+id/userAgeDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="男·天蝎座·216m"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/userNameAge"
+        app:layout_constraintTop_toBottomOf="@id/userNameAge" />
+    <TextView
+        android:id="@+id/userVerify"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/gradient_blue_11dp"
+        android:drawableLeft="@drawable/icon_gender_woman_detail"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="认证用户"
+        android:textColor="#ffffffff"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
+        app:layout_constraintLeft_toRightOf="@id/userNameAge"
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
+
+    <ImageView
+        android:id="@+id/userVip"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/icon_vip"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
+        app:layout_constraintLeft_toRightOf="@id/userVerify"
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
+
+    <ImageView
+        android:id="@+id/userContactBtn"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/icon_wechat_near_woman"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
+        app:layout_constraintLeft_toRightOf="@id/userVip"
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
+
+    <TextView
+        android:id="@+id/userOnline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="17dp"
+        android:gravity="center"
+        android:text="11小时前"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/userNameAge"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@id/userNameAge" />
 
+    <ImageView
+        android:id="@+id/userChatBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_hi_heartbeat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/userOnline"
+        app:layout_constraintTop_toTopOf="@id/intentionLl" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userAvator"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="17dp"
-            android:src="@drawable/icon_default_avator"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/userNameAge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:maxLength="6"
-            android:text="青青草地 21岁"
-            android:textColor="#ff191919"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toRightOf="@id/userAvator"
-            app:layout_constraintTop_toTopOf="@id/userAvator" />
-
-        <TextView
-            android:id="@+id/userAgeDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="男·天蝎座·216m"
-            android:textColor="#ffc5c6c8"
-            android:textSize="12sp"
-            app:layout_constraintLeft_toLeftOf="@id/userNameAge"
-            app:layout_constraintTop_toBottomOf="@id/userNameAge" />
-
-        <ImageView
-            android:id="@+id/userVip"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/icon_vip"
-            app:layout_constraintBottom_toBottomOf="@id/userNameAge"
-            app:layout_constraintLeft_toRightOf="@id/userNameAge"
-            app:layout_constraintTop_toTopOf="@id/userNameAge" />
-
-        <TextView
-            android:id="@+id/userVerify"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/gradient_blue_11dp"
-            android:drawableLeft="@drawable/icon_gender_woman_detail"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="认证用户"
-            android:textColor="#ffffffff"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/userNameAge"
-            app:layout_constraintLeft_toRightOf="@id/userContactBtn"
-            app:layout_constraintTop_toTopOf="@id/userNameAge" />
-
-        <ImageView
-            android:id="@+id/userContactBtn"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_marginLeft="5dp"
-            android:src="@drawable/icon_wechat_near_woman"
-            app:layout_constraintBottom_toBottomOf="@id/userNameAge"
-            app:layout_constraintLeft_toRightOf="@id/userVip"
-            app:layout_constraintTop_toTopOf="@id/userNameAge" />
-
-        <TextView
-            android:id="@+id/userOnline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="17dp"
-            android:gravity="center"
-            android:text="11小时前"
-            android:textColor="#ffc5c6c8"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/userNameAge"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/userNameAge" />
-
-        <ImageView
-            android:id="@+id/userChatBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_hi_heartbeat"
-            app:layout_constraintBottom_toBottomOf="@id/userRelationshipRv"
-            app:layout_constraintRight_toRightOf="@id/userOnline"
-            app:layout_constraintTop_toTopOf="@id/intentionLl" />
+    <LinearLayout
+        android:id="@+id/intentionLl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/userAvator"
+        app:layout_constraintTop_toBottomOf="@id/userAvator"
+        app:layout_goneMarginTop="0dp">
 
         <LinearLayout
-            android:id="@+id/intentionLl"
+            android:id="@+id/userIntention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/gradient_orange_11dp"
             android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@id/userAvator"
-            app:layout_constraintTop_toBottomOf="@id/userAvator">
+            android:visibility="visible">
 
-            <LinearLayout
-                android:id="@+id/userIntention"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/gradient_orange_11dp"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:src="@drawable/icon_today_want_heart" />
-
-                <TextView
-                    android:id="@+id/userIntentionContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="2dp"
-                    android:gravity="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    tools:text="运动" />
-            </LinearLayout>
-
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/icon_today_want_heart" />
 
             <TextView
-                android:id="@+id/relationshipTV1"
+                android:id="@+id/userIntentionContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/shape_rectangle_f4_14dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
                 android:gravity="center"
-                android:paddingLeft="7dp"
-                android:paddingTop="2dp"
-                android:paddingRight="7dp"
-                android:paddingBottom="2dp"
-                android:text="穿衣显瘦脱衣有肉"
-                android:textColor="#ff191919"
+                android:textColor="@color/colorWhite"
                 android:textSize="12sp"
-                android:visibility="visible" />
+                android:textStyle="bold"
+                tools:text="运动" />
         </LinearLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userRelationshipRv"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/relationshipTV1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="17dp"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/userAvator"
-            app:layout_constraintRight_toLeftOf="@id/userChatBtn"
-            app:layout_constraintTop_toBottomOf="@id/intentionLl" />
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_f4_14dp"
+            android:gravity="center"
+            android:paddingLeft="7dp"
+            android:paddingTop="2dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="2dp"
+            android:text="穿衣显瘦脱衣有肉"
+            android:textColor="#ff191919"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/sweetAnimation"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userRelationshipRv"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="false"
-        app:lottie_loop="true" />
+        app:layout_constraintLeft_toLeftOf="@id/userAvator"
+        app:layout_constraintRight_toLeftOf="@id/userChatBtn"
+        app:layout_constraintTop_toBottomOf="@id/intentionLl" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+

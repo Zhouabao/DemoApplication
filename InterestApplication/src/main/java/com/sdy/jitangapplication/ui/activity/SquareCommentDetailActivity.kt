@@ -382,6 +382,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 commentParams["square_id"] = "${squareBean!!.id}"
                 mPresenter.getCommentList(commentParams, true)
             } else {
+                commentParams["square_id"] = "${intent.getIntExtra("square_id", 0)}"
                 mPresenter.getSquareInfo(
                     hashMapOf(
                         "token" to UserManager.getToken(),
@@ -868,7 +869,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 )
             )
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
+        } else {
+            CommonFunction.toast(data.msg)
         }
+
     }
 
     override fun onReportCommentResult(data: BaseResp<Any?>, position: Int) {

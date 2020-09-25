@@ -66,6 +66,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:background="@drawable/shape_rectangle_light_orange_15dp"
         android:gravity="center"
         android:text="身材认证仅接受比基尼/私房写真\n

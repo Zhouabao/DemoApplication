@@ -78,9 +78,6 @@ class ChatUpOpenPtVipDialog(
 
 
     private fun initChatData() {
-        if (chatUpBean.avatar.isNotEmpty())
-            GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
-
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
         when (chatUpBean.contact_way) {
             1 -> {
@@ -178,6 +175,8 @@ class ChatUpOpenPtVipDialog(
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
                 chatupContact.isVisible = false
                 if (chatUpBean.isplatinum) {
+                    if (chatUpBean.avatar.isNotEmpty())
+                        GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                     chatupUnlockChat.isVisible = false
                     chatupTitle.text = "获得聊天机会"
                     openPtVipBtn.text = "成为黄金会员，免费更多聊天"
@@ -198,7 +197,7 @@ class ChatUpOpenPtVipDialog(
                 } else {
                     //成为黄金会员
                     openPtVipBtn.clickWithTrigger {
-                        CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_FREE_CHAT)
+                        CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_CHAT)
                         dismiss()
                     }
                     if (chatUpBean.ishoney) {
@@ -208,12 +207,16 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.isVisible = false
                         openPtVipBtn.text = "升级黄金会员，立即与她取得联系"
                     } else if (chatUpBean.private_chat_btn) {
+                        if (chatUpBean.avatar.isNotEmpty())
+                            GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                         //2.对方用户是普通用户
                         chatupTitle.text = "她设置了等级权限"
                         chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
                         chatupUnlockChat.isVisible = false
                         openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     } else {
+                        if (chatUpBean.avatar.isNotEmpty())
+                            GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                         openPtVipBtn.text = "成为黄金会员，免费更多聊天"
                         chatupTitle.text = "获得聊天机会"
                         chatupUnlockChat.isVisible = true
@@ -252,6 +255,8 @@ class ChatUpOpenPtVipDialog(
                  *      d.购买至尊直联卡，免费解锁联系方式
                  *
                  */
+                if (chatUpBean.avatar.isNotEmpty())
+                    GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                 chatupContact.isVisible = true
                 if (chatUpBean.private_chat_btn && !chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
@@ -260,7 +265,7 @@ class ChatUpOpenPtVipDialog(
                     chatupUnlockChat.isVisible = false
                     openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
                     openPtVipBtn.clickWithTrigger {
-                        CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCK_WECHAT)
+                        CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCK_WECHAT)
                         dismiss()
                     }
 
@@ -295,7 +300,11 @@ class ChatUpOpenPtVipDialog(
                         openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
-                            CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCK_WECHAT,1)
+                            CommonFunction.startToVip(
+                                context1,
+                                VipPowerActivity.SOURCE_LOCK_WECHAT,
+                                1
+                            )
                         }
                     }
                 }
@@ -308,7 +317,7 @@ class ChatUpOpenPtVipDialog(
                 chatupContent.text = "位置随时变更，提前跟其他地方的人打个招呼"
                 openPtVipBtn.text = "获取黄金会员，开启位置漫游"
                 openPtVipBtn.clickWithTrigger {
-                    CommonFunction.startToVip(context1,VipPowerActivity.SOURCE_LOCATION_ROAMING,0)
+                    CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCATION_ROAMING, 0)
                     dismiss()
                 }
             }

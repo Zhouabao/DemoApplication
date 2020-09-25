@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
@@ -20,13 +19,11 @@ import com.sdy.jitangapplication.event.SetRoamingLocationEvent
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
 import com.sdy.jitangapplication.model.ChatUpBean
 import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
-import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -141,8 +138,8 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             )
         }
         currentLocation.clickWithTrigger {
-            if (UserManager.isUserVip()) {
-                RoamingLocationActivity.startToRoaming(context1,sp.getString("roaming_city"))
+            if (UserManager.isUserVip() || UserManager.getGender() == 2) {
+                RoamingLocationActivity.startToRoaming(context1, sp.getString("roaming_city"))
             } else {
                 ChatUpOpenPtVipDialog(
                     context1,

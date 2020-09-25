@@ -64,7 +64,7 @@ data class SquareBean(
     var isgreeted: Boolean = true,//招呼是否仍然有效
     var member_id: Int? = null,
     var title_list: MutableList<TopicBean>? = mutableListOf(),
-    var approve_type: Int = 0,// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
+    var approve_type: Int = 0,// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5高额充值
     var issweet: Boolean = true//是否是甜心圈
 ) :
     Serializable, MultiItemEntity {

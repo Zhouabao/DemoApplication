@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.nim.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.SizeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nimlib.sdk.NIMClient;
@@ -37,7 +40,6 @@ import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.event.HideContactLlEvent;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.event.ShowSendGiftEvent;
 import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
@@ -110,7 +112,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private TextView leftChatTimes, gotoVerifyBtn, unlockContactBtn;
     private LinearLayout messageActivityBottomLayout, verifyLl, unlockContactLl;
     private FrameLayout unlockChatLl;
-    private ImageView contactIv, closeContactBtn;
+    private ImageView contactIv, closeContactBtn, giftIcon;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -132,6 +134,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         unlockContactBtn = rootView.findViewById(R.id.unlockContactBtn);
         contactIv = rootView.findViewById(R.id.contactIv);
         closeContactBtn = rootView.findViewById(R.id.closeContactBtn);
+        giftIcon = rootView.findViewById(R.id.giftIcon);
 
         // 去认证
         gotoVerifyBtn.setOnClickListener(v -> {
@@ -598,8 +601,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
             if (nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2 && nimBean.getTarget_ishoney()) {
                 EventBus.getDefault().post(new EnablePicEvent(5));
-                if (nimBean.is_unlock_contact() && !showSendGift) {
-                    EventBus.getDefault().post(new ShowSendGiftEvent(true));
+                if (!nimBean.getLockbtn() && !showSendGift) {
+                    showSendGiftEvent();
+                    // EventBus.getDefault().post(new ShowSendGiftEvent(true));
                     showSendGift = true;
                 }
             }
@@ -747,6 +751,25 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         // }
                     }
                 }).setOnCancelListener(dialog -> dialog.dismiss()).create().show();
+    }
+
+    public void showSendGiftEvent() {
+        // 初始化底部面板
+        giftIcon.setVisibility(View.VISIBLE);
+        ObjectAnimator trans = ObjectAnimator.ofFloat(giftIcon, "translationY", SizeUtils.dp2px(-5F),
+                SizeUtils.dp2px(0F), SizeUtils.dp2px(-5F));
+        trans.setDuration(800);
+        trans.setRepeatCount(-1);
+        trans.setInterpolator(new LinearInterpolator());
+        trans.start();
+        giftIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                giftIcon.clearAnimation();
+                giftIcon.setVisibility(View.GONE);
+            }
+        });
+
     }
 
 }

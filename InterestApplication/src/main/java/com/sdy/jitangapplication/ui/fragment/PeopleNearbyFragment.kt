@@ -137,9 +137,15 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 //        adapter.addHeaderView(initHeadView())
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
         adapter.isUseEmpty(false)
-        adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
-        adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
-        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+        if (type == TYPE_SWEET_HEART) {
+            adapter.emptyView.emptyFriendTip.text = "这里暂时还没有人~"
+            adapter.emptyView.emptyFriendTitle.isVisible = false
+            adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_sweet_heart)
+        } else {
+            adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
+            adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
+            adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+        }
         adapter.setHeaderAndEmpty(true)
 
         rvPeopleNearby.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -179,8 +185,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
      */
     private fun initSweetHeartView(isHoney: Boolean, progressBean: SweetProgressBean) {
         if (type == TYPE_SWEET_HEART && !isHoney) {
+
+
             statePeopleNearby.isVisible = false
             sweetHeartCl.isVisible = true
+
 
             //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
             //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
@@ -189,6 +198,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
             if (progressBean.gender == 1) {
                 sweetHeartTitle.gravity = Gravity.CENTER
+                sweetHeartTitle.text = "满足下列任意一个条件即可进入甜心圈"
                 verifyNowNum1.isVisible = false
                 verifyNowNum2.isVisible = false
                 sweetVerifyIconMan.isVisible = true
@@ -222,7 +232,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     2 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn2.text = "认证中"
+                        verifyNowBtn2.text = "审核中"
                         verifyNowBtn2.isEnabled = false
                     }
                     3 -> {
@@ -236,6 +246,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     startActivity<SweetHeartVerifyActivity>()
                 }
             } else {
+                sweetHeartTitle.text = "达成要求自动进入甜心圈"
                 verifyNowNum1.isVisible = true
                 verifyNowNum2.isVisible = true
                 sweetVerifyIconMan.isVisible = false
@@ -607,6 +618,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             params.remove("audit_only")
         if (params["roaming_city"] != null)
             params.remove("roaming_city")
+        if (params["is_roaming"] != null)
+            params.remove("is_roaming")
         if (params["online_type"] != null)
             params.remove("online_type")
 //        if (params["local_only"] != null)

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -29,7 +30,7 @@ class PeopleNearSmallListAdapter :
     BaseQuickAdapter<NearPersonBean, BaseViewHolder>(R.layout.item_people_nearby_small_list) {
     override fun convert(helper: BaseViewHolder, item: NearPersonBean) {
         val itemView = helper.itemView
-        val params = itemView.userContentCl.layoutParams as ConstraintLayout.LayoutParams
+        val params = itemView.userContentCl.layoutParams as RecyclerView.LayoutParams
         if (helper.layoutPosition == 0) {
             params.topMargin = SizeUtils.dp2px(8F)
         } else {
@@ -55,24 +56,6 @@ class PeopleNearSmallListAdapter :
                 itemView.userChatBtn.setImageResource(R.drawable.icon_chat_woman)
             }
 
-            itemView.sweetAnimation.setAnimation("data_sweet_style_list.json")
-
-            if (itemView.sweetAnimation.tag != null) {
-                itemView.sweetAnimation.removeOnAttachStateChangeListener(itemView.sweetAnimation.tag as View.OnAttachStateChangeListener)
-            }
-
-            val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
-                override fun onViewDetachedFromWindow(v: View?) {
-                    itemView.sweetAnimation.pauseAnimation()
-                }
-
-                override fun onViewAttachedToWindow(v: View?) {
-                    itemView.sweetAnimation.playAnimation()
-
-                }
-            }
-            itemView.sweetAnimation.addOnAttachStateChangeListener(onAttachStateChangeListener)
-            itemView.sweetAnimation.tag = onAttachStateChangeListener
         } else {
             itemView.userContentCl.setBackgroundResource(R.drawable.icon_bg_near_people_woman)
             itemView.userNameAge.setTextColor(Color.parseColor("#191919"))

@@ -11,7 +11,7 @@
     <include layout="@layout/layout_actionbar" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/uploadTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -32,7 +32,7 @@
         android:layout_marginRight="5dp"
         android:overScrollMode="never"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/uploadTitle" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -99,15 +99,15 @@
 
     <TextView
         android:id="@+id/tip"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="上传一张或多张图片、照片将对外展示"
         android:textColor="#ffc5c6c8"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@id/uploadTypeShowCl"
+        app:layout_constraintRight_toRightOf="@id/uploadTypeShowCl" />
 
     <LinearLayout
         android:id="@+id/normalIconLl"

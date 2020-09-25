@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -22,14 +21,13 @@ class SweetNormalPicAdapter :
     override fun convert(helper: BaseViewHolder, item: String) {
 
         val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
-        if (UserManager.getGender() ==2) {
-            params.width = SizeUtils.dp2px(300F)
-            params.height = params.width
-        } else {
-            params.width = SizeUtils.dp2px(300F)
-            params.height = params.width / 3 * 4
-
-        }
+//        if (UserManager.getGender() ==2) {
+//            params.width = SizeUtils.dp2px(300F)
+//            params.height = params.width
+//        } else {
+        params.width = SizeUtils.dp2px(300F)
+        params.height = params.width / 3 * 4
+//        }
         params.leftMargin = if (helper.layoutPosition == 0) {
             (ScreenUtils.getScreenWidth() - params.width) / 2
         } else {

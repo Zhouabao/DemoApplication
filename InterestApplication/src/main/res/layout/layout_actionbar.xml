@@ -32,7 +32,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="取消"
-        android:textColor="#FF9B9B9B"
+        android:textColor="@color/color_selector_confirm_btn"
         android:textSize="16sp"
         android:visibility="gone" />
 

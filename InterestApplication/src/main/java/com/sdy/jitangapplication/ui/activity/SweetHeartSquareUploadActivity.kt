@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -27,6 +28,7 @@ import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import kotlinx.android.synthetic.main.activity_sweet_heart_square_upload.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.textColorResource
 
 /**
  * 甜心圈对外展示动态
@@ -60,19 +62,28 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         when (type) {
             1 -> {
                 hotT1.text = "资产认证"
+                uploadTitle.text="听说你很有钱，她们想和你做朋友"
                 uploadType.text = "照片中资产大于200万"
+                tip.text="上传一张或多张图片，照片将对外展示"
             }
             2 -> {
                 hotT1.text = "豪车认证"
+                uploadTitle.text="听说你的车很漂亮，她们想和你做朋友"
                 uploadType.text = "豪车照片或人车合照"
+                tip.text="上传一张或多张图片，照片将对外展示"
+
             }
             3 -> {
                 hotT1.text = "身材认证"
+                uploadTitle.text="我咬了一口嘴巴，也太辣了吧"
                 uploadType.text = "游泳装或者私房写真照"
+                tip.text="照片将对外展示\n注意照片尺度过大或导致无法通过认证"
             }
             4 -> {
                 hotT1.text = "职业认证"
+                uploadTitle.text="听说你的职业很有趣，我和她们不一样"
                 uploadType.text = "职业为规定职业中的一种"
+                tip.text="上传一张或多张能证明你职业的图片，照片将对外展示"
             }
 
         }
@@ -87,7 +98,6 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         BarUtils.setStatusBarColor(this, Color.WHITE)
         rightBtn.isVisible = true
         rightBtn.text = "提交"
-        rightBtn.setTextColor(resources.getColor(R.color.colorOrange))
         rightBtn.isEnabled = false
 
         ClickUtils.applySingleDebouncing(

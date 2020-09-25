@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.nim.panel;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +12,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -27,7 +24,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -51,7 +47,6 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
-import com.sdy.jitangapplication.event.ShowSendGiftEvent;
 import com.sdy.jitangapplication.nim.adapter.ChatEmojAdapter;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
@@ -1010,26 +1005,5 @@ public class ChatInputPanel implements IAudioRecordCallback {
         actionPanelBottomLayoutHasSetup = true;
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void showSendGiftEvent(ShowSendGiftEvent event) {
-        // 初始化底部面板
-        PopupWindow popupWindow = new PopupWindow(container.activity);
-        View view1 = LayoutInflater.from(view.getContext()).inflate(R.layout.popupwindow_sweet_gift, null, false);
-        ImageView giftIcon = view1.findViewById(R.id.giftIcon);
-        view1.setOnClickListener(v -> popupWindow.dismiss());
-        ObjectAnimator trans = ObjectAnimator.ofFloat(giftIcon, "translationY", SizeUtils.dp2px(-5F), SizeUtils.dp2px(0F),
-                SizeUtils.dp2px(-5F));
-        trans.setDuration(800);
-        trans.setRepeatCount(-1);
-        trans.setInterpolator(new LinearInterpolator());
-        trans.start();
-
-        popupWindow.setContentView(view1);
-        popupWindow.setBackgroundDrawable(null);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setOnDismissListener(() -> view1.clearAnimation());
-        popupWindow.showAtLocation(view, Gravity.BOTTOM | Gravity.RIGHT, SizeUtils.dp2px(12F), SizeUtils.dp2px(50F));
-    }
 
 }

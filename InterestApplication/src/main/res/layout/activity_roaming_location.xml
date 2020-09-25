@@ -42,6 +42,7 @@
         android:text="当前漫游 阿尔山市"
         android:textColor="@color/colorOrange"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/searchLocation"
         app:layout_constraintRight_toRightOf="@id/searchLocation"
         app:layout_constraintTop_toBottomOf="@id/searchLocation" />
@@ -53,6 +54,7 @@
         android:background="#FFF6F6F6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/roamingLocation" />
 
     <TextView
@@ -70,6 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/roamingDivider" />
 
     <View
+        android:id="@+id/currentDivider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#FFF6F6F6"
@@ -84,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentLocation" />
+        app:layout_constraintTop_toBottomOf="@id/currentDivider" />
 
 
     <com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView

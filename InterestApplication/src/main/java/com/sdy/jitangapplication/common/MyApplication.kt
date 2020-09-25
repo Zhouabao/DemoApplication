@@ -217,6 +217,7 @@ class MyApplication : BaseApplication() {
                         //更新录制视频介绍
                         UserManager.my_mv_url = true
                         EventBus.getDefault().post(FemaleVideoEvent(1))
+                        EventBus.getDefault().post(RefreshSweetEvent())
                     }
                     //视频介绍审核不通过
                     93 -> {
@@ -228,6 +229,7 @@ class MyApplication : BaseApplication() {
                         //更新录制视频介绍
                         UserManager.my_mv_url = false
                         EventBus.getDefault().post(FemaleVideoEvent(0))
+                        EventBus.getDefault().post(RefreshSweetEvent())
                     }
 
                     //联系方式审核未通过

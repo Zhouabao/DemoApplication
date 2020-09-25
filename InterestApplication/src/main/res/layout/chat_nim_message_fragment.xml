@@ -147,8 +147,8 @@
         android:id="@+id/unlockChatLl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/messageActivityBottomLayout"
         app:layout_constraintTop_toTopOf="@+id/messageActivityBottomLayout">
 
@@ -164,6 +164,17 @@
             android:layout_gravity="center"
             android:src="@drawable/icon_unlock_chat" />
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/giftIcon"
+        android:layout_width="231dp"
+        android:layout_height="52dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/icon_guide_sweet_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/messageActivityBottomLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
