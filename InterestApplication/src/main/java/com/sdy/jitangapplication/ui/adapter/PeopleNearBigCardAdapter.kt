@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -41,10 +42,13 @@ class PeopleNearBigCardAdapter :
 
         val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
             override fun onViewDetachedFromWindow(v: View?) {
-                itemView.itemBgIvAnimation.pauseAnimation()
+                Log.d("onAttachState","onViewDetachedFromWindow=${helper.layoutPosition}")
+                itemView.itemBgIvAnimation.cancelAnimation()
             }
 
             override fun onViewAttachedToWindow(v: View?) {
+                Log.d("onAttachState","onViewAttachedToWindow=${helper.layoutPosition}")
+
                 itemView.itemBgIvAnimation.playAnimation()
 
             }

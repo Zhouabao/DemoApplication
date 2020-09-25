@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
-import com.flyco.tablayout.listener.CustomTabEntity
-import com.flyco.tablayout.listener.OnTabSelectListener
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -23,7 +21,6 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.IndexListBean
 import com.sdy.jitangapplication.model.IndexTopBean
-import com.sdy.jitangapplication.model.TabEntity
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
@@ -174,7 +171,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == 1 && UserManager.touristMode) {
+                if (position != 0 && UserManager.touristMode) {
                     TouristDialog(activity!!).show()
                     vpIndex.currentItem = 0
                 }

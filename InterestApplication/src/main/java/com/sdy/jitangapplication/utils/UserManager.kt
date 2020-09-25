@@ -664,7 +664,7 @@ object UserManager {
             data.userinfo.gender?.let { saveGender(it) }
             if (data?.extra_data?.want_steps != true) { //更多配对、更多关系、
                 context.startActivity<GetMoreMatchActivity>(
-                    "moreMatch" to MoreMatchBean(
+                    "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
                         data?.extra_data?.people_amount ?: 0
@@ -702,7 +702,7 @@ object UserManager {
                 context.startActivity<RegisterInfoActivity>()
             } else if (data?.extra_data?.want_steps != true) {
                 context.startActivity<GetMoreMatchActivity>(
-                    "moreMatch" to MoreMatchBean(
+                    "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
                         data?.extra_data?.people_amount ?: 0

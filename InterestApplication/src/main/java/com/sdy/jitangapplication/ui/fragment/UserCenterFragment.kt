@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.fragment
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -12,16 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
@@ -34,7 +29,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.UserInfoBean
-import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
@@ -162,7 +156,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         vpMySquareAndTag.adapter =
             MainPagerAdapter(childFragmentManager, mStack, titles)
         vpMySquareAndTag.offscreenPageLimit = 3
-        tabMySquareAndTag.setViewPager(vpMySquareAndTag,titles)
+        tabMySquareAndTag.setViewPager(vpMySquareAndTag, titles)
         vpMySquareAndTag.currentItem = POSITION_SQUARE
     }
 
@@ -170,7 +164,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     private val titles = arrayOf("动态", "活动", "兴趣")
-
 
 
     override fun onDestroy() {
@@ -287,14 +280,11 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         } else {
             userVerify.isVisible = true
             if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-                userVerify.imageAssetsFolder = "images_verify"
-                userVerify.setImageResource(R.drawable.icon_verify_pass)
-                userVerify.setAnimation("data_verify.json")
                 userVerify.playAnimation()
             } else if (userInfoBean?.userinfo?.isfaced == 2) { //审核中
-                userVerify.setImageResource(R.drawable.icon_verify_not)
+                userVerify.progress = 0F
             } else {
-                userVerify.setImageResource(R.drawable.icon_verify_not)
+                userVerify.progress = 0f
             }
         }
 
@@ -364,7 +354,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             //会员权益
             R.id.isVipPowerBtn -> {
                 //无门槛 非会员 开通会员(灰色)
-                VipPowerActivity.start(activity!!,VipPowerActivity.SOURCE_SUPER_VIP_LOGO)
+                VipPowerActivity.start(activity!!, VipPowerActivity.SOURCE_SUPER_VIP_LOGO)
             }
             //我的兴趣
             R.id.publishCl -> {
@@ -441,7 +431,14 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUserCenterContactEvent(event: UserCenterContactEvent) {
         userInfoBean?.userinfo?.contact_way = event.contact_way
-        setUserPower()
+        contactWayMan.isVisible = UserManager.getGender() == 1
+        if (userInfoBean?.userinfo?.contact_way == 0) {
+            contactWayIv.setImageResource(R.drawable.icon_female_contact_no_small)
+            contactWayMan.setImageResource(R.drawable.icon_female_contact_no_small)
+        } else {
+            contactWayMan.setImageResource(R.drawable.icon_female_contact_open_small)
+            contactWayIv.setImageResource(R.drawable.icon_female_contact_open_small)
+        }
     }
 
 
@@ -456,12 +453,23 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onTopCardEvent(event: FemaleVideoEvent) {
+    fun onFemaleVideoEvent(event: FemaleVideoEvent) {
         userInfoBean?.userinfo?.mv_faced = event.videoState
         if (userInfoBean?.userinfo?.mv_faced == 1) {
             videoIntroduceIv.setImageResource(R.drawable.icon_female_video_open_small)
         } else {
             videoIntroduceIv.setImageResource(R.drawable.icon_female_video_no_small)
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFemaleVerifyEvent(event: FemaleVerifyEvent) {
+        userInfoBean?.userinfo?.isfaced = event.verifyState
+        if (userInfoBean?.userinfo?.isfaced == 1) {
+            userVerifyIv.setImageResource(R.drawable.icon_female_verify_open_small)
+        } else {
+            userVerifyIv.setImageResource(R.drawable.icon_female_verify_no_small)
         }
     }
 

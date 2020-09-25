@@ -41,6 +41,9 @@ class TopCardEvent(val showTop: Boolean)
 //女性是否录制视频
 class FemaleVideoEvent(val videoState: Int)
 
+//认证状态修改
+class FemaleVerifyEvent(val verifyState: Int)
+
 
 //点击跳转到约会界面
 class JumpToDatingEvent()

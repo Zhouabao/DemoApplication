@@ -165,6 +165,8 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_marginLeft="8dp"
+                            app:lottie_imageAssetsFolder="images_verify/"
+                            app:lottie_fileName="data_verify.json"
                             android:src="@drawable/icon_verify_not"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
                             app:layout_constraintLeft_toRightOf="@id/contactWayMan"

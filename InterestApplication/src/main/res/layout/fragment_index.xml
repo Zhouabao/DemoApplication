@@ -146,7 +146,7 @@
                 app:tl_indicator_margin_top="2dp"
                 app:tl_indicator_style="NORMAL"
                 app:tl_indicator_width="16dp"
-                app:tl_openTextDmg="true"
+                app:tl_openTextDmg="false"
                 app:tl_tab_padding="7.5dp"
                 app:tl_tab_space_equal="false"
                 app:tl_textBold="SELECT"

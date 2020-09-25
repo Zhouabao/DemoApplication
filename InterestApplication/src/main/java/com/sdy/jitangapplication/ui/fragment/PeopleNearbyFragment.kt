@@ -262,6 +262,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         verifyNowBtn1.setTextColor(Color.WHITE)
                         verifyNowBtn1.setBackgroundResource(R.drawable.shape_pink_13dp)
                         verifyNowBtn1.text = "立即认证"
+                        verifyNowBtn1.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))

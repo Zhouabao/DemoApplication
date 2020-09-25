@@ -146,6 +146,7 @@ class MyApplication : BaseApplication() {
                             //发送通知更新内容
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                         }
+                        EventBus.getDefault().post(FemaleVerifyEvent(0))
                         //如果账号存在异常，就发送认证不通过弹窗
                         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
                             EventBus.getDefault()
@@ -195,6 +196,7 @@ class MyApplication : BaseApplication() {
                         if (UserManager.getAccountDangerAvatorNotPass()) {
                             UserManager.saveAccountDangerAvatorNotPass(false)
                         }
+                        EventBus.getDefault().post(FemaleVerifyEvent(1))
                         UserManager.saveUserVerify(1)
                         UserManager.saveHasFaceUrl(true)
                         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
@@ -241,10 +243,6 @@ class MyApplication : BaseApplication() {
                         UserManager.saveAccountDangerAvatorNotPass(true)
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
-                    }
-                    //门槛支付成功
-                    106 -> {
-
                     }
                     SnackBarFragment.SOMEONE_LIKE_YOU,
                     SnackBarFragment.SOMEONE_MATCH_SUCCESS,

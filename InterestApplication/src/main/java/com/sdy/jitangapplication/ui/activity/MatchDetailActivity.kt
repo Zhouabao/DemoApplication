@@ -110,6 +110,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun finish() {
         super.finish()
         datingAudioView.releaseAudio()
+        detailUserSweetState.cancelAnimation()
         handler.removeCallbacksAndMessages(null)
         EventBus.getDefault().unregister(this)
     }

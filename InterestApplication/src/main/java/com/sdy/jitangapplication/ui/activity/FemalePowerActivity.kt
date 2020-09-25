@@ -15,6 +15,7 @@ import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.FemaleVerifyEvent
 import com.sdy.jitangapplication.event.FemaleVideoEvent
 import kotlinx.android.synthetic.main.activity_female_power.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -31,7 +32,7 @@ import org.jetbrains.anko.startActivityForResult
 //                    "video" to userInfoBean?.userinfo?.mv_faced
 class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
     private val contact by lazy { intent.getIntExtra("contact", 0) }//联系方式  0  没有 1 电话 2微信 3 qq
-    private val verify by lazy { intent.getIntExtra("verify", 0) }
+    private var verify = 0
     private var video = 0
     private val url by lazy { intent.getStringExtra("url") }
 
@@ -57,28 +58,11 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
             finish()
         }
         video = intent.getIntExtra("video", 0)
+        verify = intent.getIntExtra("verify", 0)
 
 
-
-        when (verify) {
-            0 -> {
-                changeVerify.isVisible = true
-                changeVerify.text = "立即认证"
-                changeVideo.text = "请先认证"
-            }
-            1 -> {
-                changeVerify.isVisible = false
-                if (video == 1)
-                    changeVideo.text = "替换视频"
-                else if (video == 0)
-                    changeVideo.text = "录制视频"
-            }
-            2, 3 -> {
-                changeVerify.isVisible = false
-                changeVideo.text = "请先认证"
-            }
-
-        }
+//        0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+        updateVerifyAndVideo()
 
         when (contact) {
             0 -> {
@@ -88,6 +72,7 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
                 changeContact.text = "变更"
             }
         }
+
 
         powerContact.setOnClickListener(this)
         changeContact.setOnClickListener(this)
@@ -102,6 +87,15 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
         params.height = (210 * ScreenUtils.getScreenWidth() / 350F).toInt()
         powerBg.layoutParams = params
 
+        powerVerify.setCompoundDrawablesWithIntrinsicBounds(
+            null, resources.getDrawable(
+                if (verify != 1) {
+                    R.drawable.icon_female_verify_no
+                } else {
+                    R.drawable.icon_female_verify_open
+                }
+            ), null, null
+        )
         powerContact.setCompoundDrawablesWithIntrinsicBounds(
             null, resources.getDrawable(
                 if (contact != 0) {
@@ -112,24 +106,6 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
             ), null, null
         )
 
-        powerVerify.setCompoundDrawablesWithIntrinsicBounds(
-            null, resources.getDrawable(
-                if (verify != 1) {
-                    R.drawable.icon_female_verify_no
-                } else {
-                    R.drawable.icon_female_verify_open
-                }
-            ), null, null
-        )
-        powerVideo.setCompoundDrawablesWithIntrinsicBounds(
-            null, resources.getDrawable(
-                if (video != 1) {
-                    R.drawable.icon_female_video_no
-                } else {
-                    R.drawable.icon_female_video_open
-                }
-            ), null, null
-        )
 
         GlideUtil.loadImg(this, url, allPowerIv)
     }
@@ -170,19 +146,58 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
 
     /**
      * @param event showTop是否展示topShow
+     *       //      0 没有视频/拒绝   1视频通过  2视频审核中
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: FemaleVideoEvent) {
         video = event.videoState
+        updateVerifyAndVideo()
+    }
+
+    /**
+     *
+     *         //        0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFemaleVerifyEvent(event: FemaleVerifyEvent) {
+        verify = event.verifyState
+        updateVerifyAndVideo()
+    }
+
+    private fun updateVerifyAndVideo() {
         powerVideo.setCompoundDrawablesWithIntrinsicBounds(
             null, resources.getDrawable(
-                if (event.videoState == 1) {
+                if (video == 1) {
                     R.drawable.icon_female_video_open
                 } else {
                     R.drawable.icon_female_video_no
                 }
             ), null, null
         )
+
+        //        0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+        when (verify) {
+            0 -> {
+                changeVerify.isVisible = true
+                changeVerify.text = "立即认证"
+                changeVideo.text = "请先认证"
+            }
+            1 -> {
+                changeVerify.isVisible = false
+                //      0 没有视频/拒绝   1视频通过  2视频审核中
+                if (video == 1) {
+                    changeVideo.text = "替换视频"
+                } else if (video == 0) {
+                    changeVideo.text = "录制视频"
+                } else if (video == 2) {
+                    changeVideo.text = "审核中"
+                }
+            }
+            2, 3 -> {
+                changeVerify.isVisible = false
+                changeVideo.text = "请先认证"
+            }
+        }
     }
 
     override fun onLazyClick(v: View) {
@@ -219,8 +234,6 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
                 }
             }
         }
-
-
     }
 
 }

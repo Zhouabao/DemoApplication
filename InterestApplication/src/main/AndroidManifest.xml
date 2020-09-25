@@ -112,9 +112,6 @@
             android:name=".ui.activity.SweetHeartVerifyActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.activity.SweetHeartInfoActivity"
-            android:launchMode="singleTop" />
-        <activity
             android:name=".ui.activity.PublishDatingKnowActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

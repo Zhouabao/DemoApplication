@@ -75,7 +75,7 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
         holder.itemView.newCount.isVisible = item.unreadCnt > 0
 
         //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
-        val extensionMap =
+        val extensionMap: Map<String, Any>? =
             (NimUIKit.getUserInfoProvider().getUserInfo(item.accid) as NimUserInfo?)?.extensionMap
         if (!extensionMap.isNullOrEmpty() && extensionMap["assets_audit_way"] != null && extensionMap["assets_audit_way"] != 0) {
             holder.itemView.sweetLogo.isVisible = true
