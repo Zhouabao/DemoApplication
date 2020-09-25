@@ -10,9 +10,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.SetRoamingLocationEvent
 import com.sdy.jitangapplication.event.UpdateRoamingLocationEvent
@@ -27,6 +29,8 @@ import com.sdy.jitangapplication.widgets.sortcontacts.Cn2Spell
 import com.sdy.jitangapplication.widgets.sortcontacts.PinnedHeaderDecoration
 import com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
 import kotlinx.android.synthetic.main.activity_roaming_location.*
+import kotlinx.android.synthetic.main.activity_roaming_location.currentLocation
+import kotlinx.android.synthetic.main.dialog_match_filter.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -147,12 +151,14 @@ class RoamingLocationActivity : BaseActivity() {
         roamingLocationRv.addItemDecoration(decoration)
         roamingLocationRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
+            SPUtils.getInstance(Constants.SPNAME).put("roaming_city", "${adapter.data[position].provinceName},${adapter.data[position].name}")
             EventBus.getDefault().post(SetRoamingLocationEvent(adapter.data[position]))
             finish()
         }
 
         currentLocation.clickWithTrigger {
             EventBus.getDefault().post(SetRoamingLocationEvent(CityBean()))
+            SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
             finish()
         }
 

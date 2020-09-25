@@ -57,6 +57,14 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         initView()
     }
 
+    private val maxCount by lazy {
+        if (UserManager.getGender() == 1) {
+            MAX_COUNT_MAN
+        } else {
+            MAX_COUNT_WOMAN
+        }
+    }
+
     private fun initView() {
         mPresenter = SweetHeartVerifyUploadPresenter()
         mPresenter.context = this
@@ -94,12 +102,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         sweetVerifyPicAdapter.setOnItemClickListener { _, view, position ->
             if (sweetVerifyPicAdapter.data[position].url.isEmpty()) {
                 CommonFunction.onTakePhoto(
-                    this,
-                    if (UserManager.getGender() == 1) {
-                        MAX_COUNT_MAN - (sweetVerifyPicAdapter.data.size - 1)
-                    } else {
-                        MAX_COUNT_WOMAN - (sweetVerifyPicAdapter.data.size - 1)
-                    },
+                    this,maxCount- (sweetVerifyPicAdapter.data.size - 1),
                     REQUEST_VERIFY
                 )
             }
@@ -108,7 +111,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             when (view.id) {
                 R.id.sweetPicDelete -> {
                     sweetVerifyPicAdapter.remove(position)
-                    if (sweetVerifyPicAdapter.data.size < MAX_COUNT_MAN + 1
+                    if (sweetVerifyPicAdapter.data.size < maxCount + 1
                         && !sweetVerifyPicAdapter.data.contains(MediaParamBean(""))
                     ) {
                         sweetVerifyPicAdapter.addData(MediaParamBean(""))
@@ -124,12 +127,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     }
 
     private fun checkEnable() {
-        if (sweetVerifyPicAdapter.data.size - 1 == if (UserManager.getGender() == 1) {
-                MAX_COUNT_MAN
-            } else {
-                MAX_COUNT_WOMAN
-            }
-        ) {
+        if (sweetVerifyPicAdapter.data.size - 1 == maxCount) {
             uploadVerifyBtn.isEnabled = true
             sweetVerifyPicAdapter.remove(sweetVerifyPicAdapter.data.size - 1)
         } else {
@@ -147,12 +145,12 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
                         if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty()) {
                             sweetVerifyPicAdapter.addData(
-                                0,
+                                sweetVerifyPicAdapter.data.size - 1,
                                 MediaParamBean(tdata.androidQToPath, 0, tdata.width, tdata.height)
                             )
                         } else {
                             sweetVerifyPicAdapter.addData(
-                                0,
+                                sweetVerifyPicAdapter.data.size - 1,
                                 MediaParamBean(tdata.path, 0, tdata.width, tdata.height)
                             )
                         }
@@ -175,7 +173,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                     sweetVerifyPicAdapter.data[index1].height
                 )
             )
-            if (index == sweetVerifyPicAdapter.data.size - 1) {
+            if (index == maxCount - 1) {
                 mPresenter.uploadData(1, type, Gson().toJson(keys))
             } else {
                 index++
@@ -190,6 +188,8 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
 
     override fun uploadDataResult(success: Boolean) {
         if (success) {
+            index = 0
+            keys.clear()
             startActivity<SweetHeartSquareUploadActivity>("type" to type)
         }
     }

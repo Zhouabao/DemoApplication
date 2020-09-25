@@ -52,8 +52,12 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
      * //1男 2女 3不限 gender
      * //toto  这里需要判断是否认证
      */
+
+    private var isChangeByConfirmBtn = false//通过点击确认按钮修改数据
+    private val sp by lazy { SPUtils.getInstance(Constants.SPNAME) }
+    private var previousRoaming = ""//进来时候的漫游地址
+
     private fun initView() {
-        val sp = SPUtils.getInstance(Constants.SPNAME)
         seekBarAge.setProgress(
             sp.getInt("limit_age_low", 18).toFloat(),
             sp.getInt("limit_age_high", 35).toFloat()
@@ -80,7 +84,6 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 }
             }
         )
-
         rbSexAll.check(
             when (sp.getInt("filter_gender", 3)) {
                 1 -> R.id.switchSexMan
@@ -89,6 +92,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             }
         )
 
+        previousRoaming = sp.getString("roaming_city")
         if (sp.getString("roaming_city").isNotEmpty()) {
             currentLocation.setCompoundDrawablesWithIntrinsicBounds(
                 context1.resources.getDrawable(R.drawable.icon_location_airplane),
@@ -210,27 +214,27 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                     sp.put("online_type", 5)
                 }
             }
-            if (currentLocation.text != "当前位置") {
-                sp.put("roaming_city", currentLocation.text.toString())
-            } else {
-                SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
-            }
+//            if (currentLocation.text != "当前位置") {
+//                sp.put("roaming_city", currentLocation.text.toString())
+//            } else {
+//                SPUtils.getInstance(Constants.SPNAME).remove("roaming_city")
+//            }
 
             if (UserManager.isUserVerify() == 1) {
-            }
-            if (switchShowVerify.isChecked) {
-                sp.put("audit_only", 2)
-            } else {
-                sp.put("audit_only", 1)
+                if (switchShowVerify.isChecked) {
+                    sp.put("audit_only", 2)
+                } else {
+                    sp.put("audit_only", 1)
+                }
             }
 
+            isChangeByConfirmBtn = true
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
             dismiss()
         }
-
-
     }
+
 
     private fun initWindow() {
         val window = this.window
@@ -254,6 +258,10 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
     override fun dismiss() {
         super.dismiss()
+        if (!isChangeByConfirmBtn && previousRoaming != sp.getString("roaming_city")) {
+            EventBus.getDefault().post(RefreshEvent(true))
+            EventBus.getDefault().post(UpdateNearPeopleParamsEvent())
+        }
         EventBus.getDefault().unregister(this)
     }
 

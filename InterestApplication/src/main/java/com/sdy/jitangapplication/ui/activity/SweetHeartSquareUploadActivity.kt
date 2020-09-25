@@ -167,12 +167,12 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
                         if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty()) {
                             adappter.addData(
-                                0,
+                                adappter.data.size - 1,
                                 MediaParamBean(tdata.androidQToPath, 0, tdata.width, tdata.height)
                             )
                         } else {
                             adappter.addData(
-                                0,
+                                adappter.data.size - 1,
                                 MediaParamBean(
                                     if (tdata.compressPath.isNotEmpty()) {
                                         tdata.compressPath
