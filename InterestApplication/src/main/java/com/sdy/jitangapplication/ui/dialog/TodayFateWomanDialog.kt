@@ -20,6 +20,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
 import com.sdy.jitangapplication.model.BatchGreetBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.NearPersonBean
@@ -28,6 +29,7 @@ import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.util.RecyclerV
 import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_today_fate_woman.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -186,6 +188,8 @@ class TodayFateWomanDialog(
                 InviteFriendDialog(context1).show()
             } else if (nearBean?.today_pull_dating == false) {
                 PublishDatingDialog(context1).show()
+            } else {
+                EventBus.getDefault().post(ShowGuideChangeStyleEvent())
             }
         }
         UserManager.showIndexRecommend = true

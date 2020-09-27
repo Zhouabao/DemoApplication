@@ -7,9 +7,11 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
 import com.sdy.jitangapplication.ui.activity.InviteRewardsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_invite_friend.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -39,7 +41,7 @@ class InviteFriendDialog(val context1: Context) : Dialog(context1, R.style.MyDia
     override fun dismiss() {
         super.dismiss()
         UserManager.showCompleteUserCenterDialog = true
-
+        EventBus.getDefault().post(ShowGuideChangeStyleEvent())
     }
 
     private fun initWindow() {

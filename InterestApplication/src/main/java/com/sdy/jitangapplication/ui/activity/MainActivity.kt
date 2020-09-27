@@ -129,12 +129,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //            }
 //        }
 
-
-        if (!UserManager.isGuideBrowseStyleCl()) {
-            initGuideCl()
-        } else {
-            guideBrowseStyleCl.isVisible = false
-        }
     }
 
     private fun initGuideCl() {
@@ -656,6 +650,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     private var accountDangerDialog: AccountDangerDialog? = null
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onShowGuideChangeStyleEvent(event: ShowGuideChangeStyleEvent) {
+        if (!UserManager.isGuideBrowseStyleCl()) {
+            initGuideCl()
+        } else {
+            guideBrowseStyleCl.isVisible = false
+        }
+
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAccountDangerEvent(event: AccountDangerEvent) {

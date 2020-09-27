@@ -13,11 +13,13 @@ import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_privacy.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -146,6 +148,8 @@ class PrivacyDialog(
         } else if (nearBean?.today_pull_dating == false) {
             //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
             PublishDatingDialog(context1).show()
+        } else {
+            EventBus.getDefault().post(ShowGuideChangeStyleEvent())
         }
 
     }

@@ -9,7 +9,9 @@ import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
 import kotlinx.android.synthetic.main.dialog_publish_dating.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -39,6 +41,7 @@ class PublishDatingDialog(val context1: Context) : Dialog(context1, R.style.MyDi
 
     override fun dismiss() {
         super.dismiss()
+        EventBus.getDefault().post(ShowGuideChangeStyleEvent())
     }
 
 
