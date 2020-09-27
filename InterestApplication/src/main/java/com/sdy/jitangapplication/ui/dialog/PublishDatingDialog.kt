@@ -41,7 +41,6 @@ class PublishDatingDialog(val context1: Context) : Dialog(context1, R.style.MyDi
 
     override fun dismiss() {
         super.dismiss()
-        EventBus.getDefault().post(ShowGuideChangeStyleEvent())
     }
 
 
