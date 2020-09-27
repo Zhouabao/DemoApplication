@@ -29,6 +29,7 @@ class VerifyThenChatDialog(
     companion object {
         const val FROM_VERIFY_MUST_KNOW = 1
         const val FROM_CHAT_VERIFY = 2
+        const val FROM_CONTACT_VERIFY = 3
     }
 
 
@@ -47,7 +48,7 @@ class VerifyThenChatDialog(
                 parmas.width = SizeUtils.dp2px(86F)
                 parmas.height = SizeUtils.dp2px(86F)
                 accountDangerLogo.layoutParams = parmas
-                GlideUtil.loadCircleImg(context1,true, UserManager.getAvator(), accountDangerLogo)
+                GlideUtil.loadCircleImg(context1, true, UserManager.getAvator(), accountDangerLogo)
                 moreInfoTitle.text = "认证须知"
                 t2.text = "审核将与你的头像做校对，视频内容对会员用户公开为你的视频介绍，请点击录制键后介绍自己吧"
                 verifyBtn.text = "好的"
@@ -77,10 +78,21 @@ class VerifyThenChatDialog(
                 verifyBtn.text = "立即认证"
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
             }
+            FROM_CONTACT_VERIFY -> {//认证才能解锁联系方式
+                closeBtn.isVisible = false
+                accountDangerLogo.setImageResource(R.drawable.icon_verify_then_contact)
+                moreInfoTitle.text = "认证后才能解锁联系方式"
+                SpanUtils.with(t2)
+                    .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
+                    .create()
+                verifyBtn.text = "立即认证"
+                verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
+            }
         }
         verifyBtn.onClick {
             when (type) {
-                FROM_CHAT_VERIFY -> {
+                FROM_CHAT_VERIFY,
+                FROM_CONTACT_VERIFY -> {
                     CommonFunction.startToFace(context1)
                     dismiss()
                 }

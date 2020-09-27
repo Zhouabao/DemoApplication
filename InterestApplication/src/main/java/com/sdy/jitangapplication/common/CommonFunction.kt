@@ -471,6 +471,9 @@ object CommonFunction {
                                 }
 
                         }
+                        401 -> {//女性未认证
+                            VerifyThenChatDialog(context,VerifyThenChatDialog.FROM_CONTACT_VERIFY).show()
+                        }
                         else -> {
                             toast(t.msg)
                         }

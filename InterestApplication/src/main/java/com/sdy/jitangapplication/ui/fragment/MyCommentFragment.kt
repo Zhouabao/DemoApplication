@@ -163,7 +163,7 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
         } else {
-            CommonFunction.toast("删除失败")
+            CommonFunction.toast(t?.msg?:"删除失败")
         }
 
     }

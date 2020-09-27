@@ -202,10 +202,10 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                     sp.put("online_type", 1)
                 }
                 R.id.timeSevenDay -> {
-                    sp.put("online_type", 2)
+                    sp.put("online_type", 3)
                 }
                 R.id.timeThreeDay -> {
-                    sp.put("online_type", 3)
+                    sp.put("online_type", 2)
                 }
                 R.id.timeFifteenDay -> {
                     sp.put("online_type", 4)

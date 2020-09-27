@@ -187,7 +187,7 @@ class ChatUpOpenPtVipDialog(
 
                     } else {
                         chatupTitle.text = "获得聊天机会"
-                        chatupContent.text = "聊天需要消耗糖果，向对方表达诚意"
+                        chatupContent.text = "今日免费聊天机会已用完"
                         openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                     }
                     // 解锁聊天
@@ -224,7 +224,7 @@ class ChatUpOpenPtVipDialog(
                             chatupContent.text = "今日还有${chatUpBean.plat_cnt}次聊天机会"
                             chatupUnlockChat.text = "解锁聊天"
                         } else {
-                            chatupContent.text = "今日免费聊天机会已用完"
+                            chatupContent.text = "聊天需要消耗糖果，向对方表达诚意"
                             chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
                         }
                         // 解锁聊天
