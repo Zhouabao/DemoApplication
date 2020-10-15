@@ -15,6 +15,7 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
@@ -30,7 +31,6 @@ import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.WhyPayDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_foot_price.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

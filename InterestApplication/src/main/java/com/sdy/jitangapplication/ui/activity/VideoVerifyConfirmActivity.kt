@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.os.SystemClock
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.ScreenUtils
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_video_verify_confirm.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.textColor

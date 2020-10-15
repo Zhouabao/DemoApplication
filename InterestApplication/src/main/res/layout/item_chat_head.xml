@@ -102,7 +102,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginLeft="59dp"
-                    android:src="@drawable/icon_default_avator_logo"
+                    android:src="@drawable/icon_default_avator"
                     app:civ_border_color="@color/colorWhite"
                     app:civ_border_width="2dp"
                     />
@@ -111,7 +111,7 @@
                     android:id="@+id/targetAvator"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/icon_default_avator_logo"
+                    android:src="@drawable/icon_default_avator"
                     app:civ_border_color="@color/colorWhite"
                     app:civ_border_width="2dp"
                     />

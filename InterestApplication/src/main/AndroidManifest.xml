@@ -220,10 +220,7 @@
             android:name=".ui.activity.MyCandyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.MatchSucceedActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.VideoVerifyActivity"
             android:launchMode="singleTop"

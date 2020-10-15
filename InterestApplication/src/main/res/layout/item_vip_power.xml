@@ -10,7 +10,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon_default_avator_logo" />
+        android:src="@drawable/icon_default_avator" />
 
     <TextView
         android:id="@+id/powerTitle"
