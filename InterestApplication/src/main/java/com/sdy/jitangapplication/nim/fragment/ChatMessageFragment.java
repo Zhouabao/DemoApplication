@@ -289,7 +289,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     };
 
     private void onMessageIncoming(List<IMMessage> messages) {
-        Log.d("message", messages.get(0).toString());
         try {
             // if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
             // getTargetInfo(sessionId);

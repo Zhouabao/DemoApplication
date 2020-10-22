@@ -350,7 +350,7 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
                 adapter.notifyDataSetChanged()
                 squareDynamicRv.scrollToPosition(0)
             }
-            stateSquare.viewState = MultiStateView.VIEW_STATE_CONTENT
+            stateSquare?.viewState = MultiStateView.VIEW_STATE_CONTENT
             //更新标题显示内容数据
             if (data != null)
                 if (data!!.list != null && data!!.list!!.size > 0) {
@@ -385,8 +385,8 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
             refreshLayout.finishLoadMore(result)
             refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
         } else {
-            stateSquare.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateSquare.errorMsg.text = if (mPresenter.checkNetWork()) {
+            stateSquare?.viewState = MultiStateView.VIEW_STATE_ERROR
+            stateSquare?.errorMsg?.text = if (mPresenter.checkNetWork()) {
                 activity!!.getString(R.string.retry_load_error)
             } else {
                 activity!!.getString(R.string.retry_net_error)

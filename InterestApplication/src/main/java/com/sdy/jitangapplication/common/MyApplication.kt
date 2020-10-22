@@ -54,6 +54,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.tencent.bugly.Bugly
+import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
@@ -329,16 +330,15 @@ class MyApplication : BaseApplication() {
         super.onCreate()
         //初始化Umeng
         initUmeng()
-        //崩溃日志
-        CrashUtils.init(UriUtils.getCacheDir(this))
+
         //自适应size
         configUnits()
         //gsyvideoplayer
         configPlayer()
         //nim
         initUIKit()
-        //bugly初始化
-        Bugly.init(this, Constants.BUGLY_APP_ID, true)
+
+        initBugly()
 
         initFFmpegBinary()
 
@@ -348,6 +348,16 @@ class MyApplication : BaseApplication() {
         //闪验
         initSy()
 
+    }
+
+    private fun initBugly() {
+        //设置上报进程为主进程
+        val strategy = CrashReport.UserStrategy(this)
+        strategy.isUploadProcess = ProcessUtils.getCurrentProcessName().isNullOrEmpty() || ProcessUtils.isMainProcess()
+        //bugly初始化
+        Bugly.init(this, Constants.BUGLY_APP_ID, Constants.TEST, strategy)
+        //崩溃日志
+        CrashUtils.init(UriUtils.getCacheDir(this))
     }
 
     private fun initFFmpegBinary() {

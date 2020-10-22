@@ -553,8 +553,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
     }
 
     override fun onError(text: String) {
-        stateMessageList.viewState = MultiStateView.VIEW_STATE_ERROR
-        errorMsg.text = CommonFunction.getErrorMsg(activity!!)
+        stateMessageList?.viewState = MultiStateView.VIEW_STATE_ERROR
+        errorMsg?.text = CommonFunction.getErrorMsg(activity!!)
 
     }
 

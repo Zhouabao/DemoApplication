@@ -312,12 +312,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
 
         if (userinfo != null) {
-            multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
+            multiStateView?.viewState = MultiStateView.VIEW_STATE_CONTENT
             userInfoBean = userinfo
             initData()
         } else {
-            multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
-            multiStateView.errorMsg.text = if (mPresenter.checkNetWork()) {
+            multiStateView?.viewState = MultiStateView.VIEW_STATE_ERROR
+            multiStateView?.errorMsg?.text = if (mPresenter.checkNetWork()) {
                 getString(R.string.retry_load_error)
             } else {
                 getString(R.string.retry_net_error)
