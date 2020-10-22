@@ -99,6 +99,10 @@
         <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
+    <style name="MyDialogTopInAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_push_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_push_out</item>
+    </style>
 
     <style name="MyDialogCenterAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_center_in</item>

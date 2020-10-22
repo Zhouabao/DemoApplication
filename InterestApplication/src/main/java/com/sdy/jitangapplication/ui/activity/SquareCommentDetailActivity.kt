@@ -169,7 +169,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     private fun initData() {
-        if (type == TYPE_SWEET && squareBean!!.accid==UserManager.getAccid()) {
+        if (type == TYPE_SWEET && squareBean!!.accid == UserManager.getAccid()) {
             hotT1.text = "我的认证资料"
         }
 
@@ -250,9 +250,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareLocationAndTime1Ll.isVisible = false
             squareTagName.isVisible = false
             squareUserSweetLogo.isVisible = true
-            squareSweetVerifyContent.isVisible = true
+            squareSweetVerifyContentCl.isVisible = true
             val params =
-                squareSweetVerifyContent.layoutParams as ConstraintLayout.LayoutParams
+                squareSweetVerifyContentCl.layoutParams as ConstraintLayout.LayoutParams
             params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
             params.height = (params.width * (177 / 1035F)).toInt()
 
@@ -270,25 +270,34 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareUserSweetLogo.playAnimation()
             }
 
-            squareSweetVerifyContent.setImageResource(
+            squareSweetVerifyName.text = squareBean!!.assets_audit_descr
+            squareSweetVerifyContent.text = when (squareBean!!.approve_type) {
+                1 -> {
+                    "平台认证高资产用户，想和他交个朋友吗"
+                }
+                2 -> {
+                    "平台认证豪车用户，听说上车会很热呢"
+                }
+                3 -> {
+                    "经平台评估身材具有吸引力和有一定高端约会意向"
+                }
+                else -> {
+                    "职业认证通过代表用户职业正当且有一定高端约会意向"
+                }
+            }
+            squareSweetVerifyContentCl.setBackgroundResource(
                 when (squareBean!!.approve_type) {
-                    1 -> {
-                        R.drawable.icon_sweet_type_wealth
-                    }
-                    2 -> {
-                        R.drawable.icon_sweet_type_car
-                    }
-                    3 -> {
-                        R.drawable.icon_sweet_type_figure
+                    1, 2, 5 -> {
+                        R.drawable.icon_sweet_type_man
                     }
                     else -> {
-                        R.drawable.icon_sweet_type_profession
+                        R.drawable.icon_sweet_type_woman
                     }
                 }
             )
         } else {
             squareUserSweetLogo.isVisible = false
-            squareSweetVerifyContent.isVisible = false
+            squareSweetVerifyContentCl.isVisible = false
             squareContent1.setTextColor(Color.parseColor("#FF191919"))
 
             if (squareBean!!.puber_address.isNullOrEmpty()) {

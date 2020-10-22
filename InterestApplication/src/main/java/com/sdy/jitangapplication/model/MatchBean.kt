@@ -58,6 +58,7 @@ data class MatchBean(
     var personal_info: MutableList<DetailUserInfoBean> = mutableListOf(),
     var birth: Int = 0,
     var assets_audit_way: Int = 0,
+    val assets_audit_descr: String = "",
     var approve_square_id: Int = 0,
     var mv_url: String = "",
     var mv_faced: Boolean = false,
@@ -180,6 +181,7 @@ data class NearPersonBean(
     var isdirectvip: Boolean = false,
     var isfriend: Boolean = false,
     var assets_audit_way: Int = 0,//0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
+    var assets_audit_descr: String = "",
     var member_level: Int = 0,
     var nickname: String = "",
     var online_time: String = "",

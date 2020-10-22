@@ -110,7 +110,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun finish() {
         super.finish()
         datingAudioView.releaseAudio()
-        detailUserSweetState.cancelAnimation()
         handler.removeCallbacksAndMessages(null)
         EventBus.getDefault().unregister(this)
     }
@@ -366,35 +365,24 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //钻石或者女性可以免费看
         GlideUtil.loadImg(this, matchBean!!.mv_url, userVideoCover)
         if (matchBean!!.assets_audit_way == 0) {
-            detailUserSweetState.isVisible = false
+            detailUserSweetStateLl.isVisible = false
         } else {
-            detailUserSweetState.isVisible = true
+            detailUserSweetStateLl.isVisible = true
 
             //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
             when (matchBean!!.assets_audit_way) {
-                1 -> {
-                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_wealth"
-                    detailUserSweetState.setAnimation("data_sweet_detail_wealth.json")
+                1, 2 -> {
+                    detailUserSweetState.setBackgroundResource(R.drawable.icon_sweet_man_detail_hasbtn_bg)
                 }
-                2 -> {
-                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_car"
-                    detailUserSweetState.setAnimation("data_sweet_detail_car.json")
-                }
-                3 -> {
-                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_figure"
-                    detailUserSweetState.setAnimation("data_sweet_detail_figure.json")
-                }
-                4 -> {
-                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_profession"
-                    detailUserSweetState.setAnimation("data_sweet_detail_profession.json")
+                3, 4 -> {
+                    detailUserSweetState.setBackgroundResource(R.drawable.icon_sweet_woman_detail_hasbtn_bg)
                 }
                 5 -> {
-                    detailUserSweetState.imageAssetsFolder = "images_sweet_detail_charge"
-                    detailUserSweetState.setAnimation("data_sweet_detail_charge.json")
+                    detailUserSweetState.setBackgroundResource(R.drawable.icon_sweet_man_detail_nobtn_bg)
                 }
             }
 
-//            detailUserSweetState.playAnimation()
+            detailUserSweetState.text = matchBean!!.assets_audit_descr
         }
 
         if (matchBean!!.assets_audit_way != 0 && matchBean!!.assets_audit_way != 5)
@@ -618,7 +606,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     private var page = 1
     private val params1 by lazy {
-        hashMapOf<String,Any>(
+        hashMapOf<String, Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,

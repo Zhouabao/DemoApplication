@@ -126,12 +126,12 @@
 
     <TextView
         android:id="@+id/sweetHeartContent"
-        android:layout_width="142dp"
+        android:layout_width="wrap_content"
         android:layout_height="21dp"
-        android:background="@drawable/icon_sweet_heart_verify_woman_big_bg"
+        android:background="@drawable/icon_sweet_woman_detail_nobtn_bg"
         android:gravity="center_vertical"
         android:paddingLeft="25dp"
-        android:text="身材认证进入甜心圈"
+        android:text="身材"
         android:textColor="#ffffffff"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/userRelationshipRv"

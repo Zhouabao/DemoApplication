@@ -211,19 +211,36 @@
                             app:layout_constraintTop_toTopOf="@id/detailUserName" />
 
 
-                        <com.airbnb.lottie.LottieAnimationView
-                            android:id="@+id/detailUserSweetState"
-                            android:layout_width="172dp"
+                        <!--   app:lottie_autoPlay="true"
+                            app:lottie_loop="true"-->
+
+                        <LinearLayout
+                            android:id="@+id/detailUserSweetStateLl"
+                            android:layout_width="0dp"
                             android:layout_height="20dp"
+                            android:layout_marginRight="15dp"
                             android:layout_marginLeft="5dp"
-                            app:lottie_autoPlay="true"
-                            app:lottie_loop="true"
                             app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                             app:layout_constraintLeft_toRightOf="@id/detailUserVip"
-                            app:layout_constraintTop_toTopOf="@id/detailUserName"/>
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/detailUserName">
 
-
-
+                            <TextView
+                                android:id="@+id/detailUserSweetState"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:background="@drawable/icon_sweet_man_detail_nobtn_bg"
+                                android:ellipsize="end"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="身材认证身材认证身材"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                                app:layout_constraintLeft_toRightOf="@id/detailUserVip"
+                                app:layout_constraintTop_toTopOf="@id/detailUserName" />
+                        </LinearLayout>
 
 
                         <TextView
@@ -418,18 +435,18 @@
                             <TextView
                                 android:id="@+id/datingPlace"
                                 android:layout_width="0dp"
-                                android:layout_marginRight="5dp"
-                                app:layout_constraintRight_toLeftOf="@id/datingApplyForBtn"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:drawableLeft="@drawable/icon_dating_place"
                                 android:drawablePadding="5dp"
-                                android:maxLines="1"
                                 android:ellipsize="end"
+                                android:maxLines="1"
                                 android:text="15km·成都市·吉泰路"
                                 android:textColor="#ffffffff"
                                 android:textSize="13sp"
                                 app:layout_constraintBottom_toBottomOf="@id/datingApplyForBtn"
                                 app:layout_constraintLeft_toLeftOf="@id/datingProjectIv"
+                                app:layout_constraintRight_toLeftOf="@id/datingApplyForBtn"
                                 app:layout_constraintTop_toTopOf="@id/datingApplyForBtn" />
 
                             <ImageView
@@ -458,8 +475,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
                                 android:layout_marginBottom="15dp"
-                                android:maxLines="2"
                                 android:ellipsize="end"
+                                android:maxLines="2"
                                 android:text="有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？有人喜欢打羽毛球吗？"
                                 android:textColor="#ffffffff"
                                 android:textSize="14sp"

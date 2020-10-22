@@ -12,27 +12,18 @@
     android:visibility="visible">
 
 
-    <ImageView
-        android:id="@+id/userSweetBg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_sweet_heart_verify_man_small_bg"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <TextView
         android:id="@+id/userSweetContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="25dp"
+        android:background="@drawable/icon_sweet_man_detail_nobtn_bg"
         android:gravity="center_vertical"
         android:text="豪车认证进入甜心圈"
         android:textColor="#ffffcd52"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/userSweetBg"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 

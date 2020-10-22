@@ -42,12 +42,12 @@ class PeopleNearBigCardAdapter :
 
         val onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
             override fun onViewDetachedFromWindow(v: View?) {
-                Log.d("onAttachState","onViewDetachedFromWindow=${helper.layoutPosition}")
+                Log.d("onAttachState", "onViewDetachedFromWindow=${helper.layoutPosition}")
                 itemView.itemBgIvAnimation.cancelAnimation()
             }
 
             override fun onViewAttachedToWindow(v: View?) {
-                Log.d("onAttachState","onViewAttachedToWindow=${helper.layoutPosition}")
+                Log.d("onAttachState", "onViewAttachedToWindow=${helper.layoutPosition}")
 
                 itemView.itemBgIvAnimation.playAnimation()
 
@@ -70,33 +70,17 @@ class PeopleNearBigCardAdapter :
             itemView.itemBgIv.isVisible = true
             itemView.itemBgIvAnimation.isVisible = true
 
-
-            itemView.sweetHeartContent.text = when (item.assets_audit_way) {
-                1 -> {
-                    "资产认证进入甜心圈"
-                }
-                2 -> {
-                    "豪车认证进入甜心圈"
-                }
-                3 -> {
-                    "身材认证进入甜心圈"
-                }
-                4 -> {
-                    "职业认证进入甜心圈"
-                }
-                else -> {
-                    "高额充值进入甜心圈"
-                }
-            }
-            if (item.gender == 1) {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_man_big_bg)
+            itemView.sweetHeartContent.text = item.assets_audit_descr
+            //from_sweet_heart == 1 || from_sweet_heart == 2 || from_sweet_heart == 5
+            if (item.assets_audit_way == 1 || item.assets_audit_way == 2 || item.assets_audit_way == 5) {
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_man_detail_nobtn_bg)
                 itemView.sweetHeartContent.setTextColor(Color.parseColor("#FFFFCD52"))
 
                 itemView.itemBgIvAnimation.imageAssetsFolder = "images_sweet_style_card_man"
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_man.json")
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_man_bg)
             } else {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_woman_big_bg)
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_woman_detail_nobtn_bg)
                 itemView.sweetHeartContent.setTextColor(Color.WHITE)
 
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_woman_bg)
@@ -104,8 +88,6 @@ class PeopleNearBigCardAdapter :
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_woman.json")
 
             }
-
-
 
 
             val itemBgIvParams = (itemView.itemBgIv.layoutParams as ConstraintLayout.LayoutParams)

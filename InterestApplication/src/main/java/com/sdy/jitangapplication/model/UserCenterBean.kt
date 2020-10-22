@@ -53,10 +53,10 @@ data class StateBean(
 
 //vip权益描述广告
 data class VipDescr(
-    val rule: String? = "",
-    val title: String? = "",
-    val url: String? = "",
-    val icon_vip: String? = "",
+    val rule: String = "",
+    val title: String = "",
+    val url: String = "",
+    val icon_vip: String = "",
     var countdown: Int = 0,
     var id: Int = 0,
     val title_pay: String = ""

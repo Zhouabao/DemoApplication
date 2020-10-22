@@ -122,29 +122,7 @@ class PeopleNearSmallListAdapter :
                 datas.add(UserRelationshipBean(item.title, 0, item.invitation_id))
 
             if (item.assets_audit_way != 0)
-                datas.add(
-                    UserRelationshipBean(
-                        when (item.assets_audit_way) {
-                            1 -> {
-                                "资产认证进入甜心圈"
-                            }
-                            2 -> {
-                                "豪车认证进入甜心圈"
-                            }
-                            3 -> {
-                                "身材认证进入甜心圈"
-                            }
-                            4 -> {
-                                "职业认证进入甜心圈"
-                            }
-                            else -> {
-                                "高额充值进入甜心圈"
-                            }
-                        },
-                        2,
-                        item.assets_audit_way
-                    )
-                )
+                datas.add(UserRelationshipBean(item.assets_audit_descr, 2, item.assets_audit_way))
 
             for (data in item.want) {
                 datas.add(UserRelationshipBean(data, 1))

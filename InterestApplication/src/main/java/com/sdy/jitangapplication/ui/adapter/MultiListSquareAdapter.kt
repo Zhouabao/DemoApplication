@@ -151,14 +151,14 @@ class MultiListSquareAdapter(
                 holder.itemView.squareLocationAndTime1Ll.isVisible = false
                 holder.itemView.squareTagName.isVisible = false
                 holder.itemView.squareUserSweetLogo.isVisible = true
-                holder.itemView.squareSweetVerifyContent.isVisible = true
+                holder.itemView.squareSweetVerifyContentCl.isVisible = true
                 val params =
-                    holder.itemView.squareSweetVerifyContent.layoutParams as ConstraintLayout.LayoutParams
+                    holder.itemView.squareSweetVerifyContentCl.layoutParams as ConstraintLayout.LayoutParams
                 params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
                 params.height = (params.width * (177 / 1035F)).toInt()
 
                 //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5充值认证
-                if (item.approve_type == 1 || item.approve_type == 2|| item.approve_type == 5) {
+                if (item.approve_type == 1 || item.approve_type == 2 || item.approve_type == 5) {
                     holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
                     holder.itemView.squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
                     holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
@@ -171,26 +171,36 @@ class MultiListSquareAdapter(
                     holder.itemView.squareUserSweetLogo.playAnimation()
                 }
 
-                holder.itemView.squareSweetVerifyContent.setImageResource(
-                    when (item.approve_type) {
-                        1 -> {
-                            R.drawable.icon_sweet_type_wealth
-                        }
+                holder.itemView.squareSweetVerifyName.text = item.assets_audit_descr
+                holder.itemView.squareSweetVerifyContent.text = when (item.approve_type) {
+                    1 -> {
+                        "平台认证高资产用户，想和他交个朋友吗"
+                    }
+                    2 -> {
+                        "平台认证豪车用户，听说上车会很热呢"
+                    }
+                    3 -> {
+                        "经平台评估身材具有吸引力和有一定高端约会意向"
+                    }
+                    else -> {
+                        "职业认证通过代表用户职业正当且有一定高端约会意向"
+                    }
+                }
 
-                        2 -> {
-                            R.drawable.icon_sweet_type_car
-                        }
-                        3 -> {
-                            R.drawable.icon_sweet_type_figure
+                //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5高额充值
+                holder.itemView.squareSweetVerifyContentCl.setBackgroundResource(
+                    when (item.approve_type) {
+                        1, 2, 5 -> {
+                            R.drawable.icon_sweet_type_man
                         }
                         else -> {
-                            R.drawable.icon_sweet_type_profession
+                            R.drawable.icon_sweet_type_woman
                         }
                     }
                 )
             } else {
                 holder.itemView.squareUserSweetLogo.isVisible = false
-                holder.itemView.squareSweetVerifyContent.isVisible = false
+                holder.itemView.squareSweetVerifyContentCl.isVisible = false
                 holder.itemView.squareContent1.setTextColor(Color.parseColor("#FF191919"))
 
                 if (item.puber_address.isNullOrEmpty()) {
