@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -151,8 +152,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 super.onScrolled(recyclerView, dx, dy)
                 if (type == TYPE_SWEET_HEART && !isHoney) {
                     val firstVisible = linearLayoutManager.findFirstVisibleItemPosition()
-                    if (firstVisible >= 7 && !joinSweetDialog.isShowing) {
-                        joinSweetDialog.show()
+                    Log.d("firstVisible", "firstVisible = ${firstVisible},dx = ${dx},dy = ${dy}")
+                    if (firstVisible >= 5) {
+                        if (!joinSweetDialog.isShowing)
+                            joinSweetDialog.show()
+                        rvPeopleNearby.smoothScrollToPosition(5)
                     }
                 } else {
                     val lastVisible = linearLayoutManager.findLastVisibleItemPosition()
@@ -516,6 +520,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             }
 
             adapter.addData(nearBean?.list)
+            if (type == TYPE_SWEET_HEART) {
+                adapter.addData(nearBean?.list)
+            }
 
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
