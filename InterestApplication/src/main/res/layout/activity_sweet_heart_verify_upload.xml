@@ -46,6 +46,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="20dp"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/uploadVerifyBtn"
         app:layout_constraintLeft_toLeftOf="parent">
 
@@ -85,7 +86,7 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/selector_confirm_btn_25dp"
         android:gravity="center"
-        android:text="提交审核（不公开）"
+        android:text="提交不公开审核"
         android:textColor="#ffffffff"
         android:enabled="false"
         android:textSize="16sp"

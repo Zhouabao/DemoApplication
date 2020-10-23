@@ -14,10 +14,15 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.JoinSweetEvent
 import com.sdy.jitangapplication.model.SweetProgressBean
 import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.dialog_join_sweet.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -52,13 +57,12 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
             sweetVerifyIconMan.isVisible = true
             verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
             verifyTitle2.text = "通过资产认证"
-
             if (progressBean.now_money.toFloat() > progressBean.normal_money.toFloat()) {
                 verifyNowBtn1.setTextColor(Color.parseColor("#FF212225"))
                 verifyNowBtn1.setBackgroundResource(R.drawable.shape_light_orange_13dp)
                 verifyNowBtn1.text = "立即加入"
                 verifyNowBtn1.clickWithTrigger {
-//                    mPresenter.joinSweetApply()
+                    EventBus.getDefault().post(JoinSweetEvent())
                 }
             } else {
                 verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
@@ -182,6 +186,18 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
 
     override fun show() {
         super.show()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateNearPeopleParamsEvent(event: CloseDialogEvent) {
+        dismiss()
     }
 
 

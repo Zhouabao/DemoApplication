@@ -34,7 +34,7 @@
         android:drawableTop="@drawable/icon_sweet_verify_wealth_unchecked"
         android:drawablePadding="15dp"
         android:gravity="center"
-        android:text="资产认证"
+        android:text="豪宅认证"
         android:textColor="@color/colorBlack19"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

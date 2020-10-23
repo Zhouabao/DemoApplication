@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.baselibrary.glide.GlideUtil
@@ -115,6 +116,11 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         }
 
 
+        //加入甜心圈
+        addToSweetBtn.clickWithTrigger {
+            EventBus.getDefault().post(SweetAddClickEvent())
+        }
+
     }
 
 
@@ -178,7 +184,10 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 if (position == 2) {
                     UserManager.saveShowSweetHeartNew(true)
                     sweetHeartNew.isVisible = false
+
                 }
+                addToSweetBtn.isVisible = position == 2 && !isHoney
+
             }
         })
 
@@ -205,6 +214,18 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: TopCardEvent) {
         mPresenter.indexTop()
+    }
+
+    /**
+     * 刷新加入甜心圈显示
+     */
+    private var isHoney = false
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTopCardEvent(event: RefreshSweetAddEvent) {
+        isHoney = event.isHoney
+        if ((FragmentUtils.getTopShow(fragmentManager!!) as PeopleNearbyFragment?)?.type == PeopleNearbyFragment.TYPE_SWEET_HEART)
+            addToSweetBtn.isVisible = !isHoney
     }
 
     override fun indexTopResult(data: IndexListBean?) {

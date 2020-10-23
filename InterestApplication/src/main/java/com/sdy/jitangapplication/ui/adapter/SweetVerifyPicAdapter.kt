@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.SweetUploadBean
 import kotlinx.android.synthetic.main.item_sweet_verify_pic.view.*
 
 /**
@@ -17,18 +17,22 @@ import kotlinx.android.synthetic.main.item_sweet_verify_pic.view.*
  *    version: 1.0
  */
 class SweetVerifyPicAdapter :
-    BaseQuickAdapter<MediaParamBean, BaseViewHolder>(R.layout.item_sweet_verify_pic) {
+    BaseQuickAdapter<SweetUploadBean, BaseViewHolder>(R.layout.item_sweet_verify_pic) {
 
-    override fun convert(helper: BaseViewHolder, item: MediaParamBean) {
+
+    override fun convert(helper: BaseViewHolder, item: SweetUploadBean) {
 
         val params = helper.itemView.layoutParams
         params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F + 10 * 2)) / 3
         params.height = params.width
 
 
-        if (item.url=="") {
+        if (item.url == "") {
             helper.itemView.sweetPicDelete.isVisible = false
-            helper.itemView.sweetPic.setImageResource(R.drawable.icon_upload_sweet)
+            if (item.defacultIcon == 0)
+                helper.itemView.sweetPic.setImageResource(R.drawable.icon_upload_sweet)
+            else
+                helper.itemView.sweetPic.setImageResource(item.defacultIcon)
         } else {
             helper.addOnClickListener(R.id.sweetPicDelete)
             helper.itemView.sweetPicDelete.isVisible = true

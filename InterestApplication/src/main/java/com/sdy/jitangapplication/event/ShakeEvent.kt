@@ -23,7 +23,7 @@ class UpdateNearPeopleParamsEvent()
 
 
 //更新附近的人充值会员付费
-class UpdateSameCityVipEvent(val isVip:Boolean)
+class UpdateSameCityVipEvent(val isVip: Boolean)
 
 //更新头部横幅
 class UpdateShowTopAlert()
@@ -54,6 +54,15 @@ class ChangeListStyleEvent()
 
 //刷新甜心圈认证状态
 class RefreshSweetEvent()
+
+//加入甜心圈
+class JoinSweetEvent()
+
+//刷新加入甜心圈显示
+class RefreshSweetAddEvent(val isHoney: Boolean = false)
+
+
+class SweetAddClickEvent()
 
 
 

@@ -22,3 +22,11 @@ data class CityBean(
     val provinceName: String = "",
     val index: String = ""
 )
+
+data class SweetUploadBean(
+    val defacultIcon: Int = 0,
+    val type: Int = 0,
+    var url: String = "",
+    var width: Int = 0,
+    var height: Int = 0
+)

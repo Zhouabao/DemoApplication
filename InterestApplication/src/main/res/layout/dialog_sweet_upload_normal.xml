@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_margin="10dp"
+    android:background="@drawable/rectangle_white_15dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="照片示例"
+        android:textColor="#ff191919"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/normalImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" />
+
+
+    <TextView
+        android:id="@+id/normalContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="请确保与本人头像一致，照片不会对外公开"
+        android:textColor="#ffb5b7b9"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/uploadBtn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rectangle_orange_bottom_15dp"
+        android:gravity="center"
+        android:text="上传照片"
+        android:textColor="#ffffffff"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

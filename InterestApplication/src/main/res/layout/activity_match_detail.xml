@@ -214,22 +214,23 @@
                         <!--   app:lottie_autoPlay="true"
                             app:lottie_loop="true"-->
 
-                        <LinearLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/detailUserSweetStateLl"
                             android:layout_width="0dp"
                             android:layout_height="20dp"
-                            android:layout_marginRight="15dp"
                             android:layout_marginLeft="5dp"
+                            android:layout_marginRight="15dp"
                             app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                             app:layout_constraintLeft_toRightOf="@id/detailUserVip"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="@id/detailUserName">
 
+
                             <TextView
                                 android:id="@+id/detailUserSweetState"
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
-                                android:background="@drawable/icon_sweet_man_detail_nobtn_bg"
+                                android:background="@drawable/icon_sweet_woman_detail_hasbtn_bg"
                                 android:ellipsize="end"
                                 android:gravity="center"
                                 android:maxLines="1"
@@ -237,10 +238,21 @@
                                 android:textColor="@color/colorWhite"
                                 android:textSize="10sp"
                                 android:textStyle="bold"
-                                app:layout_constraintBottom_toBottomOf="@id/detailUserName"
-                                app:layout_constraintLeft_toRightOf="@id/detailUserVip"
-                                app:layout_constraintTop_toTopOf="@id/detailUserName" />
-                        </LinearLayout>
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                app:layout_constraintBottom_toBottomOf="@id/detailUserSweetState"
+                                app:layout_constraintLeft_toLeftOf="@id/detailUserSweetState"
+                                app:layout_constraintRight_toRightOf="@id/detailUserSweetState"
+                                app:layout_constraintTop_toTopOf="@id/detailUserSweetState"
+                                app:lottie_autoPlay="true"
+                                app:lottie_fileName="data_sweet_detail.json"
+                                app:lottie_loop="true" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                         <TextView

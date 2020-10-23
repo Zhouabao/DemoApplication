@@ -138,8 +138,8 @@ data class NearBean(
 
 
 data class SweetProgressBean(
-    val now_money: String = "0",
-    val normal_money: String = "0",
+    var now_money: String = "0",
+    var normal_money: String = "0",
     val gender: Int = 0,
     val assets_audit_state: Int = 0,
     val img: String = "",

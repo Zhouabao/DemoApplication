@@ -15,9 +15,11 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.SweetUploadBean
 import com.sdy.jitangapplication.presenter.SweetHeartVerifyUploadPresenter
 import com.sdy.jitangapplication.presenter.view.SweetHeartVerifyUploadView
 import com.sdy.jitangapplication.ui.adapter.SweetVerifyPicAdapter
+import com.sdy.jitangapplication.ui.dialog.SweetUploadNormalDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_sweet_heart_verify_upload.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -44,6 +46,8 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         const val TYPE_CAR = 2
         const val TYPE_FIGURE = 3
         const val TYPE_PROFESSION = 4
+        const val TYPE_IDHAND = 5
+        const val TYPE_IDFACE = 6
     }
 
     private val type by lazy { intent.getIntExtra("type", 0) }
@@ -65,6 +69,30 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         }
     }
 
+    private val datas by lazy {
+        arrayListOf<SweetUploadBean>(
+            SweetUploadBean(R.drawable.icon_sweet_upload_idcard_hand, TYPE_IDHAND),
+            SweetUploadBean(R.drawable.icon_sweet_upload_idcard_face, TYPE_IDFACE),
+            when (type) {
+                TYPE_WEALTH -> {//房产证
+                    SweetUploadBean(R.drawable.icon_sweet_upload_housecard, TYPE_WEALTH)
+                }
+
+                TYPE_CAR -> {//行驶证
+                    SweetUploadBean(R.drawable.icon_sweet_upload_drivingcard, TYPE_CAR)
+                }
+
+                TYPE_FIGURE -> {//胸围证明
+                    SweetUploadBean(R.drawable.icon_sweet_upload_chest, TYPE_FIGURE)
+                }
+                else -> {//工作证明
+                    SweetUploadBean(R.drawable.icon_sweet_upload_workcard, TYPE_PROFESSION)
+                }
+
+            }
+        )
+    }
+
     private fun initView() {
         mPresenter = SweetHeartVerifyUploadPresenter()
         mPresenter.context = this
@@ -81,7 +109,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             } else {
                 "职业认证"
             }
-            t1.text = "首先上传手持身份证及身份证正面\n请确保与本人头像一致，此流程不对外公开"
+            t1.text = "首先上传手持身份证及胸围测量\n请确保与本人头像一致，此流程不对外公开"
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_woman)
         } else if (type == TYPE_CAR) {
             hotT1.text = "豪车认证"
@@ -89,8 +117,8 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_car)
 
         } else {
-            hotT1.text = "资产认证"
-            t1.text = "首先上传手持身份证及证明资产所有权\n如房产证、公司注册、存款明细等\n照片不会对外公开"
+            hotT1.text = "豪宅认证"
+            t1.text = "首先上传手持身份证及所有权的房产证\n请确保与本人头像一致，照片不会对外公开"
             sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_wealth)
         }
 
@@ -98,24 +126,20 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
 
         sweetPicRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
         sweetPicRv.adapter = sweetVerifyPicAdapter
-        sweetVerifyPicAdapter.addData(MediaParamBean(""))
+        sweetVerifyPicAdapter.addData(datas)
+
         sweetVerifyPicAdapter.setOnItemClickListener { _, view, position ->
-            if (sweetVerifyPicAdapter.data[position].url.isEmpty()) {
-                CommonFunction.onTakePhoto(
-                    this,maxCount- (sweetVerifyPicAdapter.data.size - 1),
-                    REQUEST_VERIFY
-                )
-            }
+
+            SweetUploadNormalDialog(this, position,sweetVerifyPicAdapter.data[position].type).show()
+//            if (sweetVerifyPicAdapter.data[position].url.isEmpty()) {
+//                CommonFunction.onTakePhoto(this, 1, position)
+//            }
         }
         sweetVerifyPicAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.sweetPicDelete -> {
-                    sweetVerifyPicAdapter.remove(position)
-                    if (sweetVerifyPicAdapter.data.size < maxCount + 1
-                        && !sweetVerifyPicAdapter.data.contains(MediaParamBean(""))
-                    ) {
-                        sweetVerifyPicAdapter.addData(MediaParamBean(""))
-                    }
+                    sweetVerifyPicAdapter.data[position].url = ""
+                    sweetVerifyPicAdapter.notifyItemChanged(position)
                     checkEnable()
                 }
             }
@@ -127,35 +151,33 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     }
 
     private fun checkEnable() {
-        if (sweetVerifyPicAdapter.data.size - 1 == maxCount) {
-            uploadVerifyBtn.isEnabled = true
-            sweetVerifyPicAdapter.remove(sweetVerifyPicAdapter.data.size - 1)
-        } else {
-            uploadVerifyBtn.isEnabled = false
+        var enable = true
+        for (tdata in sweetVerifyPicAdapter.data) {
+            if (tdata.url == "") {
+                enable = false
+                break
+            }
         }
+        uploadVerifyBtn.isEnabled = enable
     }
 
     private var index = 0
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_VERIFY) {
+        if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
-                    for (tdata in PictureSelector.obtainMultipleResult(data)) {
+                    val tdata = PictureSelector.obtainMultipleResult(data)[0]
+                    sweetVerifyPicAdapter.data[requestCode].url =
                         if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty()) {
-                            sweetVerifyPicAdapter.addData(
-                                sweetVerifyPicAdapter.data.size - 1,
-                                MediaParamBean(tdata.androidQToPath, 0, tdata.width, tdata.height)
-                            )
+                            tdata.androidQToPath
                         } else {
-                            sweetVerifyPicAdapter.addData(
-                                sweetVerifyPicAdapter.data.size - 1,
-                                MediaParamBean(tdata.path, 0, tdata.width, tdata.height)
-                            )
+                            tdata.path
                         }
-
-                    }
+                    sweetVerifyPicAdapter.data[requestCode].width = tdata.width
+                    sweetVerifyPicAdapter.data[requestCode].height = tdata.height
+                    sweetVerifyPicAdapter.notifyItemChanged(requestCode)
                     checkEnable()
                 }
             }

@@ -383,6 +383,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
 
             detailUserSweetState.text = matchBean!!.assets_audit_descr
+//            detailUserSweetState.text = "那然色布bai斯台音布拉格"
         }
 
         if (matchBean!!.assets_audit_way != 0 && matchBean!!.assets_audit_way != 5)

@@ -19,6 +19,7 @@ import com.luck.picture.lib.tools.SdkVersionUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.SweetUploadBean
 import com.sdy.jitangapplication.presenter.SweetHeartVerifyUploadPresenter
 import com.sdy.jitangapplication.presenter.view.SweetHeartVerifyUploadView
 import com.sdy.jitangapplication.ui.adapter.SweetNormalPicAdapter
@@ -107,7 +108,7 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
 
         sweetSquareRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
         sweetSquareRv.adapter = adappter
-        adappter.addData(MediaParamBean(""))
+        adappter.addData(SweetUploadBean())
         adappter.setOnItemClickListener { _, view, position ->
             if (adappter.data[position].url.isEmpty()) {
                 CommonFunction.onTakePhoto(
@@ -124,9 +125,9 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                 R.id.sweetPicDelete -> {
                     adappter.remove(position)
                     if (adappter.data.size < MAX_COUNT + 1
-                        && !adappter.data.contains(MediaParamBean(""))
+                        && !adappter.data.contains(SweetUploadBean())
                     ) {
-                        adappter.addData(MediaParamBean(""))
+                        adappter.addData(SweetUploadBean())
                     }
                     rightBtn.isEnabled = adappter.data.size > 1
                 }
@@ -168,17 +169,17 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                         if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty()) {
                             adappter.addData(
                                 adappter.data.size - 1,
-                                MediaParamBean(tdata.androidQToPath, 0, tdata.width, tdata.height)
+                                SweetUploadBean(0,0,tdata.androidQToPath,  tdata.width, tdata.height)
                             )
                         } else {
                             adappter.addData(
                                 adappter.data.size - 1,
-                                MediaParamBean(
+                                SweetUploadBean(0,0,
                                     if (tdata.compressPath.isNotEmpty()) {
                                         tdata.compressPath
                                     } else {
                                         tdata.path
-                                    }, 0, tdata.width, tdata.height
+                                    },  tdata.width, tdata.height
                                 )
 
                             )
