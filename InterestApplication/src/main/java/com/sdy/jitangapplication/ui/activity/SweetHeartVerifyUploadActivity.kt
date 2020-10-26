@@ -103,23 +103,18 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             finish()
         }
 
-        if (type == TYPE_FIGURE || type == TYPE_PROFESSION) {
-            hotT1.text = if (type == TYPE_FIGURE) {
-                "身材认证"
-            } else {
-                "职业认证"
-            }
-            t1.text = "首先上传手持身份证及胸围测量\n请确保与本人头像一致，此流程不对外公开"
-            sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_woman)
+        if (type == TYPE_FIGURE ) {
+            hotT1.text = "身材认证"
+            t1.text = "上传手持身份证、身份证正面及胸围测量\n请确保与本人头像一致，此流程不对外公开"
+        }else if (type == TYPE_PROFESSION) {
+            hotT1.text  = "职业认证"
+            t1.text = "上传手持身份证、身份证正面及工作牌等\n请确保与本人头像一致，此流程不对外公开"
         } else if (type == TYPE_CAR) {
             hotT1.text = "豪车认证"
-            t1.text = "首先上传手持身份证及驾驶证\n请确保与本人头像一致，照片不会对外公开"
-            sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_car)
-
+            t1.text = "上传手持身份证、身份证正面及驾驶证\n请确保与本人头像一致，照片不会对外公开"
         } else {
             hotT1.text = "豪宅认证"
-            t1.text = "首先上传手持身份证及所有权的房产证\n请确保与本人头像一致，照片不会对外公开"
-            sweetVerifyNormalIv.setImageResource(R.drawable.icon_sweet_upload_normal_man_wealth)
+            t1.text = "上传手持身份证、身份证正面及所有权的房产证\n请确保与本人头像一致，照片不会对外公开"
         }
 
 
@@ -129,8 +124,17 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         sweetVerifyPicAdapter.addData(datas)
 
         sweetVerifyPicAdapter.setOnItemClickListener { _, view, position ->
+            if (sweetVerifyPicAdapter.data[position].url.isNullOrEmpty()) {
+                SweetUploadNormalDialog(
+                    this,
+                    position,
+                    sweetVerifyPicAdapter.data[position].type
+                ).show()
+            } else {
+                CommonFunction.onTakePhoto(this, 1, position)
 
-            SweetUploadNormalDialog(this, position,sweetVerifyPicAdapter.data[position].type).show()
+            }
+
 //            if (sweetVerifyPicAdapter.data[position].url.isEmpty()) {
 //                CommonFunction.onTakePhoto(this, 1, position)
 //            }
@@ -195,7 +199,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                     sweetVerifyPicAdapter.data[index1].height
                 )
             )
-            if (index == maxCount - 1) {
+            if (index == sweetVerifyPicAdapter.data.size - 1) {
                 mPresenter.uploadData(1, type, Gson().toJson(keys))
             } else {
                 index++

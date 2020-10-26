@@ -49,7 +49,7 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                 null,
                 null
             )
-            sweetVerifyWay1.text = "资产认证"
+            sweetVerifyWay1.text = "豪宅认证"
             sweetVerifyWay1.setTextColor(resources.getColor(R.color.colorBlack19))
 
             sweetVerifyWay2.setCompoundDrawablesWithIntrinsicBounds(
