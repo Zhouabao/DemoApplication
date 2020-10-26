@@ -62,9 +62,9 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     private fun initData() {
         when (type) {
             1 -> {
-                hotT1.text = "资产认证"
+                hotT1.text = "豪宅认证"
                 uploadTitle.text="听说你很有钱，她们想和你做朋友"
-                uploadType.text = "照片中资产大于200万"
+                uploadType.text = "房产全景照片"
                 tip.text="上传一张或多张图片，照片将对外展示"
             }
             2 -> {
@@ -83,7 +83,7 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             4 -> {
                 hotT1.text = "职业认证"
                 uploadTitle.text="听说你的职业很有趣，我和她们不一样"
-                uploadType.text = "职业为规定职业中的一种"
+                uploadType.text = "得体穿着职业装（如制服、校服等）"
                 tip.text="上传一张或多张能证明你职业的图片，照片将对外展示"
             }
 

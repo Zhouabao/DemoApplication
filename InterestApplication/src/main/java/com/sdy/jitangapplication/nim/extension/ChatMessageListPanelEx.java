@@ -869,6 +869,7 @@ public class ChatMessageListPanelEx {
 
         // 重发消息到服务器
         private void resendMessage(IMMessage message) {
+
             // 重置状态为unsent
             int index = getItemIndex(message.getUuid());
             if (index >= 0 && index < items.size()) {

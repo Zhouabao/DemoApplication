@@ -99,16 +99,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 FilterUserDialog(activity!!).show()
         }
 
-        //约会推荐点击
-        todayWantCl.clickWithTrigger {
-            if (UserManager.touristMode) {
-                TouristDialog(activity!!).show()
-            } else if (UserManager.getGender() == 1) {
-                EventBus.getDefault().post(JumpToDatingEvent())
-            } else {
-                CommonFunction.checkPublishDating(activity!!)
-            }
-        }
 
         GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)
         tobeChoicessBtn.clickWithTrigger {
@@ -184,9 +174,8 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 if (position == 2) {
                     UserManager.saveShowSweetHeartNew(true)
                     sweetHeartNew.isVisible = false
-
                 }
-                addToSweetBtn.isVisible = position == 2 && !isHoney
+                addToSweetBtn.isVisible = position == 2 && !isHoney && isInitialize
 
             }
         })
@@ -220,9 +209,11 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
      * 刷新加入甜心圈显示
      */
     private var isHoney = false
+    private var isInitialize = false
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTopCardEvent(event: RefreshSweetAddEvent) {
+        isInitialize = true
         isHoney = event.isHoney
         if ((FragmentUtils.getTopShow(fragmentManager!!) as PeopleNearbyFragment?)?.type == PeopleNearbyFragment.TYPE_SWEET_HEART)
             addToSweetBtn.isVisible = !isHoney
@@ -251,44 +242,13 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                 tobeChoicenessCl.isVisible = true
                 recommendUsers.scrollToPosition(1)
             }
-            //  setRecommendDatingView(data.dating_list)
         }
 
-    }
-
-    private fun setRecommendDatingView(datings: MutableList<String>) {
-        todayWantVp.isVisible = datings.isNotEmpty()
-        val params = todayWantContent.layoutParams as LinearLayout.LayoutParams
-        if (todayWantVp.isVisible) {
-            params.leftMargin = SizeUtils.dp2px(0F)
-        } else {
-            params.leftMargin = SizeUtils.dp2px(5F)
-        }
-        if (UserManager.getGender() == 1) {
-            todayWantContent.text = "她想约你"
-        } else {
-            todayWantContent.text = "发布活动"
-        }
-        todayWantVp.removeAllViews()
-        val images = mutableListOf<CircleImageView>()
-        for (data in datings) {
-            val v = CircleImageView(activity!!)
-            v.borderColor = Color.WHITE
-            v.borderWidth = SizeUtils.dp2px(1F)
-            val params = ViewGroup.LayoutParams(SizeUtils.dp2px(23F), SizeUtils.dp2px(23F))
-            v.layoutParams = params
-            GlideUtil.loadCircleImg(activity!!, data, v)
-            images.add(v)
-        }
-        todayWantVp.creatView(activity!!, images)
-        if (images.size >= 3)
-            todayWantVp.startLoop()
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        todayWantVp.stopLoop()
     }
 
 

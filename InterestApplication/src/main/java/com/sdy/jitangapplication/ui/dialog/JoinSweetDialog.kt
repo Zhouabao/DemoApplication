@@ -31,19 +31,18 @@ import org.jetbrains.anko.startActivity
  *    desc   :加入甜心圈弹窗
  *    version: 1.0
  */
-class JoinSweetDialog(val context1: Context, private val progressBean: SweetProgressBean) :
+class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_join_sweet)
         initWindow()
-        initView()
+        setCancelable(true)
+        setCanceledOnTouchOutside(true)
 
     }
 
     private fun initView() {
-        setCancelable(true)
-        setCanceledOnTouchOutside(true)
         //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
         //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
         //now_money 	男性充值的钱
@@ -86,6 +85,7 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
                     verifyNowBtn2.setBackgroundColor(Color.WHITE)
                     verifyNowBtn2.text = "审核中"
                     verifyNowBtn2.isEnabled = false
+
                 }
                 3 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
@@ -97,6 +97,7 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
             verifyNowBtn2.clickWithTrigger {
                 context1.startActivity<SweetHeartVerifyActivity>()
             }
+
         } else {
             sweetHeartTitle.text = "达成要求自动进入甜心圈"
             verifyNowNum1.isVisible = true
@@ -161,25 +162,19 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
 
         }
 
-
         val params = sweetPowerIv.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F + 10 * 2F)
-        params.height = (params.width * (588 / 1035f)).toInt()
-        GlideUtil.loadRoundImgCenterCrop(
-            context1,
-            progressBean.img,
-            sweetPowerIv,
-            SizeUtils.dp2px(10F)
-        )
+        params.height = (params.width * (303F / 335)).toInt()
+        GlideUtil.loadImg(context1, progressBean.img, sweetPowerIv)
     }
 
     private fun initWindow() {
         val window = this.window
         window?.setGravity(Gravity.BOTTOM)
         val params = window?.attributes
-        params?.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(20F)
+        params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.windowAnimations = R.style.MyDialogTopInAnimation
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
         window?.attributes = params
 
     }
@@ -187,6 +182,8 @@ class JoinSweetDialog(val context1: Context, private val progressBean: SweetProg
     override fun show() {
         super.show()
         EventBus.getDefault().register(this)
+        initView()
+
     }
 
     override fun dismiss() {

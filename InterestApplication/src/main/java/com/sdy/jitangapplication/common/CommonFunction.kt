@@ -116,7 +116,7 @@ object CommonFunction {
 
     /**
      * 验证报名约会
-     * 	code 202 对方设置黄金会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息
+     * 	code 202 对方设置黄金会员 206是好友，已经报名 207 报名成功返回数据（id，title，dating_title，icon） 200 400错误信息  401
      */
     fun checkApplyForDating(context: Context, datingBean: DatingBean) {
         val loading = LoadingDialog(context)
@@ -195,6 +195,9 @@ object CommonFunction {
                                         loading.dismiss()
                                     }
                                 })
+                        }
+                        401 -> {//女性未认证
+                            VerifyThenChatDialog(context).show()
                         }
                         else -> {
                             toast(t.msg)

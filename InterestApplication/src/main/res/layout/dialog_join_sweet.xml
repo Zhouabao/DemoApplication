@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/sweetHeartTitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
@@ -139,13 +139,13 @@
         android:src="@drawable/icon_sweet_heart_verify_condition_man"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/sweetVerifyRequset2"
-        app:layout_constraintLeft_toLeftOf="@id/sweetHeartTitle"
+        app:layout_constraintLeft_toLeftOf="@id/sweetVerifyRequset1"
         app:layout_constraintTop_toTopOf="@id/sweetVerifyRequset1" />
 
     <ImageView
         android:id="@+id/sweetPowerIv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="335dp"
+        android:layout_height="303dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
@@ -153,6 +153,7 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/colorWhite"
         app:layout_constraintTop_toBottomOf="@id/sweetVerifyRequset2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

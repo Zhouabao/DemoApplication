@@ -14,7 +14,7 @@
         android:visibility="visible"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.fragment.PeopleNearbyFragment">
 
         <FrameLayout

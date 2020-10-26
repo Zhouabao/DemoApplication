@@ -15,14 +15,13 @@
     <TextView
         android:id="@+id/userSweetContent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="21dp"
         android:layout_gravity="center"
         android:background="@drawable/icon_sweet_man_detail_nobtn_bg"
         android:gravity="center_vertical"
         android:text="豪车认证进入甜心圈"
         android:textColor="#ffffcd52"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

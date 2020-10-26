@@ -73,14 +73,14 @@ class PeopleNearBigCardAdapter :
             itemView.sweetHeartContent.text = item.assets_audit_descr
             //from_sweet_heart == 1 || from_sweet_heart == 2 || from_sweet_heart == 5
             if (item.assets_audit_way == 1 || item.assets_audit_way == 2 || item.assets_audit_way == 5) {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_man_detail_nobtn_bg)
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_man_detail_hasbtn_bg)
                 itemView.sweetHeartContent.setTextColor(Color.parseColor("#FFFFCD52"))
 
                 itemView.itemBgIvAnimation.imageAssetsFolder = "images_sweet_style_card_man"
                 itemView.itemBgIvAnimation.setAnimation("data_sweet_style_card_man.json")
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_man_bg)
             } else {
-                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_woman_detail_nobtn_bg)
+                itemView.sweetHeartContent.setBackgroundResource(R.drawable.icon_sweet_woman_detail_hasbtn_bg)
                 itemView.sweetHeartContent.setTextColor(Color.WHITE)
 
                 itemView.itemBgIv.setImageResource(R.drawable.icon_sweet_heart_card_woman_bg)

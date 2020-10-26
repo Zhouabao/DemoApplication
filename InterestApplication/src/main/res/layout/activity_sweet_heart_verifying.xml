@@ -34,7 +34,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="25dp"
         android:gravity="center"
-        android:text="你的认证正在审核中，审核结果稍后将以小助手形式通知您，请留意助手消息审核大概需要1个工作日"
+        android:text="你的认证正在审核中，审核结果稍后将以小助手形式通知您，请留意助手消息。审核大概需要1个工作日"
         android:textColor="#ffb5b7b9"
         android:textSize="14sp" />
 

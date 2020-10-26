@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.RefreshSweetEvent
 import kotlinx.android.synthetic.main.activity_sweet_heart_verifying.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -44,6 +45,7 @@ class SweetHeartVerifyingActivity : BaseActivity() {
             ActivityUtils.finishActivity(SweetHeartSquareUploadActivity::class.java)
         }
         EventBus.getDefault().post(RefreshSweetEvent())
+        EventBus.getDefault().post(CloseDialogEvent())
         finish()
     }
 }

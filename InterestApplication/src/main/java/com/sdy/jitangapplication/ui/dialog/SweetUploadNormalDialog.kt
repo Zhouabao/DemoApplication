@@ -46,7 +46,7 @@ class SweetUploadNormalDialog(val context1: Context, val position: Int, val type
             }
             SweetHeartVerifyUploadActivity.TYPE_FIGURE -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_chest)
-                normalContent.text="上传的测量图片胥能清晰看到卷尺标"
+                normalContent.text="上传的测量图片能清晰看到卷尺标"
             }
             SweetHeartVerifyUploadActivity.TYPE_PROFESSION -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_workid)

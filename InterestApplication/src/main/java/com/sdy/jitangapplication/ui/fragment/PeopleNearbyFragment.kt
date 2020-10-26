@@ -5,7 +5,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -150,15 +149,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         rvPeopleNearby.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (type == TYPE_SWEET_HEART && !isHoney) {
-                    val firstVisible = linearLayoutManager.findFirstVisibleItemPosition()
-                    Log.d("firstVisible", "firstVisible = ${firstVisible},dx = ${dx},dy = ${dy}")
-                    if (firstVisible >= 5) {
-                        if (!joinSweetDialog.isShowing)
-                            joinSweetDialog.show()
-                        rvPeopleNearby.smoothScrollToPosition(5)
-                    }
-                } else {
+                if (type != TYPE_SWEET_HEART || isHoney) {
                     val lastVisible = linearLayoutManager.findLastVisibleItemPosition()
                     val total = linearLayoutManager.itemCount
                     if (lastVisible >= total - 5 && dy > 0) {
@@ -172,7 +163,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                         }
                     }
                 }
-
             }
         })
 
@@ -432,9 +422,17 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
-        page += 1
-        params["page"] = page
-        mPresenter.nearlyIndex(params, type, firstLoad)
+        if (type == TYPE_SWEET_HEART && !isHoney) {
+            refreshLayout.finishLoadMore(0)
+            if (!joinSweetDialog.isShowing) {
+                joinSweetDialog.show()
+            }
+        } else {
+            page += 1
+            params["page"] = page
+            mPresenter.nearlyIndex(params, type, firstLoad)
+
+        }
     }
 
     private lateinit var progressBean: SweetProgressBean
@@ -444,7 +442,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //如果没有显示过协议
             //否则直接判断有没有显示过引导页面
             //是否今日缘分
-
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(activity!!, nearBean, indexRecommends).show()
@@ -463,6 +460,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (nearBean != null) {
                 isHoney = nearBean.is_honey
                 progressBean = nearBean.progress
+                if (type == TYPE_SWEET_HEART) {
+                    joinSweetDialog.progressBean = progressBean
+                }
             }
 
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -477,7 +477,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 rvPeopleNearby.scrollToPosition(0)
                 refreshPeopleNearby.finishRefresh(success)
             }
-            if (nearBean != null && nearBean.list?.size < Constants.PAGESIZE) {
+            if (nearBean != null && nearBean.list?.size < Constants.PAGESIZE && isHoney) {
                 refreshPeopleNearby.finishLoadMoreWithNoMoreData()
             } else {
                 refreshPeopleNearby.finishLoadMore(true)
@@ -502,28 +502,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
                     changeAvatorBtn.text = "立即替换"
                     changeAvatorCloseBtn.isVisible = false
-                }
-//                else if (!nearBean.is_full) {
-//                    (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
-//                        SizeUtils.dp2px(41F)
-//                    lieAvatorLl.isVisible = true
-//                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
-//                    changeAvatorBtn.text = "立即完善"
-//                    changeAvatorCloseBtn.isVisible = true
-//                }
-                else {
+                } else {
                     lieAvatorLl.isVisible = false
                 }
-
 
                 firstLoad = false
             }
 
             adapter.addData(nearBean?.list)
-            if (type == TYPE_SWEET_HEART) {
-                adapter.addData(nearBean?.list)
-            }
-
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
                 refreshPeopleNearby.finishLoadMoreWithNoMoreData()
@@ -596,10 +582,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEnableRvScrollEvent(event: EnableRvScrollEvent) {
-        linearLayoutManager.isSmoothScrollbarEnabled = true;
-        linearLayoutManager.isAutoMeasureEnabled = true;
+        linearLayoutManager.isSmoothScrollbarEnabled = true
+        linearLayoutManager.isAutoMeasureEnabled = true
         //取消recycleview的滑动
-        rvPeopleNearby.setHasFixedSize(true);
+        rvPeopleNearby.setHasFixedSize(true)
         rvPeopleNearby.isNestedScrollingEnabled = event.enable;
     }
 

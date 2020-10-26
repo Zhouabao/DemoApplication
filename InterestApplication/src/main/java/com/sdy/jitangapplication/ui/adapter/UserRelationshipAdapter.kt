@@ -60,10 +60,10 @@ class UserRelationshipAdapter(val from_sweet_heart: Int = 0) :
                 ////0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
                 helper.itemView.userSweetContent.text = item.title
                 if (from_sweet_heart == 1 || from_sweet_heart == 2 || from_sweet_heart == 5) {
-                    helper.itemView.userSweetContent.setBackgroundResource(R.drawable.icon_sweet_man_detail_nobtn_bg)
+                    helper.itemView.userSweetContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_man_small_bg)
                     helper.itemView.userSweetContent.setTextColor(Color.parseColor("#ffffcd52"))
                 } else {
-                    helper.itemView.userSweetContent.setBackgroundResource(R.drawable.icon_sweet_woman_detail_nobtn_bg)
+                    helper.itemView.userSweetContent.setBackgroundResource(R.drawable.icon_sweet_heart_verify_woman_small_bg)
                     helper.itemView.userSweetContent.setTextColor(Color.WHITE)
                 }
             }
