@@ -209,7 +209,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <FrameLayout
-        android:id="@+id/addToSweetBtn"
+        android:id="@+id/addToSweetBtnFl"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_gravity="bottom"
@@ -217,6 +217,7 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/addToSweetBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"

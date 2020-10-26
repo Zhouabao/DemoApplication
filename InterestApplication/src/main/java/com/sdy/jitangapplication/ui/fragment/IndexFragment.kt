@@ -175,7 +175,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
                     UserManager.saveShowSweetHeartNew(true)
                     sweetHeartNew.isVisible = false
                 }
-                addToSweetBtn.isVisible = position == 2 && !isHoney && isInitialize
+                addToSweetBtnFl.isVisible = position == 2 && !isHoney && isInitialize
 
             }
         })
@@ -216,7 +216,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         isInitialize = true
         isHoney = event.isHoney
         if ((FragmentUtils.getTopShow(fragmentManager!!) as PeopleNearbyFragment?)?.type == PeopleNearbyFragment.TYPE_SWEET_HEART)
-            addToSweetBtn.isVisible = !isHoney
+            addToSweetBtnFl.isVisible = !isHoney
     }
 
     override fun indexTopResult(data: IndexListBean?) {
