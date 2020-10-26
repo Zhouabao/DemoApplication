@@ -386,7 +386,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //            detailUserSweetState.text = "那然色布bai斯台音布拉格"
         }
 
-        if (matchBean!!.assets_audit_way != 0 && matchBean!!.assets_audit_way != 5)
+        if (matchBean!!.assets_audit_way != 0 && matchBean!!.assets_audit_way != 5 && matchBean!!.approve_square_id != 0)
             detailUserSweetState.clickWithTrigger {
                 SquareCommentDetailActivity.start(
                     this,

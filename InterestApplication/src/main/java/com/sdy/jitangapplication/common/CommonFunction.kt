@@ -197,7 +197,9 @@ object CommonFunction {
                                 })
                         }
                         401 -> {//女性未认证
-                            VerifyThenChatDialog(context).show()
+                            VerifyThenChatDialog(context,VerifyThenChatDialog.FROM_APPLY_DATING).show()
+                            loading.dismiss()
+
                         }
                         else -> {
                             toast(t.msg)

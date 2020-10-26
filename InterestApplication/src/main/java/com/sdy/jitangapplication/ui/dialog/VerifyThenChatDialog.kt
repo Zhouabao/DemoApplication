@@ -30,6 +30,7 @@ class VerifyThenChatDialog(
         const val FROM_VERIFY_MUST_KNOW = 1
         const val FROM_CHAT_VERIFY = 2
         const val FROM_CONTACT_VERIFY = 3
+        const val FROM_APPLY_DATING = 4
     }
 
 
@@ -61,19 +62,6 @@ class VerifyThenChatDialog(
                 moreInfoTitle.text = "认证后才能发起聊天"
                 SpanUtils.with(t2)
                     .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
-//                    .append("\n了解认证用户权益")
-//                    .setClickSpan(object : ClickableSpan() {
-//                        override fun onClick(widget: View) {
-//                            CommonFunction.toast("这里是权益呢~~~")
-//                        }
-//
-//                        override fun updateDrawState(ds: TextPaint) {
-//                            super.updateDrawState(ds)
-//                            ds.color = Color.parseColor("#6796FA")
-//                            ds.isUnderlineText = false
-//                        }
-//                    })
-//                    .setForegroundColor(Color.parseColor("#6796FA"))
                     .create()
                 verifyBtn.text = "立即认证"
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
@@ -88,9 +76,20 @@ class VerifyThenChatDialog(
                 verifyBtn.text = "立即认证"
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
             }
+            FROM_APPLY_DATING -> {//认证才能解锁联系方式
+                closeBtn.isVisible = false
+                accountDangerLogo.setImageResource(R.drawable.icon_verify_to_logo)
+                moreInfoTitle.text = "认证后才能发起报名活动"
+                SpanUtils.with(t2)
+                    .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
+                    .create()
+                verifyBtn.text = "立即认证"
+                verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
+            }
         }
         verifyBtn.onClick {
             when (type) {
+                FROM_APPLY_DATING,
                 FROM_CHAT_VERIFY,
                 FROM_CONTACT_VERIFY -> {
                     CommonFunction.startToFace(context1)

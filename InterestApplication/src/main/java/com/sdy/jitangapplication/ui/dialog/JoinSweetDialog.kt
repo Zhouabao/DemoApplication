@@ -42,7 +42,7 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
 
     }
 
-    private fun initView() {
+     fun initView() {
         //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
         //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
         //now_money 	男性充值的钱
@@ -69,6 +69,7 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
                 verifyNowBtn1.clickWithTrigger {
                     CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_BIG_CHARGE)
+                    dismiss()
                 }
             }
 
@@ -96,6 +97,7 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
             }
             verifyNowBtn2.clickWithTrigger {
                 context1.startActivity<SweetHeartVerifyActivity>()
+                dismiss()
             }
 
         } else {
@@ -155,9 +157,11 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
 
             verifyNowBtn1.clickWithTrigger {
                 CommonFunction.startToVideoIntroduce(context1)
+                dismiss()
             }
             verifyNowBtn2.clickWithTrigger {
                 context1.startActivity<SweetHeartVerifyActivity>()
+                dismiss()
             }
 
         }

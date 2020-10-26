@@ -460,8 +460,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (nearBean != null) {
                 isHoney = nearBean.is_honey
                 progressBean = nearBean.progress
-                if (type == TYPE_SWEET_HEART) {
+                if (type == TYPE_SWEET_HEART && !isHoney) {
                     joinSweetDialog.progressBean = progressBean
+                    if (joinSweetDialog.isShowing) {
+                        joinSweetDialog.initView()
+                    }
                 }
             }
 
