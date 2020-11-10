@@ -41,7 +41,7 @@
                 android:drawableTop="@drawable/icon_jitang"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="积糖好友"
+                android:text="@string/share_jitang_friend"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 android:visibility="visible"
@@ -59,7 +59,7 @@
                 android:drawableTop="@drawable/icon_wechat1"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="微信好友"
+                android:text="@string/share_wechat_friend"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/transpondFriend"
@@ -75,7 +75,7 @@
                 android:drawableTop="@drawable/icon_pengyouquan"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="朋友圈"
+                android:text="@string/share_wechat_zone"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/transpondFriend"
@@ -91,7 +91,7 @@
                 android:drawableTop="@drawable/icon_weibo1"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="微博"
+                android:text="@string/share_sina"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +107,7 @@
                 android:drawableTop="@drawable/icon_qq1"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="QQ"
+                android:text="@string/contact_QQ"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toRightOf="@id/transpondFriend"
@@ -156,7 +156,7 @@
             android:drawableTop="@drawable/icon_collect1"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="收藏"
+            android:text="@string/collect"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
@@ -169,7 +169,7 @@
             android:drawableTop="@drawable/icon_report1"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="举报"
+            android:text="@string/report"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
@@ -182,7 +182,7 @@
             android:drawableTop="@drawable/icon_delete1"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="删除"
+            android:text="@string/delete"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 

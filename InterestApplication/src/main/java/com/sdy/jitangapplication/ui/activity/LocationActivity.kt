@@ -67,8 +67,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "选择地址"
-        rightBtn1.text = "确定"
+        hotT1.text = getString(R.string.choose_location)
+        rightBtn1.text = getString(R.string.ok)
         rightBtn1.isVisible = true
         rightBtn1.setOnClickListener(this)
         backToMyLocationBtn.setOnClickListener(this)
@@ -213,7 +213,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
-    private val poiCode = "商务住宅|餐饮服务|生活服务|地名地址信息|体育休闲服务|购物服务|住宿服务|风景名胜|交通设施服务|事件活动|通行设施"
+    private val poiCode = getString(R.string.poi_name)
 
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
@@ -322,7 +322,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         if (rCode == 1000) {
             if (result != null && result.query != null) {
                 adapter.setNewData(result.pois)
-                adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), "无明确要求", ""))
+                adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), ""))
                 rightBtn1.isEnabled = true
 
                 if (adapter.data.size > 1) {

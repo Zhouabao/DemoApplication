@@ -38,7 +38,8 @@ import org.jetbrains.anko.startActivity
 /**
  * 兴趣特质
  */
-class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
+class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView,
+    View.OnClickListener {
 
     companion object {
         const val MIN_QUALITY = 1
@@ -52,12 +53,16 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
     //    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
     private val myLabelBean by lazy { intent.getSerializableExtra("aimData") as MyLabelBean? }
+
     //所有特质适配器
     private val adapter by lazy { LabelQualityAdapter(false) }
+
     //已经选择的特质适配器
     private val choosedQualityAdapter by lazy { LabelQualityAdapter(true) }
+
     //所有特质中选中的特质
     private val choosedFromAllQuality = mutableListOf<LabelQualityBean>()
+
     //用户自拟兴趣特质
     private val customQuality = mutableListOf<String>()
     private val mode by lazy { intent.getIntExtra("mode", MODE_NEW) }
@@ -85,7 +90,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         confirmBtn.setOnClickListener(this)
         laterBtn.setOnClickListener(this)
         switchOne.setOnClickListener(this)
-        hotT1.text = myLabelBean?.title ?: "完善兴趣特质"
+        hotT1.text = myLabelBean?.title ?: getString(R.string.comple_label_quality)
         confirmBtn.isEnabled = false
         stateLabelQuality.retryBtn.onClick {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -173,9 +178,9 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     private fun checkConfirmEnable() {
 //        rightBtn1.isVisible = true
         confirmBtn.text = if (choosedQualityAdapter.data.size > 0) {
-            "完成"
+            getString(R.string.complete)
         } else {
-            "再选${MIN_QUALITY - choosedQualityAdapter.data.size}个"
+            getString(R.string.more_choose, (MIN_QUALITY - choosedQualityAdapter.data.size))
         }
 
         t2.isVisible = choosedQualityAdapter.data.size <= 0
@@ -243,9 +248,11 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         warningDialog.show()
         warningDialog.correctLogo.setImageResource(R.drawable.icon_notice)
         if (type == MIN_QUALITY)
-            warningDialog.correctTip.text = "至少选择${MIN_QUALITY}个"
+            warningDialog.correctTip.text =
+                getString(R.string.choose_least, MIN_QUALITY)
         else
-            warningDialog.correctTip.text = "最多选择${MAX_QUALITY}个"
+            warningDialog.correctTip.text =
+                getString(R.string.choose_most, MAX_QUALITY)
 
         labelQualityRv.postDelayed({ warningDialog.dismiss() }, 1000L)
     }
@@ -294,15 +301,15 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             }
             labelQualityAddBtn -> {
                 if (labelQualityAddEt.text.trim().isNullOrEmpty()) {
-                    CommonFunction.toast("请先填写特质哦")
+                    CommonFunction.toast(getString(R.string.please_input_label_quality))
                     return
                 }
                 if (TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {
-                    CommonFunction.toast("请认真填写特质哦")
+                    CommonFunction.toast(getString(R.string.please_input_label_quality_seriously))
                     return
                 }
                 if (choosedQualityAdapter.data.size >= MAX_QUALITY) {
-                    CommonFunction.toast("最多能填写${MAX_QUALITY}个兴趣特质")
+                    CommonFunction.toast(getString(R.string.most_input_label_quality, MAX_QUALITY))
                     return
                 }
 
@@ -314,14 +321,21 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     }
                 }
                 if (hasDuplicate) {
-                    CommonFunction.toast("不能添加重复的兴趣特质")
+                    CommonFunction.toast(getString(R.string.cannot_repeat_label))
                     return
                 }
 
 
-                if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {
+                if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(
+                        labelQualityAddEt.text.trim()
+                    )
+                ) {
                     customQuality.add(labelQualityAddEt.text.trim().toString())
-                    choosedQualityAdapter.addData(LabelQualityBean(content = labelQualityAddEt.text.trim().toString()))
+                    choosedQualityAdapter.addData(
+                        LabelQualityBean(
+                            content = labelQualityAddEt.text.trim().toString()
+                        )
+                    )
                     checkConfirmEnable()
                     labelQualityAddEt.setText("")
                 }

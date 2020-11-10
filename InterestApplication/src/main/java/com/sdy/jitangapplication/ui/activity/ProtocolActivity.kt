@@ -6,9 +6,9 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.sdy.baselibrary.common.BaseConstant
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.baselibrary.common.BaseConstant
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import kotlinx.android.synthetic.main.activity_protocol.*
@@ -39,10 +39,10 @@ class ProtocolActivity : BaseActivity() {
     private fun initView() {
         when (type) {
             TYPE_PRIVACY_PROTOCOL -> {
-                hotT1.text = "隐私条款"
+                hotT1.text = resources.getString(R.string.privacy_title)
             }
             TYPE_USER_PROTOCOL -> {
-                hotT1.text = "用户协议"
+                hotT1.text = resources.getString(R.string.user_title)
             }
         }
 

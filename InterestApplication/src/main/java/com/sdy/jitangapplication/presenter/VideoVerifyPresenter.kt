@@ -6,6 +6,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.presenter.view.VideoVerifyView
@@ -54,7 +55,7 @@ class VideoVerifyPresenter : BasePresenter<VideoVerifyView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-                        CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                        CommonFunction.toast(context.getString(R.string.verify_commit_fail))
                     }
                 }
             })

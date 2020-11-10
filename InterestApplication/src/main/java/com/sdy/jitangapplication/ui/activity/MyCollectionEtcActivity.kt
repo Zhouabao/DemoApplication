@@ -25,7 +25,7 @@ class MyCollectionEtcActivity : BaseActivity() {
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "我的动态"
+        hotT1.text = getString(R.string.my_square_title)
         supportFragmentManager.beginTransaction().add(R.id.content, MyCollectionAndLikeFragment(type)).commit()
     }
 

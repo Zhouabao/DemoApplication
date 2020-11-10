@@ -77,7 +77,7 @@ class MyTodayVisitFragment(val todayCount: Int, var freeShow: Boolean = false) :
         visitRv.adapter = visitAdapter
         visitAdapter.setEmptyView(R.layout.empty_layout, visitRv)
         val view = layoutInflater.inflate(R.layout.item_today_visit_headview, visitRv, false)
-        view.visitTodayCount.text = "今日曝光量：${todayCount}"
+        view.visitTodayCount.text = getString(R.string.today_expose, todayCount)
         visitAdapter.addHeaderView(view)
 
         lockToSee.isVisible = !visitAdapter.freeShow

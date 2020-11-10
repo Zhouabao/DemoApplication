@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="已获得对方的搭讪礼物"
+        android:text="@string/get_his_chat_gift"
         android:textColor="#ffc5c6c8"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -42,9 +42,9 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
 
         btnBack.setOnClickListener(this)
         rightBtn.setOnClickListener(this)
-        hotT1.text = "发布到哪个兴趣"
+        hotT1.text = getString(R.string.label_publish_someone)
         rightBtn.isVisible = true
-        rightBtn.text = "跳过"
+        rightBtn.text = getString(R.string.skip)
         rightBtn.textSize = 17F
         rightBtn.setTextColor(Color.parseColor("#FFE1E1E3"))
 
@@ -59,11 +59,11 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
             val dataChecked = adapter.data[position].checked
             if (!dataChecked) {
                 rightBtn.setTextColor(Color.parseColor("#FFFF6318"))
-                rightBtn.text = "发布"
+                rightBtn.text = getString(R.string.publish)
                 mylabelBean = adapter.data[position]
             } else {
                 rightBtn.setTextColor(Color.parseColor("#FFE1E1E3"))
-                rightBtn.text = "跳过"
+                rightBtn.text = getString(R.string.skip)
                 mylabelBean = null
             }
 //            rightBtn
@@ -86,13 +86,13 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
                     stateChooseLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
                 } else {
                     if (!datas.used_list.isNullOrEmpty()) {
-                        adapter.addData(SquareLabelBean(title = "常用兴趣", type = SquareLabelBean.TITLE))
+                        adapter.addData(SquareLabelBean(title = getString(R.string.label_frequently_use), type = SquareLabelBean.TITLE))
                         for (data in datas.used_list) {
                             data.type = SquareLabelBean.CONTENT
                         }
                         adapter.addData(datas.used_list)
                     }
-                    adapter.addData(SquareLabelBean(title = "全部兴趣", type = SquareLabelBean.TITLE))
+                    adapter.addData(SquareLabelBean(title = getString(R.string.label_all), type = SquareLabelBean.TITLE))
                     for (data in datas.all_list) {
                         data.type = SquareLabelBean.CONTENT
                     }

@@ -50,10 +50,10 @@ class TagSquareAdapter :
         GlideUtil.loadCircleImg(mContext, item.icon, itemview.tagImg)
         itemview.tagName.text = item.title
         if (item.is_hot) {
-            itemview.tagIsHot.text = "热门标签"
+            itemview.tagIsHot.text = mContext.getString(R.string.hot_label)
             itemview.tagIsHot.isVisible = true
         } else if (item.is_join) {
-            itemview.tagIsHot.text = "已加入的标签"
+            itemview.tagIsHot.text = mContext.getString(R.string.join_label)
             itemview.tagIsHot.isVisible = true
         } else {
             itemview.tagIsHot.isVisible = false

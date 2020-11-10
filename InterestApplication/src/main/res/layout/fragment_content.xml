@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:text="正在发布"
+                    android:text="@string/publish_ing"
                     android:textColor="#ffffffff"
                     android:textSize="12sp" />
 
@@ -117,7 +117,7 @@
                         android:id="@+id/editRetry"
                         android:layout_width="20dp"
                         android:layout_height="14dp"
-                        android:text="编辑"
+                        android:text="@string/edit"
                         android:textColor="#ff919191"
                         android:textSize="10sp" />
                 </LinearLayout>

@@ -51,7 +51,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "提现记录"
+        hotT1.text = getString(R.string.candy_record_title)
 
         stateRecord.retryBtn.onClick {
             stateRecord.viewState = MultiStateView.VIEW_STATE_LOADING

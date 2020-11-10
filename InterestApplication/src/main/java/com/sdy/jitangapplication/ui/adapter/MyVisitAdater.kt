@@ -38,9 +38,9 @@ class MyVisitAdater(var freeShow: Boolean = false) :
 
         holder.itemView.visitName.text = "${item.nickname}"
         holder.itemView.visitInfo.text = "${item.age}\t/\t${if (item.gender == 1) {
-            "男"
+            mContext.getString(R.string.gender_man)
         } else {
-            "女"
+            mContext.getString(R.string.gender_woman)
         }}\t/\t${item.constellation}\t/\t${item.distance}"
         holder.itemView.visitCount.text = "${item.visitcount}"
         holder.itemView.visitVip.isVisible = (item.isvip ?: 0) == 1

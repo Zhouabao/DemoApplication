@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -29,7 +28,6 @@ import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import kotlinx.android.synthetic.main.activity_sweet_heart_square_upload.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.textColorResource
 
 /**
  * 甜心圈对外展示动态
@@ -62,29 +60,29 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     private fun initData() {
         when (type) {
             1 -> {
-                hotT1.text = "豪宅认证"
-                uploadTitle.text="听说你很有钱，她们想和你做朋友"
-                uploadType.text = "房产全景照片"
-                tip.text="上传一张或多张图片，照片将对外展示"
+                hotT1.text = getString(R.string.sweet_big_house_title)
+                uploadTitle.text = getString(R.string.sweet_rich_to_be_friend)
+                uploadType.text = getString(R.string.sweet_fullscreen_house)
+                tip.text = getString(R.string.sweet_upload_one_or_more_pic)
             }
             2 -> {
-                hotT1.text = "豪车认证"
-                uploadTitle.text="听说你的车很漂亮，她们想和你做朋友"
-                uploadType.text = "豪车照片或人车合照"
-                tip.text="上传一张或多张图片，照片将对外展示"
+                hotT1.text = getString(R.string.sweet_luxury_car_title)
+                uploadTitle.text = getString(R.string.sweet_car_to_be_friend)
+                uploadType.text = getString(R.string.sweet_car_and_man)
+                tip.text = getString(R.string.sweet_upload_one_or_more_pic)
 
             }
             3 -> {
-                hotT1.text = "身材认证"
-                uploadTitle.text="我咬了一口嘴巴，也太辣了吧"
-                uploadType.text = "游泳装或者私房写真照"
-                tip.text="照片将对外展示\n注意照片尺度过大或导致无法通过认证"
+                hotT1.text = getString(R.string.sweet_figure_title)
+                uploadTitle.text = getString(R.string.sweet_hot_figure)
+                uploadType.text = getString(R.string.sweet_swimsuit)
+                tip.text = getString(R.string.sweet_figure_pic_notice_scale)
             }
             4 -> {
-                hotT1.text = "职业认证"
-                uploadTitle.text="听说你的职业很有趣，我和她们不一样"
-                uploadType.text = "得体穿着职业装（如制服、校服等）"
-                tip.text="上传一张或多张能证明你职业的图片，照片将对外展示"
+                hotT1.text = getString(R.string.sweet_job_title)
+                uploadTitle.text = getString(R.string.sweet_funny_job)
+                uploadType.text = getString(R.string.sweet_appropriate_suit)
+                tip.text = getString(R.string.one_or_more_job_pic)
             }
 
         }
@@ -98,7 +96,7 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
 
         BarUtils.setStatusBarColor(this, Color.WHITE)
         rightBtn.isVisible = true
-        rightBtn.text = "提交"
+        rightBtn.text = getString(R.string.commit)
         rightBtn.isEnabled = false
 
         ClickUtils.applySingleDebouncing(
@@ -169,17 +167,24 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                         if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty()) {
                             adappter.addData(
                                 adappter.data.size - 1,
-                                SweetUploadBean(0,0,tdata.androidQToPath,  tdata.width, tdata.height)
+                                SweetUploadBean(
+                                    0,
+                                    0,
+                                    tdata.androidQToPath,
+                                    tdata.width,
+                                    tdata.height
+                                )
                             )
                         } else {
                             adappter.addData(
                                 adappter.data.size - 1,
-                                SweetUploadBean(0,0,
+                                SweetUploadBean(
+                                    0, 0,
                                     if (tdata.compressPath.isNotEmpty()) {
                                         tdata.compressPath
                                     } else {
                                         tdata.path
-                                    },  tdata.width, tdata.height
+                                    }, tdata.width, tdata.height
                                 )
 
                             )

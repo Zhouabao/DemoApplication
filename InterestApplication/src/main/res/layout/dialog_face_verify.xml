@@ -35,7 +35,7 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/rectangle_blue_bottom_15dp"
         android:gravity="center"
-        android:text="真人认证"
+        android:text="@string/real_verify"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold"

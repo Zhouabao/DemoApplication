@@ -58,7 +58,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
         mPresenter.context = this
         mPresenter.mView = this
 
-        hotT1.text = "活动详情"
+        hotT1.text = getString(R.string.dating_detail)
         btnBack.clickWithTrigger {
             finish()
         }
@@ -97,9 +97,9 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
         moreActionDialog.llJubao.clickWithTrigger {
             val dialog = DeleteDialog(this)
             dialog.show()
-            dialog.title.text = "活动举报"
+            dialog.title.text = getString(R.string.dating_report)
             dialog.tip.text = getString(R.string.report_dating)
-            dialog.confirm.text = "举报"
+            dialog.confirm.text = getString(R.string.report)
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
                 dialog.dismiss()
@@ -227,7 +227,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
                 myDatingAudioView.isVisible = true
                 myDatingAudioView.setUi(
                     R.drawable.gradient_rectangle_orange_22dp,
-                    audioTip = "点击播放活动语音描述"
+                    audioTip = getString(R.string.click_play_audio_descr)
                 )
                 myDatingAudioView.prepareAudio(datingBean!!.content, datingBean!!.duration)
 
@@ -241,7 +241,7 @@ class DatingDetailActivity : BaseMvpActivity<DatingDetailPresenter>(), DatingDet
                     ""
                 }}"
             datingPlace.text = if (datingBean!!.dating_distance.isNullOrEmpty()) {
-                "无明确要求"
+                getString(R.string.no_yaoqiu)
             } else {
                 datingBean!!.dating_distance
             }

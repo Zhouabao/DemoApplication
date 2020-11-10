@@ -29,7 +29,8 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 /**
  * 发布选择标题
  */
-class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitleView, View.OnClickListener,
+class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitleView,
+    View.OnClickListener,
     OnRefreshListener, OnLoadMoreListener {
 
 
@@ -53,9 +54,9 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         refreshTitle.setOnRefreshListener(this)
 
         btnBack.setOnClickListener(this)
-        hotT1.text = "选择热门话题"
+        hotT1.text = getString(R.string.label_title_hot)
         rightBtn.setOnClickListener(this)
-        rightBtn.text = "完成"
+        rightBtn.text = getString(R.string.complete)
         rightBtn.setTextColor(Color.parseColor("#FFFF6318"))
         rightBtn.isVisible = true
 
@@ -81,7 +82,11 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
                     chooseCount++
                 }
                 if (chooseCount >= limitCount) {
-                    CommonFunction.toast("至多可以选择${limitCount}个话题")
+                    CommonFunction.toast(
+                        "${getString(R.string.lable_title_most)}" +
+                                "$limitCount" +
+                                "${getString(R.string.label_title_most_2)}"
+                    )
                     return@setOnItemClickListener
                 }
             }
@@ -101,7 +106,11 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
                     }
                 }
                 if (chooseCount >= limitCount) {
-                    CommonFunction.toast("至多可以选择${limitCount}个话题")
+                    CommonFunction.toast(
+                        "${getString(R.string.lable_title_most)}${limitCount}${getString(
+                            R.string.label_title_most_2
+                        )}"
+                    )
                     titleEt.text.clear()
                 } else
                     titleEt.setSelection(titleEt.text.length)
@@ -114,7 +123,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty() && s.length > 12) {
                     titleEt.setText(s.subSequence(0, 12))
-                    CommonFunction.toast("标题长度最大为12")
+                    CommonFunction.toast(getString(R.string.label_title_max_length))
                     return
                 }
             }
@@ -160,7 +169,11 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
     }
 
 
-    override fun getTagTraitInfoResult(b: Boolean, data: MutableList<LabelQualityBean>?, maxCount: Int) {
+    override fun getTagTraitInfoResult(
+        b: Boolean,
+        data: MutableList<LabelQualityBean>?,
+        maxCount: Int
+    ) {
         limitCount = maxCount
         if (refreshTitle.state == RefreshState.Refreshing) {
             adapter.data.clear()

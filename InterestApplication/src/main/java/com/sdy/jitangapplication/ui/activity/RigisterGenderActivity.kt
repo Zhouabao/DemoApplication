@@ -55,9 +55,9 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
             R.id.nextBtn -> {
                 if (!alertGender) {
                     CommonAlertDialog.Builder(this)
-                        .setTitle("提示")
-                        .setContent("性别确定了就不能更改了奥")
-                        .setConfirmText("我知道了")
+                        .setTitle(getString(R.string.notice))
+                        .setContent(getString(R.string.cannot_change_gender))
+                        .setConfirmText(getString(R.string.i_know))
                         .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                             override fun onClick(dialog: Dialog) {
                                 mPresenter.setProfileCandy(gender)
@@ -71,7 +71,7 @@ class RigisterGenderActivity : BaseMvpActivity<RegisterGenderPresenter>(), Regis
                             }
                         })
                         .setCancelAble(true)
-                        .setCancelText("取消")
+                        .setCancelText(getString(R.string.cancel))
                         .create()
                         .show()
                 } else {

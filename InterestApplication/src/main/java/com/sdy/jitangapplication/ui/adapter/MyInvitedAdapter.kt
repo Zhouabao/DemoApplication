@@ -31,10 +31,10 @@ class MyInvitedAdapter(val from: Int = FROM_INVITED) :
             helper.itemView.myInvitedPayState.textSize = 12F
 
             if (item.is_payed) {
-                helper.itemView.myInvitedPayState.text = "已付费"
+                helper.itemView.myInvitedPayState.text = mContext.getString(R.string.has_payed)
                 helper.itemView.myInvitedPayState.setTextColor(Color.parseColor("#FFFF6318"))
             } else {
-                helper.itemView.myInvitedPayState.text = "未付费"
+                helper.itemView.myInvitedPayState.text = mContext.getString(R.string.not_pay)
                 helper.itemView.myInvitedPayState.setTextColor(Color.parseColor("#FFC5C6C8"))
             }
             helper.itemView.myInvitedName.text = item.nickname

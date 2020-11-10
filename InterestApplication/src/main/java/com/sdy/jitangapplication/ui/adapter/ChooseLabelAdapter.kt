@@ -36,7 +36,8 @@ class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHo
                 }
                 if (item.cnt > 0) {
                     helper.itemView.labelUsedCount.isVisible = true
-                    helper.itemView.labelUsedCount.text = "发布过${item.cnt}条动态"
+                    helper.itemView.labelUsedCount.text = mContext.getString(R.string.has_published) + item.cnt + mContext.getString(
+                                            R.string.piece_square)
                 } else {
                     helper.itemView.labelUsedCount.isVisible = false
                 }

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
@@ -20,6 +21,7 @@ import java.math.BigDecimal
 class CandyPriceAdapter :
     BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_candy_price) {
 
+    @SuppressLint("SetTextI18n")
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         holder.itemView.candyCount.typeface =
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
@@ -39,13 +41,13 @@ class CandyPriceAdapter :
 
             SpanUtils.with(holder.itemView.candyPrice)
                 .append(
-                    "原价${BigDecimal(item.original_price).setScale(
+                    "${mContext.getString(R.string.original_price)}${BigDecimal(item.original_price).setScale(
                         0,
                         BigDecimal.ROUND_HALF_UP
                     )},"
                 )
                 .setStrikethrough()
-                .append("首充立减")
+                .append(mContext.getString(R.string.first_charge_save))
                 .append(
                     "${BigDecimal(item.original_price - item.discount_price).setScale(
                         0,
@@ -72,7 +74,7 @@ class CandyPriceAdapter :
                 .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
                 .create()
 
-            holder.itemView.candyPrice.text = "价值${BigDecimal(
+            holder.itemView.candyPrice.text = mContext.getString(R.string.cost) + BigDecimal(
                 if (item.discount_price != 0.0) {
                     item.discount_price
                 } else {
@@ -81,7 +83,7 @@ class CandyPriceAdapter :
             ).setScale(
                 0,
                 BigDecimal.ROUND_HALF_UP
-            )}元"
+            ) + mContext.getString(R.string.money_unit)
 
         }
 

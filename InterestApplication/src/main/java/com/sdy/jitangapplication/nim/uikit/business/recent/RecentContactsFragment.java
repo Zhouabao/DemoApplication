@@ -99,7 +99,7 @@ public class RecentContactsFragment extends TFragment {
         adapter.notifyDataSetChanged();
         boolean empty = items.isEmpty() && msgLoaded;
         emptyBg.setVisibility(empty ? View.VISIBLE : View.GONE);
-        emptyHint.setHint("还没有会话，在通讯录中找个人聊聊吧！");
+        emptyHint.setHint(R.string.empty_contact);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class RecentContactsFragment extends TFragment {
                 refreshMessages(false);
             }
         });
-        alertDialog.addItem("删除该聊天（仅服务器）", new CustomAlertDialog.onSeparateItemClickListener() {
+        alertDialog.addItem(getString(R.string.delete_chat_server), new CustomAlertDialog.onSeparateItemClickListener() {
 
             @Override
             public void onClick() {

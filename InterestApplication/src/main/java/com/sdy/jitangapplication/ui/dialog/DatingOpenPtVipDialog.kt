@@ -68,9 +68,9 @@ class DatingOpenPtVipDialog(
             TYPE_DATING_PUBLISH -> { //发布约会
                 GlideUtil.loadCircleImg(context1, UserManager.getAvator(), datingAvator)
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                datingTitle.text = "仅黄金会员能发布活动"
-                datingContent.text = "活动为黄金会员独享功能\n成为黄金会员，建立和她的浪漫活动吧"
-                openPtVipBtn.text = "成为黄金会员"
+                datingTitle.text = context1.getString(R.string.dating_publish_only_vip)
+                datingContent.text = context1.getString(R.string.dating_tobe_vip_to_date)
+                openPtVipBtn.text = context1.getString(R.string.tobe_gold_vip)
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
                     CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)
@@ -82,9 +82,9 @@ class DatingOpenPtVipDialog(
                     GlideUtil.loadCircleImg(context1, datingBean?.avatar, datingAvator)
                     if (chatUpBean!!.private_chat && !chatUpBean.isplatinum) {
                         openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                        datingTitle.text = "对方仅允许黄金会员报名"
-                        datingContent.text = "对方仅允许黄金会员报名\n立即成为黄金会员，不要错过她"
-                        openPtVipBtn.text = "成为黄金会员"
+                        datingTitle.text = context1.getString(R.string.dating_allow_gold_apply)
+                        datingContent.text = context1.getString(R.string.dating_apply_dont_miss)
+                        openPtVipBtn.text = context1.getString(R.string.tobe_gold_vip)
                         applyForDatingBtn.isVisible = false
                         openPtVipBtn.clickWithTrigger {
                             CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)
@@ -93,21 +93,27 @@ class DatingOpenPtVipDialog(
                         //2.再判断有无次数
                         if (chatUpBean!!.residue_cnt <= 0) {
                             if (chatUpBean!!.isplatinum) {
-                                datingTitle.text = "要报名活动吗"
-                                datingContent.text = "今日免费聊天机会已用完"
+                                datingTitle.text = context1.getString(R.string.is_sure_dating)
+                                datingContent.text =
+                                    context1.getString(R.string.chatup_chance_run_up)
                                 applyForDatingBtn.isVisible = false
                                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
-                                openPtVipBtn.text = "报名活动（${chatUpBean!!.dating_amount}糖果）"
+                                openPtVipBtn.text = context1.getString(R.string.apply_dating_left, chatUpBean!!.dating_amount)
                                 openPtVipBtn.clickWithTrigger {
                                     datingApply()
                                 }
                             } else {
                                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                                applyForDatingBtn.text = "报名活动（${chatUpBean!!.dating_amount}糖果）"
+                                applyForDatingBtn.text =
+                                    context1.getString(
+                                        R.string.apply_dating_left,
+                                        chatUpBean!!.dating_amount
+                                    )
                                 applyForDatingBtn.isVisible = true
-                                datingTitle.text = "要报名活动吗"
-                                datingContent.text = "用糖果证明活动诚意或许更好哦"
-                                openPtVipBtn.text = "成为黄金会员，更多免费机会"
+                                datingTitle.text = context1.getString(R.string.is_sure_dating)
+                                datingContent.text =
+                                    context1.getString(R.string.prove_in_candy_is_better)
+                                openPtVipBtn.text = context1.getString(R.string.tobe_gold_more_free)
                                 openPtVipBtn.clickWithTrigger {
                                     CommonFunction.startToVip(
                                         context1,
@@ -123,10 +129,12 @@ class DatingOpenPtVipDialog(
                             //3.报名约会
                             openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
                             applyForDatingBtn.isVisible = false
-                            datingTitle.text = "要报名活动吗"
+                            datingTitle.text = context1.getString(R.string.is_sure_dating)
                             datingContent.text =
-                                "报名消耗一次聊天机会\n今日还有${chatUpBean!!.residue_cnt}次免费聊天机会"
-                            openPtVipBtn.text = "报名活动"
+                                context1.getString(R.string.dating_apply_cost_left) + chatUpBean!!.residue_cnt + context1.getString(
+                                    R.string.dating_apply_cost_right
+                                )
+                            openPtVipBtn.text = context1.getString(R.string.dating_apply)
                             openPtVipBtn.clickWithTrigger {
                                 datingApply()
                             }
@@ -140,9 +148,10 @@ class DatingOpenPtVipDialog(
             TYPE_DATING_APPLYFOR_PRIVACY -> {
                 GlideUtil.loadCircleImg(context1, datingBean?.avatar, datingAvator)
                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                datingTitle.text = "对方仅允许黄金会员报名"
-                datingContent.text = "对方仅允许高级用户报名\n立即成为黄金会员，不要错过她"
-                openPtVipBtn.text = "成为黄金会员"
+                datingTitle.text = context1.getString(R.string.dating_allow_gold_apply)
+//                dating_apply_dont_miss
+                datingContent.text = context1.getString(R.string.dating_apply_super_dont_miss)
+                openPtVipBtn.text = context1.getString(R.string.tobe_gold_vip)
                 applyForDatingBtn.isVisible = false
                 openPtVipBtn.clickWithTrigger {
                     CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_FREE_DATING)

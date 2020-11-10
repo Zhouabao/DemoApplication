@@ -249,7 +249,7 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
             }
 
             override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
+                CommonFunction.toast(getString(R.string.audio_play_error))
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
                 adapter.refreshNotifyItemChanged(position)
@@ -376,8 +376,8 @@ class SquareNewestFragment : BaseMvpFragment<SquarePresenter>(), SquareView,
                         adapter.headerLayout.isVisible = false
 
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
-                    adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
-                    adapter.emptyView.emptyFriendTip.text = "主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+                    adapter.emptyView.emptyFriendTitle.text = getString(R.string.no_square)
+                    adapter.emptyView.emptyFriendTip.text = getString(R.string.positive_make_more_friend)
                     adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 }
 

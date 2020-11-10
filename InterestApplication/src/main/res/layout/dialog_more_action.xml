@@ -27,7 +27,7 @@
 
         <TextView
                 android:id="@+id/collect"
-                android:text="收藏"
+                android:text="@string/collect"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -70,7 +70,7 @@
 
         <TextView
                 android:id="@+id/share"
-                android:text="分享"
+                android:text="@string/share"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -114,7 +114,7 @@
 
         <TextView
                 android:id="@+id/lahei"
-                android:text="拉黑"
+                android:text="@string/black"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -159,7 +159,7 @@
 
         <TextView
                 android:id="@+id/jubao"
-                android:text="举报"
+                android:text="@string/report"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -204,7 +204,7 @@
 
         <TextView
                 android:id="@+id/delete"
-                android:text="删除"
+                android:text="@string/delete"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -249,7 +249,7 @@
 
         <TextView
                 android:id="@+id/removeRelation"
-                android:text="解除配对"
+                android:text="@string/dissolve_match"
                 android:textColor="@color/colorPink"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -277,7 +277,7 @@
 
     <TextView
             android:id="@+id/cancel"
-            android:text="取消"
+            android:text="@string/cancel"
             android:textColor="#FFC4C4C4"
             android:textSize="16sp"
             android:gravity="center"

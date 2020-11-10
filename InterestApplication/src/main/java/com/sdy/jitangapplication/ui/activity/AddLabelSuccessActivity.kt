@@ -184,7 +184,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                                             }
 
                                             override fun onDenied() {
-                                                CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                                CommonFunction.toast(getString(R.string.permission_storage))
                                             }
 
                                         })
@@ -192,7 +192,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                             }
 
                             override fun onDenied() {
-                                CommonFunction.toast("相机权限被拒,请允许权限后再上传照片.")
+                                CommonFunction.toast(getString(R.string.permission_camera))
                             }
                         })
                         .request()
@@ -224,7 +224,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             publish -> {
                 publish.isEnabled = false
                 if (mediaBean == null) {
-                    CommonFunction.toast("请先选择要上传的图片")
+                    CommonFunction.toast(getString(R.string.upload_photo))
                     return
                 }
                 val qnPath =

@@ -156,13 +156,13 @@ public class ImageGridActivity extends ImageBaseActivity implements AbsDataSourc
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 loadImageData(imagePicker.getOption());
             } else {
-                showToast("权限被禁止，无法选择本地图片");
+                showToast(getString(R.string.permission_storage));
             }
         } else if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ImagePickerLauncher.takePicture(this, Constants.REQUEST_CODE_TAKE, imagePicker.getOption());
             } else {
-                showToast("权限被禁止，无法打开相机");
+                showToast(getString(R.string.permission_camera));
             }
         }
     }

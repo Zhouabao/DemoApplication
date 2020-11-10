@@ -47,24 +47,24 @@ class VerifyAddChatDialog(val myContext: Context, val chatCount: Int) :
             .create(
                 mutableListOf(
                     VideoVerifyBannerBean(
-                        "获得糖果奖励",
-                        "过往积累的糖果奖励一次性领取",
+                        myContext.getString(R.string.get_candy_reward),
+                        myContext.getString(R.string.get_candy_reward_content),
                         R.drawable.icon_verify_to_get_candy
                     ),
                     //增加聊天机会
                     VideoVerifyBannerBean(
-                        "今日聊天机会用完",
-                        "每天增加$chatCount 次聊天机会",
+                        myContext.getString(R.string.today_time_use_up),
+                        myContext.getString(R.string.get_chat_count, chatCount),
                         R.drawable.icon_verify_to_chat
                     ),
                     VideoVerifyBannerBean(
-                        "增加曝光率",
-                        "增加卡片曝光率，附近页面优先推荐",
+                        myContext.getString(R.string.add_expose),
+                        myContext.getString(R.string.add_expose_title),
                         R.drawable.icon_verify_to_exposure
                     ),
                     VideoVerifyBannerBean(
-                        "获取认证标识",
-                        "获取认证标识，收获更多信任聊天",
+                        myContext.getString(R.string.get_verify_logo),
+                        myContext.getString(R.string.get_verify_logo_title),
                         R.drawable.icon_verify_to_logo
                     )
                 )

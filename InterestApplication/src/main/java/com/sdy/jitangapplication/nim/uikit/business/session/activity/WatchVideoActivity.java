@@ -168,7 +168,7 @@ public class WatchVideoActivity extends UI implements Callback {
 
     private void parseIntent() {
         message = (IMMessage) getIntent().getSerializableExtra(INTENT_EXTRA_DATA);
-        setTitle(String.format("视频发送于%s", TimeUtil.getDateString(message.getTime())));
+        setTitle(String.format(getString(R.string.video_send_by), TimeUtil.getDateString(message.getTime())));
         isShowMenu = getIntent().getBooleanExtra(INTENT_EXTRA_MENU, true);
     }
 
@@ -406,11 +406,11 @@ public class WatchVideoActivity extends UI implements Callback {
         long fileSize = ((VideoAttachment) message.getAttachment()).getSize();
 
         if (duration <= 0) {
-            fileInfoTextView.setText("大小: " + FileUtil.formatFileSize(fileSize));
+            fileInfoTextView.setText(getString(R.string.size) + FileUtil.formatFileSize(fileSize));
         } else {
             long seconds = TimeUtil.getSecondsByMilliseconds(duration);
-            fileInfoTextView.setText("大小: " + FileUtil.formatFileSize(fileSize) + ",时长: "
-                    + String.valueOf(seconds) + " 秒");
+            fileInfoTextView.setText(getString(R.string.size) + FileUtil.formatFileSize(fileSize) + getString(R.string.time_long)
+                    + String.valueOf(seconds) + getString(R.string.second1));
             videoLength = seconds;
         }
     }

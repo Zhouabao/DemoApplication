@@ -196,22 +196,22 @@ public class SessionHelper {
                     if (recent.getAttachment() instanceof ChatHiAttachment) {
                         if (((ChatHiAttachment) recent.getAttachment())
                                 .getShowType() == ChatHiAttachment.CHATHI_CHATUP_FRIEND) {
-                            return "『聊天已解锁』";
+                            return DemoCache.getContext().getString(R.string.msg_unlock_chat);
                         }
 
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
-                        return "『转发动态』";
+                        return DemoCache.getContext().getString(R.string.msg_share_square);
 
                     } else if (recent.getAttachment() instanceof SendGiftAttachment) {
-                        return "『礼物』";
+                        return DemoCache.getContext().getString(R.string.msg_candy_gift);
                     } else if (recent.getAttachment() instanceof WishHelpAttachment) {
-                        return "『助力』";
+                        return DemoCache.getContext().getString(R.string.msg_want_help);
                     } else if (recent.getAttachment() instanceof AccostGiftAttachment) {
-                        return "『搭讪』";
+                        return DemoCache.getContext().getString(R.string.msg_chat_up_gift);
                     } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
                         return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
                     } else if (recent.getAttachment() instanceof ContactCandyAttachment) {
-                        return "『解锁联系方式』";
+                        return DemoCache.getContext().getString(R.string.msg_unlock_contact);
                     }
                     return super.getDefaultDigest(recent);
                 }

@@ -85,7 +85,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
         fun start(context1: Context, requestCode: Int = -1) {
             if (Build.VERSION.SDK_INT < 21) {
-                ToastHelper.showToast(context1, "当前系统版本暂不支持视频拍摄功能")
+                ToastHelper.showToast(context1, context1.getString(R.string.current_version_unsupport))
                 return
             }
             VideoIntroduceBeforeDialog(context1, requestCode).show()
@@ -100,12 +100,12 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             override fun startRecordingOver(success: Boolean) {
 //            super.startRecordingOver(success)
                 if (success) {
-                    CommonFunction.toast("开始录制视频")
+                    CommonFunction.toast(getString(R.string.start_record))
                     runOnUiThread {
                         chooseVideoBtn.isEnabled = false
                     }
                 } else {
-                    CommonFunction.toast("录制视频失败")
+                    CommonFunction.toast(getString(R.string.record_fail))
                 }
             }
         }
@@ -181,7 +181,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
         mainHandler = Handler()
 
         llTitle.setBackgroundResource(R.color.colorTransparent)
-        hotT1.text = "视频介绍"
+        hotT1.text = getString(R.string.video_introduce)
         hotT1.textColor = Color.WHITE
         rightBtn2.isVisible = true
         rightBtn2.setImageResource(R.drawable.icon_filter_gallery)
@@ -235,7 +235,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     private fun stopMediaRecorder() {
         if (currentTime <= RECORD_MIN_TIME) {
-            CommonFunction.toast("录制时间不可小于5S")
+            CommonFunction.toast(getString(R.string.min_record_time))
             isAction = true
             return
         }
@@ -518,7 +518,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                         )
                     )
                 } else {
-                    CommonFunction.toast("视频提交失败，请重新进入录制")
+                    CommonFunction.toast(getString(R.string.video_commit_fail_please_retry))
                 }
             }, null
         )

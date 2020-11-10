@@ -318,7 +318,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             // 收到已读回执
             messageListPanel.receiveReceipt();
             // 收到已读回执,调用接口,改变此时招呼或者消息的状态
-            Log.d("已读回执----", "对方已读你的消息，10分钟内对方未回复消息将过期");
             // if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
             // getTargetInfo(sessionId);
             // }
@@ -487,9 +486,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             nimBean = nimBeanBaseResp.getData();
                             setTargetInfoData();
                         } else if (nimBeanBaseResp.getCode() == 409) {
-                            new CommonAlertDialog.Builder(getActivity()).setTitle("提示")
+                            new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
                                     .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
-                                    .setConfirmText("知道了").setCancelAble(false).setOnConfirmListener(dialog -> {
+                                    .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
                                         dialog.cancel();
                                         NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
                                                 SessionTypeEnum.P2P);
@@ -518,15 +517,15 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (nimBean.getMy_gender() == 2 && (!nimBean.getMy_isfaced() || nimBean.getMv_state() == 0)) {
             verifyLl.setVisibility(View.VISIBLE);
             if (!nimBean.getMy_isfaced()) {
-                gotoVerifyBtn.setText("立即认证");
+                gotoVerifyBtn.setText(getString(R.string.verify_now));
                 if (nimBean.getResidue_msg_cnt() == nimBean.getNormal_chat_times()) {
-                    leftChatTimes.setText("未认证每天仅能和" + nimBean.getNormal_chat_times() + "个用户聊天");
+                    leftChatTimes.setText(getString(R.string.unverify_only_some_can_chat,nimBean.getNormal_chat_times()));
                 } else {
-                    leftChatTimes.setText("还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，认证后增加");
+                    leftChatTimes.setText(getString(R.string.unverify_residue_count,nimBean.getResidue_msg_cnt()));
                 }
             } else {
-                gotoVerifyBtn.setText("视频介绍");
-                leftChatTimes.setText("今日还有" + nimBean.getResidue_msg_cnt() + "次聊天机会，追加视频聊天不设限");
+                gotoVerifyBtn.setText(getString(R.string.video_introduce));
+                leftChatTimes.setText(getString(R.string.unverify_today_residue_count,nimBean.getResidue_msg_cnt()));
             }
         } else {
             verifyLl.setVisibility(View.INVISIBLE);
@@ -572,7 +571,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 && messageListPanel.getItems().get(messageListPanel.getItems().size() - 1)
                         .getDirect() == MsgDirectionEnum.In) {
             ArrayList<SendTipBean> tips = new ArrayList<>();
-            tips.add(new SendTipBean("消息太多？你可以设置私聊权限仅黄金会员过滤消息", true,
+            tips.add(new SendTipBean(getString(R.string.hide_message_if_gold_vip), true,
                     SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
             CommonFunction.INSTANCE.sendTips(sessionId, tips);
             isSendChargePtVip = true;
@@ -658,15 +657,15 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
                                     && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
                                 ArrayList<SendTipBean> tips = new ArrayList<>();
-                                tips.add(new SendTipBean("免费消息会被归于对方搭讪列表，可能回复率偏低，充值黄金会员可提升消息回复", true,
+                                tips.add(new SendTipBean(getString(R.string.charge_to_free), true,
                                         SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
                                 CommonFunction.INSTANCE.sendTips(sessionId, tips);
                                 isSendChargePtVip = true;
                             }
                         } else if (nimBeanBaseResp.getCode() == 409) {// 用户被封禁
-                            new CommonAlertDialog.Builder(getActivity()).setTitle("提示")
+                            new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
                                     .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
-                                    .setConfirmText("知道了").setCancelAble(false).setOnConfirmListener(dialog -> {
+                                    .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
                                         dialog.cancel();
                                         NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
                                                 SessionTypeEnum.P2P);
@@ -738,8 +737,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     private void showConfirmSendDialog(final IMMessage message) {
-        new CommonAlertDialog.Builder(getActivity()).setContent("为提高男性用户质量，将交友机会留给诚意用户。每次发送消息会消耗一个糖果").setTitle("发送消息")
-                .setCancelText("取消").setConfirmText("确认发送").setCancelIconIsVisibility(true)
+        new CommonAlertDialog.Builder(getActivity()).setContent(getString(R.string.cost_one_candy_for_quanlity)).setTitle(getString(R.string.send_messgae))
+                .setCancelText(getString(R.string.cancel)).setConfirmText(getString(R.string.confirm_send)).setCancelIconIsVisibility(true)
                 .setOnConfirmListener(dialog -> {
                     dialog.dismiss();
                     if (canSendMsg()) {

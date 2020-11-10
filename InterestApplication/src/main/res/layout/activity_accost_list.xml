@@ -36,7 +36,6 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:text="列表均为初级会员通过免费消息渠道产生的回话，可调整右上角私聊权限仅接受更优质用户拒绝骚扰无效信息"
                 android:textColor="#ff191919"
                 android:textSize="12sp"
                 android:textStyle="bold"

@@ -74,9 +74,9 @@ class ChangeAvatarRealManDialog(
                     false
                 }
                 close.isVisible = false
-                accountDangerTitle.text = "头像审核未通过"
-                accountDangerContent.text = "非真人头像可能导致匹配率偏低\n请替换后再进行匹配"
-                accountDangerBtn.text = "立即替换"
+                accountDangerTitle.text = context1.getString(R.string.avatar_not_pass)
+                accountDangerContent.text = context1.getString(R.string.please_change_real_to_match_more)
+                accountDangerBtn.text = context1.getString(R.string.replace_now)
             }
             VERIFY_NEED_VALID_REAL_MAN -> {
                 setCancelable(true)
@@ -85,9 +85,9 @@ class ChangeAvatarRealManDialog(
                     false
                 }
                 close.isVisible = true
-                accountDangerTitle.text = "请替换头像"
-                accountDangerContent.text = "当前头像不符合标准\n请替换头像"
-                accountDangerBtn.text = "立即替换"
+                accountDangerTitle.text = context1.getString(R.string.please_change_avatar)
+                accountDangerContent.text = context1.getString(R.string.please_change_standard_avatar)
+                accountDangerBtn.text = context1.getString(R.string.replace_now)
 
             }
         }

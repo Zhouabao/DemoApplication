@@ -43,9 +43,10 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
             VERIFY_NORMAL_NOTPASS_CHANGE_VIDEO -> {
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_fail)
                 verifyStateLogo.setImageResource(R.drawable.icon_verify__not_pass)
-                verifyState.text = "审核失败"
-                verifyTip.text = "您的视频介绍未通过审核，您可在确保视频与头像一致的前提下重新录制"
-                continueBtn.text = "重新录制"
+                verifyState.text = context1.getString(R.string.verify_fail)
+
+                verifyTip.text = context1.getString(R.string.mv_fail_content)
+                continueBtn.text = context1.getString(R.string.re_record)
                 continueBtn.clickWithTrigger {
                     if (ActivityUtils.getTopActivity() !is VideoVerifyActivity)
                         VideoVerifyActivity.start(context1)
@@ -55,9 +56,9 @@ class VerifyNormalResultDialog(val context1: Context, var status: Int = 0) :
             VERIFY_NORMAL_PASS -> {
                 verifyStateBg.setImageResource(R.drawable.rectangle_oval_green_verify_pass)
                 verifyStateLogo.setImageResource(R.drawable.icon_checked_relation)
-                verifyState.text = "审核通过"
-                verifyTip.text = "您的视频介绍已通过审核"
-                continueBtn.text = "继续使用"
+                verifyState.text = context1.getString(R.string.mv_pass)
+                verifyTip.text = context1.getString(R.string.mv_pass_content)
+                continueBtn.text = context1.getString(R.string.continue_use)
                 continueBtn.clickWithTrigger {
                     dismiss()
                 }

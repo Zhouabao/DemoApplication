@@ -106,31 +106,38 @@ class OpenVipActivity : BaseActivity() {
 //                shareFriendsBtn.text = moreMatch?.share_btn
                 if (UserManager.getGender() == 1) {
                     if (UserManager?.registerFileBean?.threshold == true) {
-                        moreInfoText.text = "成为会员和她们亲密接触"
+                        moreInfoText.text = getString(R.string.tobe_vip_close_touch)
                         val params = moreInfoTitle.layoutParams as ConstraintLayout.LayoutParams
                         params.topMargin = SizeUtils.dp2px(20f)
                         moreInfoTitle.layoutParams = params
                     } else {
-                        moreInfoText.text = "她们在翘首期待你的加入"
+                        moreInfoText.text = getString(R.string.thaey_are_waitinf_for_you)
                         val params = moreInfoTitle.layoutParams as ConstraintLayout.LayoutParams
                         params.topMargin = SizeUtils.dp2px(90f)
                         moreInfoTitle.layoutParams = params
                     }
                     SpanUtils.with(moreInfoTitle)
-                        .append("在${moreMatch?.city_name}共有")
+                        .append(getString(R.string.inapp, moreMatch?.city_name))
                         .setFontSize(16, true)
                         .create()
-                    standardPeople.text = "${moreMatch?.people_amount}个糖宝女孩"
+                    standardPeople.text =
+                        getString(R.string.sugar_girl_count, moreMatch?.people_amount)
                     moreInfoText.isVisible = true
                     standardPeople.dance()
 
                 } else {
                     SpanUtils.with(moreInfoTitle)
-                        .append("在${moreMatch?.city_name}找到符合标准的")
+                        .append(getString(R.string.inapp, moreMatch?.city_name))
                         .setFontSize(16, true)
                         .create()
                     SpanUtils.with(standardPeople)
-                        .append("${moreMatch?.people_amount}名${moreMatch?.gender_str}")
+                        .append(
+                            getString(
+                                R.string.person_cpunt,
+                                moreMatch?.people_amount.toString(),
+                                moreMatch?.gender_str
+                            )
+                        )
                         .setFontSize(22, true)
                         .setBold()
                         .create()
@@ -141,13 +148,13 @@ class OpenVipActivity : BaseActivity() {
                 //男性并且付费门槛开启
                 if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {
                     vipChargeCl.isVisible = true
-                    openVipBtn.text = "成为会员"
+                    openVipBtn.text = getString(R.string.tobe_normal_vip)
                     payExplain.isVisible = false
                     shareFriendsBtn.isVisible = true
                 } else {
                     vipChargeCl.visibility = View.INVISIBLE
                     refuseBtn.isVisible = false
-                    openVipBtn.text = "立即加入"
+                    openVipBtn.text = getString(R.string.join_now)
                     payExplain.isVisible = false
                     shareFriendsBtn.isVisible = false
                 }
@@ -155,12 +162,12 @@ class OpenVipActivity : BaseActivity() {
             }
             FROM_P2P_CHAT -> {
                 openVipBtn.text = if (UserManager.getGender() == 1) {
-                    "成为会员无限畅聊"
+                    getString(R.string.free_chat_after_chat)
                 } else {
-                    "成为会员"
+                    getString(R.string.tobe_normal_vip)
                 }
-                standardPeople.text = "只有会员用户才可以聊天哦\n立即充值无限畅聊"
-                refuseBtn.text = "不，谢谢"
+                standardPeople.text = getString(R.string.charge_now_to_free_chat)
+                refuseBtn.text = getString(R.string.no_thanks)
             }
         }
 
@@ -265,7 +272,7 @@ class OpenVipActivity : BaseActivity() {
                             chargeWayBeans = it.data!!.list ?: mutableListOf()
                             setPurchaseType()
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
-                            sameSexCnt.text = "已有${it.data!!.same_sex_cnt}名高端男士加入"
+                            sameSexCnt.text = getString(R.string.already_has,it.data!!.same_sex_cnt)
                         }
                     } else {
                         CommonFunction.toast(it.msg)
@@ -288,7 +295,7 @@ class OpenVipActivity : BaseActivity() {
     private fun setPurchaseType() {
         if (chargeWayBeans.isNotEmpty()) {
             SpanUtils.with(originalPrice)
-                .append("原价¥${chargeWayBeans[0].original_price}")
+                .append(getString(R.string.original_price) + "¥" + chargeWayBeans[0].original_price)
                 .setFontSize(12, true)
                 .setBold()
                 .setStrikethrough()
@@ -306,8 +313,8 @@ class OpenVipActivity : BaseActivity() {
                 )
                 .setFontSize(30, true)
                 .setBold()
-                .append("/永久")
-                .setFontSize(14,true)
+                .append(getString(R.string.forver_time))
+                .setFontSize(14, true)
                 .create()
         }
     }

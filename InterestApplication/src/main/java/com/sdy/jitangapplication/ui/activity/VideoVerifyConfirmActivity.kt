@@ -36,7 +36,7 @@ class VideoVerifyConfirmActivity : BaseActivity() {
     private fun initView() {
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundResource(R.color.colorTransparent)
-        hotT1.text = "视频介绍"
+        hotT1.text = getString(R.string.video_introduce)
         hotT1.textColor = Color.WHITE
         btnBack.setImageResource(R.drawable.icon_back_white)
 

@@ -36,7 +36,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "消息提醒"
+        hotT1.text = getString(R.string.notification_title)
 
         tvSwitchComment.setOnClickListener(this)
         tvSwitchDianzan.setOnClickListener(this)
@@ -57,9 +57,9 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
         switchVibrator.isChecked = DemoCache.getNotificationConfig().vibrate
 
         if (NotificationUtils.areNotificationsEnabled()) {
-            openPushStatus.text = "已开启"
+            openPushStatus.text = getString(R.string.has_open)
         } else {
-            openPushStatus.text = "未开启"
+            openPushStatus.text = getString(R.string.not_open)
         }
     }
 

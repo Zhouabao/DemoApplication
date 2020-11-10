@@ -66,6 +66,7 @@ import org.greenrobot.eventbus.EventBus
 
 
 class MyApplication : BaseApplication() {
+    val appContext by lazy { this }
     init {
         SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
@@ -281,7 +282,7 @@ class MyApplication : BaseApplication() {
         //8.0 以后需要加上channelId 才能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "subscribe"
-            val channelName = "默认通知"
+            val channelName = getString(R.string.default_notification)
             manager.createNotificationChannel(
                 NotificationChannel(
                     channelId,

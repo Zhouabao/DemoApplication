@@ -42,7 +42,7 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
 
     }
 
-     fun initView() {
+    fun initView() {
         //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
         //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
         //now_money 	男性充值的钱
@@ -50,16 +50,17 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
 
         if (progressBean.gender == 1) {
             sweetHeartTitle.gravity = Gravity.CENTER
-            sweetHeartTitle.text = "满足下列任意一个条件即可进入甜心圈"
+            sweetHeartTitle.text = context1.getString(R.string.meet_any_one_come_sweet)
             verifyNowNum1.isVisible = false
             verifyNowNum2.isVisible = false
             sweetVerifyIconMan.isVisible = true
-            verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
-            verifyTitle2.text = "通过资产认证"
+            verifyTitle1.text =
+                context1.getString(R.string.charge_more_than, progressBean.normal_money)
+            verifyTitle2.text = context1.getString(R.string.pass_wealth_verify)
             if (progressBean.now_money.toFloat() > progressBean.normal_money.toFloat()) {
                 verifyNowBtn1.setTextColor(Color.parseColor("#FF212225"))
                 verifyNowBtn1.setBackgroundResource(R.drawable.shape_light_orange_13dp)
-                verifyNowBtn1.text = "立即加入"
+                verifyNowBtn1.text = context1.getString(R.string.join_now)
                 verifyNowBtn1.clickWithTrigger {
                     EventBus.getDefault().post(JoinSweetEvent())
                 }
@@ -78,20 +79,20 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 1 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFFFCD52"))
                     verifyNowBtn2.setBackgroundResource(R.drawable.shape_black_13dp)
-                    verifyNowBtn2.text = "立即认证"
+                    verifyNowBtn2.text = context1.getString(R.string.verify_now)
                     verifyNowBtn2.isEnabled = true
                 }
                 2 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn2.text = "审核中"
+                    verifyNowBtn2.text = context1.getString(R.string.checking)
                     verifyNowBtn2.isEnabled = false
 
                 }
                 3 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn2.text = "认证通过"
+                    verifyNowBtn2.text = context1.getString(R.string.veriy_pass)
                     verifyNowBtn2.isEnabled = false
                 }
             }
@@ -101,12 +102,12 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
             }
 
         } else {
-            sweetHeartTitle.text = "达成要求自动进入甜心圈"
+            sweetHeartTitle.text = context1.getString(R.string.reach_auto_in_sweet)
             verifyNowNum1.isVisible = true
             verifyNowNum2.isVisible = true
             sweetVerifyIconMan.isVisible = false
-            verifyTitle1.text = "上传认证视频"
-            verifyTitle2.text = "认证职业或身材"
+            verifyTitle1.text = context1.getString(R.string.upload_verify_video)
+            verifyTitle2.text = context1.getString(R.string.verify_figure_or_job)
             //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
             //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
             //now_money 	男性充值的钱
@@ -116,19 +117,19 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 1 -> {
                     verifyNowBtn1.setTextColor(Color.WHITE)
                     verifyNowBtn1.setBackgroundResource(R.drawable.shape_pink_13dp)
-                    verifyNowBtn1.text = "立即认证"
+                    verifyNowBtn1.text = context1.getString(R.string.verify_now)
                     verifyNowBtn1.isEnabled = true
                 }
                 2 -> {
                     verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn1.text = "审核中"
+                    verifyNowBtn1.text = context1.getString(R.string.verify_in_ing)
                     verifyNowBtn1.isEnabled = false
                 }
                 3 -> {
                     verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn1.text = "认证通过"
+                    verifyNowBtn1.text = context1.getString(R.string.verify_pass)
                     verifyNowBtn1.isEnabled = false
                 }
             }
@@ -138,19 +139,19 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 1 -> {
                     verifyNowBtn2.setTextColor(Color.WHITE)
                     verifyNowBtn2.setBackgroundResource(R.drawable.shape_pink_13dp)
-                    verifyNowBtn2.text = "立即认证"
+                    verifyNowBtn2.text = context1.getString(R.string.verify_now)
                     verifyNowBtn2.isEnabled = true
                 }
                 2 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn2.text = "认证中"
+                    verifyNowBtn2.text = context1.getString(R.string.verify_in_ing)
                     verifyNowBtn2.isEnabled = false
                 }
                 3 -> {
                     verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                     verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                    verifyNowBtn2.text = "认证通过"
+                    verifyNowBtn2.text = context1.getString(R.string.verify_pass)
                     verifyNowBtn2.isEnabled = false
                 }
             }

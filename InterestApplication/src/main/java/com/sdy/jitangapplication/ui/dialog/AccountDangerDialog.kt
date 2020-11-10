@@ -60,9 +60,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 humanVerify.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 GlideUtil.loadImg(context1, UserManager.getAvator(), accountDangerVerifyStatuLogo)
-                accountDangerTitle.text = "人脸认证"
-                accountDangerContent.text = "请进行人脸认证\n以确保头像为真人"
-                accountDangerBtn.text = "去认证"
+                accountDangerTitle.text = context1.getString(R.string.face_verify)
+                accountDangerContent.text = context1.getString(R.string.please_verify_face)
+                accountDangerBtn.text = context1.getString(R.string.goto_verify)
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
@@ -74,9 +74,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 humanVerify.isVisible = false
                 accountDangerLogo.isVisible = true
                 accountDangerVerifyStatuLogo.isVisible = false
-                accountDangerTitle.text = "账号异常"
-                accountDangerContent.text = "您的账号存在高危风险异常\n请完成认证解除异常"
-                accountDangerBtn.text = "去认证"
+                accountDangerTitle.text = context1.getString(R.string.account_danger)
+                accountDangerContent.text = context1.getString(R.string.please_verify_to_clear_danger)
+                accountDangerBtn.text = context1.getString(R.string.goto_verify)
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
@@ -89,8 +89,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_ing)
-                accountDangerTitle.text = "认证审核中"
-                accountDangerContent.text = "认证审核通过后将为您解冻账号\n请耐心等待"
+                accountDangerTitle.text = context1.getString(R.string.verify_account_ing)
+                accountDangerContent.text = context1.getString(R.string.please_wait_to_clear_danger)
                 accountDangerBtn.text = ""
                 accountDangerLoading.isVisible = true
                 accountDangerBtn.isEnabled = false
@@ -107,9 +107,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                     accountDangerVerifyStatuLogo
                 )
 //                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
-                accountDangerTitle.text = "认证审核不通过"
-                accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
-                accountDangerBtn.text = "修改头像"
+                accountDangerTitle.text = context1.getString(R.string.avata_verify_fail)
+                accountDangerContent.text = context1.getString(R.string.avatar_cannot_pass_verify)
+                accountDangerBtn.text = context1.getString(R.string.change_avatar)
                 humanVerify.setTextColor(Color.parseColor("#FFFF6318"))
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
@@ -133,9 +133,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
-                accountDangerTitle.text = "认证审核不通过"
-                accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
-                accountDangerBtn.text = "修改头像"
+                accountDangerTitle.text = context1.getString(R.string.avata_verify_fail)
+                accountDangerContent.text = context1.getString(R.string.avatar_cannot_pass_verify)
+                accountDangerBtn.text = context1.getString(R.string.change_avatar)
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
@@ -154,9 +154,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_pass)
-                accountDangerTitle.text = "认证审核成功"
-                accountDangerContent.text = "您已通过认证审核\n已为您解冻账号，现在可按正常流程操作"
-                accountDangerBtn.text = "知道了"
+                accountDangerTitle.text = context1.getString(R.string.verify_success)
+                accountDangerContent.text = context1.getString(R.string.account_has_clear_danger)
+                accountDangerBtn.text = context1.getString(R.string.iknow)
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
@@ -194,7 +194,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         changeVerifyStatus(VERIFY_ING)
-                        CommonFunction.toast("已提交人工审核，请耐心等待")
+                        CommonFunction.toast(context1.getString(R.string.has_commit_human_verify))
                     }
                 }
 

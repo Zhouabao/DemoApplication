@@ -44,12 +44,12 @@ class ReportChatContentDialog(val context1: Context, val msg: IMMessage) : Dialo
     private fun initView() {
         reportContentRv.layoutManager = LinearLayoutManager(context1, RecyclerView.VERTICAL, false)
         reportContentRv.adapter = adapter
-        adapter.addData(ReportBean("广告或垃圾信息", false))
-        adapter.addData(ReportBean("色情涉黄", false))
-        adapter.addData(ReportBean("人身攻击或恶意骚扰", false))
-        adapter.addData(ReportBean("诈骗或违法信息", false))
-        adapter.addData(ReportBean("政治或意识形态问题", false))
-        adapter.addData(ReportBean("其他", false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_garbage), false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_yellow), false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_attack), false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_elegal), false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_mingan), false))
+        adapter.addData(ReportBean(context1.getString(R.string.report_other), false))
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.reportReason -> {

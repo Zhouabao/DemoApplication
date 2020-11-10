@@ -14,7 +14,7 @@
 
     <TextView
             android:id="@+id/delSquare"
-            android:text="删除"
+            android:text="@string/delete"
             android:textColor="@color/colorBlackTitle"
             android:textSize="16sp"
             android:gravity="center"

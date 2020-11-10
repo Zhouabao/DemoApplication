@@ -75,9 +75,9 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
             finish()
         }
         if (intent != null && intent.getSerializableExtra("square") != null) {
-            hotT1.text = "选择好友"
+            hotT1.text = getString(R.string.choose_friend)
         } else {
-            hotT1.text = "通讯录"
+            hotT1.text = getString(R.string.contact_book)
         }
         mPresenter = ContactBookPresenter()
         mPresenter.mView = this
@@ -186,16 +186,16 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         headView.tv_index.isVisible = false
         headView.friendDivider.isVisible = false
         headView.friendIcon.setImageResource(R.drawable.icon_assistant)
-        headView.friendName.text = "官方小助手"
+        headView.friendName.text = getString(R.string.assist)
         headView.setOnClickListener {
-            chatOrShare(ContactBean(nickname = "官方小助手",accid = Constants.ASSISTANT_ACCID))
+            chatOrShare(ContactBean(nickname = getString(R.string.assist),accid = Constants.ASSISTANT_ACCID))
         }
         return headView
     }
 
-    private fun chatOrShare(squareBean: ContactBean) {
+    private fun chatOrShare(squareBean: ContactBean) =
         if (intent != null && intent.getSerializableExtra("square") != null) {
-            hotT1.text = "选择好友"
+            hotT1.text = getString(R.string.choose_friend)
             sqauareBean = intent.getSerializableExtra("square") as SquareBean
             ShareToFriendsDialog(
                 this@ContactBookActivity,
@@ -207,7 +207,6 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         } else {
             ChatActivity.start(this, squareBean.accid ?: "")
         }
-    }
 
 
     /**

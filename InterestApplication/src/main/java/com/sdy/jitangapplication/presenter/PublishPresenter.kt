@@ -11,6 +11,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -38,7 +39,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
         keyList: MutableList<String> = mutableListOf()
     ) {
         if (!checkNetWork()) {
-            CommonFunction.toast("网络不可用")
+            CommonFunction.toast(context.getString(R.string.open_internet))
             return
         }
         //, @Field("tags[]") tagList: Array<Int?>, @Field("comment[]") keyList: Array<String?>?
@@ -91,7 +92,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
             return
         }
         if (!checkNetWork()) {
-            CommonFunction.toast("网络不可用")
+            CommonFunction.toast(context.getString(R.string.check_network))
             mView.onSquareAnnounceResult(1, false)
             return
         }

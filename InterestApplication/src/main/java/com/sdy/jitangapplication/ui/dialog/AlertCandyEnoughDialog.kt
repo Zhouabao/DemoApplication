@@ -8,8 +8,6 @@ import android.view.WindowManager
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
-import kotlinx.android.synthetic.main.customer_alert_dialog_layout.confirm
 import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
 import org.jetbrains.anko.startActivity
 
@@ -49,9 +47,9 @@ class AlertCandyEnoughDialog(var context1: Context, var from: Int = FROM_PRODUCT
 
     fun initview() {
         t2.text = if (from == FROM_PRODUCT) {
-            "您账户内糖果不足，暂不能兑换该商品，\n您也可以尝试充值后再试。"
+            context1.getString(R.string.not_enough_candy_to_exchange)
         } else {
-            "您账户内糖果不足，请充值后再试"
+            context1.getString(R.string.not_enough_candy)
         }
         cancel.onClick {
             dismiss()

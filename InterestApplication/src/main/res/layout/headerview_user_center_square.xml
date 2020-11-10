@@ -30,7 +30,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="5dp"
             android:gravity="center"
-            android:text="发布动态"
+            android:text="@string/dating_publish"
             android:textColor="#ffff6318"
             android:textSize="16sp" />
 

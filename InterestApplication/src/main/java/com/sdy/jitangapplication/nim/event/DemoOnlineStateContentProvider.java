@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.nim.event;
 
 import android.text.TextUtils;
+
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.uikit.api.model.main.OnlineStateContentProvider;
 
@@ -31,7 +33,7 @@ public class DemoOnlineStateContentProvider implements OnlineStateContentProvide
 
         // 被过滤掉的直接显示在线，如机器人
         if (OnlineStateEventSubscribe.subscribeFilter(account)) {
-            return "在线";
+            return DemoCache.getContext().getString(R.string.online);
         }
 
         // 检查是否订阅过

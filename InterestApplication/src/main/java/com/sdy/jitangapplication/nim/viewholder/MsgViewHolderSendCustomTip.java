@@ -51,11 +51,34 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
     protected void bindContentView() {
         attachment = (SendCustomTipAttachment) message.getAttachment();
         switch (attachment.getShowType()) {
-        case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT:// 小助手发聊天糖果退回警告 9
-            StringTokenizer tokenizer = new StringTokenizer(attachment.getContent(), "立即认证");
-            try {
-                notificationTextView.setText(SpanUtils.with(notificationTextView).append(tokenizer.nextToken())
-                        .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("立即认证")
+            case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT:// 小助手发聊天糖果退回警告 9
+                StringTokenizer tokenizer = new StringTokenizer(attachment.getContent(), context.getString(R.string.verify_now));
+                try {
+                    notificationTextView.setText(SpanUtils.with(notificationTextView).append(tokenizer.nextToken())
+                            .setForegroundColor(Color.parseColor("#FFC5C6C8")).append(context.getString(R.string.verify_now))
+                            .setClickSpan(new ClickableSpan() {
+                                @Override
+                                public void updateDrawState(@NonNull TextPaint ds) {
+                                    ds.setColor(Color.parseColor("#FF6796FA"));
+                                    ds.setUnderlineText(false);
+                                }
+
+                                @Override
+                                public void onClick(@NonNull View widget) {
+                                    CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+                                }
+                            }).setForegroundColor(Color.parseColor("#FF6796FA")).append(tokenizer.nextToken())
+                            .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
+                } catch (Exception e) {
+                    notificationTextView.setText(attachment.getContent());
+                    e.printStackTrace();
+                }
+                break;
+            case SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS:// 消息太多？你可以设置私聊权限仅黄金会员过滤消息
+                notificationTextView.setText(SpanUtils.with(notificationTextView)
+                        .append(context.getString(R.string.too_many_message_1))
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .append(context.getString(R.string.too_many_message_2))
                         .setClickSpan(new ClickableSpan() {
                             @Override
                             public void updateDrawState(@NonNull TextPaint ds) {
@@ -65,52 +88,40 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                             @Override
                             public void onClick(@NonNull View widget) {
-                                CommonFunction.INSTANCE.startToFace(context, IDVerifyActivity.TYPE_ACCOUNT_NORMAL, -1);
+                                Intent intent = new Intent(context, SettingsActivity.class);
+                                context.startActivity(intent);
                             }
-                        }).setForegroundColor(Color.parseColor("#FF6796FA")).append(tokenizer.nextToken())
-                        .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
-            } catch (Exception e) {
+                        })
+                        .setForegroundColor(Color.parseColor("#FF6796FA"))
+                        .append(context.getString(R.string.too_many_message_3))
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .create());
+                break;
+            case SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP:// 免费消息会被归于对方搭讪列表，可能回复率偏低， 充值黄金会员可提升消息回复
+                notificationTextView.setText(SpanUtils.with(notificationTextView)
+                        .append(context.getString(R.string.free_chat_message1))
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .append(context.getString(R.string.free_chat_message2))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(@NonNull TextPaint ds) {
+                                ds.setColor(Color.parseColor("#FF6796FA"));
+                                ds.setUnderlineText(false);
+                            }
+
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                CommonFunction.INSTANCE.startToVip(context, VipPowerActivity.SOURCE_FREE_CHAT, 0);
+                            }
+                        })
+                        .setForegroundColor(Color.parseColor("#FF6796FA"))
+                        .append(context.getString(R.string.free_chat_message3))
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .create());
+                break;
+            default:
                 notificationTextView.setText(attachment.getContent());
-                e.printStackTrace();
-            }
-            break;
-        case SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS:// 消息太多？你可以设置私聊权限仅黄金会员过滤消息
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("消息太多？你可以设置")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("私聊权限").setClickSpan(new ClickableSpan() {
-                        @Override
-                        public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(Color.parseColor("#FF6796FA"));
-                            ds.setUnderlineText(false);
-                        }
-
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            Intent intent = new Intent(context, SettingsActivity.class);
-                            context.startActivity(intent);
-                        }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("仅黄金会员过滤消息")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
-            break;
-        case SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP:// 免费消息会被归于对方搭讪列表，可能回复率偏低， 充值黄金会员可提升消息回复
-            notificationTextView.setText(SpanUtils.with(notificationTextView).append("免费消息会被归于对方搭讪列表，可能回复率偏低，\n")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).append("充值黄金会员")
-                    .setClickSpan(new ClickableSpan() {
-                        @Override
-                        public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(Color.parseColor("#FF6796FA"));
-                            ds.setUnderlineText(false);
-                        }
-
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            CommonFunction.INSTANCE.startToVip(context, VipPowerActivity.SOURCE_FREE_CHAT,0);
-                        }
-                    }).setForegroundColor(Color.parseColor("#FF6796FA")).append("可提升消息回复")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8")).create());
-            break;
-        default:
-            notificationTextView.setText(attachment.getContent());
-            break;
+                break;
         }
 
     }

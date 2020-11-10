@@ -65,7 +65,7 @@ public class ImageTakeActivity extends ImageBaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ImagePickerLauncher.takePicture(this, Constants.REQUEST_CODE_TAKE, imagePicker.getOption());
             } else {
-                showToast("权限被禁止，无法打开相机");
+                showToast(getString(R.string.permission_camera));
                 finish();
             }
         }

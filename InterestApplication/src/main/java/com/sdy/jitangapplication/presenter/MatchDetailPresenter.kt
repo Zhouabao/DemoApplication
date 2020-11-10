@@ -59,7 +59,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-                        mView.onError("服务器错误~")
+                        mView.onError(context.getString(R.string.server_error))
                         mView.onGetSquareListResult(null, false)
                     }
                 }
@@ -83,10 +83,10 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                         mView.onGetMatchDetailResult(true, t.data)
                     } else if (t.code == 409) {//用户被封禁
                         CommonAlertDialog.Builder(context)
-                            .setTitle("提示")
+                            .setTitle(context.getString(R.string.tip))
                             .setContent(t.msg)
                             .setCancelIconIsVisibility(false)
-                            .setConfirmText("知道了")
+                            .setConfirmText(context.getString(R.string.iknow))
                             .setCancelAble(false)
                             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                                 override fun onClick(dialog: Dialog) {

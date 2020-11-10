@@ -50,40 +50,40 @@ class VerifyThenChatDialog(
                 parmas.height = SizeUtils.dp2px(86F)
                 accountDangerLogo.layoutParams = parmas
                 GlideUtil.loadCircleImg(context1, true, UserManager.getAvator(), accountDangerLogo)
-                moreInfoTitle.text = "认证须知"
-                t2.text = "审核将与你的头像做校对，视频内容对会员用户公开为你的视频介绍，请点击录制键后介绍自己吧"
-                verifyBtn.text = "好的"
+                moreInfoTitle.text = context1.getString(R.string.verify_know)
+                t2.text = context1.getString(R.string.verify_notice1)
+                verifyBtn.text = context1.getString(R.string.ok_1)
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_24dp)
                 closeBtn.isVisible = true
             }
             FROM_CHAT_VERIFY -> {//认证才能聊天
                 closeBtn.isVisible = false
                 accountDangerLogo.setImageResource(R.drawable.icon_verify_to_logo)
-                moreInfoTitle.text = "认证后才能发起聊天"
+                moreInfoTitle.text = context1.getString(R.string.verify_then_chat)
                 SpanUtils.with(t2)
-                    .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
+                    .append(context1.getString(R.string.verify_then_chat_content))
                     .create()
-                verifyBtn.text = "立即认证"
+                verifyBtn.text = context1.getString(R.string.verify_now)
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
             }
             FROM_CONTACT_VERIFY -> {//认证才能解锁联系方式
                 closeBtn.isVisible = false
                 accountDangerLogo.setImageResource(R.drawable.icon_verify_then_contact)
-                moreInfoTitle.text = "认证后才能解锁联系方式"
+                moreInfoTitle.text = context1.getString(R.string.verify_then_unlock)
                 SpanUtils.with(t2)
-                    .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
+                    .append(context1.getString(R.string.face_then_chat_to_real))
                     .create()
-                verifyBtn.text = "立即认证"
+                verifyBtn.text = context1.getString(R.string.verify_now)
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
             }
             FROM_APPLY_DATING -> {//认证才能解锁联系方式
                 closeBtn.isVisible = false
                 accountDangerLogo.setImageResource(R.drawable.icon_verify_to_logo)
-                moreInfoTitle.text = "认证后才能发起报名活动"
+                moreInfoTitle.text = context1.getString(R.string.verify_then_apply_dating)
                 SpanUtils.with(t2)
-                    .append("本平台为真人社交平台，为保护付费用户利益和真实性，您需要先进行人脸验证")
+                    .append(context1.getString(R.string.face_then_chat_to_real))
                     .create()
-                verifyBtn.text = "立即认证"
+                verifyBtn.text = context1.getString(R.string.verify_now)
                 verifyBtn.setBackgroundResource(R.drawable.shape_rectangle_blue_24dp)
             }
         }

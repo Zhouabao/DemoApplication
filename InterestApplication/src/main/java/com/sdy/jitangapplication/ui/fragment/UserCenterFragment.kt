@@ -163,7 +163,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("动态", "活动", "兴趣")
+    private val titles by lazy { arrayOf(getString(R.string.tab_square), getString(R.string.tab_dating), getString(
+        R.string.tab_label)) }
 
 
     override fun onDestroy() {
@@ -308,7 +309,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
 
-    private val guideContent by lazy { "完成认证获取更多曝光" }
+    private val guideContent by lazy { getString(R.string.verify_to_more_expode) }
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
 
         if (userinfo != null) {
@@ -379,10 +380,10 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             R.id.userVerify -> {
                 when (userInfoBean?.userinfo?.isfaced) {
                     1 -> {
-                        CommonFunction.toast("您已通过认证")
+                        CommonFunction.toast(getString(R.string.verify_pass))
                     }
                     2, 3 -> {
-                        CommonFunction.toast("认证审核中...")
+                        CommonFunction.toast(getString(R.string.verify_checking))
                     }
                     else -> {
                         CommonFunction.startToFace(

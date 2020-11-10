@@ -64,10 +64,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
 
     private fun initView() {
         if (fromCandy) {
-            t7.text = "兑换金额:"
+            t7.text = myContext.getString(R.string.exchange_money)
             candyCount.isVisible = true
         } else {
-            t7.text = "提现金额:"
+            t7.text = myContext.getString(R.string.withdraw_money)
             candyCount.visibility = View.INVISIBLE
         }
         t8.isVisible = fromCandy
@@ -81,12 +81,15 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             pullWithdrawBean?.red_balance_money ?: 0F
                         }
                     ) {
+
                         CommonFunction.toast(
-                            "可提现金额不能大于${if (fromCandy) {
-                                pullWithdrawBean?.money_amount ?: 0F
-                            } else {
-                                pullWithdrawBean?.red_balance_money ?: 0F
-                            }}"
+                            myContext.getString(
+                                R.string.withdraw_max, if (fromCandy) {
+                                    pullWithdrawBean?.money_amount ?: 0F
+                                } else {
+                                    pullWithdrawBean?.red_balance_money ?: 0F
+                                }
+                            )
                         )
                         inputWithdrawMoney.setText("")
                     }
@@ -178,7 +181,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                         if (t.code == 200) {
                             pullWithdrawBean = t.data
                             candyCount.text = "${pullWithdrawBean?.candy_amount}"
-                            withdrawMoney.text = "可提现¥${pullWithdrawBean?.money_amount}"
+                            withdrawMoney.text = myContext.getString(
+                                R.string.can_withdraw,
+                                pullWithdrawBean?.money_amount
+                            )
                             if (pullWithdrawBean?.alipay != null)
                                 wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
                         }
@@ -192,7 +198,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                         super.onNext(t)
                         if (t.code == 200) {
                             pullWithdrawBean = t.data
-                            withdrawMoney.text = "可提现¥${pullWithdrawBean?.red_balance_money}"
+                            withdrawMoney.text = myContext.getString(
+                                R.string.can_withdraw,
+                                pullWithdrawBean?.red_balance_money
+                            )
                             if (pullWithdrawBean?.alipay != null)
                                 wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
                         }
@@ -225,7 +234,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             withdrawSuccessCl.isVisible = true
                             withdrawID.text = "${t.data?.trade_no}"
                             withdrawTime.text = "${t.data?.create_tme}"
-                            withdrawCandy.text = "${t.data?.candy_amount}颗"
+                            withdrawCandy.text =
+                                t.data?.candy_amount.toString() + context.getString(
+                                    R.string.count_unit
+                                )
                             withdrawMoney1.text = "¥${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
@@ -256,7 +268,9 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             withdrawSuccessCl.isVisible = true
                             withdrawID.text = "${t.data?.trade_no}"
                             withdrawTime.text = "${t.data?.create_tme}"
-                            withdrawCandy.text = "${t.data?.candy_amount}颗"
+                            withdrawCandy.text = "${t.data?.candy_amount}${context.getString(
+                                R.string.count_unit
+                            )}"
                             withdrawMoney1.text = "¥${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyWithDraw(t.data?.money_amount ?: 0F))

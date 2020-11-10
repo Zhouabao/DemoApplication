@@ -240,11 +240,11 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         moreActionDialog.show()
 
         if (squareBean!!.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collect.text = getString(R.string.collect)
             val top = resources.getDrawable(R.drawable.icon_collect1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
-            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collect.text = getString(R.string.cancel_collect)
             val top = resources.getDrawable(R.drawable.icon_collected1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
@@ -258,7 +258,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to squareBean!!.id!!
@@ -271,7 +271,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
         moreActionDialog.collect.onClick {
             //发起收藏请求
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (squareBean!!.iscollected == 0) {
@@ -289,14 +289,14 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
-            dialog.title.text = "动态举报"
-            dialog.confirm.text = "举报"
+            dialog.title.text = getString(R.string.report_square_title)
+            dialog.confirm.text = getString(R.string.report)
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
                 dialog.dismiss()
 
                 //发起举报请求
-                val params = hashMapOf(
+                val params = hashMapOf<String,Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (squareBean!!.iscollected == 0) {
@@ -319,23 +319,23 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onRemoveMySquareResult(b: Boolean, position: Int) {
         if (b) {
-            CommonFunction.toast("删除动态成功！")
+            CommonFunction.toast(getString(R.string.delete_success))
             finish()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             EventBus.getDefault().post(RefreshDeleteSquareEvent(squareBean!!.id ?: 0))
             EventBus.getDefault().postSticky(UserCenterEvent(true))
         } else {
-            CommonFunction.toast("删除动态失败！")
+            CommonFunction.toast(getString(R.string.delete_fail))
         }
 
     }
 
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
-            CommonFunction.toast("举报成功！")
+            CommonFunction.toast(getString(R.string.report_success))
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
-            CommonFunction.toast("举报失败！")
+            CommonFunction.toast(getString(R.string.report_fail))
         }
     }
 
@@ -408,7 +408,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
             //点赞
             R.id.detailPlaydianzan -> {
-                val params = hashMapOf(
+                val params = hashMapOf<String,Any>(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "type" to if (squareBean.isliked == 1) {
@@ -436,7 +436,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                         ), 0
                     )
                 } else
-                    CommonFunction.toast("说点什么吧")
+                    CommonFunction.toast(getString(R.string.say_something))
             }
 
         }
@@ -474,7 +474,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("SquarePlayDetailActivity=", "onDestroy")
+        Log.d(TAG1, "onDestroy")
 
         if (intent.getBooleanExtra("fromRecommend", false)) {
             detailPlayVideo.release()

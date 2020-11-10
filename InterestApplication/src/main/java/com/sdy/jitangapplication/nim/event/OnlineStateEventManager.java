@@ -41,7 +41,7 @@ public class OnlineStateEventManager {
     private static final String NET_TYPE_3G = "3G";
     private static final String NET_TYPE_4G = "4G";
     private static final String NET_TYPE_WIFI = "WiFi";
-    private static final String UNKNOWN = "未知";
+    private static final String UNKNOWN = DemoCache.getContext().getString(R.string.unknown);
 
     // 已发布的网络状态
     private static int pubNetState = -1;

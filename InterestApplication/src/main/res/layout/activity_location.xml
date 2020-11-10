@@ -74,7 +74,7 @@
             android:gravity="center"
             app:iconifiedByDefault="false"
             app:queryBackground="@null"
-            app:queryHint="搜索地点"
+            app:queryHint="@string/search_place"
             app:searchIcon="@drawable/icon_searchview"
             app:showDividers="none"
             app:submitBackground="@null" />

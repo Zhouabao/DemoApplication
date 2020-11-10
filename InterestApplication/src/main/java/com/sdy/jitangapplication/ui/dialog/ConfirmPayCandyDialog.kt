@@ -173,16 +173,16 @@ class ConfirmPayCandyDialog(
                         // 判断resultStatus 为9000则代表支付成功
                         if (TextUtils.equals(resultStatus, "9000")) {
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            showAlert(myContext, "支付成功！", true)
+                            showAlert(myContext, myContext.getString(R.string.pay_success), true)
                         } else if (TextUtils.equals(resultStatus, "8000")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(myContext, "支付结果确认中！", false)
+                            showAlert(myContext, myContext.getString(R.string.pay_checking), false)
                         } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(myContext, "支付取消！", false)
+                            showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
                         } else {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(myContext, "支付失败！", false)
+                            showAlert(myContext, myContext.getString(R.string.pay_fail), false)
                         }
 
                     }
@@ -204,7 +204,7 @@ class ConfirmPayCandyDialog(
             val wxapi = WXAPIFactory.createWXAPI(myContext, null)
             wxapi.registerApp(Constants.WECHAT_APP_ID)
             if (!wxapi.isWXAppInstalled) {
-                CommonFunction.toast("你没有安装微信")
+                CommonFunction.toast(myContext.getString(R.string.unload_wechat))
                 return
             }
 
@@ -238,7 +238,7 @@ class ConfirmPayCandyDialog(
 
     private fun showAlert(ctx: Context, info: String, result: Boolean) {
         CommonAlertDialog.Builder(ctx)
-            .setTitle("支付结果")
+            .setTitle(myContext.getString(R.string.pay_result))
             .setContent(info)
             .setCancelIconIsVisibility(false)
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {

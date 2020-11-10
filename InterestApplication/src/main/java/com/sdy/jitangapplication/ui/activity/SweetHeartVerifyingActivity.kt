@@ -25,7 +25,7 @@ class SweetHeartVerifyingActivity : BaseActivity() {
 
     private fun initView() {
         setSwipeBackEnable(false)
-        hotT1.text = "甜心圈认证"
+        hotT1.text = getString(R.string.sweet_girl_title)
         btnBack.isInvisible = true
         btnBack.clickWithTrigger { clearActivity() }
         okBtn.clickWithTrigger {

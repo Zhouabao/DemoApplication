@@ -124,7 +124,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
         mRangeSeekBarView.setSelectedMinValue(mLeftProgressPos);
         mRangeSeekBarView.setSelectedMaxValue(mRightProgressPos);
         mRangeSeekBarView.setStartEndTime(mLeftProgressPos, mRightProgressPos);
-        chooseTimeTv.setText("已选取 " + (mRightProgressPos - mLeftProgressPos) / 1000L + "s");
+        chooseTimeTv.setText(getContext().getString(R.string.alreadey_choose) + (mRightProgressPos - mLeftProgressPos) / 1000L + "s");
         mRangeSeekBarView.setMinShootTime(VideoTrimmerUtil.MIN_SHOOT_DURATION);
         mRangeSeekBarView.setNotifyWhileDragging(true);
         mRangeSeekBarView.setOnRangeSeekBarChangeListener(mOnRangeSeekBarChangeListener);
@@ -242,7 +242,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
 
     private void onSaveClicked() {
         if (mRightProgressPos - mLeftProgressPos < VideoTrimmerUtil.MIN_SHOOT_DURATION) {
-            CommonFunction.INSTANCE.toast("视频长不足" + MIN_SHOOT_DURATION / 1000L + "秒,无法上传");
+            CommonFunction.INSTANCE.toast(getContext().getString(R.string.cannot_cause_duration_short,MIN_SHOOT_DURATION / 1000L)  );
         } else {
             mVideoView.pause();
             VideoTrimmerUtil.trim(mContext, mSourceUri.getPath(), StorageUtil.getCacheDir(), mLeftProgressPos,
@@ -298,7 +298,7 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
 
                     mRangeSeekBarView.setStartEndTime(mLeftProgressPos, mRightProgressPos);
 
-                    chooseTimeTv.setText("已选取 " + (mRightProgressPos - mLeftProgressPos) / 1000L + "s");
+                    chooseTimeTv.setText(getContext().getString(R.string.alreadey_choose) + (mRightProgressPos - mLeftProgressPos) / 1000L + "s");
                 }
             };
 

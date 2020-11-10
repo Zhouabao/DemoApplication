@@ -61,8 +61,8 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         mPresenter.mView = this
         mPresenter.context = this
 
-        hotT1.text = "搭讪列表"
-        rightBtn.text = "隐私权限"
+        hotT1.text = getString(R.string.accost_title)
+        rightBtn.text = getString(R.string.privacy_power)
         rightBtn.setTextColor(Color.parseColor("#191919"))
         rightBtn.isVisible = UserManager.getGender() == 2
         btnBack.clickWithTrigger {
@@ -100,11 +100,11 @@ class AccostListActivity : BaseMvpActivity<AccostListPresenter>(), AccostListVie
         blackLl.isVisible = UserManager.getGender() == 2
 
         SpanUtils.with(privacyTip)
-            .append("列表均为初级会员通过免费消息渠道产生的回话，可调整右上角")
+            .append(resources.getString(R.string.accost_tip1))
             .setForegroundColor(Color.parseColor("#191919"))
-            .append("私聊权限")
+            .append(resources.getString(R.string.accost_tip2))
             .setForegroundColor(Color.parseColor("#FF6796FA"))
-            .append("仅接受更优质用户拒绝骚扰无效信息")
+            .append(resources.getString(R.string.accost_tip3))
             .setForegroundColor(Color.parseColor("#191919"))
             .create()
         closePrivacy.clickWithTrigger {

@@ -41,7 +41,7 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
         )
 
         if (UserManager.getGender() == 1) {
-            hotT1.text = "资产认证"
+            hotT1.text = getString(R.string.sweet_wealth_title)
 
             sweetVerifyWay1.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -49,7 +49,7 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                 null,
                 null
             )
-            sweetVerifyWay1.text = "豪宅认证"
+            sweetVerifyWay1.text = getString(R.string.sweet_big_house_title)
             sweetVerifyWay1.setTextColor(resources.getColor(R.color.colorBlack19))
 
             sweetVerifyWay2.setCompoundDrawablesWithIntrinsicBounds(
@@ -58,10 +58,10 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                 null,
                 null
             )
-            sweetVerifyWay2.text = "豪车认证"
+            sweetVerifyWay2.text =  getString(R.string.sweet_luxury_car_title)
             sweetVerifyWay2.setTextColor(resources.getColor(R.color.colorBlack19))
         } else {
-            hotT1.text = "甜心圈认证"
+            hotT1.text = getString(R.string.sweet_girl_title)
 
             sweetVerifyWay1.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -69,7 +69,7 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                 null,
                 null
             )
-            sweetVerifyWay1.text = "身材认证"
+            sweetVerifyWay1.text = getString(R.string.sweet_figure_title)
             sweetVerifyWay1.setTextColor(resources.getColor(R.color.colorBlack19))
 
             sweetVerifyWay2.setCompoundDrawablesWithIntrinsicBounds(
@@ -78,7 +78,7 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                 null,
                 null
             )
-            sweetVerifyWay2.text = "职业认证"
+            sweetVerifyWay2.text = getString(R.string.sweet_job_title)
             sweetVerifyWay2.setTextColor(resources.getColor(R.color.colorBlack19))
         }
 
@@ -109,11 +109,11 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                     type = TYPE_WEALTH
 
                     SpanUtils.with(sweetVerifyTip)
-                        .append("需提交房产")
-                        .append("大于200平米")
+                        .append(getString(R.string.need_commit_house))
+                        .append(getString(R.string.bigger_than_200))
                         .setForegroundColor(Color.parseColor("#FF5A85F6"))
                         .setBold()
-                        .append("的证明\n房产认证是个人实力的表现\n认证成功后可直接加入甜心圈，提高交友效率")
+                        .append(getString(R.string.approve__ability))
                         .create()
 
                 } else {
@@ -134,11 +134,11 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
                     type = TYPE_FIGURE
 
                     SpanUtils.with(sweetVerifyTip)
-                        .append("胸围需")
-                        .append("大于C罩杯\n")
+                        .append(getString(R.string.chest_size))
+                        .append(getString(R.string.bigger_than_c))
                         .setForegroundColor(Color.parseColor("#FF5A85F6"))
                         .setBold()
-                        .append("身材是您个人魅力的体现\n认证后关注度会大幅提高")
+                        .append(getString(R.string.to_show_magic))
                         .create()
 
 
@@ -166,11 +166,11 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
 
                     type = TYPE_CAR
                     SpanUtils.with(sweetVerifyTip)
-                        .append("需要提交")
-                        .append("行驶证，且车辆价格大于50万\n")
+                        .append(getString(R.string.need_commit))
+                        .append(getString(R.string.driving_license_price_more_than_50))
                         .setForegroundColor(Color.parseColor("#FF5A85F6"))
                         .setBold()
-                        .append("认证后对外展示您的车辆图片真实度\n提高您的交友效率，使您信息更真实可靠")
+                        .append(getString(R.string.to_show_your_car))
                         .create()
                 } else {
                     sweetVerifyWay1.setCompoundDrawablesWithIntrinsicBounds(
@@ -191,11 +191,11 @@ class SweetHeartVerifyActivity : BaseActivity(), View.OnClickListener {
 
 //                    要求提交能证明职业的照片
                     SpanUtils.with(sweetVerifyTip)
-                        .append("要求提交")
-                        .append("能证明职业")
+                        .append(getString(R.string.must_commit))
+                        .append(getString(R.string.job_prove))
                         .setForegroundColor(Color.parseColor("#FF5A85F6"))
                         .setBold()
-                        .append("的照片\n职业不限于：\n空乘、护士、教师、舞蹈老师、瑜伽教练、白领、幼师、演员、模特、在校大学生")
+                        .append(getString(R.string.pic_like_model))
                         .create()
                 }
 

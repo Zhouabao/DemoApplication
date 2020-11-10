@@ -25,7 +25,7 @@ class AboutActivity : BaseActivity() {
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "关于"
+        hotT1.text = resources.getString(R.string.about)
         privacyPolicy.onClick {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL )
         }

@@ -85,7 +85,7 @@ class VipPowerActivity() :
         btnBack.setImageResource(R.drawable.icon_back_white)
         divider.isVisible = false
         hotT1.setTextColor(resources.getColor(R.color.colorWhite))
-        hotT1.text = "会员权益"
+        hotT1.text = getString(R.string.vip_power)
         btnBack.onClick { finish() }
 
         initVp2()
@@ -233,13 +233,13 @@ class VipPowerActivity() :
                 BigDecimal.ROUND_HALF_UP
             )
         }} ${if (data.isplatinum) {
-            "续费"
+            getString(R.string.vip_renew)
         } else {
-            "获取"
+            getString(R.string.vip_buy)
         }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-            "黄金会员"
+            getString(R.string.vip_gold)
         } else {
-            "至尊直联卡"
+            getString(R.string.vip_connection_card)
         }}"
         val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
         val chargeManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -261,13 +261,13 @@ class VipPowerActivity() :
                     BigDecimal.ROUND_HALF_UP
                 )
             }} ${if (data.isplatinum) {
-                "续费"
+                getString(R.string.vip_renew)
             } else {
-                "获取"
+                getString(R.string.vip_buy)
             }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-                "黄金会员"
+                getString(R.string.vip_gold)
             } else {
-                "至尊直联卡"
+                getString(R.string.vip_connection_card)
             }}"
             chargePriceAdapter.notifyDataSetChanged()
         }

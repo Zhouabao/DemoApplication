@@ -53,9 +53,9 @@ class VerifyForceDialog(val context1: Context, var status: Int = VIDEO_INTRODUCE
                 verifyIngAni.cancelAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_oval_green_verify_pass)
                 verifyStateLogo.setImageResource(R.drawable.icon_checked_relation)
-                continueBtn.text = "继续使用"
-                verifyState.text = "审核通过"
-                verifyTip.text = "您已通过视频审核\n已开启私聊权限"
+                continueBtn.text = context1.getString(R.string.continue_use)
+                verifyState.text = context1.getString(R.string.mv_pass)
+                verifyTip.text = context1.getString(R.string.mv_pass_to_chat)
 
                 continueBtn.clickWithTrigger {
                     dismiss()
@@ -66,18 +66,18 @@ class VerifyForceDialog(val context1: Context, var status: Int = VIDEO_INTRODUCE
                 verifyIngAni.cancelAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_fail)
                 verifyStateLogo.setImageResource(R.drawable.icon_delete)
-                continueBtn.text = "重新认证"
-                verifyState.text = "审核失败"
-                verifyTip.text = "视频审核未通过\n您可以重新视频认证"
+                continueBtn.text = context1.getString(R.string.mv_reverify)
+                verifyState.text = context1.getString(R.string.verify_fail)
+                verifyTip.text = context1.getString(R.string.mv_not_pass)
             }
             VIDEO_INTRODUCE_GOING -> {
 //                verifyIngAni.isVisible = true
 //                verifyIngAni.playAnimation()
                 verifyStateBg.setImageResource(R.drawable.rectangle_red_green_verify_ing)
                 verifyStateLogo.setImageResource(R.drawable.icon_wait_time)
-                verifyState.text = "视频正在审核中"
-                verifyTip.text = "视频正在审核中\n开启通知将在第一时间通知您"
-                continueBtn.text = "好的"
+                verifyState.text = context1.getString(R.string.mv_checking)
+                verifyTip.text = context1.getString(R.string.my_checking_content)
+                continueBtn.text = context1.getString(R.string.ok_1)
                 continueBtn.clickWithTrigger {
                     (context1 as Activity).finish()
                     dismiss()

@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_visit.*
 import kotlinx.android.synthetic.main.item_visit_headview.view.*
-import org.jetbrains.anko.support.v4.startActivity
 
 /**
  *
@@ -46,7 +45,7 @@ class MyVisitFragment(
     //    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("freeShow", false)) }
     private val visitAdapter by lazy { MyVisitAdater(freeShow) }
     private val params by lazy {
-        hashMapOf<String,Any>(
+        hashMapOf<String, Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
@@ -84,15 +83,15 @@ class MyVisitFragment(
         visitAdapter.setEmptyView(R.layout.empty_layout, visitRv)
         if (from == MyVisitActivity.FROM_ME) {
             val view = layoutInflater.inflate(R.layout.item_visit_headview, visitRv, false)
-            view.visitTodayCount.text = "今日来访：${today}"
-            view.visitAllCount.text = "总来访：${all}"
+            view.visitTodayCount.text = getString(R.string.today_visit1, today)
+            view.visitAllCount.text = getString(R.string.all_visit_1, all)
         }
 
         visitAdapter.isUseEmpty(false)
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            CommonFunction.startToVip(activity!!,VipPowerActivity.SOURCE_VISITED_ME)
+            CommonFunction.startToVip(activity!!, VipPowerActivity.SOURCE_VISITED_ME)
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

@@ -37,11 +37,11 @@ class QuickSignActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAboutMe
         mPresenter.context = this
         mPresenter.mView = this
 
-        hotT1.text = "快速签名"
+        hotT1.text = getString(R.string.quick_sign)
         btnBack.onClick {
             finish()
         }
-        rightBtn1.text = "完成"
+        rightBtn1.text = getString(R.string.complete)
         rightBtn1.isVisible = true
 
         btnBack.setOnClickListener(this)

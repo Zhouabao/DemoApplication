@@ -45,7 +45,8 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
 
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("推荐", "附近", "甜心圈") }
+    private val titles by lazy { arrayOf(getString(R.string.tab_recommend), getString(R.string.tab_nearby), getString(
+            R.string.tab_sweet)) }
 
     //    private val matchFragment by lazy { MatchFragment() }
     private val recommendFragment by lazy { PeopleNearbyFragment(PeopleNearbyFragment.TYPE_RECOMMEND) }

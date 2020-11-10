@@ -250,7 +250,7 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
             }
 
             override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
+                CommonFunction.toast(getString(R.string.audio_error))
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
 //                adapter.notifyDataSetChanged()

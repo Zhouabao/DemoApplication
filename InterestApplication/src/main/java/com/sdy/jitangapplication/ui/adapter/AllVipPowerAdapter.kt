@@ -22,7 +22,7 @@ import java.math.BigDecimal
 class AllVipPowerAdapter :
     BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout.item_power_pt_vip) {
     var threshold_btn: Boolean = false //门槛开关
-    var source_type: Int =-1
+    var source_type: Int = -1
     override fun convert(helper: BaseViewHolder, data: VipPowerBean) {
         setPriceData(helper, data)
     }
@@ -47,14 +47,15 @@ class AllVipPowerAdapter :
                 BigDecimal.ROUND_HALF_UP
             )
         }} ${if (data.isplatinum) {
-            "续费"
+            mContext.getString(R.string.vip_renew)
         } else {
-            "获取"
+            mContext.getString(R.string.vip_buy)
         }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-            "黄金会员"
+            mContext.getString(R.string.vip_gold)
         } else {
-            "至尊直联卡"
+            mContext.getString(R.string.vip_connection_card)
         }}"
+
         val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
         val chargeManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         helper.itemView.vipPriceRv.layoutManager = chargeManager
@@ -75,13 +76,13 @@ class AllVipPowerAdapter :
                     BigDecimal.ROUND_HALF_UP
                 )
             }} ${if (data.isplatinum) {
-                "续费"
+                mContext.getString(R.string.vip_renew)
             } else {
-                "获取"
+                mContext.getString(R.string.vip_buy)
             }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-                "黄金会员"
+                mContext.getString(R.string.vip_gold)
             } else {
-                "至尊直联卡"
+                mContext.getString(R.string.vip_connection_card)
             }}"
             chargePriceAdapter.notifyDataSetChanged()
         }
@@ -96,7 +97,7 @@ class AllVipPowerAdapter :
                 }
             }
             if (position != null)
-                ConfirmPayCandyDialog(mContext, position, data.payway,source_type).show()
+                ConfirmPayCandyDialog(mContext, position, data.payway, source_type).show()
         }
 
 

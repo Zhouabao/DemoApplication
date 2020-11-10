@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.uinfo.model.UserInfo;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
 
 public class UserInfoHelper {
@@ -12,7 +14,7 @@ public class UserInfoHelper {
     public static String getUserTitleName(String id, SessionTypeEnum sessionType) {
         if (sessionType == SessionTypeEnum.P2P) {
             if (NimUIKit.getAccount().equals(id)) {
-                return "我";
+                return DemoCache.getContext().getString(R.string.me);
             } else {
                 return getUserDisplayName(id);
             }

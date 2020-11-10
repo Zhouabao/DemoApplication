@@ -70,9 +70,9 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
         //android 瀑布流
         datingSquareAdapter.setHeaderAndEmpty(false)
         datingSquareAdapter.setEmptyView(R.layout.empty_my_square_layout, rvMyTag)
-        datingSquareAdapter.emptyView.emptyPublishBtn.text = "发布活动"
+        datingSquareAdapter.emptyView.emptyPublishBtn.text = getString(R.string.dating_publish)
         datingSquareAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_my_square)
-        datingSquareAdapter.emptyView.emptyMySquareTip.text = "您还没有发布过活动\n快发布你的第一次活动吧"
+        datingSquareAdapter.emptyView.emptyMySquareTip.text = getString(R.string.publish_first_dating)
         datingSquareAdapter.emptyView.emptyPublishBtn.onClick {
             CommonFunction.checkPublishDating(activity!!)
         }
@@ -103,7 +103,7 @@ class MyDatingFragment : BaseMvpFragment<MyDatingPresenter>(), MyDatingView, OnR
         val headDating = LayoutInflater.from(activity!!)
             .inflate(R.layout.headerview_user_center_square, rvMyTag, false)
         headDating.publishImg.setImageResource(R.drawable.icon_update_dating)
-        headDating.publishBtn.text = "更新活动"
+        headDating.publishBtn.text = getString(R.string.update_dating)
         headDating.publishCl.onClick {
             CommonFunction.checkPublishDating(activity!!)
         }

@@ -46,7 +46,7 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
         BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorOrange))
         llTitle.setBackgroundColor(resources.getColor(R.color.colorOrange))
         btnBack.setImageResource(R.drawable.icon_back_white)
-        hotT1.text = "所有邀请"
+        hotT1.text = getString(R.string.all_invite)
         hotT1.setTextColor(Color.WHITE)
         btnBack.clickWithTrigger {
             finish()
@@ -93,7 +93,8 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
             } else {
                 stateMyInvite.viewState = MultiStateView.VIEW_STATE_CONTENT
                 refreshMyInvited.finishRefresh()
-                rewardsPercent.text = "享${data!!.now_rate}%分佣"
+                rewardsPercent.text =
+                    getString(R.string.shared,data!!.now_rate)
                 rewardsMoreLevel.isVisible = !data!!.title.isNullOrEmpty()
                 rewardsMoreLevel.text = data!!.title
                 when (data!!.now_level) {

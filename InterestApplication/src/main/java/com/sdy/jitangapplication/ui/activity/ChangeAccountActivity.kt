@@ -36,17 +36,17 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
         mPresenter.mView = this
         mPresenter.context = this
 
-        hotT1.text = "变更账号"
+        hotT1.text = getString(R.string.account_change_title)
         btnBack.setOnClickListener(this)
         verifycodeBtn.setOnClickListener(this)
         confirmChangeBtn.setOnClickListener(this)
         loginOff.setOnClickListener(this)
 
         loginOff.text = SpanUtils.with(loginOff)
-            .append("如需注销当前帐号，请直接选择“")
-            .append("注销账号")
+            .append(getString(R.string.account_login_offtip1))
+            .append(getString(R.string.account_login_offtip2))
             .setForegroundColor(resources.getColor(R.color.colorOrange))
-            .append("”\n账号一经注销，您的账号将不会再被任何人看到，\n并且聊天记录会被清空，请谨慎操作。")
+            .append(getString(R.string.account_login_offtip3))
             .create()
 
         newPhoneEt.addTextChangedListener(object : TextWatcher {
@@ -56,10 +56,10 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
                 if (editable.isNotEmpty() && editable.length == 11) {
                     countTimer.onFinish()
                     verifycodeBtn.isEnabled = true
-                    verifycodeBtn.text = "获取验证码"
+                    verifycodeBtn.text = getString(R.string.get_verify_code)
                 } else {
                     verifycodeBtn.isEnabled = false
-                    verifycodeBtn.text = "获取验证码"
+                    verifycodeBtn.text = getString(R.string.get_verify_code)
                 }
 
             }
@@ -94,12 +94,12 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
     private val countTimer by lazy {
         object : CountDownTimer(60 * 1000, 1000) {
             override fun onFinish() {
-                verifycodeBtn.text = "重新获取"
+                verifycodeBtn.text = getString(R.string.reget_verify_code)
                 verifycodeBtn.isEnabled = true
             }
 
             override fun onTick(p0: Long) {
-                verifycodeBtn.text = "${p0 / 1000}秒后重发"
+                verifycodeBtn.text = "${p0 / 1000}${getString(R.string.seconds_resend)}"
                 verifycodeBtn.isEnabled = false
             }
 

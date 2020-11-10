@@ -170,7 +170,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private fun initData() {
         if (type == TYPE_SWEET && squareBean!!.accid == UserManager.getAccid()) {
-            hotT1.text = "我的认证资料"
+            hotT1.text = getString(R.string.my_info_title)
         }
 
         when {
@@ -273,16 +273,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareSweetVerifyName.text = squareBean!!.assets_audit_descr
             squareSweetVerifyContent.text = when (squareBean!!.approve_type) {
                 1 -> {
-                    "平台认证高资产用户，想和他交个朋友吗"
+                    getString(R.string.sweet_rich_user)
                 }
                 2 -> {
-                    "平台认证豪车用户，听说上车会很热呢"
+                    getString(R.string.sweet_luxury_car)
                 }
                 3 -> {
-                    "经平台评估身材具有吸引力和有一定高端约会意向"
+                    getString(R.string.sweet_good_shencai)
                 }
                 else -> {
-                    "职业认证通过代表用户职业正当且有一定高端约会意向"
+                    getString(R.string.sweet_job)
                 }
             }
             squareSweetVerifyContentCl.setBackgroundResource(
@@ -405,13 +405,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         if (type == TYPE_SWEET) {
-            hotT1.text = "${if (gender == 1) {
-                "他"
+            hotT1.text = if (gender == 1) {
+                getString(R.string.he)
             } else {
-                "她"
-            }}的认证资料"
+                getString(R.string.she)
+            } + getString(R.string.verify_info)
         } else {
-            hotT1.text = "动态详情"
+            hotT1.text = getString(R.string.square_detail)
         }
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
@@ -432,7 +432,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             reply = true
             reply_id = adapter.data[position].id!!.toInt()
             showCommentEt.isFocusable = true
-            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+            showCommentEt.hint = "『${getString(R.string.reply)}" + "\t${adapter.data[position].nickname}" + "：』"
             KeyboardUtils.showSoftInput(showCommentEt)
         }
 
@@ -470,7 +470,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 R.id.commentReplyBtn -> {
                     reply = true
                     reply_id = adapter.data[position].id!!
-                    showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
+                    showCommentEt.hint = "『${getString(R.string.reply)}${adapter.data[position].replyed_nickname}：』"
                     KeyboardUtils.showSoftInput(showCommentEt)
                 }
             }
@@ -568,7 +568,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
 
             override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
+                CommonFunction.toast(getString(R.string.audio_play_error))
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
@@ -711,7 +711,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onGetSquareInfoResults(data: SquareBean?) {
         if (data != null) {
             if (data.id == null) {
-                CommonFunction.toast("该动态已被删除")
+                CommonFunction.toast(getString(R.string.remove_square))
                 finish()
                 return
             }
@@ -732,7 +732,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 mPresenter.getCommentList(commentParams, true)
             }
         } else {
-            CommonFunction.toast("该动态已被删除")
+            CommonFunction.toast(getString(R.string.remove_square))
             finish()
         }
     }
@@ -742,14 +742,14 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.setNoMoreData(false)
             if (allCommentBean != null) {
                 if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                    adapter.addData(CommentBean(content = "热门评论", type = CommentBean.TITLE))
+                    adapter.addData(CommentBean(content = getString(R.string.hot_comment), type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.hotlist!!.size) {
                         allCommentBean.hotlist!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                    adapter.addData(CommentBean(content = "所有评论", type = CommentBean.TITLE))
+                    adapter.addData(CommentBean(content = getString(R.string.all_comment), type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.list!!.size) {
                         allCommentBean.list!![i]!!.type = CommentBean.CONTENT
                     }
@@ -869,7 +869,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
-        if (data.msg == "删除成功!") {
+        if (data.msg == getString(R.string.delete_success)) {
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
@@ -961,11 +961,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         moreActionDialog.show()
 
         if (squareBean!!.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collect.text = getString(R.string.collect)
             val top = resources.getDrawable(R.drawable.icon_collect1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
-            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collect.text = getString(R.string.cancel_collect)
             val top = resources.getDrawable(R.drawable.icon_collected1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
@@ -1010,8 +1010,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
-            dialog.title.text = "动态举报"
-            dialog.confirm.text = "举报"
+            dialog.title.text = getString(R.string.report_square_title)
+            dialog.confirm.text = getString(R.string.report)
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
                 dialog.dismiss()
@@ -1035,7 +1035,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onRemoveMySquareResult(result: Boolean) {
         if (result) {
-            CommonFunction.toast("动态删除成功!")
+            CommonFunction.toast(getString(R.string.delete_success))
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             EventBus.getDefault().post(
                 RefreshDeleteSquareEvent(
@@ -1048,7 +1048,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             )
             finish()
         } else {
-            CommonFunction.toast("动态删除失败！")
+            CommonFunction.toast(getString(R.string.delete_fail))
         }
     }
 
@@ -1076,7 +1076,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         commentActionDialog!!.replyComment.onClick {
             reply = true
             reply_id = adapter.data[position].id!!
-            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+            showCommentEt.hint = "『${getString(R.string.reply)}\t${adapter.data[position].nickname}：』"
             showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 100L)
 
             commentActionDialog!!.dismiss()
@@ -1121,7 +1121,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         val clipData = ClipData.newPlainText("label", "${adapter.data[position].content}")
         //将clipdata内容放到系统剪贴板里
         cm.setPrimaryClip(clipData)
-        CommonFunction.toast("已复制内容到剪贴板")
+        CommonFunction.toast(getString(R.string.has_copy))
     }
 
     override fun onError(text: String) {
@@ -1215,7 +1215,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         reply_id = 0
         showCommentEt.clearFocus()
         showCommentEt.text.clear()
-        showCommentEt.hint = "有什么感受说来听听"
+        showCommentEt.hint = getString(R.string.say_your_feel)
         KeyboardUtils.hideSoftInput(showCommentEt)
     }
 

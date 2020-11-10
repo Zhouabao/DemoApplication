@@ -65,7 +65,7 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
         rightBtn1.setOnClickListener(this)
         rightBtn1.isVisible = true
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
-        rightBtn1.text = "完成"
+        rightBtn1.text = getString(R.string.finish)
         rightBtn1.isEnabled = false
 
         labelIntroduceModel.setOnClickListener(this)
@@ -81,7 +81,7 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
             moreInfoTitle.isVisible = false
 //            labelPurposeCl.isVisible = false
             hotT1.visibility = View.VISIBLE
-            hotT1.text = "关于我"
+            hotT1.text = getString(R.string.about_me)
         }
 
 

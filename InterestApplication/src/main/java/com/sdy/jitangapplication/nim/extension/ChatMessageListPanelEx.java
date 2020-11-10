@@ -973,8 +973,8 @@ public class ChatMessageListPanelEx {
         }
 
         private void showResendAlert(IMMessage item) {
-            new CommonAlertDialog.Builder(container.activity).setContent("确认重新发送该条消息").setTitle("重新发送")
-                    .setCancelText("取消").setConfirmText("重新发送").setCancelIconIsVisibility(true)
+            new CommonAlertDialog.Builder(container.activity).setContent(container.activity.getString(R.string.is_confirm_resend)).setTitle(container.activity.getString(R.string.resend))
+                    .setCancelText(container.activity.getString(R.string.cancel)).setConfirmText(container.activity.getString(R.string.resend)).setCancelIconIsVisibility(true)
                     .setOnConfirmListener(dialog -> {
                         resendMessage(item); // 重发确认
                         dialog.dismiss();
@@ -1068,7 +1068,7 @@ public class ChatMessageListPanelEx {
                 return;
             }
 
-            String content = UserPreferences.isEarPhoneModeEnable() ? "切换成扬声器播放" : "切换成听筒播放";
+            String content = UserPreferences.isEarPhoneModeEnable() ? container.activity.getString(R.string.switch_to_loud_speaker) : container.activity.getString(R.string.switch_to_ear_mode);
             final String finalContent = content;
             alertDialog.addItem(content, new CustomAlertDialog.onSeparateItemClickListener() {
 
@@ -1092,7 +1092,7 @@ public class ChatMessageListPanelEx {
         }
 
         private void showRevokeAlert(IMMessage item) {
-            new CommonAlertDialog.Builder(container.activity).setContent("是否撤回此条消息").setTitle("撤回")
+            new CommonAlertDialog.Builder(container.activity).setContent(container.activity.getString(R.string.is_confirm_revoke_msg)).setTitle(container.activity.getString(R.string.revoke))
                     .setCancelIconIsVisibility(true).setOnConfirmListener(dialog -> {
                         if (!NetworkUtil.isNetAvailable(container.activity)) {
                             ToastHelper.showToast(container.activity, R.string.network_is_not_available);
@@ -1104,7 +1104,7 @@ public class ChatMessageListPanelEx {
                         if (customConfig != null) {
                             payload = customConfig.getPushPayload(item);
                         }
-                        NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload)
+                        NIMClient.getService(MsgService.class).revokeMessageEx(item, container.activity.getString(R.string.revoke_message), payload)
                                 .setCallback(new RequestCallback<Void>() {
                                     @Override
                                     public void onSuccess(Void param) {
@@ -1145,7 +1145,7 @@ public class ChatMessageListPanelEx {
                 return;
             }
 
-            alertDialog.addItem("取消上传", new CustomAlertDialog.onSeparateItemClickListener() {
+            alertDialog.addItem(container.activity.getString(R.string.cancel_uoload), new CustomAlertDialog.onSeparateItemClickListener() {
                 @Override
                 public void onClick() {
                     NIMClient.getService(MsgService.class).cancelUploadAttachment(selectedItem);
@@ -1155,7 +1155,7 @@ public class ChatMessageListPanelEx {
 
         // 长按-举报聊天内容
         private void longClickReportContent(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
-            alertDialog.addItem("举报", new CustomAlertDialog.onSeparateItemClickListener() {
+            alertDialog.addItem(container.activity.getString(R.string.report), new CustomAlertDialog.onSeparateItemClickListener() {
                 @Override
                 public void onClick() {
                     // 举报聊天内容
@@ -1202,7 +1202,6 @@ public class ChatMessageListPanelEx {
      * 收到已读回执（更新VH的已读label）
      */
     public void receiveReceipt() {
-        Log.d("OkHttp", "===========已读===========");
         updateReceipt(items);
         refreshMessageList();
     }
@@ -1289,7 +1288,7 @@ public class ChatMessageListPanelEx {
             message = MessageBuilder.createForwardMessage(forwardMessage, sessionId, sessionTypeEnum);
         }
         if (message == null) {
-            ToastHelper.showToast(container.activity, "该类型不支持转发");
+            ToastHelper.showToast(container.activity, container.activity.getString(R.string.unsupport_type));
             return;
         }
         if (container.proxySend) {

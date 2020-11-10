@@ -118,16 +118,16 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
                 //大小压缩，默认为大小压缩，适合普通很大的图
                 image.compressStyle = UMImage.CompressStyle.SCALE
                 image.compressFormat = Bitmap.CompressFormat.JPEG
-                image.title = "${squareBean?.nickname} 在积糖发了一张照片"
+                image.title = myContext.getString(R.string.send_a_pic_in_app, squareBean?.nickname)
                 image.description = if (!squareBean?.descr.isNullOrEmpty()) {
                     squareBean?.descr
-                } else "「你先抓紧看看这个」"
+                } else myContext.getString(R.string.hurry_to_see_this)
                 ShareAction(myContext as Activity)
                     .setPlatform(platformConfig)
                     .withText(
                         if (!squareBean?.descr.isNullOrEmpty()) {
                             squareBean?.descr
-                        } else "「你先抓紧看看这个」"
+                        } else myContext.getString(R.string.hurry_to_see_this)
                     )//分享内容
                     .withMedia(image)//多张图片
 //                    .withMedias(*images)//多张图片
@@ -137,7 +137,8 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             } else {            //文本分享
 //                http://www.baidu.com
                 val web = UMWeb("http://")
-                web.title = "${squareBean?.nickname} 在积糖发了动态"//标题
+                web.title =
+                    myContext.getString(R.string.send_a_square_in_app, squareBean?.nickname)//标题
                 web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
                 web.description = squareBean?.descr ?: ""//描述
                 if (platformConfig == SHARE_MEDIA.QQ) {
@@ -164,10 +165,10 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             thumbImg.compressStyle = UMImage.CompressStyle.SCALE
             thumbImg.compressFormat = Bitmap.CompressFormat.PNG
             video.setThumb(thumbImg)
-            video.title = "${squareBean?.nickname} 在积糖发了一段视频"
+            video.title = myContext.getString(R.string.send_a_video_in_app, squareBean?.nickname)
             video.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
-            } else "「你先抓紧看看这个」"
+            } else myContext.getString(R.string.hurry_to_see_this)
             ShareAction(myContext as Activity)
                 .setPlatform(platformConfig)
                 .withMedia(video)
@@ -177,10 +178,10 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
             audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
             audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
-            audio.title = "${squareBean?.nickname} 在积糖发了一段语音"
+            audio.title = myContext.getString(R.string.send_a_audio_in_app, squareBean?.nickname)
             audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
-            } else "「你先抓紧看看这个」"
+            } else myContext.getString(R.string.hurry_to_see_this)
             ShareAction(myContext as Activity)
                 .setPlatform(platformConfig)
                 .withText(squareBean?.descr ?: "")
@@ -198,7 +199,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onResult(p0: SHARE_MEDIA?) {
-            Log.d("share===", "结果。。。。")
 
             addShare()
         }
@@ -208,7 +208,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onCancel(p0: SHARE_MEDIA?) {
-            Log.d("share===", "取消。。。。")
 
             dismiss()
         }
@@ -220,7 +219,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          */
         override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
             Log.d("share===", "${p0.getName()}================${p1.message ?: ""}")
-            CommonFunction.toast("分享失败")
+            CommonFunction.toast(myContext.getString(R.string.share_fail))
         }
 
         /**
@@ -228,7 +227,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onStart(p0: SHARE_MEDIA?) {
-            Log.d("share===", "开始。。。。")
 
         }
 

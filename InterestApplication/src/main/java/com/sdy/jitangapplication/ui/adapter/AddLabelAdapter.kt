@@ -74,7 +74,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                     }
             }
             if (checkedCount >= UserManager.getMaxMyLabelCount() && !data.checked) {
-                showWarningDialog("至多选择${UserManager.getMaxMyLabelCount()}个兴趣")
+                showWarningDialog("${mContext.getString(R.string.choose_most,UserManager.getMaxMyLabelCount())}")
                 return@setOnItemClickListener
             }
 
@@ -100,39 +100,5 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
     }
 
 
-    /*
-    private val deleteDialog by lazy { DeleteDialog(mContext) }
-    private fun showDeleteDialog(position: NewLabel) {
-        deleteDialog.show()
-        deleteDialog.title.text = "完善兴趣"
-        deleteDialog.title.isVisible = true
-        deleteDialog.tip.text = "是否恢复「 ${position.title} 」删除前内容"
-        deleteDialog.confirm.text = "重新完善"//要走推荐发布流程
-        deleteDialog.confirm.onClick {
-            (mContext as Activity).startActivity<LabelQualityActivity>(
-                "data" to position,
-                "from" to AddLabelActivity.FROM_ADD_NEW,
-                "mode" to LabelQualityActivity.MODE_NEW
-            )
-            deleteDialog.dismiss()
-        }
-        deleteDialog.cancel.text = "使用原内容"
-        deleteDialog.cancel.onClick {
-            var tempLabel: MyLabelBean? = null
-            for (data in removedLabels) {
-                if (data.tag_id == position.id) {
-                    tempLabel = data
-                    break
-                }
-            }
-            (mContext as Activity).startActivity<LabelQualityActivity>(
-                "aimData" to tempLabel,
-                "from" to AddLabelActivity.FROM_EDIT,
-                "mode" to LabelQualityActivity.MODE_EDIT
-            )
-            deleteDialog.dismiss()
-        }
-
-    }*/
 
 }

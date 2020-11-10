@@ -75,9 +75,9 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
             finish()
         }
         hotT1.setTextColor(Color.WHITE)
-        hotT1.text = "邀请有礼"
+        hotT1.text = getString(R.string.invite_gift)
         rightBtn.setTextColor(Color.WHITE)
-        rightBtn.text = "联系我们"
+        rightBtn.text = getString(R.string.contact_us)
         rightBtn.isVisible = true
         rightBtn.clickWithTrigger {
             ChatActivity.start(this, Constants.ASSISTANT_ACCID)
@@ -86,10 +86,10 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
 
 
         SpanUtils.with(addKefuWechat)
-            .append("分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信")
-            .append("jitangkefu")
+            .append(getString(R.string.invite_gift_content))
+            .append(getString(R.string.invite_gift_wechat))
             .setForegroundColor(Color.parseColor("#ff6318"))
-            .append("，备注「拉新」")
+            .append(getString(R.string.invite_beizhu))
             .create()
 
         rewardsRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -146,21 +146,22 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
                 2 -> rewardsLevel.setImageResource(R.drawable.icon_level2)
                 3 -> rewardsLevel.setImageResource(R.drawable.icon_level3)
             }
-            rewardsPercent.text = "享${invitePoliteBean?.now_rate}%分佣"
+
+            rewardsPercent.text = getString(R.string.shared,invitePoliteBean?.now_rate)
             rewardsMoreLevel.isVisible = !invitePoliteBean?.title.isNullOrEmpty()
             rewardsMoreLevel.text = "${invitePoliteBean?.title}"
             SpanUtils.with(myInvitedCount)
                 .append("${invitePoliteBean?.invite_cnt}")
                 .setFontSize(30, true)
                 .setBold()
-                .append("人")
+                .append(getString(R.string.person_count))
                 .setFontSize(12, true)
                 .create()
             SpanUtils.with(myRewardsMoney)
                 .append("${invitePoliteBean?.invite_amount}")
                 .setFontSize(30, true)
                 .setBold()
-                .append("元")
+                .append(getString(R.string.money_unit))
                 .setFontSize(12, true)
                 .create()
 
@@ -232,13 +233,13 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         moreActionDialog.delete.isVisible = false
         moreActionDialog.transpondFriend.isVisible = false
 
-        moreActionDialog.collect.text = "复制链接"
+        moreActionDialog.collect.text = getString(R.string.copy_link)
         val top = resources.getDrawable(R.drawable.icon_copy_url)
         moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
 
         moreActionDialog.collect.onClick {
             ClipboardUtil.clipboardCopyText(this, "")
-            CommonFunction.toast("分享链接已复制")
+            CommonFunction.toast(getString(R.string.link_has_copy))
         }
     }
 }

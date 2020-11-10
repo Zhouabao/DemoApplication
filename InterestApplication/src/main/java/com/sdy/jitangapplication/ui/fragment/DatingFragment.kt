@@ -83,8 +83,8 @@ class DatingFragment : BaseMvpFragment<DatingPresenter>(), DatingView,
         rvDatingSquare.adapter = adapter
         adapter.setHeaderAndEmpty(false)
         adapter.setEmptyView(R.layout.empty_friend_layout, rvDatingSquare)
-        adapter.emptyView.emptyFriendTitle.text = "什么也没有"
-        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+        adapter.emptyView.emptyFriendTitle.text = getString(R.string.empty_dating)
+        adapter.emptyView.emptyFriendTip.text = getString(R.string.later_see)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(rvDatingSquare)

@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="认证已提交"
+        android:text="@string/verify_has_commit"
         android:textColor="#ff191919"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -34,7 +34,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="25dp"
         android:gravity="center"
-        android:text="你的认证正在审核中，审核结果稍后将以小助手形式通知您，请留意助手消息。审核大概需要1个工作日"
+        android:text="@string/verifying_tip"
         android:textColor="#ffb5b7b9"
         android:textSize="14sp" />
 
@@ -45,7 +45,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/gradient_rectangle_orange_24dp"
         android:gravity="center"
-        android:text="好的"
+        android:text="@string/ok_1"
         android:textColor="#ffffffff"
         android:textSize="16sp"
         android:textStyle="bold" />

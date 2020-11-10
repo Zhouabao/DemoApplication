@@ -84,7 +84,7 @@ public class ConfigUtils {
 
 
                 //授权页登录按钮：
-                .setLogBtnText("本机号码一键登录")  //设置登录按钮文字
+                .setLogBtnText(context.getString(R.string.one_key_login))  //设置登录按钮文字
                 .setLogBtnTextColor(0xffffffff)   //设置登录按钮文字颜色
                 .setLogBtnImgPath(logBtnImgPath)   //设置登录按钮图片
                 .setLogBtnTextSize(18)
@@ -94,10 +94,10 @@ public class ConfigUtils {
                 .setLogBtnWidth(298)
 
                 //授权页隐私栏：
-                .setAppPrivacyOne(" 积糖用户协议 ", BaseConstant.SERVER_ADDRESS + "protocol/userProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
-                .setAppPrivacyTwo(" 积糖隐私协议 ", BaseConstant.SERVER_ADDRESS + "protocol/privacyProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
+                .setAppPrivacyOne(context.getResources().getString(R.string.user_protocol), BaseConstant.SERVER_ADDRESS + "protocol/userProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
+                .setAppPrivacyTwo(context.getResources().getString(R.string.privacy_protocol), BaseConstant.SERVER_ADDRESS + "protocol/privacyProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
                 .setAppPrivacyColor(Color.parseColor("#ffffff"), Color.parseColor("#FF6796FA"))    //	设置隐私条款名称颜色(基础文字颜色，协议文字颜色)
-                .setPrivacyText("登录注册代表你已同意", "和", " 以及 ", "、", "")
+                .setPrivacyText(context.getString(R.string.login_presents_you_agree), context.getString(R.string.and1), context.getString(R.string.and2), "、", "")
                 .setPrivacyOffsetBottomY(10)//设置隐私条款相对于屏幕下边缘y偏
                 .setPrivacyState(true)
                 .setPrivacyTextSize(12)
@@ -115,7 +115,7 @@ public class ConfigUtils {
                 .setShanYanSloganHidden(true)
                 .setShanYanSloganTextColor(Color.parseColor("#ffffff"))
 
-                // .addCustomView(numberLayout, false, false, null)
+//                 .addCustomView(numberLayout, false, false, null)
 
                 .setLoadingView(view_dialog)
                 // 添加自定义控件:

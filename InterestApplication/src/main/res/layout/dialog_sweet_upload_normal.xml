@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="照片示例"
+        android:text="@string/normal_pic"
         android:textColor="#ff191919"
         android:textSize="16sp" />
 
@@ -31,7 +31,7 @@
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="请确保与本人头像一致，照片不会对外公开"
+        android:text="@string/make_sure_its_you"
         android:textColor="#ffb5b7b9"
         android:textSize="14sp" />
 
@@ -42,7 +42,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rectangle_orange_bottom_15dp"
         android:gravity="center"
-        android:text="上传照片"
+        android:text="@string/upload_img"
         android:textColor="#ffffffff"
         android:textSize="17sp"
         android:textStyle="bold" />

@@ -127,7 +127,7 @@ public class NIMInitManager {
         NIMClient.getService(MsgServiceObserve.class).observeBroadcastMessage(new Observer<BroadcastMessage>() {
             @Override
             public void onEvent(BroadcastMessage broadcastMessage) {
-                ToastHelper.showToast(DemoCache.getContext(), "收到全员广播 ：" +  broadcastMessage.getContent());
+                ToastHelper.showToast(DemoCache.getContext(), DemoCache.getContext().getString(R.string.full_broadcaster) +  broadcastMessage.getContent());
             }
         }, register);
     }

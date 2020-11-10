@@ -58,7 +58,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
 
     private fun initView() {
         btnBack.onClick { finish() }
-        hotT1.text = "黑名单"
+        hotT1.text = getString(R.string.black_title)
         mPresenter = BlackListPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -125,7 +125,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
 
     override fun onRemoveBlockResult(success: Boolean, position: Int) {
         if (success) {
-            CommonFunction.toast("解除拉黑成功！")
+            CommonFunction.toast(getString(R.string.remove_black_success))
             NIMClient.getService(FriendService::class.java).removeFromBlackList(adapter.data[position].accid)
             adapter.remove(position)
         }

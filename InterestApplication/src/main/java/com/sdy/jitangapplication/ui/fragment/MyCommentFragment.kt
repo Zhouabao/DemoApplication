@@ -128,7 +128,7 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
         val clipData = ClipData.newPlainText("label", "${adapter.data[position].content}")
         //将clipdata内容放到系统剪贴板里
         cm.setPrimaryClip(clipData)
-        CommonFunction.toast("已复制内容到剪贴板")
+        CommonFunction.toast(getString(R.string.has_copy_to_board))
     }
 
 
@@ -163,7 +163,7 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
         } else {
-            CommonFunction.toast(t?.msg?:"删除失败")
+            CommonFunction.toast(t?.msg?:getString(R.string.delete_fail))
         }
 
     }

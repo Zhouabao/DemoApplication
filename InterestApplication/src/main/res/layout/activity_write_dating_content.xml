@@ -31,7 +31,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@null"
-            android:hint="描述具体活动项目"
+            android:hint="@string/dating_descr_detail"
             android:maxLength="15"
             android:textColor="@color/colorBlack19"
             android:textColorHint="#FFC8C8C8"

@@ -227,7 +227,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         return
                     }
                 }
-                CommonFunction.toast("请重新进入页面,并开启多媒体权限.")
+                CommonFunction.toast(getString(R.string.permission_media))
             }
         }
     }
@@ -238,9 +238,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         if (intent.getIntExtra("tag_id", -1) != -1) {
             checkTags.clear()
             checkTags.add(SquareLabelBean(id = intent.getIntExtra("tag_id", -1)))
-            rightBtn1.text = "发布"
+            rightBtn1.text = getString(R.string.publish)
         } else {
-            rightBtn1.text = "下一步"
+            rightBtn1.text = getString(R.string.next)
 
         }
 
@@ -270,9 +270,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         //进入页面判断是否启用草稿箱，不管启用不启用，最后都删除内容，只保留一次。
         if (SPUtils.getInstance(Constants.SPNAME).getString("draft", "").isNotEmpty()) {
             CommonAlertDialog.Builder(this)
-                .setTitle("草稿箱")
-                .setContent("是否启用草稿箱")
-                .setConfirmText("是")
+                .setTitle(getString(R.string.draft_box))
+                .setContent(getString(R.string.is_use_draft_box))
+                .setConfirmText(getString(R.string.yes))
                 .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                     override fun onClick(dialog: Dialog) {
                         publishContent.setText(
@@ -283,7 +283,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         dialog.cancel()
                     }
                 })
-                .setCancelText("否")
+                .setCancelText(getString(R.string.no))
                 .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                     override fun onClick(dialog: Dialog) {
                         SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
@@ -310,7 +310,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 //            { KeyboardUtils.showSoftInput(publishContent) }, 100L
 //        )
 
-        hotT1.text = "发布内容"
+        hotT1.text = getString(R.string.publish_content)
         rightBtn1.isVisible = true
         rightBtn1.isEnabled = true
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_15dp)
@@ -356,7 +356,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             when (position) {
                 0 -> {//图片
                     if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                        CommonFunction.toast("不支持图片和其他媒体一起上传哦")
+                        CommonFunction.toast(getString(R.string.not_support_pic_with_other))
                         return@setOnItemClickListener
                     }
                     allPhotosRv.isVisible = true
@@ -373,7 +373,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
                                     if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                                        CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                                        CommonFunction.toast(getString(R.string.not_support_audio_with_other))
                                         return
                                     }
                                     allPhotosRv.visibility = View.GONE
@@ -382,12 +382,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("录音权限被拒,请开启后再录音.")
+                                    CommonFunction.toast(getString(R.string.permission_audio))
                                 }
                             }).request()
                     } else {
                         if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                            CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                            CommonFunction.toast(getString(R.string.not_support_audio_with_other))
                             return@setOnItemClickListener
                         }
                         allPhotosRv.isVisible = false
@@ -398,7 +398,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 }
                 2 -> {//视频
                     if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                        CommonFunction.toast("不支持视频和其他媒体一起上传哦")
+                        CommonFunction.toast(getString(R.string.not_support_video_with_other))
                         return@setOnItemClickListener
                     }
                     allPhotosRv.isVisible = false
@@ -428,12 +428,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         rightBtn1.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && publishContent.text.isNullOrEmpty()) {
-                    CommonFunction.toast("文本内容和媒体内容至少要选择一种发布哦~")
+                    CommonFunction.toast(getString(R.string.text_and_media_least_one))
                     return
                 }
 
                 if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE && !isTopPreview) {
-                    CommonFunction.toast("请录制完语音再发布")
+                    CommonFunction.toast(getString(R.string.record_and_publish))
                     return
                 }
 
@@ -610,7 +610,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 R.id.choosePhotoDel -> {
                     val data = (allPhotoAdapter.data[position])
                     if (!data.ischecked && pickedPhotos.size == 9) {
-                        CommonFunction.toast("最多只能选9张图片")
+                        CommonFunction.toast(getString(R.string.most_pic_count))
                         return@setOnItemChildClickListener
                     }
                     allPhotoAdapter.data[position].ischecked =
@@ -638,7 +638,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 R.id.chooseCamera -> {
                     //相册的选择与取消选择
                     if (pickedPhotos.size == 9) {
-                        CommonFunction.toast("最多只能选9张图片")
+                        CommonFunction.toast(getString(R.string.most_pic_count))
                         return@setOnItemChildClickListener
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
@@ -652,7 +652,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("相机权限被拒,请允许权限后再进行拍照.")
+                                    CommonFunction.toast(getString(R.string.permission_camera))
                                 }
                             })
                             .request()
@@ -688,7 +688,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 }
                 R.id.chooseCamera -> {
                     if (pickedPhotos.size == 1) {
-                        CommonFunction.toast("最多只能选择1个视频")
+                        CommonFunction.toast(getString(R.string.most_one_video))
                         return@setOnItemChildClickListener
                     }
 
@@ -703,7 +703,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("相机权限被拒,请允许权限后再进行视频录制.")
+                                    CommonFunction.toast(getString(R.string.permission_camera))
                                 }
                             })
                             .request()
@@ -714,14 +714,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                     //视频的选择与取消选择
                     if (!allVideoThumbAdapter.data[position].ischecked) {
                         if (pickedPhotos.size == 1) {
-                            CommonFunction.toast("最多只能选择1个视频")
+                            CommonFunction.toast(getString(R.string.most_one_video))
                             return@setOnItemChildClickListener
                         }
                         if (allVideoThumbAdapter.data[position].duration / 1000 < 3) {
-                            CommonFunction.toast("视频时长过短")
+                            CommonFunction.toast(getString(R.string.video_too_short))
                             return@setOnItemChildClickListener
                         } else if (allVideoThumbAdapter.data[position].duration / 1000 > 120) {
-                            CommonFunction.toast("视频时长过长")
+                            CommonFunction.toast(getString(R.string.video_too_long))
                             return@setOnItemChildClickListener
                         }
                         allVideoThumbAdapter.data[position].ischecked =
@@ -901,7 +901,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 }
 
                 if (totalSecond == 170) {
-                    CommonFunction.toast("还可以录制10秒钟哦，抓紧时间")
+                    CommonFunction.toast(getString(R.string.has_ten_seconds))
                 }
                 recordTime.text = UriUtils.getShowTime(totalSecond)
                 recordTime.setTextColor(resources.getColor(R.color.colorOrange))
@@ -926,14 +926,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             //开始录音
             mMediaRecorderHelper.startRecord()
             mIsRecorder = true
-            recordTv.text = "正在录音"
+            recordTv.text = getString(R.string.recording)
             countTimeThread?.start()
 
         } else if (currentActionState == ACTION_RECORDING) {//录制中
             currentActionState = ACTION_COMMPLETE
             startRecordBtn.setImageResource(R.drawable.icon_record_start)
             //停止录音
-            recordTv.text = "点击试听"
+            recordTv.text = getString(R.string.click_listen)
             mMediaRecorderHelper.stopAndRelease()
             deleteRecord.visibility = View.VISIBLE
             finishRecord.visibility = View.VISIBLE
@@ -947,7 +947,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 voicePlayView.playAnimation()
             } else {
                 //预览播放录音
-                recordTv.text = "播放中.."
+                recordTv.text = getString(R.string.playing)
                 recordProgress.update(0, 100)
                 mPreviewTimeThread =
                     UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), recordTime)
@@ -966,7 +966,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 } else {
                     currentActionState = ACTION_COMMPLETE
                     recordTime.text = UriUtils.getShowTime(totalSecond)
-                    recordTv.text = "点击试听"
+                    recordTv.text = getString(R.string.click_listen)
                     startRecordBtn.setImageResource(R.drawable.icon_record_start)
                 }
             }
@@ -977,7 +977,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 voicePlayView.cancelAnimation()
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
             } else {
-                recordTv.text = "暂停"
+                recordTv.text = getString(R.string.pause)
                 startRecordBtn.setImageResource(R.drawable.icon_record_start)
             }
             //暂停播放
@@ -990,7 +990,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 voicePlayView.playAnimation()
             } else {
-                recordTv.text = "播放中.."
+                recordTv.text = getString(R.string.playing)
                 startRecordBtn.setImageResource(R.drawable.icon_record_pause)
             }
             //继续播放
@@ -1020,7 +1020,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
         totalSecond = 0
         mPreviewTimeThread?.stop()
-        recordTv.text = "点击录音"
+        recordTv.text = getString(R.string.click_record)
         recordTime.text = "00:00"
         recordTime.setTextColor(resources.getColor(R.color.colorBlack22))
         recordProgress.update(0, 100)
@@ -1034,7 +1034,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
         if (p0.length > 200) {
             publishContent.setText(publishContent.text.subSequence(0, 200))
             publishContent.setSelection(publishContent.text.length)
-            CommonFunction.toast("超出字数限制")
+            CommonFunction.toast(getString(R.string.out_of_limit))
             KeyboardUtils.hideSoftInput(publishContent)
         }
     }
@@ -1119,7 +1119,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                     emojRv.visibility = View.GONE
                 if (currentActionState == ACTION_RECORDING) {
                     if (totalSecond < 5) {
-                        CommonFunction.toast("再录制长一点吧")
+                        CommonFunction.toast(getString(R.string.record_longer))
                         return
                     }
                 }
@@ -1131,8 +1131,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             R.id.deleteRecord -> {
                 val dialog = DeleteDialog(this)
                 dialog.show()
-                dialog.title.text = "重新录制"
-                dialog.tip.text = "确定重新录制？"
+                dialog.title.text = getString(R.string.re_record)
+                dialog.tip.text = getString(R.string.confirm_re_record)
                 dialog.confirm.onClick {
                     if (emojRv.visibility == View.VISIBLE)
                         emojRv.visibility = View.GONE
@@ -1157,7 +1157,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 checkCompleteBtnEnable()
                 //重置状态为完成
                 currentActionState = ACTION_DONE
-                recordTv.text = "删除并重录"
+                recordTv.text = getString(R.string.delete_and_record)
                 deleteRecord.visibility = View.GONE
                 recordTime.visibility = View.GONE
                 finishRecord.visibility = View.GONE
@@ -1173,8 +1173,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             R.id.recordDelete -> {
                 val dialog = DeleteDialog(this)
                 dialog.show()
-                dialog.title.text = "重新录制"
-                dialog.tip.text = "确定重新录制？"
+                dialog.title.text = getString(R.string.re_record)
+                dialog.tip.text =  getString(R.string.confirm_re_record)
                 dialog.confirm.onClick {
                     isTopPreview = false
                     mMediaRecorderHelper.cancel()
@@ -1321,7 +1321,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                         }
                         checkCompleteBtnEnable()
                     } else {
-                        CommonFunction.toast("视频拍摄最短为3S")
+                        CommonFunction.toast(getString(R.string.video_shortest_time))
                     }
                 }
             }
@@ -1373,7 +1373,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 
     private fun startToUploadAndPublsih() {
         if (!mPresenter.checkNetWork()) {
-            CommonFunction.toast("网络不可用,请检查网络设置")
+            CommonFunction.toast( getString(R.string.open_internet))
             return
         }
 
@@ -1428,7 +1428,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             } else {
                 positionItem!!.cityCode ?: ""
             }),
-            "puber_address" to if (locationCity.text.toString() == "不显示位置") {
+            "puber_address" to if (locationCity.text.toString() == getString(R.string.dont_show_location)) {
                 ""
             } else {
                 locationCity.text.toString()
@@ -1601,7 +1601,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             } else {
                 positionItem!!.cityCode ?: ""
             }),
-            "puber_address" to if (locationCity.text.toString() == "不显示位置") {
+            "puber_address" to if (locationCity.text.toString() ==  getString(R.string.dont_show_location)) {
                 ""
             } else {
                 locationCity.text.toString()

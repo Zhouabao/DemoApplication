@@ -104,17 +104,17 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         }
 
         if (type == TYPE_FIGURE ) {
-            hotT1.text = "身材认证"
-            t1.text = "上传手持身份证、身份证正面及胸围测量\n请确保与本人头像一致，此流程不对外公开"
+            hotT1.text = getString(R.string.sweet_figure_title)
+            t1.text = getString(R.string.sweet_upload_id_card_figure)
         }else if (type == TYPE_PROFESSION) {
-            hotT1.text  = "职业认证"
-            t1.text = "上传手持身份证、身份证正面及工作牌等\n请确保与本人头像一致，此流程不对外公开"
+            hotT1.text  = getString(R.string.sweet_job_title)
+            t1.text = getString(R.string.sweet_upload_id_card_job)
         } else if (type == TYPE_CAR) {
-            hotT1.text = "豪车认证"
-            t1.text = "上传手持身份证、身份证正面及驾驶证\n请确保与本人头像一致，照片不会对外公开"
+            hotT1.text =  getString(R.string.sweet_luxury_car_title)
+            t1.text = getString(R.string.sweet_upload_id_card_car)
         } else {
-            hotT1.text = "豪宅认证"
-            t1.text = "上传手持身份证、身份证正面及所有权的房产证\n请确保与本人头像一致，照片不会对外公开"
+            hotT1.text = getString(R.string.sweet_big_house_title)
+            t1.text = getString(R.string.sweet_upload_id_card_house)
         }
 
 
@@ -208,7 +208,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         } else {
             index = 0
             keys.clear()
-            CommonFunction.toast("图片上传失败，请重新尝试。")
+            CommonFunction.toast(getString(R.string.pic_upload_fail))
         }
     }
 

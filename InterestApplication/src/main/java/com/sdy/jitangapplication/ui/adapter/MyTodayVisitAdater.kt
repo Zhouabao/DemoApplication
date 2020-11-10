@@ -60,9 +60,9 @@ class MyTodayVisitAdater(var freeShow: Boolean = false) :
 
         holder.itemView.visitName.text = "${item.nickname}"
         holder.itemView.visitInfo.text = "${item.age}·${if (item.gender == 1) {
-            "男"
+            mContext.getString(R.string.gender_man)
         } else {
-            "女"
+            mContext.getString(R.string.gender_woman)
         }}·${item.age}·${item.distance}"
 
     }

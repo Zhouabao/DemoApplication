@@ -49,7 +49,7 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
         mPresenter.mView = this
         mPresenter.context = this
 
-        hotT1.text = "账号相关"
+        hotT1.text = getString(R.string.account_title)
         btnBack.setOnClickListener(this)
         telChangeBtn.setOnClickListener(this)
         wechatChangeBtn.setOnClickListener(this)
@@ -87,9 +87,9 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
     private fun showDissolveDialog() {
         val dissolveDialog = DeleteDialog(this)
         dissolveDialog.show()
-        dissolveDialog.title.text = "解除绑定"
+        dissolveDialog.title.text = getString(R.string.account_unbind)
         dissolveDialog.tip.text = getString(R.string.dissolve_wechat)
-        dissolveDialog.confirm.text = "确定"
+        dissolveDialog.confirm.text = getString(R.string.ok)
         dissolveDialog.cancel.onClick {
 
             dissolveDialog.dismiss()
@@ -126,10 +126,10 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
         if (accountBean.wechat.isNotEmpty()) {
             wechat = accountBean.wechat
             wechatNumber.text = accountBean.wechat
-            wechatChangeBtn.text = "解除绑定"
+            wechatChangeBtn.text = getString(R.string.account_unbind)
         } else {
-            wechatNumber.text = "未绑定"
-            wechatChangeBtn.text = "绑定微信"
+            wechatNumber.text = getString(R.string.account_not_bind)
+            wechatChangeBtn.text =getString(R.string.account_bind_wechat)
         }
     }
 
@@ -138,11 +138,11 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
         loadingDialog.dismiss()
         if (result) {
             wechat = ""
-            wechatNumber.text = "未绑定"
-            wechatChangeBtn.text = "绑定微信"
+            wechatNumber.text = getString(R.string.account_not_bind)
+            wechatChangeBtn.text = getString(R.string.account_bind_wechat)
             val unbundDialog = CorrectDialog(this)
             unbundDialog.show()
-            unbundDialog.correctTip.text = "解绑成功"
+            unbundDialog.correctTip.text = getString(R.string.account_unbind_success)
             wechatChangeBtn.postDelayed({
                 unbundDialog.dismiss()
             }, 1000L)
@@ -158,10 +158,10 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
     fun updateAccountEvent(event: UpdateAccountEvent) {
         wechat = event.account.nickname
         wechatNumber.text = wechat
-        wechatChangeBtn.text = "解除绑定"
+        wechatChangeBtn.text = getString(R.string.account_unbind)
         val unbundDialog = CorrectDialog(this)
         unbundDialog.show()
-        unbundDialog.correctTip.text = "绑定成功"
+        unbundDialog.correctTip.text = getString(R.string.account_bind_success)
         wechatChangeBtn.postDelayed({
             unbundDialog.dismiss()
         }, 1000L)

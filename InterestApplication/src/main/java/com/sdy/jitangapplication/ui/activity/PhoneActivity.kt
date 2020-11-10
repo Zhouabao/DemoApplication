@@ -51,11 +51,11 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
         wxcode = intent.getStringExtra("wxcode") ?: ""
         login_type = intent.getStringExtra("type") ?: "1"
         if (login_type == "3") {
-            titleTv.text = "请绑定手机号"
-            tipTv.text = "快，组织需要你的手机号"
+            titleTv.text = getString(R.string.please_bind_phone)
+            tipTv.text = getString(R.string.hurry_make_phone)
         } else {
-            titleTv.text = "请输入手机号"
-            tipTv.text = "快，组织需要你的手机号"
+            titleTv.text = getString(R.string.please_bind_phone)
+            tipTv.text = getString(R.string.hurry_make_phone)
         }
 
         btnBack.setOnClickListener(this)
@@ -132,7 +132,7 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
                         "type" to login_type
                     )
                 } else {
-                    toast("请输入正确的手机号!")
+                    toast(getString(R.string.please_input_correct_phone))
                 }
             }
         }

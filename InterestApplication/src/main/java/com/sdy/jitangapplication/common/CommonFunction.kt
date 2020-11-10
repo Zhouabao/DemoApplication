@@ -35,6 +35,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.attachment.*
@@ -359,18 +360,18 @@ object CommonFunction {
         return when (item.attachment) {
             is ChatHiAttachment ->
                 when ((item.attachment as ChatHiAttachment).showType) {
-                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext().getString(R.string.msg_unlock_chat)
                     else -> ""
                 }
-            is ShareSquareAttachment -> "『动态分享内容』"
-            is ChatDatingAttachment -> "『活动报名』"
-            is SendGiftAttachment -> "『礼物消息』"
+            is ShareSquareAttachment ->DemoCache.getContext().getString(R.string.msg_share_square)
+            is ChatDatingAttachment -> DemoCache.getContext().getString(R.string.msg_dating_apply)
+            is SendGiftAttachment -> DemoCache.getContext().getString(R.string.msg_gift)
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
             is ContactCandyAttachment -> {
-                "『解锁联系方式』"
+                DemoCache.getContext().getString(R.string.msg_unlock_contact)
             }
             is SendCustomTipAttachment -> if ((item.attachment as SendCustomTipAttachment).content.isNullOrEmpty()) {
-                "『消息提醒』"
+                DemoCache.getContext().getString(R.string.msg_prompt)
             } else {
                 (item.attachment as SendCustomTipAttachment).content
             }
@@ -386,17 +387,18 @@ object CommonFunction {
         return when (item.attachment) {
             is ChatHiAttachment ->
                 when ((item.attachment as ChatHiAttachment).showType) {
-                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> "『聊天已解锁』"
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext().getString(R.string.msg_unlock_chat)
                     else -> ""
                 }
-            is ShareSquareAttachment -> "『动态分享内容』"
-            is ChatDatingAttachment -> "『活动报名』"
+            is ShareSquareAttachment ->DemoCache.getContext().getString(R.string.msg_share_square)
+            is ChatDatingAttachment -> DemoCache.getContext().getString(R.string.msg_dating_apply)
+            is SendGiftAttachment -> DemoCache.getContext().getString(R.string.msg_gift)
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
             is ContactCandyAttachment -> {
-                "『解锁联系方式』"
+                DemoCache.getContext().getString(R.string.msg_unlock_contact)
             }
             is SendCustomTipAttachment -> if ((item.attachment as SendCustomTipAttachment).content.isNullOrEmpty()) {
-                "『消息提醒』"
+                DemoCache.getContext().getString(R.string.msg_prompt)
             } else {
                 (item.attachment as SendCustomTipAttachment).content
             }
@@ -497,7 +499,7 @@ object CommonFunction {
             })
     }
 
-    fun sendAccostTip(target_accid: String, tipContent: String = "回复对方消息自动领取搭讪礼物") {
+    fun sendAccostTip(target_accid: String, tipContent: String = DemoCache.getContext().getString(R.string.reply_auto_get_gift)) {
         val attachment =
             SendCustomTipAttachment(tipContent, SendCustomTipAttachment.CUSTOME_TIP_NORMAL, false)
         val tip =
@@ -668,7 +670,7 @@ object CommonFunction {
         val wxapi = WXAPIFactory.createWXAPI(context, null)
         wxapi.registerApp(Constants.WECHAT_APP_ID)
         if (!wxapi.isWXAppInstalled) {
-            toast("你没有安装微信")
+            toast(context.getString(R.string.unload_wechat))
             return
         }
         val req = SendAuth.Req()

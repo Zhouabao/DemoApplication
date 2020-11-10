@@ -35,7 +35,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/indicator"
-            android:text="选择举报原因"
+            android:text="@string/report_reason1"
             />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -3,6 +3,8 @@ package com.sdy.jitangapplication.nim.session;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.activity.LocationAmapActivity;
 import com.sdy.jitangapplication.nim.location.activity.LocationExtras;
 import com.sdy.jitangapplication.nim.location.activity.NavigationAmapActivity;
@@ -20,8 +22,8 @@ public class NimDemoLocationProvider implements LocationProvider {
     public void requestLocation(final Context context, Callback callback) {
         if (!NimLocationManager.isLocationEnable(context)) {
             final EasyAlertDialog alertDialog = new EasyAlertDialog(context);
-            alertDialog.setMessage("位置服务未开启");
-            alertDialog.addNegativeButton("取消", EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
+            alertDialog.setMessage(context.getString(R.string.unopen_location));
+            alertDialog.addNegativeButton(context.getString(R.string.cancel), EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
                     new View.OnClickListener() {
 
                         @Override
@@ -29,7 +31,7 @@ public class NimDemoLocationProvider implements LocationProvider {
                             alertDialog.dismiss();
                         }
                     });
-            alertDialog.addPositiveButton("设置", EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
+            alertDialog.addPositiveButton(context.getString(R.string.setting), EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
                     new View.OnClickListener() {
 
                         @Override

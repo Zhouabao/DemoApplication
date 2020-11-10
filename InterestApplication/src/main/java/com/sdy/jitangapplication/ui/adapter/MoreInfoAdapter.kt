@@ -32,7 +32,7 @@ class MoreInfoAdapter() :
         val itemView = helper.itemView
         itemView.moreInfoTitle.text = item.title
         itemView.moreInfoContent.hint = item.descr
-        if (item.title == "身高" && !item.find_tag!!.title.isNullOrEmpty() && item.find_tag!!.title.toInt() > 0) {
+        if (item.title == mContext.getString(R.string.height) && !item.find_tag!!.title.isNullOrEmpty() && item.find_tag!!.title.toInt() > 0) {
             itemView.moreInfoContent.text = item.find_tag!!.title
             itemView.moreInfoAnimation.isVisible = false
         } else if (item.find_tag != null && item.child.contains(item.find_tag!!) && item.find_tag!!.id != 0) {
@@ -144,7 +144,7 @@ class MoreInfoAdapter() :
                 if (scoreView != null && scoreView.isVisible)
                     updateScoreStatus(scoreView, score, update = true)
             })
-            .setSubmitText("确定")
+            .setSubmitText(mContext.getString(R.string.ok))
             .setTitleText(title)
             .setTitleColor(mContext.resources.getColor(R.color.colorBlack))
             .setTitleSize(16)

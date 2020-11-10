@@ -30,6 +30,7 @@ import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -69,10 +70,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     CommonAlertDialog.Builder(context1)
                         .setIconVisible(false)
                         .setCancelIconIsVisibility(true)
-                        .setTitle("认证提醒")
-                        .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
-                        .setConfirmText("确定")
-                        .setCancelText("取消")
+                        .setTitle(context1.getString(R.string.verify_notice))
+                        .setContent(context1.getString(R.string.verify_compare_with_avatar))
+                        .setConfirmText(context1.getString(R.string.ok))
+                        .setCancelText(context1.getString(R.string.cancel))
                         .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                             override fun onClick(dialog: Dialog) {
                                 dialog.dismiss()
@@ -105,10 +106,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                 CommonAlertDialog.Builder(context1)
                     .setIconVisible(false)
                     .setCancelIconIsVisibility(true)
-                    .setTitle("认证提醒")
-                    .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
-                    .setConfirmText("确定")
-                    .setCancelText("取消")
+                    .setTitle(context1.getString(R.string.verify_notice))
+                    .setContent(context1.getString(R.string.verify_compare_with_avatar))
+                    .setConfirmText(context1.getString(R.string.ok))
+                    .setCancelText(context1.getString(R.string.cancel))
                     .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                         override fun onClick(dialog: Dialog) {
                             dialog.dismiss()
@@ -181,7 +182,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("文件存储权限被拒,请允许权限后再进行认证.")
+                                    CommonFunction.toast(getString(R.string.permission_storage))
                                     finish()
                                 }
 
@@ -190,7 +191,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     }
 
                     override fun onDenied() {
-                        CommonFunction.toast("相机权限被拒,请允许权限后再进行认证.")
+                        CommonFunction.toast(getString(R.string.permission_camera))
                         finish()
                     }
                 })
@@ -281,7 +282,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             || status == FaceStatusEnum.Error_LivenessTimeout ||
             status == FaceStatusEnum.Error_Timeout
         ) {
-            CommonFunction.toast("采集超时,请退出重试")
+            CommonFunction.toast(getString(R.string.take_time_out))
         }
     }
 
@@ -310,7 +311,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         )
                     )
                 } else {
-                    CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                    CommonFunction.toast(getString(R.string.verify_commit_fail))
                 }
             }, null
         )
@@ -336,7 +337,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     } else
                         when (t.code) {
                             200 -> {
-                                CommonFunction.toast("审核提交成功")
+                                CommonFunction.toast(getString(R.string.verify_commit_success))
                                 UserManager.saveUserVerify(2)
                                 UserManager.saveHasFaceUrl(true)
                                 setResult(Activity.RESULT_OK, intent.putExtra("verify", 2))
@@ -365,7 +366,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         TickDialog(this@IDVerifyActivity).show()
                     }
                     loadingDialog.dismiss()
-                    CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                    CommonFunction.toast(getString(R.string.verify_commit_fail))
                 }
             })
 

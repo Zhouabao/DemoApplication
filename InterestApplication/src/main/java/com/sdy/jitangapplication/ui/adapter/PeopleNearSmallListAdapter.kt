@@ -70,9 +70,9 @@ class PeopleNearSmallListAdapter :
         itemView.userNameAge.text = item.nickname
 
         itemView.userAgeDistance.text = "${if (item.gender == 1) {
-            "男"
+            mContext.getString(R.string.gender_man)
         } else {
-            "女"
+            mContext.getString(R.string.gender_woman)
         }}·${item.constellation}·${item.distance}"
 
         if (item!!.isfaced == 1) {
@@ -87,7 +87,7 @@ class PeopleNearSmallListAdapter :
                 ), null, null, null
             )
             if (item!!.face_str.isNullOrEmpty()) {
-                itemView.userVerify.text = "已认证"
+                itemView.userVerify.text = mContext.getString(R.string.face_has_verify)
             } else {
                 itemView.userVerify.text = item!!.face_str
             }

@@ -4,6 +4,8 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.uikit.api.model.recent.RecentCustomization;
 
 import java.util.ArrayList;
@@ -26,15 +28,15 @@ public class DefaultRecentCustomization extends RecentCustomization {
             case text:
                 return recent.getContent();
             case image:
-                return "[图片]";
+                return "["+ DemoCache.getContext().getString(R.string.input_panel_photo) +"]";
             case video:
-                return "[视频]";
+                return "["+ DemoCache.getContext().getString(R.string.input_panel_video) +"]";
             case audio:
-                return "[语音消息]";
+                return "["+ DemoCache.getContext().getString(R.string.message_type_audio) +"]";
             case location:
-                return "[位置]";
+                return "["+ DemoCache.getContext().getString(R.string.input_panel_location) +"]";
             case file:
-                return "[文件]";
+                return "["+ DemoCache.getContext().getString(R.string.message_type_file) +"]";
             case tip:
                 List<String> uuids = new ArrayList<>();
                 uuids.add(recent.getRecentMessageId());
@@ -42,11 +44,11 @@ public class DefaultRecentCustomization extends RecentCustomization {
                 if (messages != null && messages.size() > 0) {
                     return messages.get(0).getContent();
                 }
-                return "[通知提醒]";
+                return "["+ DemoCache.getContext().getString(R.string.message_type_notification) +"]";
             case robot:
-                return "[机器人消息]";
+                return "["+ DemoCache.getContext().getString(R.string.message_type_robot) +"]";
             default:
-                return "[自定义消息]";
+                return "["+ DemoCache.getContext().getString(R.string.message_type_custom) +"]";
         }
     }
 }

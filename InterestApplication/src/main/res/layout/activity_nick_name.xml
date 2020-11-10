@@ -27,7 +27,7 @@
 
         <TextView
                 android:id="@+id/hotT1"
-                android:text="更改昵称"
+                android:text="@string/nickname_change"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="18sp"
                 android:gravity="center"
@@ -45,7 +45,7 @@
                 android:layout_height="28dp"
                 android:background="@drawable/selector_confirm_btn_15dp"
                 android:textColor="@color/complete_btn_color_selector"
-                android:text="保存"
+                android:text="@string/save"
                 android:layout_marginRight="15dp"
                 />
     </LinearLayout>

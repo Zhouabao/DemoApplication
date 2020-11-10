@@ -51,7 +51,7 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
         EventBus.getDefault().register(this)
         StatusBarUtil.immersive(this)
         llTitle.setBackgroundColor(Color.parseColor("#FFFFDCC1"))
-        hotT1.text = "个人权益"
+        hotT1.text = getString(R.string.power_title)
         hotT1.setTextColor(Color.WHITE)
         btnBack.setImageResource(R.drawable.icon_back_white)
         btnBack.onClick {
@@ -66,10 +66,10 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
 
         when (contact) {
             0 -> {
-                changeContact.text = "立即绑定"
+                changeContact.text = getString(R.string.bind_now)
             }
             else -> {
-                changeContact.text = "变更"
+                changeContact.text = getString(R.string.change)
             }
         }
 
@@ -179,23 +179,23 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
         when (verify) {
             0 -> {
                 changeVerify.isVisible = true
-                changeVerify.text = "立即认证"
-                changeVideo.text = "请先认证"
+                changeVerify.text = getString(R.string.verify_now)
+                changeVideo.text = getString(R.string.please_verify)
             }
             1 -> {
                 changeVerify.isVisible = false
                 //      0 没有视频/拒绝   1视频通过  2视频审核中
                 if (video == 1) {
-                    changeVideo.text = "替换视频"
+                    changeVideo.text = getString(R.string.replace_video)
                 } else if (video == 0) {
-                    changeVideo.text = "录制视频"
+                    changeVideo.text = getString(R.string.record_video)
                 } else if (video == 2) {
-                    changeVideo.text = "审核中"
+                    changeVideo.text = getString(R.string.checking)
                 }
             }
             2, 3 -> {
                 changeVerify.isVisible = false
-                changeVideo.text = "请先认证"
+                changeVideo.text = getString(R.string.please_verify)
             }
         }
     }
@@ -208,10 +208,10 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
             R.id.powerVerify, R.id.changeVerify -> { //真人认证
                 when (verify) {
                     1 -> {
-                        CommonFunction.toast("您已通过认证")
+                        CommonFunction.toast(getString(R.string.verify_pass))
                     }
                     2, 3 -> {
-                        CommonFunction.toast("认证审核中...")
+                        CommonFunction.toast(getString(R.string.verify_checking))
                     }
                     else -> {
                         CommonFunction.startToFace(this, requestCode = REQUEST_VERIFY)
@@ -224,13 +224,13 @@ class FemalePowerActivity : BaseActivity(), OnLazyClickListener {
                     if (video == 0) {
                         CommonFunction.startToVideoIntroduce(this)
                     } else if (video == 2) {
-                        CommonFunction.toast("视频正在审核中，请耐心等待")
+                        CommonFunction.toast(getString(R.string.video_checking_waiting))
                     } else {
                         CommonFunction.startToVideoIntroduce(this)
 //                    CommonFunction.toast("您已经通过视频介绍")
                     }
                 } else {
-                    CommonFunction.toast("请先完成真人认证再录制视频介绍")
+                    CommonFunction.toast(getString(R.string.video_verify_first_then_introduce))
                 }
             }
         }

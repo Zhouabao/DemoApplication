@@ -29,14 +29,14 @@ class NickNameActivity : BaseActivity() {
         btnBack.onClick { onBackPressed() }
 
         if (type == 1) {
-            hotT1.text = "更改昵称"
-            changeEt.hint = "好名字可以让你的朋友更容易记住你"
+            hotT1.text = getString(R.string.nickname_title)
+            changeEt.hint = getString(R.string.nickname_change_tip)
             changeEt.filters = arrayOf(InputFilter.LengthFilter(10))
             changeEt.setText(intent.getStringExtra("content"))
             changeEt.setSelection(changeEt.text.length)
         } else {
-            hotT1.text = "关于我"
-            changeEt.hint = "介绍你自己，关于你的平凡与另类，关于你的隐秘与渴望，关于你的压抑与释放...关于你的压抑与释放.."
+            hotT1.text = getString(R.string.about_me_title)
+            changeEt.hint = getString(R.string.about_me_tip)
             changeEt.filters = arrayOf(InputFilter.LengthFilter(200))
             val params = changeEt.layoutParams as LinearLayout.LayoutParams
             params.width = LinearLayout.LayoutParams.MATCH_PARENT

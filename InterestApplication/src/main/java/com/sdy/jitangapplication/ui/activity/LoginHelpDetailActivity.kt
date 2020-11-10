@@ -24,7 +24,7 @@ class LoginHelpDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_login_help_detail)
 
         btnBack.onClick { finish() }
-        hotT1.text = "帮助"
+        hotT1.text = getString(R.string.help)
 
         loginHelpTitle.text = (intent.getSerializableExtra("data") as LoginHelpBean).title
         loginHelpContentRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

@@ -110,7 +110,7 @@ public class CaptureActivity extends AppCompatActivity {
 
     public static void start(Activity activity, int requestCode) {
         if (Build.VERSION.SDK_INT < 21) {
-            ToastHelper.showToast(activity, "当前系统版本暂不支持视频拍摄功能");
+            ToastHelper.showToast(activity, activity.getString(R.string.current_version_unsupport));
             return;
         }
         Intent intent = new Intent(activity, CaptureActivity.class);
@@ -180,7 +180,7 @@ public class CaptureActivity extends AppCompatActivity {
         mCamera = pair.first;
         cameraId = pair.second;
         if (mCamera == null) {
-            ToastHelper.showToast(this, "设备异常");
+            ToastHelper.showToast(this, getString(R.string.device_error));
             finish();
         }
         // get Camera parameters
@@ -433,7 +433,7 @@ public class CaptureActivity extends AppCompatActivity {
         mProgressView.reset();
         Log.i(TAG, "stopMediaRecorder currentTime:" + currentTime);
         if (currentTime <= RECORD_MIN_TIME) {
-            Toast.makeText(this, "录制时间过短", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.time_too_short, Toast.LENGTH_LONG).show();
         } else {
             GLVideoConfirmActivity.start(this, Uri.fromFile(new File(videoSavePath)), currentTime * 1000);
         }

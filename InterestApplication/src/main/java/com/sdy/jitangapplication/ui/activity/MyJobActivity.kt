@@ -132,11 +132,11 @@ class MyJobActivity   : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnCli
 
     override fun onSavePersonal(b: Boolean) {
         if (b) {
-            CommonFunction.toast("职业设置成功")
+            CommonFunction.toast(getString(R.string.job_success))
             setResult(Activity.RESULT_OK, intent.putExtra("job", checkJob?.title))
             finish()
         } else {
-            CommonFunction.toast("职业设置失败，请重试")
+            CommonFunction.toast(getString(R.string.job_setting_fail))
         }
     }
 

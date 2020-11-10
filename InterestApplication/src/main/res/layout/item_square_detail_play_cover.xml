@@ -129,7 +129,7 @@
                     android:id="@+id/detailPlayComment"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:hint="不如说点什么"
+                    android:hint="@string/say_something"
                     android:textSize="14sp"
                     android:layout_marginLeft="15dp"
                     android:background="@null"

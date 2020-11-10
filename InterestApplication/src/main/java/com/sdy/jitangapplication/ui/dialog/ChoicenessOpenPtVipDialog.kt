@@ -39,17 +39,17 @@ class ChoicenessOpenPtVipDialog(val context1: Context) :
         // * 1.开通黄金会员成为精选用户（男性）
         // * 2.添加视频介绍成为精选用户（女性）
         if (UserManager.getGender() == 1) {
-            choicenessTitle.text = "成为精选用户"
-            choicenessContent.text = "成为黄金会员，让女生第一眼看到你"
-            openPtVipBtn.text = "开通黄金会员"
+            choicenessTitle.text = context1.getString(R.string.tobe_choiceness_user)
+            choicenessContent.text = context1.getString(R.string.tobe_gold_to_first_see_you)
+            openPtVipBtn.text = context1.getString(R.string.open_gold_vip)
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
             openPtVipBtn.clickWithTrigger {
                 CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_MORE_EXPODE)
             }
         } else {
-            choicenessTitle.text = "成为精选用户"
-            choicenessContent.text = "上传视频介绍，让优质男性第一眼看到你"
-            openPtVipBtn.text = "添加视频介绍"
+            choicenessTitle.text = context1.getString(R.string.tobe_choiceness_user)
+            choicenessContent.text = context1.getString(R.string.upload_video_to_first_see_you)
+            openPtVipBtn.text = context1.getString(R.string.add_video_introduce)
             openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
             openPtVipBtn.clickWithTrigger {
                 CommonFunction.startToVideoIntroduce(context1)

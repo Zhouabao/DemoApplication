@@ -61,7 +61,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/i1"
                     android:gravity="center"
-                    android:text="解锁查看"
+                    android:text="@string/unlock_to_see"
                     android:textColor="#ffffffff"
                     android:textSize="16sp" />
 

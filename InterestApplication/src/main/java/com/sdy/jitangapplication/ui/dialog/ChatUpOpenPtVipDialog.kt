@@ -89,7 +89,7 @@ class ChatUpOpenPtVipDialog(
                     null
                 )
                 SpanUtils.with(chatupContact)
-                    .append("手机")
+                    .append(context1.getString(R.string.phone))
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .append("\t${chatUpBean.contact}")
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
@@ -105,7 +105,7 @@ class ChatUpOpenPtVipDialog(
                     null
                 )
                 SpanUtils.with(chatupContact)
-                    .append("微信")
+                    .append(context1.getString(R.string.contact_wechat))
                     .setForegroundColor(Color.parseColor("#FF1EC121"))
                     .append("\t${chatUpBean.contact}")
                     .setForegroundColor(Color.parseColor("#FF1EC121"))
@@ -121,7 +121,7 @@ class ChatUpOpenPtVipDialog(
                     null
                 )
                 SpanUtils.with(chatupContact)
-                    .append("QQ")
+                    .append(context1.getString(R.string.contact_QQ))
                     .setForegroundColor(Color.parseColor("#FF1E9CF0"))
                     .append("\t${chatUpBean.contact}")
                     .setForegroundColor(Color.parseColor("#FF1E9CF0"))
@@ -178,17 +178,19 @@ class ChatUpOpenPtVipDialog(
                     if (chatUpBean.avatar.isNotEmpty())
                         GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                     chatupUnlockChat.isVisible = false
-                    chatupTitle.text = "获得聊天机会"
-                    openPtVipBtn.text = "成为黄金会员，免费更多聊天"
+                    chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
+                    openPtVipBtn.text = context1.getString(R.string.chatup_to_be_vip)
                     if (chatUpBean.plat_cnt > 0) {
-                        chatupTitle.text = "要给她打个招呼吗"
-                        chatupContent.text = "今日还可免费解锁${chatUpBean.plat_cnt}次聊天"
-                        openPtVipBtn.text = "解锁聊天"
+                        chatupTitle.text = context1.getString(R.string.chatup_is_chat_her)
+                        chatupContent.text =
+                            context1.getString(R.string.chatup_free_time_left, chatUpBean.plat_cnt)
+                        openPtVipBtn.text = context1.getString(R.string.chatup_unlock)
 
                     } else {
-                        chatupTitle.text = "获得聊天机会"
-                        chatupContent.text = "今日免费聊天机会已用完"
-                        openPtVipBtn.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                        chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
+                        chatupContent.text = context1.getString(R.string.chatup_chance_run_up)
+                        openPtVipBtn.text =
+                            context1.getString(R.string.unlock_chat_left, chatUpBean.chat_amount)
                     }
                     // 解锁聊天
                     openPtVipBtn.clickWithTrigger {
@@ -202,30 +204,38 @@ class ChatUpOpenPtVipDialog(
                     }
                     if (chatUpBean.ishoney) {
                         chatupAvator.setImageResource(R.drawable.icon_sweet_chat_privacy)
-                        chatupTitle.text = "当前会员等级无法与她联系"
-                        chatupContent.text = "因避免甜心圈用户被骚扰\n普通会员不能直接与甜心圈用户建立联系"
+                        chatupTitle.text = context1.getString(R.string.cannot_contact_in_level)
+                        chatupContent.text =
+                            context1.getString(R.string.avoid_trouble_with_normal_vip)
                         chatupUnlockChat.isVisible = false
-                        openPtVipBtn.text = "升级黄金会员，立即与她取得联系"
+                        openPtVipBtn.text = context1.getString(R.string.tobe_gold_to_contact_her)
                     } else if (chatUpBean.private_chat_btn) {
                         if (chatUpBean.avatar.isNotEmpty())
                             GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                         //2.对方用户是普通用户
-                        chatupTitle.text = "她设置了等级权限"
-                        chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
+                        chatupTitle.text = context1.getString(R.string.her_level_privay)
+                        chatupContent.text = context1.getString(R.string.she_allow_gold_contact_her)
                         chatupUnlockChat.isVisible = false
-                        openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
+                        openPtVipBtn.text = context1.getString(R.string.tobe_gold_approve_power)
                     } else {
                         if (chatUpBean.avatar.isNotEmpty())
                             GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
-                        openPtVipBtn.text = "成为黄金会员，免费更多聊天"
-                        chatupTitle.text = "获得聊天机会"
+                        openPtVipBtn.text = context1.getString(R.string.chatup_to_be_vip)
+                        chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
                         chatupUnlockChat.isVisible = true
                         if (chatUpBean.plat_cnt > 0) {
-                            chatupContent.text = "今日还有${chatUpBean.plat_cnt}次聊天机会"
-                            chatupUnlockChat.text = "解锁聊天"
+                            chatupContent.text =
+                                context1.getString(R.string.today_has) + chatUpBean.plat_cnt + context1.getString(
+                                    R.string.chat_count
+                                )
+                            chatupUnlockChat.text = context1.getString(R.string.chatup_unlock)
                         } else {
-                            chatupContent.text = "聊天需要消耗糖果，向对方表达诚意"
-                            chatupUnlockChat.text = "解锁聊天 （${chatUpBean.chat_amount}糖果）"
+                            chatupContent.text = context1.getString(R.string.chat_cost_candy)
+                            chatupUnlockChat.text =
+                                context1.getString(
+                                    R.string.unlock_chat_left,
+                                    chatUpBean.chat_amount
+                                )
                         }
                         // 解锁聊天
                         chatupUnlockChat.clickWithTrigger {
@@ -260,10 +270,16 @@ class ChatUpOpenPtVipDialog(
                 chatupContact.isVisible = true
                 if (chatUpBean.private_chat_btn && !chatUpBean.isplatinum) {
                     openPtVipBtn.setBackgroundResource(R.drawable.gradient_gold_vip)
-                    chatupTitle.text = "她设置了等级权限"
-                    chatupContent.text = "她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她"
+                    chatupTitle.text = context1.getString(
+                        R.string.her_level_privay
+                    )
+                    chatupContent.text = context1.getString(
+                        R.string.she_allow_gold_contact_her
+                    )
                     chatupUnlockChat.isVisible = false
-                    openPtVipBtn.text = "成为黄金会员，证明实力解锁关系"
+                    openPtVipBtn.text = context1.getString(
+                        R.string.tobe_gold_approve_power
+                    )
                     openPtVipBtn.clickWithTrigger {
                         CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCK_WECHAT)
                         dismiss()
@@ -275,13 +291,22 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.isVisible = false
                         chatupContent.isVisible = true
                         if (chatUpBean.direct_residue_cnt > 0) {
-                            chatupTitle.text = "是否解锁她的联系方式"
-                            chatupContent.text = "您当日还可免费解锁${chatUpBean.direct_residue_cnt}次联系方式"
-                            openPtVipBtn.text = "解锁她的联系方式"
+                            chatupTitle.text = context1.getString(R.string.is_unlock_contact)
+                            chatupContent.text =
+                                context1.getString(R.string.today_free_chat) + chatUpBean.direct_residue_cnt + context1.getString(
+                                    R.string.time_contact
+                                )
+                            openPtVipBtn.text = context1.getString(R.string.unlock_her)
                         } else {
-                            chatupTitle.text = "免费解锁次数已用完"
-                            chatupContent.text = "您当日还可以免费解锁0次联系方式\n使用糖果解锁，不错过心仪的她"
-                            openPtVipBtn.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
+
+                            chatupTitle.text = context1.getString(R.string.free_unlock_use_up)
+                            chatupContent.text =
+                                context1.getString(R.string.use_candy_unlock_her_dont_miss)
+                            openPtVipBtn.text =
+                                context1.getString(
+                                    R.string.unlock_contact_left,
+                                    chatUpBean.contact_amount
+                                )
                         }
 
                         // 解锁联系方式
@@ -291,13 +316,14 @@ class ChatUpOpenPtVipDialog(
                     } else {  //不是的话,弹起购买直联卡
                         chatupUnlockChat.isVisible = true
                         chatupContent.isVisible = false
-                        chatupTitle.text = "解锁心仪的她"
-                        chatupUnlockChat.text = "解锁联系方式 （${chatUpBean.contact_amount}糖果）"
+                        chatupTitle.text = context1.getString(R.string.unlock_lovely_girl)
+                        chatupUnlockChat.text =
+                            context1.getString(R.string.unlock_contact_left,chatUpBean.contact_amount)
                         // 解锁联系方式
                         chatupUnlockChat.clickWithTrigger {
                             unlockContact()
                         }
-                        openPtVipBtn.text = "购买至尊直联卡，免费解锁联系方式"
+                        openPtVipBtn.text = context1.getString(R.string.buy_contact_card_to_free)
                         // 购买直联卡
                         openPtVipBtn.clickWithTrigger {
                             CommonFunction.startToVip(
@@ -313,9 +339,9 @@ class ChatUpOpenPtVipDialog(
                 chatupUnlockChat.isVisible = false
                 chatupContact.isVisible = false
                 chatupAvator.setImageResource(R.drawable.icon_vip_roaming)
-                chatupTitle.text = "全国位置漫游"
-                chatupContent.text = "位置随时变更，提前跟其他地方的人打个招呼"
-                openPtVipBtn.text = "获取黄金会员，开启位置漫游"
+                chatupTitle.text = context1.getString(R.string.all_country_roaming)
+                chatupContent.text = context1.getString(R.string.location_auto_change_say_hi)
+                openPtVipBtn.text = context1.getString(R.string.buy_gold_to_open_roaming)
                 openPtVipBtn.clickWithTrigger {
                     CommonFunction.startToVip(context1, VipPowerActivity.SOURCE_LOCATION_ROAMING, 0)
                     dismiss()

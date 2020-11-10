@@ -1,17 +1,10 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -38,7 +31,7 @@ class MyFootPrintActivity : BaseActivity() {
     }
 
     private fun initView() {
-        hotT1.text = "我的足迹"
+        hotT1.text = getString(R.string.my_foot_print)
         btnBack.onClick {
             finish()
         }
@@ -48,7 +41,11 @@ class MyFootPrintActivity : BaseActivity() {
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("点赞", "评论", "收藏")
+    private val titles by lazy { arrayOf(
+        getString(R.string.tab_zan), getString(R.string.tab_comment), getString(
+            R.string.tab_collect
+        )
+    ) }
 
 
     /*
@@ -62,7 +59,7 @@ class MyFootPrintActivity : BaseActivity() {
         vpMyFootPrint.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         vpMyFootPrint.offscreenPageLimit = 3
 
-        tabMyFootprint.setViewPager(vpMyFootPrint,titles)
+        tabMyFootprint.setViewPager(vpMyFootPrint, titles)
         vpMyFootPrint.currentItem = 0
     }
 

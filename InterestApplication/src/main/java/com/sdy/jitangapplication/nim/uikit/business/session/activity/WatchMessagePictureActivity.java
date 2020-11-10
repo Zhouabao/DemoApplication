@@ -103,7 +103,7 @@ public class WatchMessagePictureActivity extends UI {
         setContentView(R.layout.nim_watch_picture_activity);
 
         ToolBarOptions options = new NimToolBarOptions();
-        options.titleString = "图片";
+        options.titleString = getString(R.string.input_panel_photo);
         options.navigateId = R.drawable.nim_actionbar_white_back_icon;
         setToolBar(R.id.toolbar, options);
 
@@ -140,7 +140,7 @@ public class WatchMessagePictureActivity extends UI {
         if (message == null) {
             return;
         }
-        super.setTitle(String.format("图片发送于%s", TimeUtil.getDateString(message.getTime())));
+        super.setTitle(String.format(getString(R.string.pic_sended_by), TimeUtil.getDateString(message.getTime())));
     }
 
     private void initActionbar() {

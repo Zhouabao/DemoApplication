@@ -89,7 +89,7 @@ public class VoiceTrans {
     public void show() {
         hideKeyBoard();
         textLayout.setVisibility(View.VISIBLE);
-        voiceTransText.setText("正在转换");
+        voiceTransText.setText(R.string.exchange);
     }
 
     public boolean isShow() {

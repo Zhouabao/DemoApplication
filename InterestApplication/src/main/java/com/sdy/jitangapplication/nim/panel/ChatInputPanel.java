@@ -314,7 +314,7 @@ public class ChatInputPanel implements IAudioRecordCallback {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
-                    messageEditText.setHint("请输入消息");
+                    messageEditText.setHint(R.string.please_input_msg);
                 checkSendButtonEnable(messageEditText);
             }
         });
@@ -530,7 +530,7 @@ public class ChatInputPanel implements IAudioRecordCallback {
 
                                     @Override
                                     public void onDenied() {
-                                        CommonFunction.INSTANCE.toast("请开启文件权限后再发送语音.");
+                                        CommonFunction.INSTANCE.toast(container.activity.getString(R.string.permission_storage));
                                         switchToTextLayout(false);
                                     }
                                 }).request();
@@ -546,7 +546,7 @@ public class ChatInputPanel implements IAudioRecordCallback {
 
                 @Override
                 public void onDenied() {
-                    CommonFunction.INSTANCE.toast("请开启录音权限后再发送语音.");
+                    CommonFunction.INSTANCE.toast(container.activity.getString(R.string.permission_audio));
                     switchToTextLayout(false);
                 }
             }).request();

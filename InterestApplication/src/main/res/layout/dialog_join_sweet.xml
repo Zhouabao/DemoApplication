@@ -17,7 +17,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
-        android:text="达成要求自动进入甜心圈"
+        android:text="@string/reach_auto_in_sweet"
         android:textColor="#ff191919"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="上传认证视频"
+            android:text="@string/upload_verify_video"
             android:textColor="#ff191919"
             android:textSize="14sp" />
 
@@ -73,7 +73,7 @@
             android:paddingTop="4dp"
             android:paddingRight="9dp"
             android:paddingBottom="4dp"
-            android:text="立即认证"
+            android:text="@string/verify_now"
             android:textColor="#FFC5C6C8"
             android:textSize="13sp" />
     </LinearLayout>
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="认证职业或身材"
+            android:text="@string/verify_figure_or_job"
             android:textColor="#ff191919"
             android:textSize="14sp" />
 
@@ -127,7 +127,7 @@
             android:paddingTop="4dp"
             android:paddingRight="9dp"
             android:paddingBottom="4dp"
-            android:text="立即认证"
+            android:text="@string/verify_now"
             android:textColor="#ffffffff"
             android:textSize="13sp" />
     </LinearLayout>

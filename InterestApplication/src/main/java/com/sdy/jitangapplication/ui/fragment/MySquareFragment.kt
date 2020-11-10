@@ -5,17 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.blankj.utilcode.util.SPUtils
-import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.RecommendSquareListBean
@@ -62,7 +58,7 @@ class MySquareFragment : BaseMvpFragment<MySquarePresenter>(), MySquareView,
         )
     }
     private val adapter by lazy { RecommendSquareAdapter() }
-     fun loadData() {
+    fun loadData() {
         initView()
         if (!UserManager.touristMode)
             mPresenter.aboutMeSquareCandy(params)
@@ -85,7 +81,7 @@ class MySquareFragment : BaseMvpFragment<MySquarePresenter>(), MySquareView,
         //android 瀑布流
         adapter.setHeaderAndEmpty(false)
         adapter.setEmptyView(R.layout.empty_my_square_layout, rvMySquare)
-        adapter.emptyView.emptyPublishBtn.text = "发布动态"
+        adapter.emptyView.emptyPublishBtn.text = getString(R.string.publish_square)
         adapter.emptyView.emptyPublishBtn.onClick {
             mPresenter.checkBlock()
         }
@@ -100,7 +96,7 @@ class MySquareFragment : BaseMvpFragment<MySquarePresenter>(), MySquareView,
         val headPublish = LayoutInflater.from(activity!!)
             .inflate(R.layout.headerview_user_center_square, rvMySquare, false)
         headPublish.publishImg.setImageResource(R.drawable.icon_edit_me)
-        headPublish.publishBtn.text = "发布动态"
+        headPublish.publishBtn.text = getString(R.string.publish_square)
         headPublish.publishCl.onClick {
 
             mPresenter.checkBlock()

@@ -27,7 +27,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llTitle"
         app:queryBackground="@null"
-        app:queryHint="搜索地点"
+        app:queryHint="@string/search_place"
         app:showDividers="none"
         app:submitBackground="@null" />
 
@@ -64,7 +64,7 @@
         android:drawableLeft="@drawable/icon_location_roaming"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
-        android:text="当前定位  "
+        android:text="@string/current_location"
         android:textColor="#ff191919"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@id/searchLocation"

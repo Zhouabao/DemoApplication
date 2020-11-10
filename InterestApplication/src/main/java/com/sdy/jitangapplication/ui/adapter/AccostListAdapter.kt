@@ -59,7 +59,7 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
                 item.content
             }
             else -> {
-                "新的招呼消息"
+                mContext.getString(R.string.new_hi_message)
             }
         }
 
@@ -70,7 +70,7 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
             .isNullOrEmpty()
                 && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid)
             .contains(
-                "在线"
+                mContext.getString(R.string.on_line)
             )
         holder.itemView.newCount.isVisible = item.unreadCnt > 0
 

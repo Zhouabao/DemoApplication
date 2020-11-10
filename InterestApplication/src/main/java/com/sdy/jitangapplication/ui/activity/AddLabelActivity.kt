@@ -72,10 +72,10 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
         setSwipeBackEnable(from != FROM_REGISTER)
         btnBack.isVisible = from != FROM_REGISTER
-        hotT1.text = "选择兴趣"
+        hotT1.text = getString(R.string.label_title)
 
         rightBtn1.isEnabled = true
-        rightBtn1.text = "保存"
+        rightBtn1.text = getString(R.string.save)
         rightBtn1.isVisible = true
 
 
@@ -182,7 +182,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 if (tag_ids.isNotEmpty()) {
                     mPresenter.saveInterestTag(Gson().toJson(tag_ids))
                 } else {
-                    CommonFunction.toast("暂无选中的兴趣可保存")
+                    CommonFunction.toast(getString(R.string.label_no_choose))
                 }
             }
         }

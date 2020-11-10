@@ -39,7 +39,7 @@ class LoginHelpActivity : BaseMvpActivity<LoginHelpPresenter>(), LoginHelpView {
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "帮助"
+        hotT1.text = resources.getString(R.string.help)
         btnLoginHelp.onClick {
             startActivity<LoginHelpReasonActivity>("qntoken" to qntoken)
         }

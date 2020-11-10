@@ -37,7 +37,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
 
     private var page = 1
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
@@ -58,7 +58,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         btnBack.onClick {
             onBackPressed()
         }
-        hotT1.text = "发现消息"
+        hotT1.text = getString(R.string.message_find_title)
         mPresenter = MessageSquarePresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -82,7 +82,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         )
         messageSquareNewRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, messageSquareNewRv)
-        adapter.emptyView.emptyTip.text = "暂时没有消息"
+        adapter.emptyView.emptyTip.text = getString(R.string.empty_messgae)
         adapter.isUseEmpty(false)
 
         //val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的

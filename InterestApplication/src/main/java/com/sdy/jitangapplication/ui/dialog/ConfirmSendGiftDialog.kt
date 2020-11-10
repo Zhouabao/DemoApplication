@@ -71,8 +71,8 @@ class ConfirmSendGiftDialog(
     }
 
     fun initview() {
-        t2.text = "你确定赠送「${giftName.title}」吗？"
-        confirm.text = "赠送礼物"
+        t2.text = context1.getString(R.string.sure_send_left, giftName.title)
+        confirm.text = context1.getString(R.string.send_gift)
         cancel.onClick {
             dismiss()
         }
@@ -122,7 +122,7 @@ class ConfirmSendGiftDialog(
      */
     fun sendGiftBeFriends() {
         if (!NetworkUtils.isConnected()) {
-            CommonFunction.toast("请连接网络！")
+            CommonFunction.toast(context1.getString(R.string.connect_network))
             return
         }
         val loadingDialog = LoadingDialog(context1)

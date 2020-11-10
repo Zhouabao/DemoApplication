@@ -122,7 +122,7 @@ class PeopleNearBigCardAdapter :
         SpanUtils.with(itemView.userNameAge)
             .append(item.nickname)
             .setFontSize(19, true)
-            .append(" ${item.age}岁")
+            .append(" " + item.age + mContext.getString(R.string.years))
             .create()
 
         if (item!!.isfaced == 1) {
@@ -137,7 +137,7 @@ class PeopleNearBigCardAdapter :
                 ), null, null, null
             )
             if (item!!.face_str.isNullOrEmpty()) {
-                itemView.userVerify.text = "已认证"
+                itemView.userVerify.text = mContext.getString(R.string.face_has_verify)
             } else {
                 itemView.userVerify.text = item!!.face_str
             }
@@ -159,7 +159,7 @@ class PeopleNearBigCardAdapter :
             itemView.userIntention.isVisible = false
         } else {
             itemView.userIntention.isVisible = true
-            itemView.userIntentionContent.text = "她想和你：${item.title}·${item.dating_title}"
+            itemView.userIntentionContent.text = mContext.getString(R.string.shw_want_to_with_you) + item.title + "·" + item.dating_title
             itemView.userIntention.clickWithTrigger {
                 DatingDetailActivity.start2Detail(mContext, item.invitation_id)
             }

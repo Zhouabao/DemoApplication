@@ -28,7 +28,7 @@
 
     <EditText
             android:id="@+id/newPhoneEt"
-            android:hint="请填写新手机号"
+            android:hint="@string/input_new_phone"
             android:textColorHint="#ffd1d2d5"
             android:textSize="16sp"
             android:inputType="number"
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="验证码"
+            android:text="@string/verify_code"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
@@ -69,7 +69,7 @@
 
     <EditText
             android:id="@+id/newVerifyCodeEt"
-            android:hint="请输入验证码"
+            android:hint="@string/input_verify_code"
             android:textColorHint="#ffd1d2d5"
             android:textSize="16sp"
             android:inputType="number"
@@ -91,7 +91,7 @@
             android:background="@drawable/selector_verify"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:text="获取验证码"
+            android:text="@string/get_verify_code"
             android:textSize="13sp"
             android:enabled="false"
             android:textColor="@color/verify_btn_color_selector"
@@ -104,7 +104,7 @@
             android:id="@+id/confirmChangeBtn"
             android:layout_width="0dp"
             android:layout_height="46dp"
-            android:text="确认变更"
+            android:text="@string/account_confirm_change"
             android:background="@drawable/selector_confirm_btn"
             android:layout_marginTop="117dp"
             android:gravity="center"
@@ -121,9 +121,7 @@
             android:layout_marginBottom="34dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="如需注销当前帐号，请直接选择“注销账号”
-账号一经注销，您的账号将不会再被任何人看到，
-并且聊天记录会被清空，请谨慎操作。"
+            android:text="@string/account_login_offtip1"
             android:gravity="center"
             android:textColor="#ffbec2c2"
             android:textSize="13sp"

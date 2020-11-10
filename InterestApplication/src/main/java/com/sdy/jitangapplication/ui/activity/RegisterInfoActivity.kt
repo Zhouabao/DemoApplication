@@ -65,7 +65,13 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
 
     }
 
-    private val genders by lazy { mutableListOf("男", "女") }
+    private val genders by lazy {
+        mutableListOf(
+            getString(R.string.gender_man),
+            getString(R.string.gender_woman)
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_info)
@@ -164,7 +170,12 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 PermissionUtils.permission(PermissionConstants.CAMERA)
                     .callback(object : PermissionUtils.SimpleCallback {
                         override fun onGranted() {
-                            if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                            if (!PermissionUtils.isGranted(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.STORAGE
+                                    )
+                                )
+                            )
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
@@ -180,7 +191,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                                         }
 
                                         override fun onDenied() {
-                                            CommonFunction.toast("文件存储权限被拒,请允许权限后再上传头像.")
+                                            CommonFunction.toast(getString(R.string.permission_storage))
                                             uploadAvatorDialog.cancel()
                                         }
 
@@ -189,7 +200,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                         }
 
                         override fun onDenied() {
-                            CommonFunction.toast("相机权限被拒,请允许权限后再上传头像.")
+                            CommonFunction.toast(getString(R.string.permission_camera))
                             uploadAvatorDialog.cancel()
                         }
                     })
@@ -210,12 +221,21 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (!PermissionUtils.isGranted(
                     *PermissionConstants.getPermissions(PermissionConstants.CAMERA)
                 ) ||
-                        !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                        !PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(
+                                PermissionConstants.STORAGE
+                            )
+                        ))
             ) {
                 PermissionUtils.permission(PermissionConstants.CAMERA)
                     .callback(object : PermissionUtils.SimpleCallback {
                         override fun onGranted() {
-                            if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
+                            if (!PermissionUtils.isGranted(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.STORAGE
+                                    )
+                                )
+                            ) {
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
@@ -232,7 +252,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                                         }
 
                                         override fun onDenied() {
-                                            CommonFunction.toast("文件存储权限被拒,请允许权限后再上传头像.")
+                                            CommonFunction.toast(getString(R.string.permission_storage))
                                             uploadAvatorDialog.cancel()
                                         }
                                     })
@@ -242,7 +262,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                         }
 
                         override fun onDenied() {
-                            CommonFunction.toast("相机权限被拒,请允许权限后再上传头像.")
+                            CommonFunction.toast(getString(R.string.permission_camera))
 //                            PermissionUtils.launchAppDetailsSettings()
                             uploadAvatorDialog.cancel()
                         }
@@ -330,7 +350,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             }
             R.id.quickSign -> {//快速签名
                 if (params["gender"] == null) {
-                    CommonFunction.toast("请先选择性别")
+                    CommonFunction.toast(getString(R.string.please_choose_gender))
                     return
                 }
                 startActivityForResult<QuickSignActivity>(
@@ -427,7 +447,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
         })
             .setRangDate(startDate, endDate)
             .setDate(endDate)
-            .setTitleText("生日")
+            .setTitleText(getString(R.string.birthday))
             .setTitleColor(Color.BLACK)//标题文字颜色
             .build()
         clOptions.show()
@@ -456,8 +476,8 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 params["gender"] = options1 + 1
                 checkConfirmEnable()
             })
-            .setSubmitText("确定")
-            .setTitleText("性别")
+            .setSubmitText(getString(R.string.ok))
+            .setTitleText(getString(R.string.gender))
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)
             .setDividerColor(resources.getColor(R.color.colorDivider))
@@ -474,7 +494,13 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
      * 展示联系方式
      */
     private var contactWay = 2 //0手机号   1微信  2QQ
-    private val contactWays by lazy { mutableListOf("手机号", "微信", "QQ") }
+    private val contactWays by lazy {
+        mutableListOf(
+            getString(R.string.contact_phone),
+            getString(R.string.contact_wechat),
+            getString(R.string.contact_QQ)
+        )
+    }
     private val contactWaysIcon by lazy {
         mutableListOf(
             R.drawable.icon_phone_reg,
@@ -491,19 +517,19 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 contactWay = options1 + 1
                 contactWayEt.hint = "${when (options1) {
                     0 -> {
-                        "请输入正确的手机号，可设置隐藏"
+                        getString(R.string.please_input_correct_phone_can_hide)
                     }
                     1 -> {
-                        "请输入正确的微信号，可设置隐藏"
+                        getString(R.string.please_input_correct_wechat_can_hide)
                     }
                     else -> {
-                        "请输入正确的QQ号，可设置隐藏"
+                        getString(R.string.please_input_correct_qq_can_hide)
                     }
                 }}"
                 checkConfirmEnable()
             })
-            .setSubmitText("确定")
-            .setTitleText("联系方式")
+            .setSubmitText(getString(R.string.ok))
+            .setTitleText(getString(R.string.contact_way))
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)
             .setDividerColor(resources.getColor(R.color.colorDivider))
@@ -635,7 +661,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
         if (ok) {
             params["avatar"] = key
         } else {
-            CommonFunction.longToast("头像上传失败")
+            CommonFunction.longToast(getString(R.string.avatar_upload_fail))
         }
         checkConfirmEnable()
     }

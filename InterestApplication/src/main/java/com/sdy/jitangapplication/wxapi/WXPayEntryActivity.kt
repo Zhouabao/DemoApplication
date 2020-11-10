@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -33,16 +34,16 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
         if (resp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
             when (resp.errCode) {
                 BaseResp.ErrCode.ERR_OK -> {
-                    showAlert(0, this, "支付成功！")
+                    showAlert(0, this, getString(R.string.pay_success))
                 }
                 BaseResp.ErrCode.ERR_USER_CANCEL -> {
-                    showAlert(-2, this, "支付取消！")
+                    showAlert(-2, this,  getString(R.string.pay_cancel))
                 }
                 BaseResp.ErrCode.ERR_COMM -> {
-                    showAlert(-1, this, "支付失败！")
+                    showAlert(-1, this,  getString(R.string.pay_cancel))
                 }
                 else -> {
-                    showAlert(-3, this, "支付出错，请重新请求！")
+                    showAlert(-3, this, getString(R.string.pay_error))
                 }
             }
         }
@@ -55,7 +56,7 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
 
     private fun showAlert(code: Int, ctx: Context, info: String) {
         CommonAlertDialog.Builder(ctx)
-            .setTitle("支付结果")
+            .setTitle(getString(R.string.pay_result))
             .setContent(info)
             .setCancelIconIsVisibility(false)
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {

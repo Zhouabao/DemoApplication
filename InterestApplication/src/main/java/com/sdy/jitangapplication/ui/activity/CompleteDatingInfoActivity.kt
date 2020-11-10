@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -78,11 +77,11 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         mPresenter.mView = this
         mPresenter.context = this
 
-        hotT1.text = "完善活动信息"
+        hotT1.text = getString(R.string.dating_info_complete)
         btnBack.clickWithTrigger {
             finish()
         }
-        rightBtn1.text = "发布"
+        rightBtn1.text = getString(R.string.publish)
         rightBtn1.isVisible = true
         rightBtn1.isEnabled = true
 
@@ -187,8 +186,8 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             startRecordBtn.setImageResource(R.drawable.icon_dating_record_play)
             cancelAnimation()
             //停止录音
-            recordTv.text = "录制完成"
-            audioPlayTip.text = "点击试听"
+            recordTv.text = getString(R.string.record_complete)
+            audioPlayTip.text = getString(R.string.try_listen)
             mMediaRecorderHelper.stopAndRelease()
 
             restartTip.isVisible = true
@@ -201,7 +200,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             currentActionState = MediaRecorderHelper.ACTION_PLAYING
 
             //预览播放录音
-            recordTv.text = "播放中.."
+            recordTv.text = getString(R.string.playing)
             mPreviewTimeThread =
                 UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), recordTime)
             startRecordBtn.setImageResource(R.drawable.icon_dating_record_pause)
@@ -213,7 +212,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
                 currentActionState = MediaRecorderHelper.ACTION_COMMPLETE
                 recordTime.text = UriUtils.getShowTime(totalSecond)
-                recordTv.text = "录制完成"
+                recordTv.text = getString(R.string.record_complete)
                 startRecordBtn.setImageResource(R.drawable.icon_dating_record_play)
             }
 
@@ -221,7 +220,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             currentActionState = MediaRecorderHelper.ACTION_PAUSE
             mPreviewTimeThread?.pause()
 
-            recordTv.text = "暂停"
+            recordTv.text = getString(R.string.pause)
             startRecordBtn.setImageResource(R.drawable.icon_dating_record_play)
             //暂停播放
             MediaPlayerHelper.pause()
@@ -230,7 +229,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             //开启预览计时线程
             mPreviewTimeThread?.start()
 
-            recordTv.text = "播放中.."
+            recordTv.text = getString(R.string.playing)
             startRecordBtn.setImageResource(R.drawable.icon_dating_record_pause)
             //继续播放
             MediaPlayerHelper.resume()
@@ -261,7 +260,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         totalSecond = 0
         mPreviewTimeThread?.stop()
         countTimeThread?.cancel()
-        recordTv.text = "点击录音"
+        recordTv.text = getString(R.string.click_record)
         recordTime.text = "00:00"
         recordTime.setTextColor(Color.parseColor("#FF888D92"))
 
@@ -355,7 +354,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                     params[params2] = optionsItems2[options1][options2]
                 }
             })
-            .setSubmitText("确定")
+            .setSubmitText(getString(R.string.ok))
             .setTitleText(title)
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)
@@ -401,7 +400,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                 showConditionPicker(
                     chooseDatingObjectBtn,
                     "dating_target",
-                    "选择活动对象",
+                    getString(R.string.dating_person_choose),
                     datingTargetCondition
                 )
             }
@@ -412,7 +411,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                 showConditionPicker(
                     chooseDatingPayBtn,
                     "cost_type",
-                    "费用开支预估",
+                    getString(R.string.dating_pay_estimated),
                     datingCostTypeCondition,
                     datingCostMoneyCondition,
                     "cost_money"
@@ -425,7 +424,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                 showConditionPicker(
                     chooseDatingPlanBtn,
                     "follow_up",
-                    "后续活动",
+                    getString(R.string.dating_later_plan),
                     datingPlanCondition
                 )
 
@@ -437,13 +436,13 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                     mMediaRecorderHelper.cancel()
                     cancelAnimation()
                     changeToNormalState()
-                    switchContentTypeBtn.text = "切换语音描述"
+                    switchContentTypeBtn.text = getString(R.string.switch_audio_descr)
                 } else {
                     if (KeyboardUtils.isSoftInputVisible(this)) {
                         KeyboardUtils.hideSoftInput(this)
                     }
                     datingDescrEt.setText("")
-                    switchContentTypeBtn.text = "切换文字描述"
+                    switchContentTypeBtn.text = getString(R.string.switch_text_descr)
                 }
                 datingTextCl.isVisible = typeText
                 datingAudioCl.isVisible = !typeText
@@ -459,19 +458,19 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
                                 if (currentActionState == MediaRecorderHelper.ACTION_RECORDING && totalSecond < 5) {
-                                    CommonFunction.toast("再录制长一点吧")
+                                    CommonFunction.toast(getString(R.string.record_longer))
                                     return
                                 }
                                 switchActionState()
                             }
 
                             override fun onDenied() {
-                                CommonFunction.toast("录音权限被拒,请开启后再录音.")
+                                CommonFunction.toast(getString(R.string.permission_audio))
                             }
                         }).request()
                 } else {
                     if (currentActionState == MediaRecorderHelper.ACTION_RECORDING && totalSecond < 5) {
-                        CommonFunction.toast("再录制长一点吧")
+                        CommonFunction.toast(getString(R.string.record_longer))
                         return
                     }
                     switchActionState()
@@ -482,8 +481,8 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             R.id.revertRecord, R.id.restartRecordBtn -> {
                 val dialog = DeleteDialog(this)
                 dialog.show()
-                dialog.title.text = "重新录制"
-                dialog.tip.text = "确定重新录制？"
+                dialog.title.text = getString(R.string.re_record)
+                dialog.tip.text = getString(R.string.confirm_re_record)
                 dialog.confirm.onClick {
                     mMediaRecorderHelper.cancel()
                     changeToNormalState()
@@ -504,40 +503,40 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
             }
             R.id.rightBtn1 -> {
                 if (dating_type == null) {
-                    CommonFunction.toast("请返回上一界面选择活动类型")
+                    CommonFunction.toast(getString(R.string.dating_back_to_dating_type))
                     return
                 }
 
                 if (chooseDatingPlaceBtn.text.isEmpty()) {
-                    CommonFunction.toast("请选择活动地点")
+                    CommonFunction.toast(getString(R.string.dating_choose_place))
                     return
                 }
                 if (chooseDatingObjectBtn.text.isEmpty()) {
-                    CommonFunction.toast("请选择活动对象")
+                    CommonFunction.toast(getString(R.string.dating_choose_person))
                     return
                 }
                 if (chooseDatingPayBtn.text.isEmpty()) {
-                    CommonFunction.toast("请选择费用开支")
+                    CommonFunction.toast(getString(R.string.dating_cost_money))
                     return
                 }
                 if (chooseDatingPlanBtn.text.isEmpty()) {
-                    CommonFunction.toast("请选择后续活动")
+                    CommonFunction.toast(getString(R.string.dating_choose_later_plan))
                     return
                 }
 
 
                 if (!typeText && ((!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != MediaRecorderHelper.ACTION_DONE) || mMediaRecorderHelper.currentFilePath.isNullOrEmpty())) {
-                    CommonFunction.toast("请录制完语音并确认使用再发布")
+                    CommonFunction.toast(getString(R.string.confirm_record_and_publish))
                     return
                 }
 
                 if (typeText && datingDescrEt.text.isNullOrEmpty()) {
-                    CommonFunction.toast("请填写此刻的心情吧")
+                    CommonFunction.toast(getString(R.string.write_mind))
                     return
                 }
 
                 if (mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && datingDescrEt.text.isNullOrEmpty()) {
-                    CommonFunction.toast("文字描述或者语音描述必须满足一项")
+                    CommonFunction.toast(getString(R.string.text_or_audio_must))
                     return
                 }
                 if (myDatingAudioView.isPlaying())
@@ -646,7 +645,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
 
     override fun onDatingReleaseResult(success: Boolean, code: Int) {
         if (success) {
-            CommonFunction.toast("活动发布成功")
+            CommonFunction.toast(getString(R.string.dating_publish_success))
             EventBus.getDefault().post(UpdateMyDatingEvent())
             if (ActivityUtils.isActivityExistsInStack(ChooseDatingTypeActivity::class.java)) {
                 ActivityUtils.finishActivity(ChooseDatingTypeActivity::class.java)

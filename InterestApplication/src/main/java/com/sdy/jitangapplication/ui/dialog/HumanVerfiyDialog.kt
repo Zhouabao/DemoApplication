@@ -49,9 +49,10 @@ class HumanVerfiyDialog(val context1: Context, val type: Int, val showToast: Boo
             UserManager.getAvator(),
             accountDangerVerifyStatuLogo
         )
-        accountDangerTitle.text = "认证审核不通过"
-        accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
-        accountDangerBtn.text = "修改头像"
+        accountDangerTitle.text = context1.getString(R.string.avata_verify_fail)
+
+        accountDangerContent.text =  context1.getString(R.string.avatar_compare_fail)
+        accountDangerBtn.text = context1.getString(R.string.change_avatar)
         humanVerify.setTextColor(Color.parseColor("#FFFF6318"))
         accountDangerLoading.isVisible = false
         accountDangerBtn.isEnabled = true
@@ -95,7 +96,7 @@ class HumanVerfiyDialog(val context1: Context, val type: Int, val showToast: Boo
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        CommonFunction.toast("已提交人工审核，请耐心等待")
+                        CommonFunction.toast(context1.getString(R.string.has_commit_human_verify))
                         dismiss()
                     }
                 }

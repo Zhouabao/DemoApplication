@@ -136,12 +136,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
         adapter.isUseEmpty(false)
         if (type == TYPE_SWEET_HEART) {
-            adapter.emptyView.emptyFriendTip.text = "这里暂时还没有人~"
+            adapter.emptyView.emptyFriendTip.text = getString(R.string.nearby_empty)
             adapter.emptyView.emptyFriendTitle.isVisible = false
             adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_sweet_heart)
         } else {
-            adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
-            adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
+            adapter.emptyView.emptyFriendTitle.text = getString(R.string.nearby_empty_content)
+            adapter.emptyView.emptyFriendTip.text = getString(R.string.nearby_empty_content1)
             adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         }
         adapter.setHeaderAndEmpty(true)
@@ -200,17 +200,17 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
             if (progressBean.gender == 1) {
                 sweetHeartTitle.gravity = Gravity.CENTER
-                sweetHeartTitle.text = "满足下列任意一个条件即可进入甜心圈"
+                sweetHeartTitle.text = getString(R.string.meet_any_one_come_sweet)
                 verifyNowNum1.isVisible = false
                 verifyNowNum2.isVisible = false
                 sweetVerifyIconMan.isVisible = true
-                verifyTitle1.text = "充值金额大于${progressBean.normal_money}"
-                verifyTitle2.text = "通过资产认证"
+                verifyTitle1.text = getString(R.string.charge_more_than, progressBean.normal_money)
+                verifyTitle2.text = getString(R.string.pass_wealth_verify)
 
                 if (progressBean.now_money.toFloat() > progressBean.normal_money.toFloat()) {
                     verifyNowBtn1.setTextColor(Color.parseColor("#FF212225"))
                     verifyNowBtn1.setBackgroundResource(R.drawable.shape_light_orange_13dp)
-                    verifyNowBtn1.text = "立即加入"
+                    verifyNowBtn1.text = getString(R.string.join_now)
                     verifyNowBtn1.clickWithTrigger {
                         mPresenter.joinSweetApply()
                     }
@@ -228,19 +228,19 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     1 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFFFCD52"))
                         verifyNowBtn2.setBackgroundResource(R.drawable.shape_black_13dp)
-                        verifyNowBtn2.text = "立即认证"
+                        verifyNowBtn2.text = getString(R.string.verify_now)
                         verifyNowBtn2.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn2.text = "审核中"
+                        verifyNowBtn2.text = getString(R.string.checking)
                         verifyNowBtn2.isEnabled = false
                     }
                     3 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn2.text = "认证通过"
+                        verifyNowBtn2.text = getString(R.string.veriy_pass)
                         verifyNowBtn2.isEnabled = false
                     }
                 }
@@ -248,12 +248,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     startActivity<SweetHeartVerifyActivity>()
                 }
             } else {
-                sweetHeartTitle.text = "达成要求自动进入甜心圈"
+                sweetHeartTitle.text = getString(R.string.reach_auto_in_sweet)
                 verifyNowNum1.isVisible = true
                 verifyNowNum2.isVisible = true
                 sweetVerifyIconMan.isVisible = false
-                verifyTitle1.text = "上传认证视频"
-                verifyTitle2.text = "认证职业或身材"
+                verifyTitle1.text = getString(R.string.upload_verify_video)
+                verifyTitle2.text = getString(R.string.verify_figure_or_job)
                 //assets_audit_state 甜心圈认证状态 1没有 2认证中 3认证通过
                 //female_mv_state 	女性视频认证 1没有通过 2审核中 3视频认证通过
                 //now_money 	男性充值的钱
@@ -263,19 +263,19 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     1 -> {
                         verifyNowBtn1.setTextColor(Color.WHITE)
                         verifyNowBtn1.setBackgroundResource(R.drawable.shape_pink_13dp)
-                        verifyNowBtn1.text = "立即认证"
+                        verifyNowBtn1.text = getString(R.string.verify_now)
                         verifyNowBtn1.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn1.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn1.text = "审核中"
+                        verifyNowBtn1.text = getString(R.string.checking)
                         verifyNowBtn1.isEnabled = false
                     }
                     3 -> {
                         verifyNowBtn1.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn1.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn1.text = "认证通过"
+                        verifyNowBtn1.text = getString(R.string.veriy_pass)
                         verifyNowBtn1.isEnabled = false
                     }
 
@@ -286,19 +286,19 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     1 -> {
                         verifyNowBtn2.setTextColor(Color.WHITE)
                         verifyNowBtn2.setBackgroundResource(R.drawable.shape_pink_13dp)
-                        verifyNowBtn2.text = "立即认证"
+                        verifyNowBtn2.text = getString(R.string.verify_now)
                         verifyNowBtn2.isEnabled = true
                     }
                     2 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn2.text = "认证中"
+                        verifyNowBtn2.text = getString(R.string.checking)
                         verifyNowBtn2.isEnabled = false
                     }
                     3 -> {
                         verifyNowBtn2.setTextColor(Color.parseColor("#FFC5C6C8"))
                         verifyNowBtn2.setBackgroundColor(Color.WHITE)
-                        verifyNowBtn2.text = "认证通过"
+                        verifyNowBtn2.text = getString(R.string.veriy_pass)
                         verifyNowBtn2.isEnabled = false
                     }
                 }
@@ -336,9 +336,12 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             openVipCl.isVisible = true
 
             t2.text =
-                "在${UserManager.getCity()}共有${UserManager.registerFileBean?.people_amount ?: 0}名糖宝女孩\n满足你的需求"
+                getString(
+                    R.string.open_vip_contact_them1,
+                    arrayOf(UserManager.getCity(), UserManager.registerFileBean?.people_amount ?: 0)
+                )
 
-            openVipBtn.text = "开通会员联系她们"
+            openVipBtn.text = getString(R.string.open_vip_contact_them)
 
             GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), myAvator)
             openVipBtn.clickWithTrigger {
@@ -502,8 +505,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     (refreshPeopleNearby.layoutParams as FrameLayout.LayoutParams).topMargin =
                         SizeUtils.dp2px(41F)
                     lieAvatorLl.isVisible = true
-                    lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
-                    changeAvatorBtn.text = "立即替换"
+                    lieAvatorContent.text = getString(R.string.true_avatar_to_recommend)
+                    changeAvatorBtn.text = getString(R.string.replace_now)
                     changeAvatorCloseBtn.isVisible = false
                 } else {
                     lieAvatorLl.isVisible = false
@@ -620,8 +623,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
         adapter.isUseEmpty(false)
-        adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
-        adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
+        adapter.emptyView.emptyFriendTitle.text = getString(R.string.nearby_empty_content)
+        adapter.emptyView.emptyFriendTip.text =  getString(R.string.nearby_empty_content1)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.setHeaderAndEmpty(true)
 

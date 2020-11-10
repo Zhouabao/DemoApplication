@@ -42,7 +42,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="在成都找到符合标准的" />
+                tools:text="@string/find_standard_girl" />
 
             <com.sdy.jitangapplication.widgets.DancingNumberView
                 android:id="@+id/standardPeople"
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="高端精英认证"
+                    android:text="@string/higher_man_verify"
                     android:textColor="#fff2b769"
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -191,7 +191,7 @@
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/icon_bg_share_friend"
                 android:gravity="center"
-                android:text="为什么需要付费"
+                android:text="@string/why_pay"
                 android:textColor="#ff888d92"
                 android:textSize="14sp"
                 android:textStyle="bold"

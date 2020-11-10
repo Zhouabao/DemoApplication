@@ -27,7 +27,7 @@
                 android:layout_marginTop="30dp"
                 android:lineSpacingMultiplier="1.5"
                 android:gravity="center"
-                android:text="登录过期\n请重新登录"
+                android:text="@string/login_out_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -46,7 +46,7 @@
                 android:layout_below="@id/view"
                 android:textSize="18sp"
                 android:textColor="@color/colorOrange"
-                android:text="确定"
+                android:text="@string/ok"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:background="@color/colorWhite"

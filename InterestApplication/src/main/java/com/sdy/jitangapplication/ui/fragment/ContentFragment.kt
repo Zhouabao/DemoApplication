@@ -1,14 +1,11 @@
 package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.PopupWindow
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -183,7 +180,13 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    val titles by lazy { arrayOf("最新", "推荐", "兴趣", "附近") }
+    val titles by lazy {
+        arrayOf(
+            getString(R.string.tab_newest), getString(R.string.tab_recommend), getString(
+                R.string.tab_label
+            ), getString(R.string.tab_nearby)
+        )
+    }
 
 
     private fun initFragments() {
@@ -217,10 +220,9 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
         })
 
-        rgSquare.setViewPager(squareVp,titles)
+        rgSquare.setViewPager(squareVp, titles)
         squareVp.currentItem = 1
     }
-
 
 
     override fun onDestroy() {
@@ -237,7 +239,8 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 btnClose.isVisible = false
                 uploadProgressBar.progress =
                     (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
-                uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
+                uploadProgressTv.text =
+                    getString(R.string.publish_progress, uploadProgressBar.progress)
                 uploadFl.isVisible = true
             } else {
                 UserManager.cancelUpload = true
@@ -250,7 +253,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
     fun onAnnounceEvent(event: AnnounceEvent) {
         if (event.serverSuccess) {
             UserManager.clearPublishParams()
-            uploadProgressTv.text = "动态发布成功!"
+            uploadProgressTv.text = getString(R.string.publish_square_success)
             uploadFl.postDelayed({
                 uploadFl.isVisible = false
             }, 500)
@@ -266,9 +269,9 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
             if (event.code == 402) { //内容违规重新去编辑
                 UserManager.publishState = -1
-                uploadProgressTv.text = "内容违规请重新编辑"
+                uploadProgressTv.text = getString(R.string.re_edit_obey)
                 iconRetry.setImageResource(R.drawable.icon_edit_retry)
-                editRetry.text = "编辑"
+                editRetry.text = getString(R.string.edit)
                 llRetry.onClick {
                     SPUtils.getInstance(Constants.SPNAME)
                         .put("draft", UserManager.publishParams["descr"] as String)
@@ -280,9 +283,9 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 }
             } else { //发布失败重新发布
                 UserManager.publishState = -2
-                uploadProgressTv.text = "发布失败"
+                uploadProgressTv.text = getString(R.string.publish_fail)
                 iconRetry.setImageResource(R.drawable.icon_retry)
-                editRetry.text = "重试"
+                editRetry.text = getString(R.string.retry)
                 llRetry.onClick {
                     retryPublish()
                 }
@@ -306,20 +309,20 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
             1
         }
         if (UserManager.publishState == 1) {//正在发布中
-            CommonFunction.toast("还有动态正在发布哦~请稍候")
+            CommonFunction.toast(getString(R.string.waiting_publishing))
             return
         } else if (UserManager.publishState == -2) {//发布失败
             CommonAlertDialog.Builder(activity!!)
-                .setTitle("发布提示")
-                .setContent("您有一条内容未成功发布，是否重新发布？")
-                .setConfirmText("重新上传")
+                .setTitle(getString(R.string.publish_tip))
+                .setContent(getString(R.string.re_publish_for_fail_content))
+                .setConfirmText(getString(R.string.retry_upload))
                 .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                     override fun onClick(dialog: Dialog) {
                         dialog.cancel()
                         retryPublish()
                     }
                 })
-                .setCancelText("发布新内容")
+                .setCancelText(getString(R.string.publish_new_content))
                 .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                     override fun onClick(dialog: Dialog) {
                         dialog.cancel()
@@ -362,7 +365,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
     private fun retryPublish() {
         if (!mPresenter.checkNetWork()) {
-            uploadProgressTv.text = "网络不可用,请检查网络设置"
+            uploadProgressTv.text = getString(R.string.check_network)
             return
         } else {
             uploadProgressTv.text = ""

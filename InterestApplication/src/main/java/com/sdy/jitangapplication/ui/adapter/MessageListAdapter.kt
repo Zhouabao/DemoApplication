@@ -70,7 +70,7 @@ class MessageListAdapter :
                 .getSimpleDisplay(item.contactId).isNullOrEmpty()
                     && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId)
                 .contains(
-                    "在线"
+                    mContext.getString(R.string.on_line)
                 )
 
 

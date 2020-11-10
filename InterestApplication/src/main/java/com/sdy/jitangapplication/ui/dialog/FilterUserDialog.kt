@@ -63,7 +63,8 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
             sp.getInt("limit_age_high", 35).toFloat()
         )
         filterAge.text =
-            "${seekBarAge.leftSeekBar.progress.toInt()}-${seekBarAge.rightSeekBar.progress.toInt()}岁"
+            seekBarAge.leftSeekBar.progress.toInt()
+                .toString() + "-" + seekBarAge.rightSeekBar.progress.toInt() + context1.getString(R.string.years)
 
         rgOnlineTime.check(
             when (sp.getInt("online_type")) {
@@ -108,7 +109,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 null,
                 null
             )
-            currentLocation.text = "当前位置"
+            currentLocation.text = context1.getString(R.string.current_location)
         }
 
         if (UserManager.isUserVerify() == 1) {
@@ -118,9 +119,9 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
         } else {
             if (UserManager.isUserVerify() == 2) {
-                btnVerify.text = "认证中"
+                btnVerify.text = context1.getString(R.string.verify_in_ing)
             } else {
-                btnVerify.text = "未认证"
+                btnVerify.text = context1.getString(R.string.not_verify)
             }
             btnVerify.visibility = View.VISIBLE
             switchShowVerify.visibility = View.GONE
@@ -158,7 +159,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
         btnVerify.onClick {
             if (UserManager.isUserVerify() == 2) {
-                CommonFunction.toast("认证正在审核中，请耐心等待哦~")
+                CommonFunction.toast(context1.getString(R.string.please_wait_verifying))
             } else {
                 CommonFunction.startToFace(context1)
             }
@@ -173,7 +174,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 rightValue: Float,
                 isFromUser: Boolean
             ) {
-                filterAge.text = "${leftValue.toInt()}-${rightValue.toInt()}岁"
+                filterAge.text = leftValue.toInt().toString() + "-" + rightValue.toInt() + context1.getString(R.string.years)
             }
 
             override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
@@ -282,7 +283,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
                 null,
                 null
             )
-            currentLocation.text = "当前位置"
+            currentLocation.text = context1.getString(R.string.current_location)
         }
     }
 

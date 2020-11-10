@@ -41,7 +41,7 @@ class VideoTrimmerActivity : BaseActivity(), VideoTrimListener {
     }
 
     private fun initView() {
-        hotT1.text = "选择视频"
+        hotT1.text = getString(R.string.choose_video)
         btnBack.clickWithTrigger { onCancel() }
 
         trimmer_view.setOnTrimVideoListener(this)

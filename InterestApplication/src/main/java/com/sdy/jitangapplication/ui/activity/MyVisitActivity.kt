@@ -32,7 +32,7 @@ class MyVisitActivity : BaseActivity() {
     }
 
     private fun initView() {
-        hotT1.text = "看过我的"
+        hotT1.text = getString(R.string.visit_me)
         btnBack.onClick {
             finish()
         }
@@ -44,12 +44,12 @@ class MyVisitActivity : BaseActivity() {
     private val mStack = Stack<Fragment>()
     private val titles by lazy {
         if (from == FROM_TOP_RECOMMEND) arrayOf(
-            "今天来过${intent.getIntExtra(
+            getString(R.string.today_visit) + intent.getIntExtra(
                 "today",
                 0
-            )}", "所有访客"
+            ), getString(R.string.all_visir)
         ) else {
-            arrayOf("所有访客")
+            arrayOf(getString(R.string.all_visir))
         }
     }
 
@@ -82,7 +82,7 @@ intent.getBooleanExtra("freeShow", false)
         vpMyVisit.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         if (from == FROM_TOP_RECOMMEND) {
             vpMyVisit.offscreenPageLimit = 2
-            tabMyVisit.setViewPager(vpMyVisit,titles)
+            tabMyVisit.setViewPager(vpMyVisit, titles)
             tabMyVisit.isVisible = true
         } else {
             vpMyVisit.offscreenPageLimit = 1

@@ -65,11 +65,11 @@ class TodayFateWomanDialog(
     }
 
     private fun initView() {
-        t2.text = "快给${if (UserManager.getGender() == 1) {
-            "她"
+        t2.text = context1.getString(R.string.hurry_give) + if (UserManager.getGender() == 1) {
+            context1.getString(R.string.she)
         } else {
-            "他"
-        }}们打个招呼吧"
+            context1.getString(R.string.he)
+        } + context1.getString(R.string.say_hi)
 
         rvFate.layoutManager = GridLayoutManager(context1, 3)
         rvFate.adapter = adapter
@@ -153,7 +153,7 @@ class TodayFateWomanDialog(
                                             if (data.index == (t.data?.size ?: 0) - 1) {
                                                 loadingDialog.dismiss()
                                                 dismiss()
-                                                CommonFunction.toast("送出招呼成功！")
+                                                CommonFunction.toast(context1.getString(R.string.send_hi_success))
                                             }
                                         }
 

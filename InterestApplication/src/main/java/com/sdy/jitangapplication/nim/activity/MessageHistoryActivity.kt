@@ -65,7 +65,7 @@ class MessageHistoryActivity : UI(), ModuleProxy, SwipeBackActivityBase {
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "历史记录"
+        hotT1.text = getString(R.string.history)
 
         account = intent.getStringExtra(EXTRA_DATA_ACCOUNT)
         sessionType = intent.getSerializableExtra(EXTRA_DATA_SESSION_TYPE) as SessionTypeEnum

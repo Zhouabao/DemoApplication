@@ -64,7 +64,7 @@ public class MsgViewHolderContact extends MsgViewHolderBase {
                     @Override
                     public void onClick(@NonNull View widget) {
                         ClipboardUtil.clipboardCopyText(context, attachment.getContactContent());
-                        CommonFunction.INSTANCE.toast("已复制联系方式");
+                        CommonFunction.INSTANCE.toast(context.getString(R.string.contact_has_been_copyed));
                     }
                 })
                 .setForegroundColor(Color.parseColor("#FF6318"))

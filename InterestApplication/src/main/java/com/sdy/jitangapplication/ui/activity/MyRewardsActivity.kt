@@ -52,10 +52,10 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
         BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorOrange))
         llTitle.setBackgroundColor(resources.getColor(R.color.colorOrange))
         btnBack.setImageResource(R.drawable.icon_back_white)
-        hotT1.text = "我的奖励"
+        hotT1.text = getString(R.string.my_reward)
         hotT1.setTextColor(Color.WHITE)
         rightBtn.isVisible = true
-        rightBtn.text = "提现记录"
+        rightBtn.text = getString(R.string.withdraw_record)
         rightBtn.setTextColor(Color.WHITE)
 
         btnBack.clickWithTrigger {
@@ -130,10 +130,10 @@ class MyRewardsActivity : BaseMvpActivity<MyRewardsPresenter>(), MyRewardsView, 
             2,
             BigDecimal.ROUND_HALF_UP
         )}"
-        myWithdrawRewardsMoney.text = "已提现${BigDecimal(myWithdrawMoney).setScale(
+        myWithdrawRewardsMoney.text = getString(R.string.has_withdraw) + BigDecimal(myWithdrawMoney).setScale(
             2,
             BigDecimal.ROUND_HALF_UP
-        )}"
+        )
     }
 
 

@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="今日来访：444"
+            android:text="@string/today_visit1"
             android:textColor="@color/colorBlackTitle"
             android:textSize="15sp" />
 
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="来访总数：0"
+            android:text="@string/all_visit_1"
             android:textColor="@color/colorBlackTitle"
             android:textSize="15sp" />
 

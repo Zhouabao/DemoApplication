@@ -29,14 +29,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="兴趣"/>
+                tools:text="@string/label"/>
 
         <TextView
                 android:id="@+id/moreInfoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="兴趣添加完成"
+                android:text="@string/label_add_success"
                 android:textColor="@color/colorOrange"
                 android:textSize="27sp"
                 android:textStyle="bold"
@@ -50,7 +50,7 @@
                 android:layout_marginTop="42dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="马上发布兴趣动态，收获超多喜欢"
+                android:text="@string/label_publish_add"
                 android:textColor="#ff696e73"
                 android:textSize="17sp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -69,13 +69,12 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/t2"
-                tools:text="快秀一下你的健身成果"
                 />
 
         <TextView
                 android:id="@+id/changeLabel"
                 android:layout_marginTop="18dp"
-                android:text="换一个"
+                android:text="@string/label_change_one"
                 android:drawablePadding="4dp"
                 android:textSize="12sp"
                 android:background="@drawable/shape_rectangle_gray_white_10dp"
@@ -102,7 +101,7 @@
 
         <TextView
                 android:id="@+id/publish"
-                android:text="发布"
+                android:text="@string/publish"
                 android:textColor="#ffffffff"
                 android:gravity="center"
                 android:textSize="17sp"
@@ -119,7 +118,7 @@
 
         <TextView
                 android:id="@+id/startJitangBtn"
-                android:text="稍后再说"
+                android:text="@string/later"
                 android:textColor="#ffcbcdd3"
                 android:textSize="15sp"
                 android:gravity="center"

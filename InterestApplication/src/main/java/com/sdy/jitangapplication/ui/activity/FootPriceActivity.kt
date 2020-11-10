@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
@@ -66,10 +65,10 @@ class FootPriceActivity : BaseActivity() {
 
         footPowerRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         footPowerRv.adapter = adapter
-        adapter.addData(FootDescr("杜绝无效社交", R.drawable.icon_foot_price1))
-        adapter.addData(FootDescr("直接和女会员见面", R.drawable.icon_foot_price2))
-        adapter.addData(FootDescr("和女会员一起旅行一起约饭", R.drawable.icon_foot_price3))
-        adapter.addData(FootDescr("永久解锁附近优质女生", R.drawable.icon_foot_price4))
+        adapter.addData(FootDescr(getString(R.string.pay_why1), R.drawable.icon_foot_price1))
+        adapter.addData(FootDescr(getString(R.string.pay_why2), R.drawable.icon_foot_price2))
+        adapter.addData(FootDescr(getString(R.string.pay_why3), R.drawable.icon_foot_price3))
+        adapter.addData(FootDescr(getString(R.string.pay_why4), R.drawable.icon_foot_price4))
 
 
         //立即加入
@@ -97,12 +96,15 @@ class FootPriceActivity : BaseActivity() {
                             chargeWayBeans = it.data!!.list ?: mutableListOf()
                             setPurchaseType()
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
-                            footUserCount.text = "已有${it.data!!.same_sex_cnt}名高端男士加入"
+                            footUserCount.text = getString(R.string.has, it.data!!.same_sex_cnt)
+
                             if (!chargeWayBeans.isNullOrEmpty() && chargeWayBeans[0].giving_amount > 0)
                                 adapter.addData(
                                     FootDescr(
-                                        "赠送${chargeWayBeans[0].giving_amount}糖果",
-                                        R.drawable.icon_foot_price5
+                                        getString(
+                                            R.string.give,
+                                            chargeWayBeans[0].giving_amount
+                                        ), R.drawable.icon_foot_price5
                                     )
                                 )
 
@@ -128,7 +130,7 @@ class FootPriceActivity : BaseActivity() {
     private fun setPurchaseType() {
         if (chargeWayBeans.isNotEmpty()) {
             SpanUtils.with(footOriginalPrice)
-                .append("原价¥${chargeWayBeans[0].original_price}")
+                .append(getString(R.string.original_price) + chargeWayBeans[0].original_price)
                 .setFontSize(12, true)
                 .setBold()
                 .setStrikethrough()
@@ -146,7 +148,7 @@ class FootPriceActivity : BaseActivity() {
                 )
                 .setFontSize(30, true)
                 .setBold()
-                .append("/永久")
+                .append(getString(R.string.forver))
                 .setFontSize(14, true)
                 .create()
         }

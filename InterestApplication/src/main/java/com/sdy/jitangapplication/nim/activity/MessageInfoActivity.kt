@@ -137,7 +137,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         dialog.show()
         when (type) {
             1 -> {
-                dialog.title.text = "清空消息"
+                dialog.title.text = getString(R.string.clean_message)
                 dialog.tip.text = resources.getString(R.string.message_p2p_clear_tips)
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
@@ -149,8 +149,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             }
             3 -> {
                 if (isfriend) {
-                    dialog.title.text = "删除好友"
-                    dialog.tip.text = "确定删除该好友?"
+                    dialog.title.text = getString(R.string.delete_friend)
+                    dialog.tip.text = getString(R.string.is_confirm_delete_friend)
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {
                         deleteFriends()
@@ -243,7 +243,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         flStar.setVisible(isfriend)
         if (isfriend) {
             friendStar.isChecked = star
-            deleteTv.text = "删除好友"
+            deleteTv.text = getString(R.string.delete_friend)
             friendDelete.visibility = View.VISIBLE
         } else {
             friendDelete.visibility = View.GONE

@@ -105,7 +105,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
 
             override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
+                CommonFunction.toast(getString(R.string.audio_play_error))
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
@@ -248,7 +248,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                         )
                         detailPlayCommentSend.isEnabled = false
                     } else
-                        CommonFunction.toast("说点什么吧")
+                        CommonFunction.toast(getString(R.string.say_something))
                 }
                 //更多操作
                 R.id.detailPlayMoreActions -> {
@@ -347,11 +347,11 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         moreActionDialog.show()
 
         if (adapter.data[position]?.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collect.text = getString(R.string.collect)
             val top = resources.getDrawable(R.drawable.icon_collect1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
-            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collect.text = getString(R.string.cancel_collect)
             val top = resources.getDrawable(R.drawable.icon_collected1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
@@ -396,8 +396,8 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
-            dialog.title.text = "动态举报"
-            dialog.confirm.text = "举报"
+            dialog.title.text = getString(R.string.report_square_title)
+            dialog.confirm.text = getString(R.string.report)
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
                 dialog.dismiss()
@@ -423,9 +423,9 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
-            CommonFunction.toast("举报成功！")
+            CommonFunction.toast(getString(R.string.report_success))
         } else {
-            CommonFunction.toast("举报失败！")
+            CommonFunction.toast(getString(R.string.report_fail))
         }
 
     }
@@ -433,7 +433,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
 
         if (result) {
-            toast("删除动态成功！")
+            toast(getString(R.string.delete_success))
             EventBus.getDefault().post(RefreshDeleteSquareEvent(adapter.data[position].id ?: 0))
             if (adapter.data.size == 1) {
                 finish()
@@ -444,7 +444,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             EventBus.getDefault().postSticky(UserCenterEvent(true))
 
         } else {
-            toast("删除动态失败！")
+            toast(getString(R.string.delete_fail))
         }
     }
 
@@ -462,7 +462,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (mutableList != null) {
             if (mutableList.id == null) {
-                CommonFunction.toast("该动态已经被删除了")
+                CommonFunction.toast(getString(R.string.square_has_deleted))
                 finish()
                 return
             }
@@ -476,7 +476,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
             adapter.addData(mutableList)
         } else {
-            CommonFunction.toast("该动态已经被删除了")
+            CommonFunction.toast(getString(R.string.square_has_deleted))
             finish()
         }
     }
@@ -493,7 +493,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             adapter.notifyItemChanged(position, "hahah")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
-            CommonFunction.toast("点赞失败！")
+            CommonFunction.toast(getString(R.string.zan_fail))
         }
     }
 

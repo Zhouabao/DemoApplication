@@ -52,7 +52,7 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
             .setFontSize(30, true)
             .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
             .setBold()
-            .append("/月")
+            .append(mContext.getString(R.string.per_month))
             .setFontSize(14, true)
             .create()
 
@@ -61,7 +61,7 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
 
 
             if (item.giving_amount > 0) {
-                holder.itemView.vipSendCandy.text = "赠送${item.giving_amount}糖果"
+                holder.itemView.vipSendCandy.text =  mContext.getString(R.string.give) + item.giving_amount + mContext.getString(R.string.candy)
                 holder.itemView.vipSendCandy.isVisible = true
             } else {
                 holder.itemView.vipSendCandy.isVisible = false

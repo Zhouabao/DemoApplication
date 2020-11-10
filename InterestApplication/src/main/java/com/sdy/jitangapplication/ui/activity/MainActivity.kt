@@ -48,7 +48,8 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("心动", "发现", "活动", "消息", "我的")
+    private val titles by lazy { arrayOf(getString(R.string.tab_heart), getString(R.string.tab_find), getString(
+        R.string.tab_dating), getString(R.string.tab_message), getString(R.string.tab_mine)) }
 
     companion object {
         const val REQUEST_LABEL_CODE = 2000
@@ -505,7 +506,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         val secondTime = System.currentTimeMillis()
         if (secondTime - firstClickTime > 2000) {
-            CommonFunction.toast("再按一次退出程序")
+            CommonFunction.toast(getString(R.string.click_to_exit))
             firstClickTime = secondTime
         } else {
             AppUtils.exitApp()
@@ -587,13 +588,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         var confirmText = ""
         when (type) {
             GotoVerifyDialog.TYPE_VERIFY -> { //认证不通过
-                content = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
-                title = "认证审核不通过"
+                content = getString(R.string.avatar_compare_fail)
+                title = getString(R.string.avata_verify_fail)
             }
             GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规
-                content = "尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
-                title = "请替换头像"
-                confirmText = "修改头像"
+                content = getString(R.string.avatar_not_pass_content)
+                title = getString(R.string.avatar_change)
+                confirmText = getString(R.string.avator_change_text)
             }
 //            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
 //                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"

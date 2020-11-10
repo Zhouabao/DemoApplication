@@ -44,7 +44,7 @@ class SomeoneGetGiftActivity : BaseMvpActivity<SomeoneGetGiftPresenter>(), Someo
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "礼物墙"
+        hotT1.text = getString(R.string.gift_wall_title)
         stateGift.retryBtn.onClick {
             stateGift.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getSomeoneGiftList(page, target_accid)

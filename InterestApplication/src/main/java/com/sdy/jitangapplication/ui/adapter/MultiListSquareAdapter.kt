@@ -174,16 +174,16 @@ class MultiListSquareAdapter(
                 holder.itemView.squareSweetVerifyName.text = item.assets_audit_descr
                 holder.itemView.squareSweetVerifyContent.text = when (item.approve_type) {
                     1 -> {
-                        "平台认证高资产用户，想和他交个朋友吗"
+                        mContext.getString(R.string.he_is_rich)
                     }
                     2 -> {
-                        "平台认证豪车用户，听说上车会很热呢"
+                        mContext.getString(R.string.he_has_luxury_car)
                     }
                     3 -> {
-                        "经平台评估身材具有吸引力和有一定高端约会意向"
+                        mContext.getString(R.string.she_is_hot)
                     }
                     else -> {
-                        "职业认证通过代表用户职业正当且有一定高端约会意向"
+                        mContext.getString(R.string.she_is_professional)
                     }
                 }
 
@@ -651,11 +651,11 @@ class MultiListSquareAdapter(
         moreActionDialog.show()
 
         if (data[position]?.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collect.text = mContext.getString(R.string.collect)
             val top = mContext.resources.getDrawable(R.drawable.icon_collect1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
-            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collect.text = mContext.getString(R.string.cancel_collect)
             val top = mContext.resources.getDrawable(R.drawable.icon_collected1)
             moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
@@ -699,9 +699,9 @@ class MultiListSquareAdapter(
         moreActionDialog.report.onClick {
             val dialog = DeleteDialog(mContext)
             dialog.show()
-            dialog.title.text = "动态举报"
+            dialog.title.text = mContext.getString(R.string.report_square_title)
             dialog.tip.text = mContext.getString(R.string.report_square)
-            dialog.confirm.text = "举报"
+            dialog.confirm.text = mContext.getString(R.string.report)
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
                 dialog.dismiss()

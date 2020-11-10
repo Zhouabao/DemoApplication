@@ -35,8 +35,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/indicator"
-            tools:text="您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n
-您即将离开积糖，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用"
+            tools:text="@string/login_off_tip"
             />
 
     <View
@@ -72,7 +71,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_height="46dp"
-            android:text="确定"
+            android:text="@string/ok"
             android:background="@drawable/selector_confirm_btn"
             android:gravity="center"
             android:enabled="false"

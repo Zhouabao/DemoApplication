@@ -176,7 +176,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailRvTag.layoutManager = GridLayoutManager(this, 2)
         detailRvTag.adapter = userTagAdapter
         userTagAdapter.setEmptyView(R.layout.empty_gift, detailRvTag)
-        userTagAdapter.emptyView.emptyTip.text = "暂时还没有添加兴趣"
+        userTagAdapter.emptyView.emptyTip.text = getString(R.string.empty_label)
         userTagAdapter.isUseEmpty(false)
 
         //用户礼物墙
@@ -230,7 +230,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             resources.getColor(R.color.colorOrange),
             R.drawable.icon_play_dating_audio_orange,
             R.drawable.icon_pause_dating_audio_orange,
-            "点击播放活动语音描述"
+            getString(R.string.click_play_audio_descr)
         )
 
     }
@@ -240,7 +240,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         val view = layoutInflater.inflate(R.layout.footer_tag_quality, detailRvTag, false)
         view.expandAll.onClick {
             if (expand) {
-                view.expandAll.text = "展开全部"
+                view.expandAll.text = getString(R.string.expand_all)
                 view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
@@ -253,7 +253,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 userTagAdapter.notifyDataSetChanged()
 
             } else {
-                view.expandAll.text = "收起展示"
+                view.expandAll.text = getString(R.string.collapse_all)
                 view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
@@ -288,15 +288,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         } else if (matchBean!!.label_quality.isNullOrEmpty()) {
             notifyAddTagBtn.isVisible = true
             if (matchBean!!.need_notice) {
-                notifyAddTagBtn.text = "希望${if (matchBean!!.gender == 1) {
-                    "他"
+                notifyAddTagBtn.text = getString(R.string.hope) + if (matchBean!!.gender == 1) {
+                    getString(R.string.he)
                 } else {
-                    "她"
-                }}添加"
+                    getString(R.string.she)
+                } + getString(R.string.add)
                 notifyAddTagBtn.setTextColor(Color.parseColor("#789EFF"))
                 notifyAddTagBtn.isEnabled = true
             } else {
-                notifyAddTagBtn.text = "已通知"
+                notifyAddTagBtn.text = getString(R.string.has_noticed)
                 notifyAddTagBtn.setTextColor(Color.parseColor("#A5A5A5"))
                 notifyAddTagBtn.isEnabled = false
             }
@@ -449,7 +449,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 ), null, null, null
             )
             if (matchBean!!.face_str.isNullOrEmpty()) {
-                detailUserVerify.text = "已认证"
+                detailUserVerify.text = getString(R.string.face_has_verify)
             } else {
                 detailUserVerify.text = matchBean!!.face_str
             }
@@ -468,14 +468,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             val dating = matchBean!!.dating
             setTempLikeState(dating!!.isliked, dating!!.like_cnt)
             GlideUtil.loadCircleImg(this, dating!!.icon, datingProjectIv)
-            datingProjectText.text = "${if (matchBean!!.gender == 1) {
-                "他"
+            datingProjectText.text = if (matchBean!!.gender == 1) {
+                getString(R.string.he)
             } else {
-                "她"
-            }}想和你：${dating!!.title}"
+                getString(R.string.she)
+            } + getString(R.string.want_with_you) + dating!!.title
             datingProjectDetailText.text = dating!!.dating_title
             datingPlace.text = if (dating!!.dating_distance.isNullOrEmpty()) {
-                "无明确要求"
+                getString(R.string.no_yaoqiu)
             } else {
                 dating!!.dating_distance
             }
@@ -646,19 +646,19 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = true
-                blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
+                blackContent.text = getString(R.string.black_you_did_content)
             }
             3 -> {
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = false
-                blackContent.text = "对方已将你拉黑并限制访问其主页\n去看看其它感兴趣的人吧"
+                blackContent.text = getString(R.string.black_she_did_content)
             }
             4 -> {
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = true
-                blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
+                blackContent.text = getString(R.string.black_you_did_content)
             }
             else -> {
                 userContent.isVisible = true
@@ -669,11 +669,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onGetUserActionResult(success: Boolean, result: String?) {
         if (success) {
-            if (result == "解除成功!") {
+            if (result == getString(R.string.dissolve_black_success)) {
 //                finish()
                 CommonFunction.dissolveRelationship(matchBean?.accid ?: "")
 
-            } else if (result == "拉黑成功!") {
+            } else if (result == getString(R.string.make_black_success)) {
                 NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
                 NIMClient.getService(MsgService::class.java)
                     .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
@@ -707,9 +707,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onNeedNoticeResult(success: Boolean) {
         if (success) {
             matchBean!!.need_notice = false
-            notifyAddTagBtn.text = "已通知"
+            notifyAddTagBtn.text = getString(R.string.has_noticed)
             notifyAddTagBtn.setTextColor(Color.parseColor("#A5A5A5"))
-            CommonFunction.toast("已提示对方更新兴趣标签")
+            CommonFunction.toast(getString(R.string.has_notice_target_to_update_label))
             notifyAddTagBtn.isEnabled = false
         }
     }

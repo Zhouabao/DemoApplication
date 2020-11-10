@@ -61,7 +61,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     itemview.datingContentTextWoman.isVisible = false
                     itemview.datingContentAudioWoman.setUi(
                         R.drawable.shape_rectangle_gray4df_10dp,
-                        audioTip = "点击播放活动语音描述"
+                        audioTip = mContext.getString(R.string.click_play_audio_descr)
                     )
                     itemview.datingContentAudioWoman.prepareAudio(
                         item.content,
@@ -85,7 +85,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .create()
                 itemview.datingPlaceWoman.text = if (item.dating_distance.isNullOrEmpty()) {
-                    "无明确要求"
+                    mContext.getString(R.string.no_yaoqiu)
                 } else {
                     item.dating_distance
                 }
@@ -120,7 +120,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     itemview.datingContentText.isVisible = false
                     itemview.datingContentAudio.setUi(
                         R.drawable.shape_rectangle_gray4df_10dp,
-                        audioTip = "点击播放活动语音描述"
+                        audioTip = mContext.getString(R.string.click_play_audio_descr)
                     )
                     itemview.datingContentAudio.prepareAudio(
                         item.content,
@@ -145,7 +145,7 @@ class DatingSquareAdapter : BaseMultiItemQuickAdapter<DatingBean, BaseViewHolder
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .create()
                 itemview.datingPlace.text = if (item.dating_distance.isNullOrEmpty()) {
-                    "无明确要求"
+                    mContext.getString(R.string.no_yaoqiu)
                 } else {
                     item.dating_distance
                 }

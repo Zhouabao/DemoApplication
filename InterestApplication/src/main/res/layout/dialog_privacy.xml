@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="温馨提示"
+        android:text="@string/warming_notice"
         android:textColor="#ff3f3f3f"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -47,9 +47,7 @@
             android:textColor="#ff333333"
             android:textColorLink="@color/colorOrange"
             android:textSize="16sp"
-            tools:text="尊敬的用户，欢迎使用积糖。\n
-依据最新法律法规、监管政策等要求及业务实际情况，更新了《积糖用户协议》及《隐私政策》，特此向您提示：\n\n请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。点击同意即代表您已经阅读并同意《积糖用户协议》及《隐私政策》，如果您不同意，将可能影响使用积糖产品和服务。\n\n
-我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。" />
+            />
     </androidx.core.widget.NestedScrollView>
 
 
@@ -76,7 +74,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="不同意"
+            android:text="@string/dont_agree"
             android:textColor="#ff9c9c9c"
             android:textSize="18sp" />
 
@@ -93,7 +91,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="同意"
+            android:text="@string/agree"
             android:textColor="@color/color_333333"
             android:textSize="18sp"
             android:textStyle="bold" />

@@ -104,7 +104,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
 
         aboutAccount.setOnClickListener(this)
-        hotT1.text = "设置"
+        hotT1.text = getString(R.string.setting)
         stateSettings.retryBtn.onClick {
             stateSettings.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.mySettings(UserManager.getToken(), UserManager.getAccid())
@@ -114,8 +114,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
     private val dialog by lazy {
         CommonAlertDialog.Builder(this)
-            .setTitle("退出登录")
-            .setContent("是否退出登录？\n退出后用户信息将在上次登录位置对其他用户持续可见")
+            .setTitle(getString(R.string.login_out))
+            .setContent(getString(R.string.is_confirm_login_out))
             .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
@@ -163,7 +163,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             R.id.clearData -> {
                 DataCleanManager.clearAllCache(this)
                 cacheDataSize.text = DataCleanManager.getTotalCacheSize(this)
-                CommonFunction.toast("缓存清理成功")
+                CommonFunction.toast(getString(R.string.clear_cache_success))
 
             }
             //退出登录，同时退出IM和服务器
@@ -206,7 +206,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("您已拒绝获取联系人列表权限的开启！")
+                                    CommonFunction.toast(getString(R.string.permission_contact))
                                 }
 
                             })
@@ -217,14 +217,14 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
 
             R.id.hideModeBtn -> {
-                showHideModePicker(hideModeContent, invisible_state, hideMode, "隐身模式", 2)
+                showHideModePicker(hideModeContent, invisible_state, hideMode, getString(R.string.hide_mode), 2)
             }
             R.id.privacyPowerBtn -> {
                 showHideModePicker(
                     privacyPowerContent,
                     private_chat_state,
                     privacyPowers,
-                    "私聊权限",
+                    getString(R.string.privacy_chat),
                     3
                 )
             }
@@ -253,7 +253,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 textView.text = states[options1].title
                 mPresenter.switchSet(type, states[options1].id)
             })
-            .setSubmitText("确定")
+            .setSubmitText(getString(R.string.ok))
             .setTitleText(title)
             .setTitleColor(Color.parseColor("#191919"))
             .setTitleSize(16)

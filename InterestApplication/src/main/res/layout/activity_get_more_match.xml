@@ -87,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="获取更精准配对"
+        android:text="@string/get_quick_match"
         android:textColor="#ff000000"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="在成都找到4230个待筛选男性用户\n
+        tools:text="在成都找到4230个待筛选男性用户\n
 我们将进一步问您一些问题\n
 提供给你更精准的配对需求"
         android:textColor="#ff000000"
@@ -120,7 +120,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/selector_confirm_btn1"
         android:gravity="center"
-        android:text="下一步"
+        android:text="@string/next"
         android:textColor="@color/colorWhite"
         android:textSize="17sp"
         android:textStyle="bold"

@@ -18,7 +18,7 @@
             android:id="@+id/isAvator"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:text="头像"
+            android:text="@string/avatar"
             android:textColor="#ffffffff"
             android:textSize="12sp"
             android:gravity="center"

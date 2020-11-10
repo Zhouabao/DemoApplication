@@ -18,19 +18,19 @@ class RedRecordAdapter :
     override fun convert(helper: BaseViewHolder, item: RedRecordBean) {
         helper.itemView.recordTime.text = item.create_time
 
-        helper.itemView.recordMoney.text = "提出 ${item.amount} 元"
-        helper.itemView.recordId.text = "提现ID:${item.trade_no}"
+        helper.itemView.recordMoney.text = mContext.getString(R.string.withdraw_left,item.amount)
+        helper.itemView.recordId.text = mContext.getString(R.string.withdraw_id) + item.trade_no
         when (item.status) {
             1 -> {
-                helper.itemView.recordStatus.text = "审核中"
+                helper.itemView.recordStatus.text = mContext.getString(R.string.checking)
                 helper.itemView.recordStatus.setTextColor(Color.parseColor("#FF191919"))
             }
             2 -> {
-                helper.itemView.recordStatus.text = "已完成"
+                helper.itemView.recordStatus.text = mContext.getString(R.string.has_finished)
                 helper.itemView.recordStatus.setTextColor(Color.parseColor("#FFC5C6C8"))
             }
             else -> {
-                helper.itemView.recordStatus.text = "已拒绝"
+                helper.itemView.recordStatus.text = mContext.getString(R.string.has_refused)
                 helper.itemView.recordStatus.setTextColor(Color.parseColor("#FFFD4417"))
             }
         }

@@ -33,7 +33,7 @@
             android:id="@+id/loginOffTitle"
             android:layout_marginTop="30dp"
             android:textStyle="bold"
-            android:text="注销成功"
+            android:text="@string/login_off_success"
             android:textColor="#ff191919"
             android:textSize="18sp"
             android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
     <TextView
             android:id="@+id/loginOffContent"
             android:layout_marginTop="15dp"
-            android:text="15天内登录可取消注销\n过期数据将全部清空且不可恢复"
+            android:text="@string/login_off_success_content"
             android:textColor="#ffb5b7b9"
             android:textSize="14sp"
             android:layout_marginLeft="32dp"
@@ -60,7 +60,7 @@
 
     <TextView
             android:id="@+id/loginOffSuccessBtn"
-            android:text="知道了"
+            android:text="@string/iknow"
             android:textStyle="bold"
             android:layout_marginTop="35dp"
             android:gravity="center"

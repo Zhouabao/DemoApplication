@@ -12,6 +12,7 @@ import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment;
@@ -66,7 +67,7 @@ public class NimSDKOptionConfig {
         configServerAddress(options, context);
         options.mixPushConfig = buildMixPushConfig();
         // options.mNosTokenSceneConfig = createNosTokenScene();
-        options.loginCustomTag = "登录自定义字段";
+        options.loginCustomTag = context.getString(R.string.login_custom);
         options.appKey = Constants.NIM_APP_KEY;
         return options;
     }
@@ -169,15 +170,15 @@ public class NimSDKOptionConfig {
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
             if (message.getAttachment() instanceof AccostGiftAttachment) {
-                return "『搭讪礼物』";
+                return DemoCache.getContext().getString(R.string.msg_chat_up_gift);
             } else if (message.getAttachment() instanceof ShareSquareAttachment) {
-                return "『动态分享内容』";
+                return DemoCache.getContext().getString(R.string.msg_share_square);
             } else if (message.getAttachment() instanceof SendGiftAttachment) {
-                return "『糖果礼物』";
+                return DemoCache.getContext().getString(R.string.msg_candy_gift);
             } else if (message.getAttachment() instanceof WishHelpAttachment) {
-                return "『心愿助力』";
+                return DemoCache.getContext().getString(R.string.msg_want_help);
             } else if (message.getAttachment() instanceof ChatDatingAttachment) {
-                return "『活动报名』";
+                return DemoCache.getContext().getString(R.string.msg_dating_apply);
             }
 
             return null;

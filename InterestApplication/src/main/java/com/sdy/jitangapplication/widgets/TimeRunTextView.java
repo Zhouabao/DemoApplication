@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.SpanUtils;
+import com.sdy.jitangapplication.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -167,7 +168,7 @@ public class TimeRunTextView extends TextView {
         String strTime = "";
         switch (MODE) {
             case "1":
-                strTime = mHour + "时" + mMin + "分" + mSecond + "秒";
+                strTime = mHour + getContext().getString(R.string.hour) + mMin + getContext().getString(R.string.minute) + mSecond + getContext().getString(R.string.second);
                 break;
             case "2":
                 strTime = (mHour >= 10 ? mHour : "0" + mHour) + " : " + (mMin >= 10 ? mMin : "0" + mMin) + " : " + (mSecond >= 10 ? mSecond : "0" + mSecond);
@@ -176,7 +177,7 @@ public class TimeRunTextView extends TextView {
                 strTime = (mHour > 0 ? (mHour >= 10 ? mHour : "0" + mHour) + ":" : "") + (mMin >= 10 ? mMin : "0" + mMin) + ":" + (mSecond >= 10 ? mSecond : "0" + mSecond);
                 break;
             default:
-                strTime = mHour + "时" + mMin + "分" + mSecond + "秒";
+                strTime = mHour + getContext().getString(R.string.hour) + mMin + getContext().getString(R.string.minute) + mSecond + getContext().getString(R.string.second);
                 break;
         }
 

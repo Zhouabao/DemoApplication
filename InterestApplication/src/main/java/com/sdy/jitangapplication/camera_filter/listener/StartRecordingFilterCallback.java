@@ -3,6 +3,8 @@ package com.sdy.jitangapplication.camera_filter.listener;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.sdy.jitangapplication.R;
+
 import org.wysaid.view.CameraRecordGLSurfaceView;
 
 /**
@@ -25,9 +27,9 @@ public class StartRecordingFilterCallback implements CameraRecordGLSurfaceView.S
             @Override
             public void run() {
                 if (success){
-                    Toast.makeText(mActivity,"开始录制视频",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity,mActivity.getString(R.string.start_record),Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(mActivity,"录制视频失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity,mActivity.getString(R.string.record_fail),Toast.LENGTH_SHORT).show();
                 }
             }
         });

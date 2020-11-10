@@ -18,7 +18,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
             android:textStyle="bold"
-            android:text="当无法登陆/注册时建议您尝试以下几种方法："
+            android:text="@string/login_help_try"
             android:textColor="#ff222222"
             android:textSize="16sp"
             android:layout_width="match_parent"

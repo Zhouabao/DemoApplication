@@ -171,7 +171,7 @@ class ShareToFriendsDialog constructor(
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200)
-                        CommonFunction.toast("转发成功!")
+                        CommonFunction.toast(myContext.getString(R.string.transpond_success))
                     else
                         CommonFunction.toast(t.msg)
                     dismiss()
@@ -179,7 +179,7 @@ class ShareToFriendsDialog constructor(
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast("转发成功!")
+                    CommonFunction.toast(myContext.getString(R.string.transpond_success))
                     dismiss()
                     (myContext as Activity).finish()
                 }
@@ -230,7 +230,7 @@ class ShareToFriendsDialog constructor(
             }
 
             override fun onFailed(code: Int) {
-                CommonFunction.toast("转发失败！")
+                CommonFunction.toast(myContext.getString(R.string.transpond_fail))
                 dismiss()
             }
 

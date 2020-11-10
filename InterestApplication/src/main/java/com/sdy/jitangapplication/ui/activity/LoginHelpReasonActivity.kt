@@ -64,7 +64,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "问题反馈"
+        hotT1.text = getString(R.string.feedback)
         helpConfirm.setOnClickListener(this)
 
 
@@ -109,7 +109,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                                             }
 
                                             override fun onDenied() {
-                                                CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                                CommonFunction.toast(getString(R.string.permission_storage))
                                             }
 
                                         })
@@ -117,7 +117,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                             }
 
                             override fun onDenied() {
-                                CommonFunction.toast("相机权限被拒,请允许权限后再上传照片.")
+                                CommonFunction.toast(getString(R.string.permission_camera))
                             }
                         })
                         .request()

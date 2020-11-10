@@ -36,7 +36,8 @@ class SomeOneGetGiftAdapter :
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.donateAvator)
         helper.addOnClickListener(R.id.donateAvator)
         helper.itemView.donateNickname.text = item.nickname
-        helper.itemView.donateNum.text = "送出了${item.gif_cnt}种礼物"
+        helper.itemView.donateNum.text =
+            mContext.getString(R.string.has_send_left, item.gif_cnt)
         helper.itemView.donateCandyAmount.text = "${item.all_amount}"
         helper.itemView.donateGiftRv.layoutManager =
             GridLayoutManager(mContext, 5, RecyclerView.VERTICAL, false)

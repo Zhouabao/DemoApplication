@@ -6,6 +6,8 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit;
 
 /**
@@ -29,14 +31,13 @@ public class MessageRevokeTip {
         } else {
             String revokeNick = ""; // 撤回者
             if (item.getSessionType() == SessionTypeEnum.P2P) {
-                revokeNick = item.getFromAccount().equals(NimUIKit.getAccount()) ? "你" : "对方";
-            }
-            return revokeNick + "撤回了一条消息";
+                revokeNick = item.getFromAccount().equals(NimUIKit.getAccount()) ? DemoCache.getContext().getString(R.string.you) : DemoCache.getContext().getString(R.string.target);            }
+            return revokeNick + DemoCache.getContext().getString(R.string.revoke_message);
         }
     }
 
     // 撤回其他人的消息时，获取tip
     public static String getRevokeTipOfOther(String sessionID, SessionTypeEnum sessionType, String revokeAccount) {
-        return "撤回了一条消息";
+        return DemoCache.getContext().getString(R.string.revoke_message);
     }
 }

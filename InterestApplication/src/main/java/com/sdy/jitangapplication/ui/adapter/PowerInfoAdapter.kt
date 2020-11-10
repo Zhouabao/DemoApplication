@@ -2,8 +2,6 @@ package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Color
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -11,13 +9,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
-import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_power_info.view.*
-import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -54,22 +48,26 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
         when (data.type) {
             VipPowerBean.TYPE_GOLD_VIP -> {
                 itemview.vipPowerNickname.text =
-                    "黄金会员（${(data.icon_list ?: mutableListOf()).size}项特权）"
+                    mContext.getString(R.string.gold_vip_left) + (data.icon_list
+                        ?: mutableListOf()).size + mContext.getString(
+                        R.string.gold_vip_right
+                    )
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_ptvip_10dp)
                 itemview.vipOutTime.setTextColor(Color.parseColor("#ffcd7e14"))
                 itemview.vipSaveAmount.setTextColor(Color.parseColor("#ffcd7e14"))
                 itemview.vipPowerNickname.setTextColor(Color.parseColor("#ffcd7e14"))
                 itemview.powerUserBg.setImageResource(R.drawable.icon_pt_vip_power_user_bg)
                 if (data!!.isplatinum)
-                    itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
+                    itemview.vipOutTime.text =
+                        data!!.platinum_vip_express + mContext.getString(R.string.timerun)
                 else
-                    itemview.vipOutTime.text = "暂未激活特权"
+                    itemview.vipOutTime.text = mContext.getString(R.string.unactive_power)
                 itemview.vipPowerAvator.borderColor = Color.parseColor("#FFEBA35A")
 
             }
 
             VipPowerBean.TYPE_PT_VIP -> {
-                itemview.vipPowerNickname.text = "至尊直联卡"
+                itemview.vipPowerNickname.text = mContext.getString(R.string.vip_connection_card)
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_vip_10dp)
                 itemview.vipOutTime.setTextColor(Color.parseColor("#FF5E6473"))
                 itemview.vipPowerNickname.setTextColor(Color.parseColor("#FF5E6473"))
@@ -77,9 +75,10 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
                 itemview.vipSaveAmount.setTextColor(Color.parseColor("#FF5E6473"))
 
                 if (data!!.isplatinum)
-                    itemview.vipOutTime.text = "${data!!.platinum_vip_express}到期"
+                    itemview.vipOutTime.text =
+                        data!!.platinum_vip_express + mContext.getString(R.string.timerun)
                 else
-                    itemview.vipOutTime.text = "暂未激活特权"
+                    itemview.vipOutTime.text = mContext.getString(R.string.unactive_power)
 
                 itemview.vipPowerAvator.borderColor = Color.parseColor("#FF565259")
             }

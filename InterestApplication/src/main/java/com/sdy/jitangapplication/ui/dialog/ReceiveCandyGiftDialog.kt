@@ -116,26 +116,26 @@ class ReceiveCandyGiftDialog(
             SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
                 if (!isReceive) {
                     tempRefuseBtn.visibility = View.INVISIBLE
-                    receiveGiftBtn.text = "确定"
+                    receiveGiftBtn.text = context1.getString(R.string.ok)
                     startReceivedAnimation()
                     receiveCandyReceived.isVisible = true
                     receiveCandyReceived.setImageResource(R.drawable.icon_gift_waitreceive)
                 } else {
                     tempRefuseBtn.isVisible = true
-                    receiveGiftBtn.text = "接收糖果礼物"
+                    receiveGiftBtn.text = context1.getString(R.string.receive_candy_gift)
                     startWaitReceiveAnimation()
                     receiveCandyReceived.isVisible = false
                 }
             }
             SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
-                receiveGiftBtn.text = "确定"
+                receiveGiftBtn.text = context1.getString(R.string.ok)
                 tempRefuseBtn.visibility = View.INVISIBLE
                 receiveCandyReceived.setImageResource(R.drawable.icon_gift_received)
                 startReceivedAnimation()
             }
             SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
                 startReceivedAnimation()
-                receiveGiftBtn.text = "确定"
+                receiveGiftBtn.text = context1.getString(R.string.ok)
                 tempRefuseBtn.visibility = View.INVISIBLE
                 receiveCandyReceived.setImageResource(R.drawable.icon_gift_has_returned)
             }

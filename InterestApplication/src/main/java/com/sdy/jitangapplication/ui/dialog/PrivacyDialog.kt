@@ -79,28 +79,28 @@ class PrivacyDialog(
         }
         privacyContent.highlightColor = context1.resources.getColor(R.color.colorTransparent)
         SpanUtils.with(privacyContent)
-            .append("尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了")
-            .append("《积糖用户协议》")
+            .append(context1.getString(R.string.privacy_t1))
+            .append("《${context1.resources.getString(R.string.user_protocol)}》")
             .setClickSpan(clickSpanProtocol1)
             .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-            .append("及")
+            .append(context1.getString(R.string.login_tip_and))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
-            .append("《隐私政策》")
+            .append("《${context1.resources.getString(R.string.privacy_protocol)}》")
             .setClickSpan(clickSpanPrivacy1)
             .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-            .append("，特此向您提示：\n\n")
+            .append(context1.getString(R.string.privacy_t2))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
-            .append("请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。点击同意即代表您已经阅读并同意")
+            .append(context1.getString(R.string.privacy_t3))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
-            .append("《积糖用户协议》")
+            .append("《${context1.resources.getString(R.string.user_protocol)}》")
             .setClickSpan(clickSpanProtocol)
             .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-            .append("及")
+            .append(context1.getString(R.string.login_tip_and))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
-            .append("《隐私政策》")
+            .append("《${context1.resources.getString(R.string.privacy_protocol)}》")
             .setClickSpan(clickSpanPrivacy)
             .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-            .append("，如果您不同意，将可能影响使用积糖产品和服务。\n\n我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。")
+            .append(context1.getString(R.string.privacy_t4))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
             .create()
 
@@ -109,7 +109,13 @@ class PrivacyDialog(
             dismiss()
         }
         disAgree.onClick {
-            CommonFunction.toast("您需要同意《积糖用户协议》及《隐私政策》才能继续使用我们的产品及服务")
+            CommonFunction.toast(
+                context1.getString(R.string.privacy_t5)
+                        + "${context1.resources.getString(R.string.user_protocol)}》"
+                        + context1.getString(R.string.login_tip_and)
+                        + "《${context1.resources.getString(R.string.privacy_protocol)}"
+                        + context1.getString(R.string.privacy_t6)
+            )
         }
 
     }

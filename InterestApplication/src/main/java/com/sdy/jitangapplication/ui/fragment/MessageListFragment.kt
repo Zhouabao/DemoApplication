@@ -164,7 +164,11 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
                 //删除会话
                 R.id.menuDetele -> {
                     // 删除会话，删除后，消息历史被一起删除
-                    NIMClient.getService(MsgService::class.java).clearServerHistory(recentContact.contactId,recentContact.sessionType,true)
+                    NIMClient.getService(MsgService::class.java).clearServerHistory(
+                        recentContact.contactId,
+                        recentContact.sessionType,
+                        true
+                    )
                     NIMClient.getService(MsgService::class.java).deleteRecentContact(recentContact)
 //                    NIMClient.getService(MsgService::class.java).deleteRoamingRecentContact(recentContact.contactId,recentContact.sessionType)
                     adapter.remove(position)
@@ -270,16 +274,16 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
             EventBus.getDefault().post(GetNewMsgEvent())
         headAdapter.data[1].msg = when (data?.square_type) {
             1 -> {
-                "${data?.square_nickname}赞了你的动态"
+                getString(R.string.someone_zan_your_square, data?.square_nickname)
             }
             2 -> {
-                "${data?.square_nickname}评论了你的动态"
+                getString(R.string.someone_comment_your_square, data?.square_nickname)
             }
             3 -> {
-                "${data?.square_nickname}赞了你的评论"
+                getString(R.string.someone_zan_your_comment, data?.square_nickname)
             }
             else -> {
-                "暂时没有新动态哦"
+                getString(R.string.no_new_square)
             }
         }
         headAdapter.data[1].count = (data?.square_count ?: 0)
@@ -289,7 +293,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
 
         accostAdapter.setNewData(data?.chatup_list ?: mutableListOf<AccostBean>())
         if ((data?.chatup_list ?: mutableListOf()).size > 0) {
-            adapter.headerLayout.moreChatUpBtn.isVisible = (data?.chatup_list ?: mutableListOf()).size > 4
+            adapter.headerLayout.moreChatUpBtn.isVisible =
+                (data?.chatup_list ?: mutableListOf()).size > 4
             adapter.headerLayout.getChildAt(0).isVisible = true
         } else {
             adapter.headerLayout.getChildAt(0).isVisible = false
@@ -303,8 +308,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
     //官方助手
     private val ass by lazy {
         MessageListBean(
-            "官方助手",
-            "暂时没有助手消息哦",
+            getString(R.string.assistant),
+            getString(R.string.no_assistant_msg),
             0,
             "",
             R.drawable.icon_default_avator_logo
@@ -312,8 +317,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
     }
     private val square by lazy {
         MessageListBean(
-            "广场消息",
-            "暂时没有广场消息哦",
+            getString(R.string.squre_message),
+            getString(R.string.no_square_message),
             0,
             "",
             R.drawable.icon_message_square
@@ -331,7 +336,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
                 ass.time = TimeUtil.getTimeShowString(loadedRecent.time, true)
                 ass.id = loadedRecent.contactId
                 //本地小助手发送通知通过认证通知，本地修改认证状态
-                if (loadedRecent.content.contains("已通过认证")) {
+                if (loadedRecent.content.contains(getString(R.string.pass_verify))) {
                     //更改本地的认证状态
                     UserManager.saveUserVerify(1)
                     if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
@@ -459,7 +464,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
                     if ((message.attachment is SendCustomTipAttachment && (message.attachment as SendCustomTipAttachment).ifSendUserShow != isSend)
                         || (message.attachment is ContactAttachment && message.direct == MsgDirectionEnum.Out)
                     ) {
-                        NIMClient.getService(MsgService::class.java).deleteMsgSelf(message,"")
+                        NIMClient.getService(MsgService::class.java).deleteMsgSelf(message, "")
                     }
                 }
             }
@@ -526,7 +531,6 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
      */
     private val messageReceiptObserver = Observer<List<MessageReceipt>> {
         //收到已读回执,调用接口,改变此时招呼或者消息的状态
-        Log.d(TAG, "======已读回执=====")
 //        mPresenter.messageCensus(params)
     }
 

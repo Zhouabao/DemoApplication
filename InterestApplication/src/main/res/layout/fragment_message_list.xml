@@ -62,7 +62,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
-                android:text="主动加微信/QQ的可能是骗子，请及时举报！"
+                android:text="@string/lier_cause_too_active"
                 android:textColor="#ff191919"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -78,7 +78,7 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="知道了"
+                android:text="@string/iknow"
                 android:textColor="#191919"
                 android:textSize="11sp"
                 android:textStyle="bold" />

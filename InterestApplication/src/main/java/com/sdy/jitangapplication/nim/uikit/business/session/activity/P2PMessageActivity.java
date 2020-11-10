@@ -178,7 +178,7 @@ public class P2PMessageActivity extends BaseMessageActivity {
             int id = json.getIntValue("id");
             if (id == 1) {
                 // 正在输入
-                ToastHelper.showToastLong(P2PMessageActivity.this, "对方正在输入...");
+                ToastHelper.showToastLong(P2PMessageActivity.this, getString(R.string.inputing));
             } else {
                 ToastHelper.showToast(P2PMessageActivity.this, "command: " + content);
             }

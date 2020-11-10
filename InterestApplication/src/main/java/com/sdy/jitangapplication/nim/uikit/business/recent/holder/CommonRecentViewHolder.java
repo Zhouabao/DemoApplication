@@ -3,6 +3,8 @@ package com.sdy.jitangapplication.nim.uikit.business.recent.holder;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseQuickAdapter;
 import com.sdy.jitangapplication.nim.uikit.impl.NimUIKitImpl;
 
@@ -53,6 +55,6 @@ public class CommonRecentViewHolder extends RecentViewHolder {
             return digest;
         }
 
-        return "[未知]";
+        return DemoCache.getContext().getString(R.string.unknown_msg);
     }
 }

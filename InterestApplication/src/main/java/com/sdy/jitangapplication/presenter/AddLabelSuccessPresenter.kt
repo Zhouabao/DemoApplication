@@ -9,6 +9,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -61,7 +62,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
      */
     fun publishContent(params: HashMap<String, Any>) {
         if (!checkNetWork()) {
-            CommonFunction.toast("网络不可用")
+            CommonFunction.toast(context.getString(R.string.check_network))
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
@@ -109,7 +110,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
             return
         }
         if (!checkNetWork()) {
-            CommonFunction.toast("网络不可用")
+            CommonFunction.toast(context.getString(R.string.check_network))
             mView.onUploadImgResult(false, "")
             return
         }

@@ -37,7 +37,7 @@
                     android:gravity="center"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="10dp"
-                    android:text="问题反馈"
+                    android:text="@string/question_feed_back"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp"

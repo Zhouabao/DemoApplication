@@ -52,10 +52,10 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
                 giftTitle.setText(attachment.getGiftName());
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_white_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
-                giftTitle.setText("礼物已开启");
+                giftTitle.setText(R.string.gift_has_opend);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED) {
-                giftTitle.setText("礼物已退回");
+                giftTitle.setText(R.string.gift_has_revoked);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
             }
 
@@ -64,15 +64,15 @@ public class MsgViewHolderAccostGift extends MsgViewHolderBase {
                 giftTitle.setText(attachment.getGiftName());
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_white_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
-                giftTitle.setText("礼物已开启");
+                giftTitle.setText(R.string.gift_has_opend);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED) {
-                giftTitle.setText("超时已退回");
+                giftTitle.setText(R.string.gift_has_revoked);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
             }
         }
         GlideUtil.loadImg(context, attachment.getGiftIcon(), giftImg);
-        giftAmount.setText("价值"+attachment.getGiftAmount()+"糖果");
+        giftAmount.setText(context.getString(R.string.cost_candy_count,attachment.getGiftAmount()));
     }
 
     @Override

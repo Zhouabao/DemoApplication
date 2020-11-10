@@ -30,7 +30,10 @@ class TouristDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
             UserManager.startToLogin(context1 as Activity)
             dismiss()
         }
-        touristCount.text = "此为注册用户功能\n加入积糖，与${UserManager.registerFileBean?.people_amount?: 0}位糖宝达成联系"
+        touristCount.text = context1.getString(
+            R.string.register_in,
+            (UserManager.registerFileBean?.people_amount ?: 0)
+        )
     }
 
     private fun initWindow() {

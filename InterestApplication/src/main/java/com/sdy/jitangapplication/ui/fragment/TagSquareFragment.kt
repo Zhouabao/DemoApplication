@@ -140,15 +140,15 @@ class TagSquareFragment : BaseMvpFragment<TagSquarePresenter>(), TagSquareView,
                         filterPopupWindow.showAsDropDown(view, 0, SizeUtils.dp2px(-15F))
                         filterPopupWindow.contentView.tagTop.text =
                             if (adapter.data[position].place_type == 1) {
-                                "取消置顶"
+                                getString(R.string.cancel_top)
                             } else {
-                                "置于顶部"
+                                getString(R.string.make_top)
                             }
                         filterPopupWindow.contentView.tagBottom.text =
                             if (adapter.data[position].place_type == 2) {
-                                "取消置底"
+                                getString(R.string.cancel_top)
                             } else {
-                                "置于底部"
+                                getString(R.string.make_top)
                             }
                     }
                     R.id.rvTagSquareImg -> {

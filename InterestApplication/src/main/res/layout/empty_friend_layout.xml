@@ -22,7 +22,7 @@
             android:id="@+id/emptyFriendTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="您还没有好友"
+            android:text="@string/empty_friend"
             android:textColor="#ff191919"
             android:textSize="18sp"
             android:textStyle="bold"

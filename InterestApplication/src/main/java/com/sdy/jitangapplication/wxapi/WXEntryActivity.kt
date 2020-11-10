@@ -171,7 +171,7 @@ class WXEntryActivity : WXCallbackActivity() {
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)
         } else {
-            CommonFunction.toast("登录失败！请重试")
+            CommonFunction.toast(getString(R.string.login_error))
         }
     }
 

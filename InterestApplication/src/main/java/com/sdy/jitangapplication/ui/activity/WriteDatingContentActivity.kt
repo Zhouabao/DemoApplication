@@ -33,17 +33,17 @@ class WriteDatingContentActivity : BaseActivity() {
     }
 
     private fun initView() {
-        hotT1.text = "活动内容"
+        hotT1.text = getString(R.string.dating_content)
         btnBack.clickWithTrigger {
             finish()
         }
-        rightBtn.text = "完成"
+        rightBtn.text = getString(R.string.finish)
         rightBtn.setTextColor(resources.getColor(R.color.colorOrange))
         rightBtn.isVisible = true
         rightBtn.isEnabled = true
         rightBtn.clickWithTrigger {
             if (datingContentEt.text.trim().isNullOrBlank()) {
-                CommonFunction.toast("请填写活动内容")
+                CommonFunction.toast(getString(R.string.please_write_dating_content))
                 return@clickWithTrigger
             }
             setResult(
@@ -66,15 +66,15 @@ class WriteDatingContentActivity : BaseActivity() {
             .create()
 
         SpanUtils.with(contentTip)
-            .append("其他用户预览样式如下，请妥善描述，")
-            .append("发布违禁内容或导致封号及设备禁用")
+            .append(getString(R.string.dating_preview_mode))
+            .append(getString(R.string.dating_elegal_warnning))
             .setForegroundColor(Color.parseColor("#FFFF0D0D"))
             .create()
 
 
         SpanUtils.with(datingContentShow)
             .append("${datingType}·")
-            .append("待描述")
+            .append(getString(R.string.wait_descr))
             .setForegroundColor(resources.getColor(R.color.colorOrange))
             .create()
 

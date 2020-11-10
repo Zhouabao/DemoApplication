@@ -46,31 +46,31 @@ public class MsgViewHolderSendGift extends MsgViewHolderBase {
         int giftReceiveStatus = attachment.getGiftStatus();
         if (isReceivedMessage()) {
             if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
-                giftTitle.setText("开启礼物");
-                giftType.setText("糖果礼物待开启");
+                giftTitle.setText(R.string.open_gift);
+                giftType.setText(R.string.gift_wait_open);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_orange_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
-                giftTitle.setText("礼物已开启");
-                giftType.setText("已领取糖果礼物");
+                giftTitle.setText(R.string.gift_has_opend);
+                giftType.setText(R.string.gift_has_received);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_light_orange_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED) {
-                giftTitle.setText("礼物已退回");
-                giftType.setText("糖果礼物已退回");
+                giftTitle.setText(R.string.gift_revoke);
+                giftType.setText(R.string.gift_has_revoked);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_light_orange_0_18_18_0);
             }
 
         } else {
             if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
-                giftTitle.setText("待开启");
-                giftType.setText("糖果礼物待开启");
+                giftTitle.setText(R.string.wait_open);
+                giftType.setText(R.string.gift_wait_open);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_orange_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN) {
-                giftTitle.setText("礼物已开启");
-                giftType.setText("糖果礼物已被领取");
+                giftTitle.setText(R.string.gift_has_opend);
+                giftType.setText(R.string.gift_has_been_received);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_light_orange_0_18_18_0);
             } else if (giftReceiveStatus == SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED) {
-                giftTitle.setText("超时已退回");
-                giftType.setText("糖果礼物已退回");
+                giftTitle.setText(R.string.revoke_cause_time_out);
+                giftType.setText(R.string.gift_has_been_revoked);
                 giftStatusBg.setBackgroundResource(R.drawable.gradient_light_orange_0_18_18_0);
             }
 

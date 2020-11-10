@@ -120,8 +120,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
 //        StatusBarUtil.immersive(this)
 
-        userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
-        privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
+        userAgreement.text = SpanUtils.with(userAgreement).append(resources.getString(R.string.user_protocol)).setUnderline().create()
+        privacyPolicy.text = SpanUtils.with(privacyPolicy).append(resources.getString(R.string.privacy_protocol)).setUnderline().create()
 
         //判断是否有登录
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
@@ -139,7 +139,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         onekeyLoginBtn.clickWithTrigger(1000L) {
             touristBtn.isEnabled = false
             if (!NetworkUtils.getMobileDataEnabled()) {
-                CommonFunction.toast("请开启数据流量")
+                CommonFunction.toast(resources.getString(R.string.open_internet))
                 return@clickWithTrigger
             }
 
@@ -320,7 +320,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             OneKeyLoginManager.getInstance().removeAllListener()
             isOpenAuth = true
         } else {
-            CommonFunction.toast("登录失败！请重试")
+            CommonFunction.toast(resources.getString(R.string.login_error))
             isOpenAuth = false
             OneKeyLoginManager.getInstance().setLoadingVisibility(false)
         }

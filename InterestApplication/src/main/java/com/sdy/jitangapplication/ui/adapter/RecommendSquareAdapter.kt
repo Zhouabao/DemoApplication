@@ -70,16 +70,16 @@ class RecommendSquareAdapter :
             //0普通动态 1 资产 2豪车 3身材 4职业
             helper.itemView.squareSweet.text = when (item.approve_type) {
                 1 -> {
-                    "资产认证"
+                     mContext.getString(R.string.sweet_wealth_title)
                 }
                 2 -> {
-                    "豪车认证"
+                     mContext.getString(R.string.sweet_luxury_car_title)
                 }
                 3 -> {
-                    "身材认证"
+                     mContext.getString(R.string.sweet_figure_title)
                 }
                 4 -> {
-                    "职业认证"
+                     mContext.getString(R.string.sweet_job_title)
                 }
                 else -> {
                     ""
@@ -111,7 +111,7 @@ class RecommendSquareAdapter :
                 helper.itemView.squareDistance.text = "${item.distance}"
             } else {
                 helper.itemView.squareDistanceLl.isVisible = true
-                helper.itemView.squareDistance.text = "推荐"
+                helper.itemView.squareDistance.text = mContext.getString(R.string.recommend)
             }
         }
 

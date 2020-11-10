@@ -47,9 +47,9 @@ class UplevelRewardsAdapter() :
             .create()
 
         helper.itemView.uplevelRewardsState.text = if (item.isget) {
-            "已领取"
+            mContext.getString(R.string.has_received)
         } else {
-            "邀请${item.set_cnt}人"
+            mContext.getString(R.string.invite,item.set_cnt)
         }
 
     }

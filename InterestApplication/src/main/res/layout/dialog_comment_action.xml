@@ -14,7 +14,7 @@
 
     <TextView
             android:id="@+id/copyComment"
-            android:text="复制评论"
+            android:text="@string/copy_comment"
             android:textColor="@color/colorBlackTitle"
             android:textSize="16sp"
             android:gravity="center"
@@ -29,7 +29,7 @@
 
     <TextView
             android:id="@+id/replyComment"
-            android:text="回复评论"
+            android:text="@string/reply_comment"
             android:textColor="@color/colorBlackTitle"
             android:textSize="16sp"
             android:gravity="center"
@@ -44,7 +44,7 @@
 
     <TextView
             android:id="@+id/jubaoComment"
-            android:text="举报评论"
+            android:text="@string/report_comment"
             android:textColor="@color/colorBlackTitle"
             android:textSize="16sp"
             android:gravity="center"
@@ -59,7 +59,7 @@
 
     <TextView
             android:id="@+id/deleteComment"
-            android:text="删除评论"
+            android:text="@string/delete_comment"
             android:textColor="@color/colorOrange"
             android:textSize="16sp"
             android:gravity="center"

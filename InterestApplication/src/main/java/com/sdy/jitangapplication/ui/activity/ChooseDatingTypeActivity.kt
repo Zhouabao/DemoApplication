@@ -46,12 +46,12 @@ class ChooseDatingTypeActivity : BaseMvpActivity<ChooseDatingTypePresenter>(),
         mPresenter.context = this
         mPresenter.mView = this
 
-        hotT1.text = "选择活动类型"
+        hotT1.text = getString(R.string.dating_title)
         btnBack.clickWithTrigger {
             finish()
         }
         rightBtn1.isVisible = true
-        rightBtn1.text = "下一步"
+        rightBtn1.text = getString(R.string.next)
 
         retryBtn.clickWithTrigger {
             stateDatingType.viewState = MultiStateView.VIEW_STATE_LOADING

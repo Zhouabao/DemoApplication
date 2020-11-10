@@ -30,7 +30,7 @@ class UserRelationshipAdapter(val from_sweet_heart: Int = 0) :
     override fun convert(helper: BaseViewHolder, item: UserRelationshipBean) {
         when (helper.itemViewType) {
             0 -> {
-                helper.itemView.userIntentionContent.text = "活动：${item.title}"
+                helper.itemView.userIntentionContent.text = mContext.getString(R.string.dating) + item.title
                 helper.itemView.userIntentionContent.clickWithTrigger {
                     DatingDetailActivity.start2Detail(mContext, item.id)
                 }

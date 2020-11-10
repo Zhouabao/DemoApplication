@@ -258,7 +258,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
             val id = json.getIntValue("id")
             if (id == 1) {
                 // 正在输入
-                inputTip.text = "对方正在输入..."
+                inputTip.text = getString(R.string.she_is_input)
             } else {
                 inputTip.text = ""
             }

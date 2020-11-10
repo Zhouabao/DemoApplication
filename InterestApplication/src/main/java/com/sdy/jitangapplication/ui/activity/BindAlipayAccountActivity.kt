@@ -39,9 +39,9 @@ class BindAlipayAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "绑定支付宝"
+        hotT1.text = getString(R.string.alipay_bind)
         rightBtn1.isVisible = true
-        rightBtn1.text = "保存"
+        rightBtn1.text = getString(R.string.save)
 
 
         etTelephone.filters = arrayOf(InputFilter.LengthFilter(11))

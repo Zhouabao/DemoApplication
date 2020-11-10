@@ -47,7 +47,7 @@
             android:id="@+id/tagIsHot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="热门标签"
+            android:text="@string/hot_label"
             android:textColor="#ffa5a5a5"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/tagImg"

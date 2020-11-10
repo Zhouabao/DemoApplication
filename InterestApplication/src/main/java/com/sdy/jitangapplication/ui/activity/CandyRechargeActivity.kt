@@ -41,7 +41,7 @@ class CandyRechargeActivity : BaseMvpActivity<ChargeVipPresenter>(), ChargeVipVi
         mPresenter.mView = this
         mPresenter.context = this
 
-        hotT1.text = "糖果充值"
+        hotT1.text = getString(R.string.candy_charge)
         btnBack.clickWithTrigger {
             finish()
         }

@@ -48,15 +48,15 @@ public class MsgViewHolderWishHelp extends MsgViewHolderBase {
         attachment = (WishHelpAttachment) message.getAttachment();
         int giftReceiveStatus = attachment.getWishHelpStatus();
         if (giftReceiveStatus == WishHelpAttachment.WISH_HELP_STATUS_NORMAL) {
-            giftTitle.setText("心愿助力");
+            giftTitle.setText(R.string.wish_help);
             giftStatusBg.setBackgroundResource(R.drawable.gradient_white_0_18_18_0);
         } else if (giftReceiveStatus == WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN) {
-            giftTitle.setText("已接受助力");
+            giftTitle.setText(R.string.has_accept_wish_help);
         } else if (giftReceiveStatus == WishHelpAttachment.WISH_HELP_STATUS_HAS_RETURNED) {
-            giftTitle.setText("心愿助力");
+            giftTitle.setText(R.string.wish_help);
             giftStatusBg.setBackgroundResource(R.drawable.gradient_gray_0_18_18_0);
         }
-        wishHelpAmount.setText("助力\t" + attachment.getAmount() + "\t糖果");
+        wishHelpAmount.setText(context.getString(R.string.wish_help_candy, attachment.getAmount()));
         GlideUtil.loadImgCenterCrop(context, attachment.getIcon(), wishHelpImg);
     }
 

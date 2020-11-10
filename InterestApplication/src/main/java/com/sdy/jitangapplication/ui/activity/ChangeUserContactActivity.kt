@@ -45,8 +45,8 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
 
 
         rightBtn1.isVisible = true
-        hotT1.text = "更改联系方式"
-        rightBtn1.text = "保存"
+        hotT1.text = getString(R.string.contact_title)
+        rightBtn1.text = getString(R.string.save)
 
         contactImg.setOnClickListener(this)
         contactImgMore.setOnClickListener(this)
@@ -100,7 +100,13 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
      * 1 电话 2 微信 3 qq 99隐藏
      */
     private var contactWay = 1 //1 电话 2 微信 3 qq 99隐藏
-    private val contactWays by lazy { mutableListOf("手机号", "微信", "QQ") }
+    private val contactWays by lazy {
+        mutableListOf(
+            getString(R.string.contact_phone),
+            getString(R.string.contact_wechat),
+            getString(R.string.contact_QQ)
+        )
+    }
     private val contactWaysIcon by lazy {
         mutableListOf(
             R.drawable.icon_phone_circle,
@@ -116,8 +122,8 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
                 contactImg.setImageResource(contactWaysIcon[options1])
                 contactWay = options1 + 1
             })
-            .setSubmitText("确定")
-            .setTitleText("联系方式")
+            .setSubmitText(getString(R.string.ok))
+            .setTitleText(getString(R.string.contact_picker_title))
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)
             .setDividerColor(resources.getColor(R.color.colorDivider))
@@ -151,7 +157,7 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
 
     override fun onSetContactResult(success: Boolean) {
         if (success) {
-            CommonFunction.toast("修改成功！")
+            CommonFunction.toast(getString(R.string.contact_change_success))
             if (UserManager.getGender() == 2) {
                 EventBus.getDefault().post(UserCenterContactEvent(contactWay))
             }

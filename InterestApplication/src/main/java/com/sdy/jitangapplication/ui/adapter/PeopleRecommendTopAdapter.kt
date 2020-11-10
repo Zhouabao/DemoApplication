@@ -46,8 +46,9 @@ class PeopleRecommendTopAdapter :
             0 -> {
                 val itemView = helper.itemView
                 if ((UserManager.getGender() == 1 && isplatinum) || (UserManager.getGender() == 2 && mv_url)) {
-                    itemView.choicenessCount.text = "${total_exposure_cnt}人通过精选\n用户看到了你"
-                    itemView.openVipBtn.text = "谁看过我"
+                    itemView.choicenessCount.text = total_exposure_cnt.toString() + mContext.getString(
+                                            R.string.many_people_see_you)
+                    itemView.openVipBtn.text = mContext.getString(R.string.who_see_me)
                     itemView.openVipBtn.setBackgroundResource(R.drawable.shape_rectangle_orange_24dp)
                     itemView.openVipBtn.clickWithTrigger {
                         mContext.startActivity<MyVisitActivity>(
@@ -61,14 +62,14 @@ class PeopleRecommendTopAdapter :
                 } else {
                     itemView.openVipBtn.setBackgroundResource(R.drawable.gradient_orange_10dp)
                     if (UserManager.getGender() == 1) {
-                        itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
-                        itemView.openVipBtn.text = "升级会员"
+                        itemView.choicenessCount.text = mContext.getString(R.string.tobe_choiceness)
+                        itemView.openVipBtn.text = mContext.getString(R.string.upgrade_vip)
                         itemView.openVipBtn.clickWithTrigger {
                             CommonFunction.startToVip(mContext,VipPowerActivity.SOURCE_MORE_EXPODE)
                         }
                     } else {
-                        itemView.choicenessCount.text = "成为“精选”用户\n获取更多聊天"
-                        itemView.openVipBtn.text = "上传视频"
+                        itemView.choicenessCount.text = mContext.getString(R.string.tobe_choiceness)
+                        itemView.openVipBtn.text =  mContext.getString(R.string.upload_verify_video)
                         itemView.openVipBtn.clickWithTrigger {
                             CommonFunction.startToVideoIntroduce(mContext)
                         }

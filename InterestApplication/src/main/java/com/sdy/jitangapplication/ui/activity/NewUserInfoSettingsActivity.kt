@@ -170,7 +170,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             override fun onItemClick(vh: RecyclerView.ViewHolder) {
                 if (vh.itemViewType == MyPhotoBean.COVER) {
                     if (adapter.data.size == IMAGE_SIZE + 1) {
-                        CommonFunction.toast("最多只能上传9张，请删除后上传")
+                        CommonFunction.toast(getString(R.string.most_upload_count))
                         return
                     }
                     choosePosition = vh.layoutPosition
@@ -196,7 +196,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                                 }
 
                                                 override fun onDenied() {
-                                                    CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                                    CommonFunction.toast(getString(R.string.permission_storage))
                                                 }
 
                                             })
@@ -204,7 +204,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                 }
 
                                 override fun onDenied() {
-                                    CommonFunction.toast("相机权限被拒,请允许权限后再上传照片.")
+                                    CommonFunction.toast(getString(R.string.permission_camera))
                                 }
                             })
                             .request()
@@ -261,9 +261,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             userNickName.text = "${data.nickname}"
             userGender.text = if (data.gender == 1) {
-                "男"
+                getString(R.string.gender_man)
             } else {
-                "女"
+                getString(R.string.gender_woman)
             }
             userBirth.text = "${data.birth}/${data.constellation}"
 
@@ -337,9 +337,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
     private fun updateVerifyState(verifyState: Int) {
         if (verifyState == 3) {
-            verifyNotice.text = "替换头像照片后自动进入重新审核"
+            verifyNotice.text = getString(R.string.replace_and_auto_commit)
         } else if (verifyState == 2) {
-            verifyNotice.text = "已进入自动审核，请返回"
+            verifyNotice.text = getString(R.string.in_auto_commit)
         }
     }
 
@@ -397,9 +397,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         dialog.show()
         dialog.makeAvatorTip.text = if (position == 0) {
-            "替换头像"
+            getString(R.string.replace_avatar)
         } else {
-            "设为头像"
+            getString(R.string.set_avatar)
         }
 
 
@@ -439,7 +439,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                         }
 
                                         override fun onDenied() {
-                                            CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                            CommonFunction.toast(getString(R.string.permission_storage))
                                         }
 
                                     })
@@ -447,7 +447,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             }
 
                             override fun onDenied() {
-                                CommonFunction.toast("相机权限被拒,请允许权限后再上传照片.")
+                                CommonFunction.toast(getString(R.string.permission_camera))
                             }
                         })
                         .request()
@@ -521,7 +521,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      */
     private fun updatePhotos(type: Int = 0) {
         if (photos.isNullOrEmpty()) {
-            CommonFunction.toast("请至少上传一张照片")
+            CommonFunction.toast(getString(R.string.least_upload_count))
             return
         }
 
@@ -640,7 +640,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             setData(data)
             if (intent.getBooleanExtra("showToast", false)) {
-                CommonFunction.toast("点击首张图片替换真人头像即可再次审核")
+                CommonFunction.toast(getString(R.string.click_first_to_replace_avatar))
             }
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -850,7 +850,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     private var originalAvator = ""
     private fun checkIsForceChangeAvator() {
         if (adapter.data.isNullOrEmpty()) {
-            CommonFunction.toast("请至少上传一张照片")
+            CommonFunction.toast(getString(R.string.least_upload_count))
             return
         }
 
@@ -879,10 +879,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         //如果更改过相册信息并且没有是强制替换头像,就新增
         if (isChange && !UserManager.isNeedChangeAvator()) {
             dialog.show()
-            dialog.title.text = "保存内容"
-            dialog.tip.text = "是否保存此次编辑的内容？"
-            dialog.cancel.text = "放弃"
-            dialog.confirm.text = "保存"
+            dialog.title.text = getString(R.string.save_content)
+            dialog.tip.text = getString(R.string.is_save_content)
+            dialog.cancel.text = getString(R.string.give_up)
+            dialog.confirm.text = getString(R.string.save)
             dialog.cancel.onClick {
                 setResult(Activity.RESULT_OK)
                 finish()
@@ -1052,7 +1052,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     updateScoreStatus(scoreView, score, update = true)
                 saveBtn.isEnabled = true
             })
-            .setSubmitText("确定")
+            .setSubmitText(getString(R.string.ok))
             .setTitleText(title)
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)
@@ -1065,7 +1065,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         //身高默认选中，男170 女160
         if (findTagBean != null && !findTagBean.title.isNullOrEmpty()) {
             for (data in optionsItems1.withIndex()) {
-                if (title == "身高") {
+                if (title == getString(R.string.height)) {
                     if (data.value.title == findTagBean.title) {
                         pvOptions.setSelectOptions(data.index)
                         break
@@ -1077,7 +1077,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     }
                 }
             }
-        } else if (title == "身高") {
+        } else if (title == getString(R.string.height)) {
             if (UserManager.getGender() == 1) { //男
                 pvOptions.setSelectOptions(175 - 60)
             } else {
@@ -1117,7 +1117,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         })
             .setRangDate(startDate, endDate)
             .setDate(endDate)
-            .setTitleText("请选择您的生日")
+            .setTitleText(getString(R.string.choose_birthday))
             .setTitleColor(Color.BLACK)//标题文字颜色
             .build()
         clOptions.show()

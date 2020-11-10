@@ -20,7 +20,7 @@ class ContactStarAdapter(var star: Boolean = true) :
         val position = helper.layoutPosition
         if (position == 0 && star) {
             helper.itemView.tv_index.visibility = View.VISIBLE
-            helper.itemView.tv_index.text = "☆星标好友"
+            helper.itemView.tv_index.text = mContext.getString(R.string.star_friend)
         } else {
             helper.itemView.tv_index.visibility = View.GONE
         }

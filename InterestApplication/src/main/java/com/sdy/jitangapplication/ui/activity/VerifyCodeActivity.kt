@@ -56,13 +56,13 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
         when (intent.getStringExtra("type")) {
             "$TYPE_LOGIN_PHONE", "$TYPE_LOGIN_WECHAT" -> {
-                tv1.text = "验证码"
+                tv1.text = resources.getString(R.string.verify_code)
                 help.isVisible = false
 
             }
 
-            "${TYPE_LOGIN_OFF}" -> {
-                tv1.text = "注销账号"
+            "$TYPE_LOGIN_OFF" -> {
+                tv1.text = resources.getString(R.string.login_off)
                 help.isVisible = true
             }
         }
@@ -108,9 +108,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     /** 倒计时60秒，一次1秒 */
     val timer = object : CountDownTimer(60 * 1000, 1000) {
         override fun onFinish() {
-            tvPhone.text = "$phone"
+            tvPhone.text = phone
             SpanUtils.with(countVerifyCodeTime)
-                .append("重新获取")
+                .append(resources.getString(R.string.reget_verify_code))
                 .setBold()
                 .create()
             countVerifyCodeTime.isEnabled = true
@@ -118,8 +118,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
         override fun onTick(p0: Long) {
             SpanUtils.with(countVerifyCodeTime)
-                .append("验证码已发送")
-                .append("  ${p0 / 1000}秒")
+                .append(resources.getString(R.string.verify_code_has_send))
+                .append("  ${p0 / 1000}${resources.getString(R.string.second)}")
                 .setBold()
                 .create()
         }
@@ -132,7 +132,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     }
 
     override fun onGetPhoneNum() {
-        tvPhone.text = "$phone"
+        tvPhone.text = phone
     }
 
 
@@ -164,7 +164,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                 LoginOffSuccessDialog(this).show()
             } else {//登录成功
                 this.data = data
-                mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
+                mPresenter.loginIM(LoginInfo(data!!.accid, data.extra_data?.im_token))
             }
         } else {
             inputVerifyCode.isEnabled = true
@@ -175,25 +175,25 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     override fun onGetVerifyCode(data: BaseResp<RegisterTooManyBean?>?) {
         if (data != null && data.code == 200) {
             SpanUtils.with(tvPhone)
-                .append("验证码已发至 ")
-                .append("$phone")
+                .append("${resources.getString(R.string.verify_code_sended)} ")
+                .append(phone)
                 .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                 .setFontSize(18, true)
                 .create()
             countVerifyCodeTime.isEnabled = false
             onCountTime()
         } else if (data?.code == 401) {
-            RegisterTooManyActivity.start(data?.data?.countdown_time ?: 0, this)
+            RegisterTooManyActivity.start(data.data?.countdown_time ?: 0, this)
             countVerifyCodeTime.isEnabled = true
             SpanUtils.with(countVerifyCodeTime)
-                .append("重新获取")
+                .append(resources.getString(R.string.reget_verify_code))
                 .setBold()
                 .create()
         } else {
             CommonFunction.toast("${data?.msg}")
             countVerifyCodeTime.isEnabled = true
             SpanUtils.with(countVerifyCodeTime)
-                .append("重新获取")
+                .append(resources.getString(R.string.reget_verify_code))
                 .setBold()
                 .create()
         }
@@ -208,7 +208,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)
         } else {
-            CommonFunction.toast("登录失败！请重试")
+            CommonFunction.toast(resources.getString(R.string.login_error))
         }
 
     }

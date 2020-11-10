@@ -39,7 +39,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_rectangle_orange_24dp"
             android:gravity="center"
-            android:text="好的"
+            android:text="@string/ok_1"
             android:textColor="#ffffffff"
             android:textSize="16sp"
             android:textStyle="bold"

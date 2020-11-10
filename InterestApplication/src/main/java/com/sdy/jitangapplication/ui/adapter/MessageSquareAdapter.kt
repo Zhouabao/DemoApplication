@@ -25,10 +25,10 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
         holder.addOnClickListener(R.id.msgIcon)
         //未读
         if (item.is_read == false && item.pos == 0) {
-            holder.itemView.headTitle.text = "未读消息"
+            holder.itemView.headTitle.text = mContext.getString(R.string.unread_message)
             holder.itemView.headTitle.isVisible = true
         } else if (item.is_read == true && item.pos == 0) {
-            holder.itemView.headTitle.text = "历史消息"
+            holder.itemView.headTitle.text = mContext.getString(R.string.history_message)
             holder.itemView.headTitle.isVisible = true
         } else {
             holder.itemView.headTitle.isVisible = false
@@ -38,21 +38,21 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
         holder.itemView.msgTitle.text = item.nickname ?: ""
         holder.itemView.text.text = when (item.type) {
             1 -> {
-                "赞了你的动态"
+                mContext.getString(R.string.zan_your_square)
             }
             2 -> {
                 SpanUtils.with(holder.itemView.text)
-                    .append("评论\t\t")
+                    .append(mContext.getString(R.string.comment))
                     .setForegroundColor(mContext.resources.getColor(R.color.colorBlack99))
                     .append(item.content ?: "")
                     .setForegroundColor(mContext.resources.getColor(R.color.colorBlackTitle))
                     .create()
             }
             3 -> {
-                "赞了你的评论"
+                mContext.getString(R.string.zan_your_comment)
             }
             4 -> {  //活动点赞
-                "赞了你的活动"
+                mContext.getString(R.string.zan_your_dating)
             }
             else -> {
                 ""

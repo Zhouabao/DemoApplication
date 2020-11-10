@@ -137,7 +137,7 @@ class RoamingLocationActivity : BaseActivity() {
     private fun initView() {
         EventBus.getDefault().register(this)
 
-        hotT1.text = "位置漫游"
+        hotT1.text = getString(R.string.location_roaming)
         btnBack.clickWithTrigger {
             finish()
         }
@@ -212,7 +212,7 @@ class RoamingLocationActivity : BaseActivity() {
         if (roaming.isNotEmpty()) {
             roamingDivider.isVisible = true
             roamingLocation.isVisible = true
-            roamingLocation.text = "当前漫游 ${roaming}"
+            roamingLocation.text = getString(R.string.current_roaming,roaming)
         } else {
             roamingDivider.isVisible = false
             roamingLocation.isVisible = false
@@ -247,7 +247,7 @@ class RoamingLocationActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateRoamingLocationEvent(event: UpdateRoamingLocationEvent) {
-        currentLocation.text = "当前位置\t${UserManager.getCity()},${UserManager.getDistrict()}"
+        currentLocation.text = getString(R.string.current_location) +"\t${UserManager.getCity()}," + UserManager.getDistrict()
         if (roaming.isNullOrEmpty()) {
             currentLocation.setTextColor(resources.getColor(R.color.colorOrange))
             currentLocation.setCompoundDrawablesWithIntrinsicBounds(

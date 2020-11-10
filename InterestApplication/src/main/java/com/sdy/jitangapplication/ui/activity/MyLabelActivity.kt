@@ -58,9 +58,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
         btnBack.setOnClickListener(this)
         rightBtn.setOnClickListener(this)
         addLabelBtn.setOnClickListener(this)
-        hotT1.text = "兴趣管理"
+        hotT1.text = getString(R.string.label_manager)
         rightBtn.isVisible = true
-        rightBtn.text = "删除"
+        rightBtn.text = getString(R.string.delete)
         divider.isVisible = false
         rightBtn.setTextColor(Color.parseColor("#FF191919"))
 
@@ -83,7 +83,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 R.id.labelDelete -> {
                     // 删除兴趣
                     if (adapter.data.size <= MIN_LABEL) {
-                        CommonFunction.toast("至少保留${MIN_LABEL}个兴趣")
+                        CommonFunction.toast(
+                            getString(R.string.at_least_main, MIN_LABEL)
+                        )
                         return@setOnItemChildClickListener
                     }
                     showDeleteDialog(position)
@@ -138,7 +140,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 }
                 adapter.emptyView.emptyLabelTip.isVisible = true
                 adapter.emptyView.emptyTip.isVisible = true
-                adapter.emptyView.addLabelBtn.text = "添加兴趣"
+                adapter.emptyView.addLabelBtn.text = getString(R.string.add_label)
                 rightBtn.isVisible = false
             } else {
                 rightBtn.isVisible = true
@@ -163,9 +165,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     private val deleteDialog by lazy { DeleteDialog(this) }
     private fun showDeleteDialog(position: Int) {
         deleteDialog.show()
-        deleteDialog.title.text = "删除兴趣"
+        deleteDialog.title.text = getString(R.string.deleta_label)
         deleteDialog.title.isVisible = true
-        deleteDialog.tip.text = "您确定要删除兴趣「${adapter.data[position].title}」吗？"
+        deleteDialog.tip.text = getString(R.string.is_confirm_delete, adapter.data[position].title)
         deleteDialog.confirm.onClick {
             mPresenter.delMyTags(adapter.data[position].id, position)
             deleteDialog.dismiss()
@@ -185,7 +187,12 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             }
             addLabelBtn -> {//添加兴趣
                 if (adapter.data.size >= UserManager.getMaxMyLabelCount()) {
-                    CommonFunction.toast("最多能拥有${UserManager.getMaxMyLabelCount()}个兴趣")
+                    CommonFunction.toast(
+                        getString(
+                            R.string.most_maintain,
+                            UserManager.getMaxMyLabelCount()
+                        )
+                    )
                     return
                 }
                 intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
@@ -220,9 +227,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     fun onUpdateEditMode() {
         editMode = !editMode
         rightBtn.text = if (editMode) {
-            "取消"
+            getString(R.string.cancel)
         } else {
-            "删除"
+            getString(R.string.delete)
         }
         addLabelBtn.isVisible = !editMode
         for (data in adapter.data) {

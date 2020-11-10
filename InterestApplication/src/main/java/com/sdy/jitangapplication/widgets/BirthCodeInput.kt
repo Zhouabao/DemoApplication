@@ -193,11 +193,11 @@ class BirthCodeInput @JvmOverloads constructor(
             layoutParams.rightMargin = childHPadding
             layoutParams.gravity = Gravity.CENTER
             if (i in 0..3) {
-                editText.hint = "年"
+                editText.hint = context.getString(R.string.year)
             } else if (i in 4..5) {
-                editText.hint = "月"
+                editText.hint = context.getString(R.string.month)
             } else {
-                editText.hint = "日"
+                editText.hint = context.getString(R.string.day)
             }
 
             editText.setOnKeyListener(this)

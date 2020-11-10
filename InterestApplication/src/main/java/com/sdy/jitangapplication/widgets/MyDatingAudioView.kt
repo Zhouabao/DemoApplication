@@ -46,7 +46,7 @@ class MyDatingAudioView @JvmOverloads constructor(
         textColor: Int = Color.WHITE,
         playIcon: Int = R.drawable.icon_play_dating_audio,
         pauseIcon: Int = R.drawable.icon_pause_dating_audio,
-        audioTip: String = "点击试听活动语音描述"
+        audioTip: String = context.getString(R.string.click_play_audio_descr)
     ) {
         audioRecordLl.setBackgroundResource(bgResource)
         audioTime.setTextColor(textColor)
@@ -101,7 +101,7 @@ class MyDatingAudioView @JvmOverloads constructor(
             }
 
             override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
+                CommonFunction.toast(context.getString(R.string.audio_play_error))
 //                audioTime.text = UriUtils.getShowTime(duration)
                 UpdateVoiceTimeThread.getInstance(
                     UriUtils.getShowTime(duration),

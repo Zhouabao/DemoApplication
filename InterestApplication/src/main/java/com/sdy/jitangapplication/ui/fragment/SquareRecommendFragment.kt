@@ -100,8 +100,8 @@ class SquareRecommendFragment : BaseMvpFragment<RecommendSquarePresenter>(),
         //android 瀑布流
         adapter.setHeaderView(initHeadBannerView())
         adapter.setEmptyView(R.layout.empty_friend_layout, rvRecommendSquare)
-        adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
-        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+        adapter.emptyView.emptyFriendTitle.text = getString(R.string.nearby_empty_content)
+        adapter.emptyView.emptyFriendTip.text = getString(R.string.nearby_empty_content1)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.isUseEmpty(false)
 

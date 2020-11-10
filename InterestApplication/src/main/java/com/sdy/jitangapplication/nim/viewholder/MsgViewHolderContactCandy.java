@@ -36,7 +36,7 @@ public class MsgViewHolderContactCandy extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         attachment = (ContactCandyAttachment) message.getAttachment();
-        giftAmount.setText(attachment.getContactCandy() + "糖果");
+        giftAmount.setText(attachment.getContactCandy() + context.getString(R.string.candy));
     }
 
     @Override

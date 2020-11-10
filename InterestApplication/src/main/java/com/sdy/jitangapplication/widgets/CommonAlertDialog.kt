@@ -145,9 +145,9 @@ class CommonAlertDialog : Dialog {
             }
             dialog.ivDialogIcon?.isVisible = this.iconVisble
 
-            dialog.btDialogConfirm?.text = this.btConfirmText ?: "确认"
+            dialog.btDialogConfirm?.text = this.btConfirmText ?: context.getString(R.string.ok)
             if (this.cancelIsVisibility!!) {
-                dialog.tvDialogCancel?.text = this.tvCancelText ?: "取消"
+                dialog.tvDialogCancel?.text = this.tvCancelText ?: context.getString(R.string.cancel)
             } else {
                 dialog.tvDialogCancel?.visibility = View.GONE
                 dialog.viewDialog?.visibility = View.GONE

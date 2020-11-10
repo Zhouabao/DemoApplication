@@ -30,27 +30,27 @@ class SweetUploadNormalDialog(val context1: Context, val position: Int, val type
         when (type) {
             SweetHeartVerifyUploadActivity.TYPE_IDHAND -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_handid)
-                normalContent.text="上传清晰的手持身份证正面照片"
+                normalContent.text=context1.getString(R.string.upload_clear_face_id_pic)
             }
             SweetHeartVerifyUploadActivity.TYPE_IDFACE -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_faceid)
-                normalContent.text="上传清晰的身份证正面照片"
+                normalContent.text=context1.getString(R.string.upload_clear_front_pic)
             }
             SweetHeartVerifyUploadActivity.TYPE_CAR -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_drivingid)
-                normalContent.text="上传与身份证姓名一致的车辆行驶证\n要求车价大于50万"
+                normalContent.text=context1.getString(R.string.upload_driving_more_50)
             }
             SweetHeartVerifyUploadActivity.TYPE_WEALTH -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_houseid)
-                normalContent.text="上传与身份证姓名一致的房产证\n要求房产大于200平米"
+                normalContent.text=context1.getString(R.string.upload_house_licnese)
             }
             SweetHeartVerifyUploadActivity.TYPE_FIGURE -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_chest)
-                normalContent.text="上传的测量图片能清晰看到卷尺标"
+                normalContent.text=context1.getString(R.string.upload_see_size)
             }
             SweetHeartVerifyUploadActivity.TYPE_PROFESSION -> {
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_workid)
-                normalContent.text="上传与身份证姓名一致的工作证明信息"
+                normalContent.text=context1.getString(R.string.upload_see_job)
             }
         }
 

@@ -33,7 +33,7 @@ class MyCommentAdapter : BaseQuickAdapter<MyCommentBean, BaseViewHolder>(R.layou
                 .setBold()
                 .append(
                     "${if (item.reply_content.isNullOrEmpty()) {
-                        "「媒体内容」"
+                        mContext.getString(R.string.media_content)
                     } else {
                         item.reply_content
                     }}"

@@ -52,12 +52,12 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
         when (v.id) {
             R.id.nextStep -> {
                 if (vpRelationship.currentItem == 0 && getRelationshipVpAdapter.channel_string.isNullOrEmpty()) {
-                    CommonFunction.toast("请先填写了解的渠道奥")
+                    CommonFunction.toast(getString(R.string.input_knoe_channel))
                     return
                 }
 
                 if (vpRelationship.currentItem != 0 && (getRelationshipVpAdapter.checkList.isNullOrEmpty() || getRelationshipVpAdapter.checkList[currentPos] == -1)) {
-                    CommonFunction.toast("请先勾选相应项")
+                    CommonFunction.toast(getString(R.string.check_option))
                     return
                 }
                 when (currentPos) {
@@ -148,7 +148,7 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
     override fun onGetMyTaps(data: MutableList<MyTapsBean>) {
         getRelationshipVpAdapter.addData(
             MyTapsBean(
-                title = "首先，您在哪里得知的积糖呢",
+                title = getString(R.string.where_did_you_know),
                 type = MyTapsBean.TYPE_INVESTIGATION,
                 use_cnt = data[0].use_cnt
             )

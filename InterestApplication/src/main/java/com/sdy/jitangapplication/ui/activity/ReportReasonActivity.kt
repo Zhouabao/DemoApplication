@@ -72,8 +72,8 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "举报理由"
-        reportUserName.text = "请选择对「${intent.getStringExtra("nickname")}」的举报理由 "
+        hotT1.text = getString(R.string.report_reason)
+        reportUserName.text = getString(R.string.please_choose, intent.getStringExtra("nickname"))
         reportConfirm.setOnClickListener(this)
 
 
@@ -129,7 +129,12 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                                if (!PermissionUtils.isGranted(
+                                        *PermissionConstants.getPermissions(
+                                            PermissionConstants.STORAGE
+                                        )
+                                    )
+                                )
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {
@@ -141,7 +146,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                                             }
 
                                             override fun onDenied() {
-                                                CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                                CommonFunction.toast(getString(R.string.permission_storage))
                                             }
 
                                         })
@@ -149,7 +154,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                             }
 
                             override fun onDenied() {
-                                CommonFunction.toast("相机权限被拒,请允许权限后再上传照片.")
+                                CommonFunction.toast(getString(R.string.permission_camera))
                             }
                         })
                         .request()
