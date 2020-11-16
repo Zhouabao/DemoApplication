@@ -213,7 +213,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
-    private val poiCode = getString(R.string.poi_name)
+    private val poiCode by lazy { getString(R.string.poi_name) }
 
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
@@ -322,7 +322,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         if (rCode == 1000) {
             if (result != null && result.query != null) {
                 adapter.setNewData(result.pois)
-                adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), ""))
+                if (!adapter.data.contains( PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), "")))
+                     adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), ""))
                 rightBtn1.isEnabled = true
 
                 if (adapter.data.size > 1) {
