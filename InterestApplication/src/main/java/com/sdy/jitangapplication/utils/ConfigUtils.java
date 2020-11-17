@@ -71,13 +71,13 @@ public class ConfigUtils {
                 .setDialogDimAmount(0f)
                 .setNavReturnImgPath(returnBg)
                 .setNavReturnImgHidden(true)
-                .setFullScreen(true)
-                .setStatusBarHidden(true)
+                .setFullScreen(false)
+                .setStatusBarHidden(false)
 
 
                 //授权页号码栏：
-                .setNumberColor(Color.WHITE)  //设置手机号码字体颜色
-                .setNumFieldOffsetBottomY(409)    //设置号码栏相对于标题栏下边缘y偏移
+                .setNumberColor(Color.parseColor("#FF191919"))  //设置手机号码字体颜色
+                .setNumFieldOffsetY(76)
                 .setNumberSize(26)
                 .setNumberBold(true)
                 .setNumFieldHeight(40)
@@ -89,14 +89,14 @@ public class ConfigUtils {
                 .setLogBtnImgPath(logBtnImgPath)   //设置登录按钮图片
                 .setLogBtnTextSize(18)
                 .setLogBtnTextBold(true)
+                .setLogBtnOffsetY(173)
                 .setLogBtnHeight(54)
-                .setLogBtnOffsetBottomY(295)
                 .setLogBtnWidth(298)
 
                 //授权页隐私栏：
                 .setAppPrivacyOne(context.getResources().getString(R.string.user_protocol), BaseConstant.SERVER_ADDRESS + "protocol/userProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
                 .setAppPrivacyTwo(context.getResources().getString(R.string.privacy_protocol), BaseConstant.SERVER_ADDRESS + "protocol/privacyProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
-                .setAppPrivacyColor(Color.parseColor("#ffffff"), Color.parseColor("#FF6796FA"))    //	设置隐私条款名称颜色(基础文字颜色，协议文字颜色)
+                .setAppPrivacyColor(Color.BLACK, Color.parseColor("#FF6796FA"))    //	设置隐私条款名称颜色(基础文字颜色，协议文字颜色)
                 .setPrivacyText(context.getString(R.string.login_presents_you_agree), context.getString(R.string.and1), context.getString(R.string.and2), "、", "")
                 .setPrivacyOffsetBottomY(10)//设置隐私条款相对于屏幕下边缘y偏
                 .setPrivacyState(true)
@@ -108,12 +108,11 @@ public class ConfigUtils {
                 .setPrivacyState(true)
 
                 .setSloganHidden(false)
-                .setSloganOffsetBottomY(263)
-                .setSloganTextColor(Color.WHITE)
+                .setSloganOffsetY(242)
+                .setSloganTextColor(Color.parseColor("#FFB5B7B9"))
                 .setSloganTextSize(12)
 
                 .setShanYanSloganHidden(true)
-                .setShanYanSloganTextColor(Color.parseColor("#ffffff"))
 
 //                 .addCustomView(numberLayout, false, false, null)
 

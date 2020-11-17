@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_margin="10dp"
+    android:paddingBottom="20dp"
+    android:background="@drawable/rectangle_white_15dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/join_sugartown"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/create_profile_start_date"
+        android:textColor="#ffb5b7b9"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t1" />
+
+
+    <TextView
+        android:id="@+id/loginWithPhoneBtn"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:gravity="center"
+        android:text="@string/login_with_phone"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/icon_login_way_phone"
+        app:layout_constraintBottom_toBottomOf="@id/loginWithPhoneBtn"
+        app:layout_constraintLeft_toLeftOf="@id/loginWithPhoneBtn"
+        app:layout_constraintTop_toTopOf="@id/loginWithPhoneBtn" />
+
+
+    <TextView
+        android:id="@+id/loginWithWechatBtn"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:gravity="center"
+        android:text="@string/login_with_wechat"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginWithPhoneBtn" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/icon_login_way_wechat"
+        app:layout_constraintBottom_toBottomOf="@id/loginWithWechatBtn"
+        app:layout_constraintLeft_toLeftOf="@id/loginWithWechatBtn"
+        app:layout_constraintTop_toTopOf="@id/loginWithWechatBtn" />
+
+
+
+    <TextView
+        android:id="@+id/loginWithFacebookBtn"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:gravity="center"
+        android:text="@string/continue_with_facebook"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginWithWechatBtn" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/icon_login_way_facebook"
+        app:layout_constraintBottom_toBottomOf="@id/loginWithFacebookBtn"
+        app:layout_constraintLeft_toLeftOf="@id/loginWithFacebookBtn"
+        app:layout_constraintTop_toTopOf="@id/loginWithFacebookBtn" />
+
+
+
+    <TextView
+        android:id="@+id/loginWithTwitterBtn"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:gravity="center"
+        android:text="@string/continue_with_twitter"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginWithFacebookBtn" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/icon_login_way_twitter"
+        app:layout_constraintBottom_toBottomOf="@id/loginWithTwitterBtn"
+        app:layout_constraintLeft_toLeftOf="@id/loginWithTwitterBtn"
+        app:layout_constraintTop_toTopOf="@id/loginWithTwitterBtn" />
+
+
+
+    <TextView
+        android:id="@+id/loginWithGoogleBtn"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:gravity="center"
+        android:text="@string/continue_with_google"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginWithTwitterBtn" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/icon_login_with_google"
+        app:layout_constraintBottom_toBottomOf="@id/loginWithGoogleBtn"
+        app:layout_constraintLeft_toLeftOf="@id/loginWithGoogleBtn"
+        app:layout_constraintTop_toTopOf="@id/loginWithGoogleBtn" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

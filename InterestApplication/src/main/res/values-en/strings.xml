@@ -1174,4 +1174,19 @@
     <string name="message_type_custom">自定义消息</string>
 
 
+    <string name="chat_detail">聊天详情</string>
+    <string name="do_star_friend">星标好友</string>
+    <string name="msg_disturb">消息免打扰</string>
+    <string name="find_history">查找聊天记录</string>
+    <string name="clear_history">清空聊天记录</string>
+    <string name="reported">投诉举报</string>
+    <string name="join_sugartown">加入积糖</string>
+    <string name="create_profile_start_date">创建个人资料，开始你的约会</string>
+    <string name="login_with_phone">User Phone Number</string>
+    <string name="login_with_wechat">微信</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_twitter">Continue with Twitter</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+
 </resources>

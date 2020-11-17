@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="60dp"
             android:src="@drawable/icon_logo_login"
-            app:layout_constraintBottom_toTopOf="@id/phoneLoginBtn"
+            app:layout_constraintBottom_toTopOf="@id/onekeyLoginBtn"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -37,34 +37,14 @@
             android:id="@+id/onekeyLoginBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/icon_login_btn_onekey"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/touristBtn"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <ImageView
-            android:id="@+id/phoneLoginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:src="@drawable/icon_login_btn_phone"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/wechatLoginBtn"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <ImageView
-            android:id="@+id/wechatLoginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:src="@drawable/icon_login_with_wechat"
-            android:visibility="invisible"
+            android:src="@drawable/icon_login_btn_onekey"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/touristBtn"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+
 
 
         <TextView
@@ -89,7 +69,7 @@
             android:layout_height="20dp"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">

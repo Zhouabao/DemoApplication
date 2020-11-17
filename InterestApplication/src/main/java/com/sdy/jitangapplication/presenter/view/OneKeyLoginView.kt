@@ -5,6 +5,9 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 
-interface LoginView : BaseView {
-    fun onGetRegisterProcessType(data: RegisterFileBean?)
+interface OneKeyLoginView : BaseView {
+
+    fun onConfirmVerifyCode(data: LoginBean?, b: Boolean)
+    fun onIMLoginResult(param: LoginInfo?, b: Boolean)
+
 }

@@ -45,11 +45,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.clearTask
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles by lazy { arrayOf(getString(R.string.tab_heart), getString(R.string.tab_find), getString(
-        R.string.tab_dating), getString(R.string.tab_message), getString(R.string.tab_mine)) }
+    private val titles by lazy {
+        arrayOf(
+            getString(R.string.tab_heart), getString(R.string.tab_find), getString(
+                R.string.tab_dating
+            ), getString(R.string.tab_message), getString(R.string.tab_mine)
+        )
+    }
 
     companion object {
         const val REQUEST_LABEL_CODE = 2000
@@ -59,8 +68,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         const val POSITION_MESSAGE = 3
         const val POSITION_MINE = 4
 
-        fun start(context: Context, intent: Intent) {
-            context.startActivity(intent.setClass(context, MainActivity::class.java))
+        fun start(context: Context, clearTop: Boolean = true) {
+            if (clearTop)
+                context.startActivity(context.intentFor<MainActivity>().clearTask().newTask())
+            else
+                context.startActivity<MainActivity>()
         }
     }
 

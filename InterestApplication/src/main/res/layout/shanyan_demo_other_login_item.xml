@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="其他方式登录"
-            android:textColor="#ffffffff" />
+            android:textColor="#FFB5B7B9" />
 
         <View
             android:layout_width="51dp"

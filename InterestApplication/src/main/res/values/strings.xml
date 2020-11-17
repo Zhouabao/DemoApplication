@@ -946,7 +946,7 @@
     <string name="you_have_published_toady">你今天已经发布过活动了，为了活动的有效性请明日再试，我们会为你保留最新发布的活动信息</string>
     <string name="tourist_title">你目前是游客</string>
     <string name="register_now">立即注册登录</string>
-    <string name="register_in">此为注册用户功能\n加入积糖，与 %d 位糖宝达成联系</string>
+    <string name="register_in">此为注册用户功能\n加入积糖，与 $s%d 位糖宝达成联系</string>
     <string name="share_qq_zone">QQ空间</string>
     <string name="upload_clear_pic">上传清晰的本人照片作为头像会极大提高匹配率</string>
     <string name="take_picture">拍摄</string>
@@ -1119,9 +1119,9 @@
     <string name="gift_wall_title">礼物墙</string>
     <string name="min_record_time">录制时间不可小于5S</string>
     <string name="one_key_login">本机号码一键登录</string>
-    <string name="login_presents_you_agree">登录注册代表你已同意</string>
-    <string name="and1">和</string>
-    <string name="and2">\" 以及 \"</string>
+    <string name="login_presents_you_agree">登录注册代表你已同意 </string>
+    <string name="and1"> 和 </string>
+    <string name="and2"> 以及 </string>
     <string name="cannot_cause_duration_short">视频长不足 %1$d 秒,无法上传</string>
     <string name="alreadey_choose">\"已选取 \"</string>
     <string name="hour">时</string>
@@ -1172,12 +1172,21 @@
     <string name="message_type_notification">通知提醒</string>
     <string name="message_type_robot">机器人消息</string>
     <string name="message_type_custom">自定义消息</string>
+
+
     <string name="chat_detail">聊天详情</string>
     <string name="do_star_friend">星标好友</string>
     <string name="msg_disturb">消息免打扰</string>
     <string name="find_history">查找聊天记录</string>
     <string name="clear_history">清空聊天记录</string>
     <string name="reported">投诉举报</string>
+    <string name="join_sugartown">加入积糖</string>
+    <string name="create_profile_start_date">创建个人资料，开始你的约会</string>
+    <string name="login_with_phone">手机号</string>
+    <string name="login_with_wechat">微信</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_twitter">Continue with Twitter</string>
+    <string name="continue_with_google">Continue with Google</string>
 
 
 </resources>

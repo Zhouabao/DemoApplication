@@ -1,73 +1,50 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.app.Activity
-import android.app.Application
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.NetworkUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-import com.chuanglan.shanyan_sdk.view.CmccLoginActivity
-import com.chuanglan.shanyan_sdk.view.ShanYanOneKeyActivity
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.CommonFunction.wechatLogin
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
+import com.sdy.jitangapplication.ui.dialog.ChooseLoginWayDialog
 import com.sdy.jitangapplication.utils.AbScreenUtils
-import com.sdy.jitangapplication.utils.ConfigUtils
-import com.sdy.jitangapplication.utils.ForebackUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
-import org.json.JSONObject
 import java.lang.ref.WeakReference
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener {
-
     private var syCode = 0
 
     companion object {
         public var weakrefrece: WeakReference<LoginActivity>? = null
     }
 
-    private val listener by lazy {
-        object : ForebackUtils.Listener {
-            override fun onApplicationEnterForeground(activity: Activity?) {
-                if (activity is LoginActivity || activity is ShanYanOneKeyActivity || activity is CmccLoginActivity) {
-                    AbScreenUtils.hideBottomUIMenu(activity)
-                }
-            }
-
-            override fun onApplicationEnterBackground(activity: Activity?) {
-                if (activity is LoginActivity || activity is ShanYanOneKeyActivity || activity is CmccLoginActivity)
-                    AbScreenUtils.hideBottomUIMenu(activity)
-            }
-
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         syCode = intent.getIntExtra("syCode", 0)
-//        BarUtils.setStatusBarLightMode(this,true)
+//        BarUtils.setStatusBarLightMode(this, true)
 //        ScreenUtils.setFullScreen(this)
+        AbScreenUtils.hideBottomUIMenu(this)
         initView()
         showVideoPreview()
         mPresenter.getRegisterProcessType()
@@ -75,53 +52,24 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     private fun initView() {
         weakrefrece = WeakReference(this)
-
         mPresenter = LoginPresenter()
         mPresenter.context = this
         mPresenter.mView = this
-        setSwipeBackEnable(false)
 
-        ForebackUtils.init(application.applicationContext as Application)
-        ForebackUtils.unregisterListener(listener)
-        ForebackUtils.registerListener(listener)
-        AbScreenUtils.hideBottomUIMenu(this)
 
-        loginCl.isVisible = !isOpenAuth
-        //闪验预取号code为1022即为成功
+        //闪验预取号code为1022即为成功,失败了则再次获取，确保准确
         if (syCode == 0) {
             OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
                 syCode = p0
-                if (p0 == 1022) {
-                    onekeyLoginBtn.isVisible = true
-                    phoneLoginBtn.isInvisible = true
-                    wechatLoginBtn.isInvisible = true
-                    t2.isVisible = false
-                } else {
-                    onekeyLoginBtn.isVisible = false
-                    phoneLoginBtn.isVisible = true
-                    wechatLoginBtn.isVisible = true
-                    t2.isVisible = true
-                }
-            }
-        } else {
-            if (syCode == 1022) {
-                onekeyLoginBtn.isVisible = true
-                phoneLoginBtn.isInvisible = true
-                wechatLoginBtn.isInvisible = true
-                t2.isVisible = false
-            } else {
-                onekeyLoginBtn.isVisible = false
-                phoneLoginBtn.isVisible = true
-                wechatLoginBtn.isVisible = true
-                t2.isVisible = true
             }
         }
 
-
-//        StatusBarUtil.immersive(this)
-
-        userAgreement.text = SpanUtils.with(userAgreement).append(resources.getString(R.string.user_protocol)).setUnderline().create()
-        privacyPolicy.text = SpanUtils.with(privacyPolicy).append(resources.getString(R.string.privacy_protocol)).setUnderline().create()
+        userAgreement.text =
+            SpanUtils.with(userAgreement).append(resources.getString(R.string.user_protocol))
+                .setUnderline().create()
+        privacyPolicy.text =
+            SpanUtils.with(privacyPolicy).append(resources.getString(R.string.privacy_protocol))
+                .setUnderline().create()
 
         //判断是否有登录
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
@@ -142,11 +90,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 CommonFunction.toast(resources.getString(R.string.open_internet))
                 return@clickWithTrigger
             }
-
-            OneKeyLoginManager.getInstance()
-                .setAuthThemeConfig(ConfigUtils.getCJSConfig(applicationContext))
-            openLoginActivity()
-            // CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
+            ChooseLoginWayDialog(this, syCode).show()
         }
 
         //隐私协议
@@ -168,81 +112,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             }, 1000L)
 
         }
-
-        //电话号码登录
-        phoneLoginBtn.clickWithTrigger {
-            startActivity<PhoneActivity>("type" to "1")
-        }
-        //微信登录
-        wechatLoginBtn.clickWithTrigger {
-            wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
-        }
-
-
-    }
-
-    private var isOpenAuth = false
-    private fun openLoginActivity() {
-        //拉起授权页方法
-        OneKeyLoginManager.getInstance().openLoginAuth(false,
-            //getOpenLoginAuthStatus
-            { code, result ->
-                when (code) {
-                    1000 -> {
-                        isOpenAuth = true
-                        val animation =
-                            AnimationUtils.loadAnimation(this, R.anim.shanyan_dmeo_fade_out_anim)
-                        loginCl.startAnimation(animation)
-                        loginCl.isVisible = false
-                        //拉起授权页成功
-                        Log.e(
-                            "VVV",
-                            "拉起授权页成功： _code==$code   _result==$result"
-                        )
-                    }
-                    else -> {
-                        //拉起授权页失败
-                        startActivity<PhoneActivity>("type" to "1")
-                        Log.e(
-                            "VVV",
-                            "拉起授权页失败： _code==$code   _result==$result"
-                        )
-                    }
-
-                }
-
-            },
-            //OneKeyLoginListener
-            { code, result ->
-                touristBtn.isEnabled = true
-                when (code) {
-                    1011 -> {//点击返回，用户取消免密登录
-                        val animation = AnimationUtils.loadAnimation(
-                            this,
-                            R.anim.shanyan_demo_fade_in_anim
-                        )
-                        loginCl.startAnimation(animation)
-                        loginCl.isVisible = true
-
-                        isOpenAuth = false
-
-                    }
-                    1000 -> {//一键登录成功，解析result，可得到网络请求参数
-                        Log.e("VVV", "用户点击登录获取token成功： _code==$code   _result==$result")
-                        mPresenter.checkVerifyCode(
-                            JSONObject(result).optString("token"),
-                            "${VerifyCodeActivity.TYPE_LOGIN_SY}"
-                        )
-
-                    }
-                    else -> {
-                        Log.e("VVV", "用户点击登录获取token失败： _code==$code   _result==$result")
-                    }
-                }
-
-            })
-
-
     }
 
 
@@ -273,16 +142,12 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         super.onResume()
         if (!videoPreview.isPlaying)
             videoPreview.start()
-        AbScreenUtils.hideBottomUIMenu(this)
-//        videoPreview.resume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         UMShareAPI.get(this).release()
         videoPreview.stopPlayback()
-        ForebackUtils.unregisterListener(listener)
-
     }
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
@@ -301,30 +166,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     }
 
-    private var data: LoginBean? = null
-    override fun onConfirmVerifyCode(data: LoginBean?, b: Boolean) {
-        if (b) {
-            this.data = data
-            mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
-        } else {
-            isOpenAuth = false
-            OneKeyLoginManager.getInstance().setLoadingVisibility(false)
-        }
-    }
-
-
-    override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
-        if (success) {
-            UserManager.startToPersonalInfoActivity(this, nothing, data)
-            OneKeyLoginManager.getInstance().finishAuthActivity()
-            OneKeyLoginManager.getInstance().removeAllListener()
-            isOpenAuth = true
-        } else {
-            CommonFunction.toast(resources.getString(R.string.login_error))
-            isOpenAuth = false
-            OneKeyLoginManager.getInstance().setLoadingVisibility(false)
-        }
-    }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         Log.d("what", "$what,$extra")
