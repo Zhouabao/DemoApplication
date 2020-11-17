@@ -690,7 +690,7 @@ object UserManager {
                 //跳到主页
                 //保存个人信息
                 saveUserInfo(data)
-                MainActivity.start(context)
+                context.startActivity<MainActivity>()
             }
         } else if (data.userinfo.gender == 2) {//女生流程：性别、填写个人信息、活体、更多配对、更多关系、充值VIP、落地
             data.userinfo.gender?.let { saveGender(it) }

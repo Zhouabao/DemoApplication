@@ -68,6 +68,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         const val POSITION_MESSAGE = 3
         const val POSITION_MINE = 4
 
+        fun start(context: Context, intent: Intent) {
+            context.startActivity(intent.setClass(context, MainActivity::class.java))
+        }
+
         fun start(context: Context, clearTop: Boolean = true) {
             if (clearTop)
                 context.startActivity(context.intentFor<MainActivity>().clearTask().newTask())
