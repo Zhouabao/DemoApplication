@@ -36,7 +36,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+//implementation('com.android.support:appcompat-v7:28.0.0') {
+//            exclude module: 'support-v4'
+//        }
     implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -130,20 +132,27 @@ dependencies {
     //statusBar
 //    api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
+
     //友盟统计
-    api 'com.umeng.umsdk:analytics:8.1.4'
-    //友盟基础组件库
-    api 'com.umeng.umsdk:common:2.0.0'
+    api 'com.umeng.umsdk:common:9.3.0'
+    api 'com.umeng.umsdk:asms:1.1.3' // asms包依赖(必选)
+    api 'com.umeng.umsdk:crash:0.0.5' // native crash包依赖(必选)
+    //OAID目前为目前国内市场主流的Android Q设备标识。目前主流厂商（华为、oppo、vivo、联想、小米）均已在新版本系统中支持该标识的获取，具有权威性。您可根据需求选择接入（华为已默认接入无需额外添加jar包）
+    api 'com.umeng.umsdk:oaid_lenovo:1.0.0' // (可选)
+    api 'com.umeng.umsdk:oaid_mi:1.0.0' // (可选)
+    api 'com.umeng.umsdk:oaid_oppo:1.0.4' // (可选)
+    api 'com.umeng.umsdk:oaid_vivo:1.0.0.1' // (可选)
+
     //PushSDK必须依赖utdid库，所以需要加入对应依赖
 //    api 'com.umeng.umsdk:utdid:1.1.5.3'
     //分享核心库依赖：
-    api 'com.umeng.umsdk:share-core:6.9.8'
-    api 'com.umeng.umsdk:share-board:6.9.8'
-    //分享平台模块
-    api 'com.umeng.umsdk:share-qq:6.9.8'
-    api 'com.umeng.umsdk:share-wx:6.9.8'
-    api 'com.umeng.umsdk:share-sina:6.9.8'
+    api 'com.umeng.umsdk:share-core:7.1.2'
+    api 'com.umeng.umsdk:share-qq:7.1.2'
+    api 'com.umeng.umsdk:share-wx:7.1.2'
+    api 'com.umeng.umsdk:share-sina:7.1.2'
     api 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
+//    api 'com.twitter.sdk.android:twitter-core:3.1.1'
+//    api 'com.twitter.sdk.android:tweet-composer:3.1.1'
 
     //多渠道打包
     api 'com.leon.channel:helper:2.0.3'

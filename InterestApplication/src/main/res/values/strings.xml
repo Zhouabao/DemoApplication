@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">积糖</string>
 
+    <string name="facebook_app_id">3546860392031186</string>
+    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
+
+
     <string name="service_error">服务器出错，请重试</string>
     <string name="retry_net_error">网络异常，点击重试</string>
     <string name="retry_load_error">加载失败，请稍后重试</string>
@@ -1175,7 +1179,7 @@
 
 
     <string name="chat_detail">聊天详情</string>
-    <string name="do_star_friend">星标好友</string>
+    <string name="do_star_friend">星标好友</string>s
     <string name="msg_disturb">消息免打扰</string>
     <string name="find_history">查找聊天记录</string>
     <string name="clear_history">清空聊天记录</string>
@@ -1187,6 +1191,11 @@
     <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="continue_with_twitter">Continue with Twitter</string>
     <string name="continue_with_google">Continue with Google</string>
+
+
+    <string name="install_face_book_first">请先安装facebook</string>
+    <string name="install_twitter_first">请先安装Twitter</string>
+    <string name="install_google_first">请先安装Google</string>
 
 
 </resources>

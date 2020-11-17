@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_margin="10dp"
-    android:paddingBottom="20dp"
     android:background="@drawable/rectangle_white_15dp"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="20dp">
 
 
     <TextView
@@ -89,7 +89,6 @@
         app:layout_constraintTop_toTopOf="@id/loginWithWechatBtn" />
 
 
-
     <TextView
         android:id="@+id/loginWithFacebookBtn"
         android:layout_width="0dp"
@@ -98,6 +97,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/shape_rectangle_gray_white_28dp"
+        android:elevation="0dp"
         android:gravity="center"
         android:text="@string/continue_with_facebook"
         android:textColor="#ff191919"
@@ -114,7 +114,6 @@
         app:layout_constraintBottom_toBottomOf="@id/loginWithFacebookBtn"
         app:layout_constraintLeft_toLeftOf="@id/loginWithFacebookBtn"
         app:layout_constraintTop_toTopOf="@id/loginWithFacebookBtn" />
-
 
 
     <TextView
@@ -143,7 +142,6 @@
         app:layout_constraintTop_toTopOf="@id/loginWithTwitterBtn" />
 
 
-
     <TextView
         android:id="@+id/loginWithGoogleBtn"
         android:layout_width="0dp"
@@ -168,7 +166,6 @@
         app:layout_constraintBottom_toBottomOf="@id/loginWithGoogleBtn"
         app:layout_constraintLeft_toLeftOf="@id/loginWithGoogleBtn"
         app:layout_constraintTop_toTopOf="@id/loginWithGoogleBtn" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

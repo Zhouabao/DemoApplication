@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.event
 
+
 /**
  *    author : ZFM
  *    date   : 2019/6/2516:30
@@ -8,4 +9,5 @@ package com.sdy.jitangapplication.event
  */
 
 class UpdateBlackEvent
+
 

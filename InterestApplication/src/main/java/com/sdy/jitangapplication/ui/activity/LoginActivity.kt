@@ -1,23 +1,25 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
+import com.huawei.hms.framework.common.PackageUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
@@ -28,6 +30,8 @@ import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import java.lang.ref.WeakReference
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
@@ -48,9 +52,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         initView()
         showVideoPreview()
         mPresenter.getRegisterProcessType()
+        getHash()
     }
 
     private fun initView() {
+//        EventBus.getDefault().register(this)
         weakrefrece = WeakReference(this)
         mPresenter = LoginPresenter()
         mPresenter.context = this
@@ -140,14 +146,16 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     override fun onResume() {
         super.onResume()
-        if (!videoPreview.isPlaying)
+        if (!videoPreview.isPlaying) {
             videoPreview.start()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        UMShareAPI.get(this).release()
+//        UMShareAPI.get(this).release()
         videoPreview.stopPlayback()
+//        EventBus.getDefault().unregister(this)
     }
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
@@ -170,6 +178,29 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         Log.d("what", "$what,$extra")
         return true
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
+    }
+
+
+    fun getHash() {
+        try {
+            val info: PackageInfo = packageManager.getPackageInfo(
+                AppUtils.getAppPackageName(),
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md: MessageDigest = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (e: NoSuchAlgorithmException) {
+        }
     }
 
 

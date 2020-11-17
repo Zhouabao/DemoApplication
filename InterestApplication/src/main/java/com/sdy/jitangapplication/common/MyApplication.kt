@@ -13,6 +13,8 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
+//import com.facebook.FacebookSdk
+//import com.facebook.appevents.AppEventsLogger
 import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
@@ -425,6 +427,9 @@ class MyApplication : BaseApplication() {
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
+
+            //twitter
+//            PlatformConfig.setTwitter("","")
 
 
         }
