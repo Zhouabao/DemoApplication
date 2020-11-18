@@ -27,7 +27,7 @@ class OneKeyLoginPresenter : BasePresenter<OneKeyLoginView>() {
     /**
      * 对比验证码是否正确，正确即登录
      */
-    fun checkVerifyCode(flash_token: String, type: String) {
+    fun checkVerifyCode(flash_token: String, type: Int) {
         if (!checkNetWork()) {
             return
         }

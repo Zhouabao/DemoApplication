@@ -95,7 +95,7 @@ class OnekeyLoginActivity : BaseMvpActivity<OneKeyLoginPresenter>(), OneKeyLogin
                         Log.e("VVV", "用户点击登录获取token成功： _code==$code   _result==$result")
                         mPresenter.checkVerifyCode(
                             JSONObject(result).optString("token"),
-                            "${VerifyCodeActivity.TYPE_LOGIN_SY}"
+                            VerifyCodeActivity.TYPE_LOGIN_SY
                         )
 
                     }

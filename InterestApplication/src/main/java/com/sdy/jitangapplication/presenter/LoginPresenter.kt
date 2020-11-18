@@ -16,11 +16,12 @@ import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.ui.activity.RegisterTooManyActivity
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
-import org.jetbrains.anko.startActivity
 
 class LoginPresenter : BasePresenter<LoginView>() {
+    val loading by lazy { LoadingDialog(context) }
 
     /**
      * 获取登录配置开关
@@ -35,5 +36,74 @@ class LoginPresenter : BasePresenter<LoginView>() {
                     mView.onGetRegisterProcessType(t.data)
                 }
             })
+    }
+
+
+    /**
+     * 对比验证码是否正确，正确即登录
+     */
+    fun checkVerifyCode(flash_token: String, type: Int) {
+        if (!checkNetWork()) {
+            return
+        }
+
+        val params = hashMapOf<String,Any>()
+        params["overseas_token"] = flash_token
+        params["type"] = type
+        params.putAll(UserManager.getLocationParams())
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .loginOrAlloc(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<LoginBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mView.onConfirmVerifyCode(t.data, true)
+                    } else if (t.code == 401) {
+                        RegisterTooManyActivity.start(t.data?.countdown_time ?: 0, context)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                        mView.onConfirmVerifyCode(t.data, false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.onConfirmVerifyCode(null, false)
+                    }
+
+                }
+            })
+    }
+
+
+    /**
+     * 登录IM
+     */
+    fun loginIM(info: LoginInfo) {
+        val callback = object : RequestCallback<LoginInfo> {
+            override fun onSuccess(param: LoginInfo) {
+                mView.onIMLoginResult(param, true)
+            }
+
+            override fun onFailed(code: Int) {
+                Log.d("OkHttp", "=====$code")
+                mView.onIMLoginResult(null, false)
+            }
+
+            override fun onException(exception: Throwable?) {
+                Log.d("OkHttp", exception.toString())
+            }
+
+        }
+        NimUIKit.login(info, callback)
+
     }
 }

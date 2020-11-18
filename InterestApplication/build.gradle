@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 apply plugin: 'channel'
 apply plugin: 'com.huawei.agconnect'
+apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
 
@@ -247,6 +248,13 @@ dependencies {
     implementation 'com.qhutch.bottomsheetlayout:bottomsheetlayout:0.1.9'
     implementation  'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.22'
 
+
+    //谷歌服务
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+//    implementation 'com.google.firebase:firebase-core:19.0.0'
 
 
 }

@@ -1,45 +1,50 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-import com.huawei.hms.framework.common.PackageUtils
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.ui.dialog.ChooseLoginWayDialog
 import com.sdy.jitangapplication.utils.AbScreenUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.umeng.socialize.UMAuthListener
 import com.umeng.socialize.UMShareAPI
+import com.umeng.socialize.bean.SHARE_MEDIA
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import java.lang.ref.WeakReference
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
-class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener {
+class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener,
+    UMAuthListener {
     private var syCode = 0
 
     companion object {
         public var weakrefrece: WeakReference<LoginActivity>? = null
+        const val RC_GOOGLE_SIGN_IN = 1100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +57,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         initView()
         showVideoPreview()
         mPresenter.getRegisterProcessType()
-        getHash()
     }
 
     private fun initView() {
@@ -174,6 +178,27 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     }
 
+    private var data: LoginBean? = null
+    override fun onConfirmVerifyCode(data: LoginBean?, b: Boolean) {
+        if (b) {
+            this.data = data
+            mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
+        } else {
+            OneKeyLoginManager.getInstance().setLoadingVisibility(false)
+        }
+    }
+
+
+    override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
+        if (success) {
+            UserManager.startToPersonalInfoActivity(this, nothing, data)
+            OneKeyLoginManager.getInstance().finishAuthActivity()
+            OneKeyLoginManager.getInstance().removeAllListener()
+        } else {
+            CommonFunction.toast(resources.getString(R.string.login_error))
+            OneKeyLoginManager.getInstance().setLoadingVisibility(false)
+        }
+    }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         Log.d("what", "$what,$extra")
@@ -184,24 +209,129 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
-    }
-
-
-    fun getHash() {
-        try {
-            val info: PackageInfo = packageManager.getPackageInfo(
-                AppUtils.getAppPackageName(),
-                PackageManager.GET_SIGNATURES
-            )
-            for (signature in info.signatures) {
-                val md: MessageDigest = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
+            try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                if (task != null && task.isSuccessful) {
+                    val account = task.getResult(ApiException::class.java)!!
+//                firebaseAuthWithGoogle(account.idToken!!)
+                    Log.e(
+                        "VVV",
+                        "google---${account},idToken = ${account.idToken},id = ${account.id}"
+                    )
+                    mPresenter.checkVerifyCode(
+                        account.idToken!!,
+                        VerifyCodeActivity.TYPE_LOGIN_GOOGLE
+                    )
+                    mPresenter.loading.dismiss()
+                }
+            } catch (e: ApiException) {
+                Log.e("VVV", "google error---${e}")
             }
-        } catch (e: PackageManager.NameNotFoundException) {
-        } catch (e: NoSuchAlgorithmException) {
         }
     }
 
+
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        // [START_EXCLUDE silent]
+        // [END_EXCLUDE]
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.e("VVV", "google success---${task.result}")
+                    val user = auth.currentUser!!
+                    Log.e(
+                        "VVV",
+                        "google success---${user.displayName},${user.photoUrl},${user.email},${user.isEmailVerified}，${user.getIdToken(
+                            true
+                        )}   user id = ${user.uid}"
+                    )
+                } else {
+                    Log.e("VVV", "google failure---")
+                }
+
+            }
+            .addOnFailureListener {
+                Log.e("VVV", "google addOnFailureListener --- $it")
+            }
+    }
+
+
+    /**
+     * 谷歌登录
+     */
+    fun googleLogin() {
+        //初始化gso
+        val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestId().requestProfile()
+            .requestIdToken(getString(R.string.server_client_id))
+            .build()
+        //初始化google登录实例，activity为当前activity
+        val googleSignInClient = GoogleSignIn.getClient(this, options)
+        val intent = googleSignInClient.signInIntent
+        startActivityForResult(intent, RC_GOOGLE_SIGN_IN)
+        mPresenter.loading.show()
+//        }
+    }
+
+
+    /**
+     * facebook登录 twitter登录（暂时没做）
+     * @param platform 三方登录平台
+     */
+    fun umengThirdLogin(platform: SHARE_MEDIA) {
+        if (!UMShareAPI.get(this).isInstall(this as Activity, platform)) {
+            when (platform) {
+                SHARE_MEDIA.FACEBOOK -> {
+                    CommonFunction.toast(this.getString(R.string.install_face_book_first))
+                }
+                SHARE_MEDIA.TWITTER -> {
+                    CommonFunction.toast(this.getString(R.string.install_twitter_first))
+                }
+            }
+            return
+        }
+
+        UMShareAPI.get(this).getPlatformInfo(this, platform, this)
+    }
+
+
+    /**
+     * @desc 授权成功的回调
+     * @param platform 平台名称
+     * @param action 行为序号，开发者用不上
+     * @param data 用户资料返回  {uid=123175219579566, iconurl=https://graph.facebook.com/123175219579566/picture?height=200&width=200&migration_overrides=%7Boctober_2012%3Atrue%7D,
+     * name=Tang JI, last_name=JI, expiration=Sat Jan 16 19:13:04 GMT+08:00 2021, id=123175219579566, middle_name=,
+     * accessToken=EAAyZA2cm8I9IBAMZA0zIsbPPZA5dYEZBdrxSuI6pyf5Q4bgoQFZBRAYfKByV1nI8ZCL0xNDGZAznzyJxZCZB6ZA9m9v88W4aaStlQAAuJVtN474SPWJz7HHbgTmZBrSzDmwOFz66QnDLc7vUZB6VaH4CcSr43mejCZCqtw0STlFvVzpmanae6pgksZBYH4cPPwZAeSbFEiw7jX1ZAvL5OVywt0WxKI0AZB71hy5YSEMYSNFikadb5TWS10EwsNjsD,
+     * first_name=Tang, profilePictureUri=https://graph.facebook.com/123175219579566/picture?height=200&width=200&migration_overrides=%7Boctober_2012%3Atrue%7D, linkUri=}
+     */
+    override fun onComplete(platform: SHARE_MEDIA, action: Int, data: MutableMap<String, String>) {
+        Log.e("VVV", "onComplete===$platform,$action,$data")
+        if (platform == SHARE_MEDIA.FACEBOOK && data["accessToken"] != null) {
+            mPresenter.checkVerifyCode(
+                "${data["accessToken"]}",
+                VerifyCodeActivity.TYPE_LOGIN_FACEBOOK
+            )
+        }
+    }
+
+    override fun onCancel(p0: SHARE_MEDIA, p1: Int) {
+        Log.e("VVV", "onCancel===$p0,$p1")
+
+    }
+
+    override fun onError(p0: SHARE_MEDIA, p1: Int, p2: Throwable) {
+        Log.e("VVV", "onError===$p0,$p1,$p2")
+
+    }
+
+    override fun onStart(p0: SHARE_MEDIA) {
+        Log.e("VVV", "onStart===$p0")
+
+    }
 
 }

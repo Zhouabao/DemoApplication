@@ -40,6 +40,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         const val TYPE_LOGIN_OFF = 2//注销
         const val TYPE_LOGIN_WECHAT = 3//微信登录
         const val TYPE_LOGIN_SY = 4//闪验登录
+        const val TYPE_LOGIN_GOOGLE = 6//GOOGLE登录
+        const val TYPE_LOGIN_FACEBOOK = 7//FACEBOOK登录
+        const val TYPE_LOGIN_TWITTER = 8//TWITTER
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

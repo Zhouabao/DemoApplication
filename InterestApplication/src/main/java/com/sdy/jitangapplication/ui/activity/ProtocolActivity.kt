@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_protocol.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
- * 用户隐私政策  https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json   1
- * 用户协议 https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json   2
+ * 用户隐私政策  https://ppsns.duluduludala.com/ppsns//protocol/privacyProtocol/v1.json   1
+ * 用户协议 https://ppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json   2
  * 防骗子 /ppsns/protocol/bewareFraud/v1.json
  * 防骗子 /ppsns/protocol/candyHelp/v1.json
  */

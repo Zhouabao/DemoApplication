@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "325834510992",
+    "firebase_url": "https://sugar-town-1605615640985.firebaseio.com",
+    "project_id": "sugar-town-1605615640985",
+    "storage_bucket": "sugar-town-1605615640985.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325834510992:android:e8ea26f3a4257f48413e15",
+        "android_client_info": {
+          "package_name": "com.sdy.jitangapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325834510992-tainpp0lkfm8le7hpff1lksoqhe4bjtm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sdy.jitangapplication",
+            "certificate_hash": "9f3699ae3db8382139726d19728b982fdb98b1d4"
+          }
+        },
+        {
+          "client_id": "325834510992-k6g9s9tkvnhvqpedasbc9o756vpc5se1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAPU5SjWQwgc4kEq7LQ8ibVxjD5aLEVOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325834510992-k6g9s9tkvnhvqpedasbc9o756vpc5se1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

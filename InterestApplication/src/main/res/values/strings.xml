@@ -3,6 +3,8 @@
 
     <string name="facebook_app_id">3546860392031186</string>
     <string name="fb_login_protocol_scheme">fb3546860392031186</string>
+<!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
+    <string name="server_client_id">325834510992-k6g9s9tkvnhvqpedasbc9o756vpc5se1.apps.googleusercontent.com</string>
 
 
     <string name="service_error">服务器出错，请重试</string>
