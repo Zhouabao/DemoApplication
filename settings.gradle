@@ -1,1 +1,2 @@
-include ':InterestApplication', ':BaseLibrary', 'SwipeBackLibrary', ':faceplatform', ':faceplatform-ui'
+include ':faceplatform-release'
+include ':InterestApplication', ':BaseLibrary', ':faceplatform-ui'

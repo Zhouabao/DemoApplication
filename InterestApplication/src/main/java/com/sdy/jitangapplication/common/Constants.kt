@@ -53,7 +53,7 @@ object Constants {
     //    // license为调用sdk的人脸检测功能使用，人脸识别 = 人脸检测（sdk功能）  + 人脸比对（服务端api）
     var apiKey = "FCcKnV8g5FeocjHFrdbQsB58"
     var secretKey = "xtPYk95nmUFR48GVDzCxFZW8qMI6MnBs"
-    var licenseID = "jitangapplication-face-android"
+    var licenseID = "jitang-new-face-android"
     var licenseFileName = "idl-license.face-android"
 
 

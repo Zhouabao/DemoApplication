@@ -15,8 +15,8 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Surface;
@@ -26,16 +26,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.aip.face.stat.Ast;
 import com.baidu.idl.face.platform.FaceConfig;
 import com.baidu.idl.face.platform.FaceSDKManager;
-import com.baidu.idl.face.platform.FaceStatusEnum;
+import com.baidu.idl.face.platform.FaceStatusNewEnum;
 import com.baidu.idl.face.platform.ILivenessStrategy;
 import com.baidu.idl.face.platform.ILivenessStrategyCallback;
+import com.baidu.idl.face.platform.ILivenessViewCallback;
+import com.baidu.idl.face.platform.LivenessTypeEnum;
+import com.baidu.idl.face.platform.model.ImageInfo;
+import com.baidu.idl.face.platform.ui.utils.BrightnessUtils;
 import com.baidu.idl.face.platform.ui.utils.CameraUtils;
 import com.baidu.idl.face.platform.ui.utils.VolumeUtils;
 import com.baidu.idl.face.platform.ui.widget.FaceDetectRoundView;
@@ -43,9 +45,12 @@ import com.baidu.idl.face.platform.utils.APIUtils;
 import com.baidu.idl.face.platform.utils.Base64Utils;
 import com.baidu.idl.face.platform.utils.CameraPreviewUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 活体检测接口
@@ -55,22 +60,29 @@ public class FaceLivenessActivity extends Activity implements
         Camera.PreviewCallback,
         Camera.ErrorCallback,
         VolumeUtils.VolumeCallback,
-        ILivenessStrategyCallback {
+        ILivenessStrategyCallback,
+        ILivenessViewCallback {
 
     public static final String TAG = FaceLivenessActivity.class.getSimpleName();
+
+
+
+    protected TextView faceContentWhy;
+    protected TextView startFaceBtn;
+    protected TextView faceType;
+    protected TextView faceNotice;
+    protected ImageView faceCoverIv;
+    protected RelativeLayout faceBeginRl;
+
+
 
     // View
     protected View mRootView;
     protected FrameLayout mFrameLayout;
     protected SurfaceView mSurfaceView;
     protected SurfaceHolder mSurfaceHolder;
-    protected ImageView mCloseView;
-    protected ImageView mSoundView;
-    protected ImageView mSuccessView;
-    protected TextView mTipsTopView;
-    protected TextView mTipsBottomView;
     protected FaceDetectRoundView mFaceDetectRoundView;
-    protected LinearLayout mImageLayout;
+    private ImageView mImageAnim;
     // 人脸信息
     protected FaceConfig mFaceConfig;
     protected ILivenessStrategy mILivenessStrategy;
@@ -83,7 +95,6 @@ public class FaceLivenessActivity extends Activity implements
     protected Drawable mTipsIcon;
     // 状态标识
     protected volatile boolean mIsEnableSound = true;
-    protected HashMap<String, String> mBase64ImageMap = new HashMap<String, String>();
     protected boolean mIsCreateSurface = false;
     protected boolean mIsCompletion = false;
     // 相机
@@ -96,11 +107,17 @@ public class FaceLivenessActivity extends Activity implements
     // 监听系统音量广播
     protected BroadcastReceiver mVolumeReceiver;
 
+    public String mBmpStr;
+    private Context mContext;
+    private LivenessTypeEnum mLivenessType = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setScreenBright();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_face_liveness_v3100);
+        mContext = FaceLivenessActivity.this;
         DisplayMetrics dm = new DisplayMetrics();
         Display display = this.getWindowManager().getDefaultDisplay();
         display.getMetrics(dm);
@@ -112,10 +129,19 @@ public class FaceLivenessActivity extends Activity implements
 
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int vol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mIsEnableSound = vol > 0 ? mFaceConfig.isSound : false;
+        mIsEnableSound = vol > 0 ? mFaceConfig.isSound() : false;
 
         mRootView = this.findViewById(R.id.liveness_root_layout);
         mFrameLayout = (FrameLayout) mRootView.findViewById(R.id.liveness_surface_layout);
+
+        faceContentWhy = mRootView.findViewById(R.id.faceContent);
+        startFaceBtn = mRootView.findViewById(R.id.startFaceBtn);
+        faceCoverIv = mRootView.findViewById(R.id.faceCoverIv);
+        faceType = mRootView.findViewById(R.id.faceType);
+        faceNotice = mRootView.findViewById(R.id.faceNotice);
+        faceBeginRl = mRootView.findViewById(R.id.faceBeginRl);
+
+
 
         mSurfaceView = new SurfaceView(this);
         mSurfaceHolder = mSurfaceView.getHolder();
@@ -133,37 +159,18 @@ public class FaceLivenessActivity extends Activity implements
         mSurfaceView.setLayoutParams(cameraFL);
         mFrameLayout.addView(mSurfaceView);
 
-        mRootView.findViewById(R.id.liveness_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         mFaceDetectRoundView = (FaceDetectRoundView) mRootView.findViewById(R.id.liveness_face_round);
-        mCloseView = (ImageView) mRootView.findViewById(R.id.liveness_close);
-        mSoundView = (ImageView) mRootView.findViewById(R.id.liveness_sound);
-        mSoundView.setImageResource(mIsEnableSound ?
-                R.mipmap.ic_enable_sound_ext : R.mipmap.ic_disable_sound_ext);
-        mSoundView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIsEnableSound = !mIsEnableSound;
-                mSoundView.setImageResource(mIsEnableSound ?
-                        R.mipmap.ic_enable_sound_ext : R.mipmap.ic_disable_sound_ext);
-                if (mILivenessStrategy != null) {
-                    mILivenessStrategy.setLivenessStrategySoundEnable(mIsEnableSound);
-                }
-            }
-        });
-        mTipsTopView = (TextView) mRootView.findViewById(R.id.liveness_top_tips);
-        mTipsBottomView = (TextView) mRootView.findViewById(R.id.liveness_bottom_tips);
-        mSuccessView = (ImageView) mRootView.findViewById(R.id.liveness_success_image);
+        mFaceDetectRoundView.setIsActiveLive(true);
 
-        mImageLayout = (LinearLayout) mRootView.findViewById(R.id.liveness_result_image_layout);
-        if (mBase64ImageMap != null) {
-            mBase64ImageMap.clear();
-        }
+    }
+
+    /**
+     * 设置屏幕亮度
+     */
+    private void setScreenBright() {
+        int currentBright = BrightnessUtils.getScreenBrightness(this);
+        BrightnessUtils.setBrightness(this, currentBright + 100);
     }
 
     @Override
@@ -171,27 +178,33 @@ public class FaceLivenessActivity extends Activity implements
         super.onResume();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         mVolumeReceiver = VolumeUtils.registerVolumeReceiver(this, this);
-        if (mTipsTopView != null) {
-            mTipsTopView.setText(R.string.detect_face_in);
-        }
+        faceType.setText("请将脸移入取景框");
         startPreview();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        stopPreview();
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "onRestart");
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         if (mILivenessStrategy != null) {
             mILivenessStrategy.reset();
         }
         VolumeUtils.unRegisterVolumeReceiver(this, mVolumeReceiver);
         mVolumeReceiver = null;
-        super.onStop();
+        mFaceDetectRoundView.setProcessCount(0,
+                mFaceConfig.getLivenessTypeList().size());
+        super.onPause();
         stopPreview();
+        mIsCompletion = false;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -206,8 +219,8 @@ public class FaceLivenessActivity extends Activity implements
             if (am != null) {
                 int cv = am.getStreamVolume(AudioManager.STREAM_MUSIC);
                 mIsEnableSound = cv > 0;
-                mSoundView.setImageResource(mIsEnableSound
-                        ? R.mipmap.ic_enable_sound_ext : R.mipmap.ic_disable_sound_ext);
+//                mSoundView.setImageResource(mIsEnableSound
+//                        ? R.mipmap.icon_titlebar_voice2 : R.mipmap.icon_titlebar_voice1);
                 if (mILivenessStrategy != null) {
                     mILivenessStrategy.setLivenessStrategySoundEnable(mIsEnableSound);
                 }
@@ -280,6 +293,7 @@ public class FaceLivenessActivity extends Activity implements
 
         mPreviewWidth = point.x;
         mPreviewHight = point.y;
+        Log.e(TAG, "x = " + mPreviewWidth + " y = " + mPreviewHight);
         // Preview 768,432
 
         if (mILivenessStrategy != null) {
@@ -397,7 +411,7 @@ public class FaceLivenessActivity extends Activity implements
         }
 
         if (mILivenessStrategy == null) {
-            mILivenessStrategy = FaceSDKManager.getInstance().getLivenessStrategyModule();
+            mILivenessStrategy = FaceSDKManager.getInstance().getLivenessStrategyModule(this);
             mILivenessStrategy.setPreviewDegree(mPreviewDegree);
             mILivenessStrategy.setLivenessStrategySoundEnable(mIsEnableSound);
 
@@ -414,111 +428,137 @@ public class FaceLivenessActivity extends Activity implements
     }
 
     @Override
-    public void onLivenessCompletion(FaceStatusEnum status, String message,
-                                     HashMap<String, String> base64ImageMap) {
+    public void onLivenessCompletion(FaceStatusNewEnum status, String message,
+                                     HashMap<String, ImageInfo> base64ImageCropMap,
+                                     HashMap<String, ImageInfo> base64ImageSrcMap, int currentLivenessCount) {
         if (mIsCompletion) {
             return;
         }
 
-        onRefreshView(status, message);
+        onRefreshView(status, message, currentLivenessCount);
 
-        if (status == FaceStatusEnum.OK) {
+        if (status == FaceStatusNewEnum.OK) {
             mIsCompletion = true;
-            saveImage(base64ImageMap);
+            saveImage(base64ImageCropMap, base64ImageSrcMap);
+            // saveAllImage(base64ImageCropMap, base64ImageSrcMap);
         }
-        Ast.getInstance().faceHit("liveness");
     }
 
-    private void onRefreshView(FaceStatusEnum status, String message) {
+    private void onRefreshView(FaceStatusNewEnum status, String message, int currentLivenessCount) {
         switch (status) {
             case OK:
-            case Liveness_OK:
-            case Liveness_Completion:
-                onRefreshTipsView(false, message);
-                mTipsBottomView.setText("");
-                mFaceDetectRoundView.processDrawState(false);
-                onRefreshSuccessView(true);
+            case FaceLivenessActionComplete:
+            case DetectRemindCodeTooClose:
+            case DetectRemindCodeTooFar:
+            case DetectRemindCodeBeyondPreviewFrame:
+            case DetectRemindCodeNoFaceDetected:
+                // onRefreshTipsView(false, message);
+                mFaceDetectRoundView.setTipTopText(message);
+                mFaceDetectRoundView.setTipSecondText("");
+                mFaceDetectRoundView.setProcessCount(currentLivenessCount,
+                        mFaceConfig.getLivenessTypeList().size());
+                // onRefreshSuccessView(true);
                 break;
-            case Detect_DataNotReady:
-            case Liveness_Eye:
-            case Liveness_Mouth:
-            case Liveness_HeadUp:
-            case Liveness_HeadDown:
-            case Liveness_HeadLeft:
-            case Liveness_HeadRight:
-            case Liveness_HeadLeftRight:
-                onRefreshTipsView(false, message);
-                mTipsBottomView.setText("");
-                mFaceDetectRoundView.processDrawState(false);
-                onRefreshSuccessView(false);
+            case FaceLivenessActionTypeLiveEye:
+            case FaceLivenessActionTypeLiveMouth:
+            case FaceLivenessActionTypeLivePitchUp:
+            case FaceLivenessActionTypeLivePitchDown:
+            case FaceLivenessActionTypeLiveYawLeft:
+            case FaceLivenessActionTypeLiveYawRight:
+            case FaceLivenessActionTypeLiveYaw:
+                faceType.setText(message);
+
+                // onRefreshTipsView(false, message);
+                // onRefreshSuccessView(false);
                 break;
-            case Detect_PitchOutOfUpMaxRange:
-            case Detect_PitchOutOfDownMaxRange:
-            case Detect_PitchOutOfLeftMaxRange:
-            case Detect_PitchOutOfRightMaxRange:
-                onRefreshTipsView(true, message);
-                mTipsBottomView.setText(message);
-                mFaceDetectRoundView.processDrawState(true);
-                onRefreshSuccessView(false);
+            case DetectRemindCodePitchOutofUpRange:
+            case DetectRemindCodePitchOutofDownRange:
+            case DetectRemindCodeYawOutofLeftRange:
+            case DetectRemindCodeYawOutofRightRange:
+                faceNotice.setText(message);
+                // onRefreshSuccessView(false);
+                // onRefreshTipsView(true, message);
+                break;
+            case FaceLivenessActionCodeTimeout:    // 动作超时，播放教程动画
+                //todo 提醒动作超时
+                faceNotice.setText(message);
                 break;
             default:
-                onRefreshTipsView(false, message);
-                mTipsBottomView.setText("");
-                mFaceDetectRoundView.processDrawState(true);
-                onRefreshSuccessView(false);
+                faceNotice.setText(message);
+                break;
         }
     }
 
-    private void onRefreshTipsView(boolean isAlert, String message) {
-        if (isAlert) {
-            if (mTipsIcon == null) {
-                mTipsIcon = getResources().getDrawable(R.mipmap.ic_warning);
-                mTipsIcon.setBounds(0, 0, (int) (mTipsIcon.getMinimumWidth() * 0.7f),
-                        (int) (mTipsIcon.getMinimumHeight() * 0.7f));
-                mTipsTopView.setCompoundDrawablePadding(15);
-            }
-            mTipsTopView.setBackgroundResource(R.drawable.bg_tips);
-            mTipsTopView.setText(R.string.detect_standard);
-            mTipsTopView.setCompoundDrawables(mTipsIcon, null, null, null);
-        } else {
-            mTipsTopView.setBackgroundResource(R.drawable.bg_tips_no);
-            mTipsTopView.setCompoundDrawables(null, null, null, null);
-            if (!TextUtils.isEmpty(message)) {
-                mTipsTopView.setText(message);
-            }
-        }
-    }
 
-    private void onRefreshSuccessView(boolean isShow) {
-        if (mSuccessView.getTag() == null) {
-            Rect rect = mFaceDetectRoundView.getFaceRoundRect();
-            RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) mSuccessView.getLayoutParams();
-            rlp.setMargins(
-                    rect.centerX() - (mSuccessView.getWidth() / 2),
-                    rect.top - (mSuccessView.getHeight() / 2),
-                    0,
-                    0);
-            mSuccessView.setLayoutParams(rlp);
-            mSuccessView.setTag("setlayout");
-        }
-        mSuccessView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
-    }
+    private void saveImage(HashMap<String, ImageInfo> imageCropMap, HashMap<String, ImageInfo> imageSrcMap) {
+        if (imageCropMap != null && imageCropMap.size() > 0) {
+            List<Map.Entry<String, ImageInfo>> list1 = new ArrayList<>(imageCropMap.entrySet());
+            Collections.sort(list1, new Comparator<Map.Entry<String, ImageInfo>>() {
 
-    private void saveImage(HashMap<String, String> imageMap) {
-        Set<Map.Entry<String, String>> sets = imageMap.entrySet();
-        Bitmap bmp = null;
-        mImageLayout.removeAllViews();
-        for (Map.Entry<String, String> entry : sets) {
-            bmp = base64ToBitmap(entry.getValue());
-            ImageView iv = new ImageView(this);
-            iv.setImageBitmap(bmp);
-            mImageLayout.addView(iv, new LinearLayout.LayoutParams(300, 300));
+                @Override
+                public int compare(Map.Entry<String, ImageInfo> o1,
+                                   Map.Entry<String, ImageInfo> o2) {
+                    String[] key1 = o1.getKey().split("_");
+                    String score1 = key1[2];
+                    String[] key2 = o2.getKey().split("_");
+                    String score2 = key2[2];
+                    // 降序排序
+                    return Float.valueOf(score2).compareTo(Float.valueOf(score1));
+                }
+            });
+
+            // TODO:发送加密的base64字符串
+//            int secType = mFaceConfig.getSecType();
+//            String base64;
+//            if (secType == 0) {
+//                base64 = mBmpStr;
+//            } else {
+//                base64 = list1.get(0).getValue().getSecBase64();
+//            }
+//            SecRequest.sendMessage(FaceDetectActivity.this, base64, secType);
+        }
+
+        if (imageSrcMap != null && imageSrcMap.size() > 0) {
+            List<Map.Entry<String, ImageInfo>> list2 = new ArrayList<>(imageSrcMap.entrySet());
+            Collections.sort(list2, new Comparator<Map.Entry<String, ImageInfo>>() {
+
+                @Override
+                public int compare(Map.Entry<String, ImageInfo> o1,
+                                   Map.Entry<String, ImageInfo> o2) {
+                    String[] key1 = o1.getKey().split("_");
+                    String score1 = key1[2];
+                    String[] key2 = o2.getKey().split("_");
+                    String score2 = key2[2];
+                    // 降序排序
+                    return Float.valueOf(score2).compareTo(Float.valueOf(score1));
+                }
+            });
+            mBmpStr = list2.get(0).getValue().getBase64();
+            // TODO:发送底层加密的base64字符串
+//            int secType = mFaceConfig.getSecType();
+//            String base64;
+//            if (secType == 0) {
+//                base64 = mBmpStr;
+//            } else {
+//                base64 = list2.get(0).getValue().getSecBase64();
+//            }
+//            SecRequest.sendMessage(FaceDetectActivity.this, base64, secType);
         }
     }
 
     public static Bitmap base64ToBitmap(String base64Data) {
         byte[] bytes = Base64Utils.decode(base64Data, Base64Utils.NO_WRAP);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    @Override
+    public void setCurrentLiveType(LivenessTypeEnum liveType) {
+        mLivenessType = liveType;
+    }
+
+    @Override
+    public void viewReset() {
+        mFaceDetectRoundView.setProcessCount(0, 1);
     }
 
 }

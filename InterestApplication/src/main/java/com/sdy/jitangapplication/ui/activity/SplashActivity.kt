@@ -4,7 +4,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.baidu.idl.face.platform.FaceEnvironment
+import com.baidu.idl.face.platform.FaceSDKManager
+import com.baidu.idl.face.platform.listener.IInitCallback
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
@@ -14,6 +18,7 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.MyApplication
 import com.sdy.jitangapplication.utils.AMapManager
 import org.jetbrains.anko.startActivity
 
@@ -195,7 +200,10 @@ class SplashActivity : BaseActivity() {
 
     }
 
+
     private fun start2login() {
+
+
         //闪验SDK预取号
         OneKeyLoginManager.getInstance().getPhoneInfo { p0, p1 ->
             contentView.postDelayed({
@@ -203,6 +211,8 @@ class SplashActivity : BaseActivity() {
                 finish()
             }, 1000L)
         }
+
+
     }
 
 

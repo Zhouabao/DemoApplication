@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
-
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode 1000
         versionName "3.2.1.0"
     }
@@ -20,5 +19,5 @@ android {
 
 dependencies {
     api  fileTree(dir: 'libs', include: ['*.jar'])
-    api  project(path: ':faceplatform')
+    api  project(path: ':faceplatform-release')
 }

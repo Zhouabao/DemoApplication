@@ -4,16 +4,17 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import androidx.core.view.isVisible
+import android.util.Log
 import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.face.platform.FaceSDKManager
-import com.baidu.idl.face.platform.FaceStatusEnum
-import com.baidu.idl.face.platform.LivenessTypeEnum
-import com.baidu.idl.face.platform.ui.FaceLivenessActivity
+import com.baidu.idl.face.platform.FaceStatusNewEnum
+import com.baidu.idl.face.platform.listener.IInitCallback
+import com.baidu.idl.face.platform.model.ImageInfo
 import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
@@ -24,23 +25,23 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.utils.NetWorkUtils
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
-import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
-import com.sdy.baselibrary.widgets.swipeback.Utils
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.AccountDangerEvent
+import com.sdy.jitangapplication.faceliveness.FaceLivenessActivity
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
+import kotlinx.android.synthetic.main.activity_face_liveness.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -50,10 +51,7 @@ import java.io.ByteArrayOutputStream
 /**
  * 身份验证
  */
-class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
-    private lateinit var mHelper: SwipeBackActivityHelper
-
-
+class IDVerifyActivity : FaceLivenessActivity() {
     companion object {
         const val TYPE_ACCOUNT_DANGER = 1 //账户异常发起
         const val TYPE_ACCOUNT_NORMAL = 2  //用户主动发起
@@ -136,58 +134,29 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
     private val type by lazy { intent.getIntExtra("type", TYPE_ACCOUNT_NORMAL) }
 
-    override fun getSwipeBackLayout(): SwipeBackLayout {
-        return mHelper.swipeBackLayout
-    }
-
-    override fun setSwipeBackEnable(enable: Boolean) {
-        swipeBackLayout.setEnableGesture(enable)
-    }
-
-    override fun scrollToFinishActivity() {
-        Utils.convertActivityToTranslucent(this)
-        swipeBackLayout.scrollToFinishActivity()
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        mHelper.onPostCreate()
-
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFaceConfig()
         super.onCreate(savedInstanceState)
         StatusBarUtil.immersive(this)
-        AppManager.instance.addActivity(this)
-        mHelper = SwipeBackActivityHelper(this)
-        mHelper.onActivityCreate()
         setSwipeBackEnable(type != TYPE_LIVE_CAPTURE)
-        mCloseView.isVisible = type != TYPE_LIVE_CAPTURE
+        GlideUtil.loadCircleImg(this, UserManager.getAvator(), faceCoverIv)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.CAMERA)) ||
-                    !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+        startFaceBtn.clickWithTrigger {
+//            onResume()
+            if (initFace)
+                startPreview()
+            else
+                initVerify()
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(
+                *PermissionConstants.getPermissions(PermissionConstants.CAMERA),
+                *PermissionConstants.getPermissions(PermissionConstants.STORAGE)
+            )
         ) {
-            PermissionUtils.permission(PermissionConstants.CAMERA)
+            PermissionUtils.permission(PermissionConstants.CAMERA, PermissionConstants.STORAGE)
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
-                        if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
-                        }
-                        PermissionUtils.permission(PermissionConstants.STORAGE)
-                            .callback(object : PermissionUtils.SimpleCallback {
-                                override fun onGranted() {
-                                    initVerify()
-                                }
-
-                                override fun onDenied() {
-                                    CommonFunction.toast(getString(R.string.permission_storage))
-                                    finish()
-                                }
-
-                            })
-                            .request()
+                        initVerify()
                     }
 
                     override fun onDenied() {
@@ -199,90 +168,121 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         } else {
             initVerify()
         }
+
+
     }
 
+    /**
+     * 初始化人脸config
+     */
+    private var initFace = false
+
+
     private fun initVerify() {
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
-        mImageLayout.visibility = View.GONE
+        Log.d("VVV", "MD5 = ${AppUtils.getAppSignatureMD5()}")
+        Log.d("VVV", "SHA1 = ${AppUtils.getAppSignatureSHA1()}")
+
         // 根据需求添加活体动作
-        MyApplication.livenessList.clear()
-        MyApplication.livenessList.add(LivenessTypeEnum.Eye)
-        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeft)
-        MyApplication.livenessList.add(LivenessTypeEnum.HeadRight)
+        setFaceConfig()
+        FaceSDKManager.getInstance().initialize(this, Constants.licenseID,
+            Constants.licenseFileName, object : IInitCallback {
+                override fun initSuccess() {
+                    runOnUiThread {
+                        initFace = true
+                        Log.e(TAG, "初始化成功")
+                    }
+                }
 
-        // 为了android和ios 区分授权，appId=appname_face_android ,其中appname为申请sdk时的应用名
-        // 应用上下文
-        // 申请License取得的APPID
-        // assets目录下License文件名
-        FaceSDKManager.getInstance()
-            .initialize(this, Constants.licenseID, Constants.licenseFileName)
+                override fun initFailure(p0: Int, p1: String?) {
+                    runOnUiThread {
 
+                        Log.e(TAG, "初始化失败 = $p0  , $p1")
+                    }
+                }
+
+            })
     }
 
     private fun setFaceConfig() {
         val config = FaceSDKManager.getInstance().faceConfig
-        // SDK初始化已经设置完默认参数（推荐参数），您也根据实际需求进行数值调整
-        config.setLivenessTypeList(MyApplication.livenessList)
-        //设置就活体动作是否随机
-        config.setLivenessRandom(MyApplication.isLivewnessRandom)
-        //设置模糊度范围(0-1)推荐小于0.7
-        config.setBlurnessValue(FaceEnvironment.VALUE_BLURNESS)
-        //光照范围(0-1)推荐大于40
-        config.setBrightnessValue(FaceEnvironment.VALUE_BRIGHTNESS)
-        //裁剪人脸大小
-        config.setCropFaceValue(FaceEnvironment.VALUE_MIN_FACE_SIZE)
-        //人脸yaw,pitch,row角度，范围(-45,45)，推荐-15-15
-        //低头抬头角度
-        config.setHeadPitchValue(45)
-        //偏头角度
-        config.setHeadRollValue(45)
-        //左右角度
-        config.setHeadYawValue(45)
-        //最小检测人脸80-200 越小越耗性能,推荐120-200
-        config.setMinFaceSize(120)
-
-        config.setNotFaceValue(FaceEnvironment.VALUE_NOT_FACE_THRESHOLD)
-        //人脸遮挡范围(0-1) 推荐小于0.5
-        config.setOcclusionValue(FaceEnvironment.VALUE_OCCLUSION)
-        //s是否进行质量检测
-        config.setCheckFaceQuality(true)
-        //人脸检测使用线程数量
-        config.setFaceDecodeNumberOfThreads(2)
-        //是否开启提示声音
-        config.setSound(false)
+        // SDK初始化已经设置完默认参数（推荐参数），也可以根据实际需求进行数值调整
+        // 设置可检测的最小人脸阈值
+//        config.minFaceSize = FaceEnvironment.VALUE_MIN_FACE_SIZE
+        config.minFaceSize = 120
+        // 设置可检测到人脸的阈值
+        config.notFaceValue = FaceEnvironment.VALUE_NOT_FACE_THRESHOLD
+        // 设置模糊度阈值
+        config.blurnessValue = FaceEnvironment.VALUE_BLURNESS
+        // 设置光照阈值（范围0-255）
+        config.brightnessValue = FaceEnvironment.VALUE_BRIGHTNESS
+        // 设置遮挡阈值
+        config.occlusionValue = FaceEnvironment.VALUE_OCCLUSION
+        // 设置人脸姿态角阈值
+        config.headPitchValue = 45
+        config.headYawValue = 45
+        // 设置闭眼阈值
+        config.eyeClosedValue = FaceEnvironment.VALUE_CLOSE_EYES
+        // 设置图片缓存数量
+        config.cacheImageNum = FaceEnvironment.VALUE_CACHE_IMAGE_NUM
+        // 设置口罩判断开关以及口罩阈值
+        config.isOpenMask = FaceEnvironment.VALUE_OPEN_MASK
+        config.maskValue = FaceEnvironment.VALUE_MASK_THRESHOLD
+        // 设置活体动作，通过设置list，LivenessTypeEunm.Eye, LivenessTypeEunm.Mouth,
+        // LivenessTypeEunm.HeadUp, LivenessTypeEunm.HeadDown, LivenessTypeEunm.HeadLeft,
+        // LivenessTypeEunm.HeadRight, LivenessTypeEunm.HeadLeftOrRight
+        config.livenessTypeList = MyApplication.livenessList
+        // 设置动作活体是否随机
+        config.isLivenessRandom = false
+        // 设置开启提示音
+        config.isSound = false
+        // 原图缩放系数
+        config.scale = FaceEnvironment.VALUE_SCALE
+        // 抠图高的设定，为了保证好的抠图效果，我们要求高宽比是4：3，所以会在内部进行计算，只需要传入高即可
+        config.cropHeight = FaceEnvironment.VALUE_CROP_HEIGHT
+        // 抠图人脸框与背景比例
+        config.enlargeRatio = FaceEnvironment.VALUE_CROP_ENLARGERATIO
+        // 加密类型，0：Base64加密，上传时image_sec传false；1：百度加密文件加密，上传时image_sec传true
+        config.secType = FaceEnvironment.VALUE_SEC_TYPE
         FaceSDKManager.getInstance().faceConfig = config
 
     }
 
     override fun onLivenessCompletion(
-        status: FaceStatusEnum?,
-        message: String?,
-        images: HashMap<String, String>?
+        status: FaceStatusNewEnum, message: String,
+        base64ImageCropMap: HashMap<String, ImageInfo>,
+        base64ImageSrcMap: HashMap<String, ImageInfo>, currentLivenessCount: Int
     ) {
-        super.onLivenessCompletion(status, message, images)
-        if (status == FaceStatusEnum.OK && mIsCompletion) {
-            loadingDialog.show()
-            if (images != null && images.size > 0) {
-                val fileKey =
-                    "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME)
-                        .getString(
-                            "accid"
-                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                        16
-                    )}"
-
-                if (images["bestImage0"].isNullOrEmpty()) {
-                    uploadProfile(bitmap2Bytes(mILivenessStrategy.bestFaceImage), fileKey)
-                } else {
-                    uploadProfile(bitmap2Bytes(images["bestImage0"]!!), fileKey)
-                }
-
-            }
-        } else if (status == FaceStatusEnum.Error_DetectTimeout
-            || status == FaceStatusEnum.Error_LivenessTimeout ||
-            status == FaceStatusEnum.Error_Timeout
+        super.onLivenessCompletion(
+            status,
+            message,
+            base64ImageCropMap,
+            base64ImageSrcMap,
+            currentLivenessCount
+        )
+        if (status == FaceStatusNewEnum.OK && mIsCompletion) {
+            onPause()
+            uploadFaceImg()
+        } else if (status == FaceStatusNewEnum.FaceLivenessActionCodeTimeout
+            || status == FaceStatusNewEnum.DetectRemindCodeTimeout
         ) {
+            onPause()
+            faceNotice.text = getString(R.string.take_time_out)
+            faceNotice.setTextColor(Color.parseColor("#fffb1919"))
             CommonFunction.toast(getString(R.string.take_time_out))
+            onResume()
+        }
+    }
+
+    private fun uploadFaceImg() {
+        if (mBmpStr.isNotEmpty()) {
+            val fileKey =
+                "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME)
+                    .getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    16
+                )}"
+            uploadProfile(bitmap2Bytes(mBmpStr), fileKey)
         }
     }
 

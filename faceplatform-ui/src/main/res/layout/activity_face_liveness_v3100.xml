@@ -1,95 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/liveness_root_layout"
-                android:layout_width="match_parent"
-                android:fitsSystemWindows="true"
-                android:layout_height="match_parent">
+    android:id="@+id/liveness_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/faceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="66dp"
+        android:gravity="center"
+        android:text="@string/need_face_livness"
+        android:textColor="#ff191919"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/faceContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/faceTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/face_liveness_for_account_danger"
+        android:textColor="#ffb5b7b9"
+        android:textSize="14sp" />
+
 
     <FrameLayout
-            android:id="@+id/liveness_surface_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+        android:id="@+id/liveness_surface_layout"
+        android:layout_width="238dp"
+        android:layout_height="238dp"
+        android:visibility="invisible"
+        android:layout_alignTop="@id/faceCoverIv"
+        android:layout_centerHorizontal="true" />
+
 
     <com.baidu.idl.face.platform.ui.widget.FaceDetectRoundView
-            android:id="@+id/liveness_face_round"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:id="@+id/liveness_face_round"
+        android:layout_width="238dp"
+        android:layout_height="238dp"
+        android:visibility="invisible"
+        android:layout_alignTop="@id/faceCoverIv"
+        android:layout_centerHorizontal="true" />
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.15"/>
+    <ImageView
+        android:id="@+id/faceCoverIv"
+        android:layout_width="238dp"
+        android:layout_height="238dp"
+        android:src="@mipmap/icon_face_liveness_bg"
+        android:layout_below="@id/faceContent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/faceBeginRl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/liveness_face_round"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp">
 
         <TextView
-                android:id="@+id/liveness_top_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="8dp"
-                android:text="@string/detect_face_in"
-                android:textColor="#F6A623"
-                android:textSize="18sp"/>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.65"/>
+            android:id="@+id/faceType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text=""
+            android:textColor="#ff191919"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
-                android:id="@+id/liveness_bottom_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.36"
-                android:gravity="center|top"
-                android:text=""
-                android:textColor="#D0D0D0"
-                android:textSize="16sp"/>
-    </LinearLayout>
-
-    <ImageView
-            android:id="@+id/liveness_close"
+            android:id="@+id/faceNotice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:src="@mipmap/ic_close_ext"/>
+            android:layout_below="@id/faceType"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textColor="#fffb1919"
+            android:textSize="16sp" />
 
-    <ImageView
-            android:id="@+id/liveness_sound"
+        <TextView
+            android:id="@+id/facePhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_margin="20dp"
-            android:src="@mipmap/ic_enable_sound_ext"/>
+            android:layout_below="@id/faceNotice"
+            android:layout_marginTop="27dp"
+            android:drawableTop="@mipmap/icon_liveness_full_phone"
+            android:drawablePadding="10dp"
+            android:text="正对手机"
+            android:textColor="#ff191919"
+            android:textSize="13sp" />
 
-    <ImageView
-            android:id="@+id/liveness_success_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@mipmap/ic_success"
-            android:visibility="invisible"/>
-
-    <HorizontalScrollView
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/faceLight"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_below="@id/faceNotice"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="27dp"
+            android:layout_toRightOf="@id/facePhone"
+            android:drawableTop="@mipmap/icon_liveness_full_light"
+            android:drawablePadding="10dp"
+            android:text="正对手机"
+            android:textColor="#ff191919"
+            android:textSize="13sp" />
 
-        <LinearLayout
-                android:id="@+id/liveness_result_image_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"></LinearLayout>
-    </HorizontalScrollView>
+        <TextView
+            android:id="@+id/faceFull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/faceNotice"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="27dp"
+            android:layout_toRightOf="@id/faceLight"
+            android:drawableTop="@mipmap/icon_liveness_full_face"
+            android:drawablePadding="10dp"
+            android:text="正对手机"
+            android:textColor="#ff191919"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/startFaceBtn"
+        android:layout_width="235dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:text="@string/begin_face_liveness"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/confirm_btn"
+        android:textColor="#ffffffff"
+        android:textSize="16sp" />
+
 </RelativeLayout>

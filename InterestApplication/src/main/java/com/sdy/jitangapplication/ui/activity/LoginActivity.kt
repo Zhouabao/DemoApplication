@@ -215,10 +215,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 if (task != null && task.isSuccessful) {
                     val account = task.getResult(ApiException::class.java)!!
 //                firebaseAuthWithGoogle(account.idToken!!)
-                    Log.e(
-                        "VVV",
-                        "google---${account},idToken = ${account.idToken},id = ${account.id}"
-                    )
+                    Log.e(TAG1, "google---${account},idToken = ${account.idToken},id = ${account.id}")
                     mPresenter.checkVerifyCode(
                         account.idToken!!,
                         VerifyCodeActivity.TYPE_LOGIN_GOOGLE
@@ -226,7 +223,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                     mPresenter.loading.dismiss()
                 }
             } catch (e: ApiException) {
-                Log.e("VVV", "google error---${e}")
+                Log.e(TAG1, "google error---${e}")
             }
         }
     }

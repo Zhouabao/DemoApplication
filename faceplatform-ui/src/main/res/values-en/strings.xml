@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="need_face_livness">需进行人脸识别</string>
+</resources>

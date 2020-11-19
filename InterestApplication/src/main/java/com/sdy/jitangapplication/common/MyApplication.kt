@@ -98,6 +98,11 @@ class MyApplication : BaseApplication() {
         public var isLivewnessRandom = false
 
     }
+    init {
+        livenessList.add(LivenessTypeEnum.Mouth)
+        livenessList.add(LivenessTypeEnum.HeadLeft)
+        livenessList.add(LivenessTypeEnum.HeadRight)
+    }
 
     private val onLineClient: Observer<List<OnlineClient>> = Observer {
         if (it == null || it.isEmpty()) {
