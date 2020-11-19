@@ -131,7 +131,10 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
         if (b) {
             val moreMatchBean = intent.getSerializableExtra("morematchbean") as MoreMatchBean?
             if (moreMatchBean?.living_btn == true) {//  true  需要活体   false  不需要活体
-                startActivity<WomanLivingActivity>("morematchbean" to moreMatchBean)
+                startActivity<IDVerifyActivity>(
+                    "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
+                    "morematchbean" to moreMatchBean
+                )
             } else {
                 moreMatchBean?.people_amount = data?.people_amount ?: 0
                 OpenVipActivity.start(

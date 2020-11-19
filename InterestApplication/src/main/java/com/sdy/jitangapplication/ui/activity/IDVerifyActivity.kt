@@ -138,7 +138,23 @@ class IDVerifyActivity : FaceLivenessActivity() {
         super.onCreate(savedInstanceState)
         StatusBarUtil.immersive(this)
         setSwipeBackEnable(type != TYPE_LIVE_CAPTURE)
-        GlideUtil.loadCircleImg(this, UserManager.getAvator(), faceCoverIv)
+
+        if (UserManager.getAvator().isNullOrEmpty())
+            GlideUtil.loadCircleImg(this, R.drawable.icon_face_liveness_bg, faceCoverIv)
+        else
+            GlideUtil.loadCircleImg(this, UserManager.getAvator(), faceCoverIv)
+        when (type) {
+            TYPE_ACCOUNT_NORMAL,
+            TYPE_LIVE_CAPTURE -> {
+                faceTitle.text = getString(R.string.living_title)
+                faceContent.text = getString(R.string.living_tip)
+            }
+            TYPE_ACCOUNT_DANGER -> {
+                faceTitle.text = getString(R.string.need_face_livness)
+                faceContent.text = getString(R.string.face_liveness_for_account_danger)
+            }
+        }
+
 
         startFaceBtn.clickWithTrigger {
 //            onResume()

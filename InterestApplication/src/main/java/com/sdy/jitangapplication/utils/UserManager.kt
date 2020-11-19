@@ -709,7 +709,8 @@ object UserManager {
                     )
                 )
             } else if (data?.extra_data?.living_btn == true) {
-                context.startActivity<WomanLivingActivity>(
+                context.startActivity<IDVerifyActivity>(
+                    "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
                     "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
