@@ -96,10 +96,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         //加入积糖
         onekeyLoginBtn.clickWithTrigger(1000L) {
             touristBtn.isEnabled = false
-            if (!NetworkUtils.getMobileDataEnabled()) {
-                CommonFunction.toast(resources.getString(R.string.open_internet))
-                return@clickWithTrigger
-            }
             ChooseLoginWayDialog(this, syCode).show()
         }
 

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/colorTransparent"
     android:gravity="center">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/accountDangerCl"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:layout_gravity="center"
         android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:orientation="vertical">
@@ -63,13 +64,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/closeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
             android:src="@drawable/icon_close_transparent"
+            android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -155,4 +156,103 @@
             app:layout_constraintTop_toBottomOf="@id/cl1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/accountDangerResultCl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/accountDangerTitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="66dp"
+            android:text="@string/account_danger"
+            android:textColor="#131415"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/accountDangerContent1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:text="@string/please_verify_to_clear_danger"
+            android:textColor="#B6BABF"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accountDangerTitle1" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/accountDangerVerifyStatuLogo1"
+            android:layout_width="238dp"
+            android:layout_height="238dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/icon_face_liveness_bg"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accountDangerContent1" />
+
+        <ImageView
+            android:id="@+id/accountDangerImgAlert1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="220dp"
+            android:src="@drawable/icon_wrong"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/accountDangerVerifyStatuLogo1" />
+
+
+        <TextView
+            android:id="@+id/accountDangerBtn1"
+            android:layout_width="235dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/selector_confirm_btn_25dp"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="@string/goto_verify" />
+
+
+        <TextView
+            android:id="@+id/humanVerify1"
+            android:layout_width="144dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/shape_rectangle_gray_white_28dp"
+            android:gravity="center"
+            android:text="@string/apply_human_verify"
+            android:textColor="#ffc5c6c8"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/accountDangerBtn1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

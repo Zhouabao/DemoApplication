@@ -1198,6 +1198,8 @@
     <string name="install_face_book_first">请先安装facebook</string>
     <string name="install_twitter_first">请先安装Twitter</string>
     <string name="install_google_first">请先安装Google</string>
+    <string name="apply_human_verify">申请人工审核</string>
+    <string name="waiting">等待中</string>
 
 
 </resources>

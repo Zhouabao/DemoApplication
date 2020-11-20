@@ -129,7 +129,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
         }
         VolumeUtils.unRegisterVolumeReceiver(this, mVolumeReceiver)
         mVolumeReceiver = null
-        mFaceDetectRoundView!!.setProcessCount(
+        mFaceDetectRoundView.setProcessCount(
             0,
             mFaceConfig!!.livenessTypeList.size
         )
@@ -477,7 +477,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
     }
 
     override fun viewReset() {
-        mFaceDetectRoundView!!.setProcessCount(0, 1)
+        mFaceDetectRoundView.setProcessCount(0, 1)
     }
 
     companion object {

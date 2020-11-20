@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.NetworkUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
@@ -72,7 +73,12 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
         }
         //手机号码登录
         loginWithPhoneBtn.clickWithTrigger {
+
             if (syCode == 1022) {
+                if (!NetworkUtils.getMobileDataEnabled()) {
+                    CommonFunction.toast(context1.getString(R.string.open_internet))
+                    return@clickWithTrigger
+                }
                 context1.startActivity<OnekeyLoginActivity>()
             } else {
                 context1.startActivity<PhoneActivity>("type" to "1")

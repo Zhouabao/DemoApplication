@@ -333,10 +333,11 @@ class IDVerifyActivity : FaceLivenessActivity() {
         )
     }
 
+
+
     /**
      * 保存个人信息
      */
-
     private fun savePersonal(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .savePersonal(UserManager.getSignParams(params))
@@ -407,7 +408,6 @@ class IDVerifyActivity : FaceLivenessActivity() {
         if (loadingDialog.isShowing) {
             loadingDialog.dismiss()
         }
-        AppManager.instance.finishActivity(this)
         FaceSDKManager.release()
     }
 

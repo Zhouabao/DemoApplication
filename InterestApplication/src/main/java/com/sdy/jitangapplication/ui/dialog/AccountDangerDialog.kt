@@ -6,9 +6,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.Window
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -55,6 +57,9 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
     fun changeVerifyStatus(status: Int) {
         when (status) {
             VERIFY_NEED_AVATOR_INVALID -> {
+                accountDangerResultCl.isVisible = false
+                accountDangerCl.isVisible = true
+
                 accountDangerLogo.isVisible = false
                 accountDangerImgAlert.isVisible = true
                 humanVerify.isVisible = false
@@ -70,12 +75,16 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 }
             }
             VERIFY_NEED_ACCOUNT_DANGER -> {
+                accountDangerResultCl.isVisible = false
+                accountDangerCl.isVisible = true
+
                 accountDangerImgAlert.isVisible = false
                 humanVerify.isVisible = false
                 accountDangerLogo.isVisible = true
                 accountDangerVerifyStatuLogo.isVisible = false
                 accountDangerTitle.text = context1.getString(R.string.account_danger)
-                accountDangerContent.text = context1.getString(R.string.please_verify_to_clear_danger)
+                accountDangerContent.text =
+                    context1.getString(R.string.please_verify_to_clear_danger)
                 accountDangerBtn.text = context1.getString(R.string.goto_verify)
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
@@ -83,6 +92,124 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                     CommonFunction.startToFace(context1, IDVerifyActivity.TYPE_ACCOUNT_DANGER)
                 }
             }
+
+            VERIFY_ING -> {
+                accountDangerResultCl.isVisible = true
+                accountDangerCl.isVisible = false
+
+                GlideUtil.loadCircleImg(
+                    context1,
+                    UserManager.getAvator(),
+                    accountDangerVerifyStatuLogo1
+                )
+                accountDangerImgAlert1.isVisible = false
+                humanVerify1.isVisible = false
+                accountDangerTitle1.text = context1.getString(R.string.verify_account_ing)
+                accountDangerContent1.text =
+                    context1.getString(R.string.please_wait_to_clear_danger)
+                accountDangerBtn1.text = context1.getString(R.string.waiting)
+                accountDangerBtn1.isEnabled = false
+            }
+            VERIFY_NOT_PASS -> {
+                accountDangerResultCl.isVisible = true
+                accountDangerCl.isVisible = false
+
+                GlideUtil.loadCircleImg(
+                    context1,
+                    UserManager.getAvator(),
+                    accountDangerVerifyStatuLogo1
+                )
+                accountDangerImgAlert1.isVisible = true
+                humanVerify1.isVisible = true
+//                accountDangerVerifyStatuLogo1.setImageResource(R.drawable.icon_verify_account_not_pass)
+                accountDangerTitle1.text = context1.getString(R.string.avata_verify_fail)
+                accountDangerContent1.text = context1.getString(R.string.avatar_cannot_pass_verify)
+                accountDangerBtn1.text = context1.getString(R.string.change_avatar)
+                humanVerify1.setTextColor(Color.parseColor("#FFFF6318"))
+                accountDangerBtn1.isEnabled = true
+                accountDangerBtn1.onClick {
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                        context1.startActivity<NewUserInfoSettingsActivity>()
+                    else
+                        dismiss()
+                }
+                humanVerify1.onClick {
+                    humanVerify(1)
+                }
+
+            }
+            VERIFY_NOT_PASS_FORCE -> {
+                accountDangerResultCl.isVisible = true
+                accountDangerCl.isVisible = false
+
+                GlideUtil.loadCircleImg(
+                    context1,
+                    UserManager.getAvator(),
+                    accountDangerVerifyStatuLogo1
+                )
+                accountDangerImgAlert1.isVisible = false
+                humanVerify1.isVisible = true
+                accountDangerTitle1.text = context1.getString(R.string.avata_verify_fail)
+                accountDangerContent1.text = context1.getString(R.string.avatar_cannot_pass_verify)
+                accountDangerBtn1.text = context1.getString(R.string.change_avatar)
+                accountDangerBtn1.isEnabled = true
+                accountDangerBtn1.onClick {
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                        context1.startActivity<NewUserInfoSettingsActivity>()
+                    else
+                        dismiss()
+                }
+                humanVerify1.onClick {
+                    humanVerify(1)
+                }
+
+//                accountDangerResultCl.isVisible = false
+//                accountDangerCl.isVisible = true
+//                accountDangerImgAlert.isVisible = false
+//                humanVerify.isVisible = true
+//                accountDangerLogo.isVisible = false
+//                accountDangerVerifyStatuLogo.isVisible = true
+//                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
+//                accountDangerTitle.text = context1.getString(R.string.avata_verify_fail)
+//                accountDangerContent.text = context1.getString(R.string.avatar_cannot_pass_verify)
+//                accountDangerBtn.text = context1.getString(R.string.change_avatar)
+//                accountDangerLoading.isVisible = false
+//                accountDangerBtn.isEnabled = true
+//                accountDangerBtn.onClick {
+//                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+//                        context1.startActivity<NewUserInfoSettingsActivity>()
+//                    else
+//                        dismiss()
+//                }
+//                humanVerify.onClick {
+//                    humanVerify(1)
+//                }
+            }
+            VERIFY_PASS -> {
+                accountDangerResultCl.isVisible = false
+                accountDangerCl.isVisible = true
+
+                accountDangerImgAlert.isVisible = false
+                humanVerify.isVisible = false
+                accountDangerLogo.isVisible = false
+                accountDangerVerifyStatuLogo.isVisible = true
+                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_pass)
+                accountDangerTitle.text = context1.getString(R.string.verify_success)
+                accountDangerContent.text = context1.getString(R.string.account_has_clear_danger)
+                accountDangerBtn.text = context1.getString(R.string.iknow)
+                accountDangerLoading.isVisible = false
+                accountDangerBtn.isEnabled = true
+                accountDangerBtn.onClick {
+                    dismiss()
+                }
+            }
+
+        }
+    }
+
+
+    fun changeVerifyResultStatus(status: Int) {
+        when (status) {
             VERIFY_ING -> {
                 accountDangerImgAlert.isVisible = false
                 humanVerify.isVisible = false
@@ -148,21 +275,6 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                     humanVerify(1)
                 }
             }
-            VERIFY_PASS -> {
-                accountDangerImgAlert.isVisible = false
-                humanVerify.isVisible = false
-                accountDangerLogo.isVisible = false
-                accountDangerVerifyStatuLogo.isVisible = true
-                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_pass)
-                accountDangerTitle.text = context1.getString(R.string.verify_success)
-                accountDangerContent.text = context1.getString(R.string.account_has_clear_danger)
-                accountDangerBtn.text = context1.getString(R.string.iknow)
-                accountDangerLoading.isVisible = false
-                accountDangerBtn.isEnabled = true
-                accountDangerBtn.onClick {
-                    dismiss()
-                }
-            }
         }
     }
 
@@ -170,9 +282,19 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
         val window = this.window
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.windowAnimations = R.style.MyDialogCenterAnimation
+        if (status == VERIFY_ING || status == VERIFY_NOT_PASS_FORCE || status == VERIFY_NOT_PASS) {
+            params?.width = WindowManager.LayoutParams.MATCH_PARENT
+            params?.height = WindowManager.LayoutParams.MATCH_PARENT
+            params?.windowAnimations = R.style.MyDialogBottomAnimation
+            BarUtils.setStatusBarColor(window!!,Color.WHITE)
+
+        } else {
+            params?.width = WindowManager.LayoutParams.WRAP_CONTENT
+            params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+            params?.windowAnimations = R.style.MyDialogCenterAnimation
+
+        }
+
         window?.attributes = params
         setCancelable(false)
         setCanceledOnTouchOutside(false)
