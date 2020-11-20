@@ -1200,6 +1200,10 @@
     <string name="install_google_first">请先安装Google</string>
     <string name="apply_human_verify">申请人工审核</string>
     <string name="waiting">等待中</string>
+    <string name="qqZone">QQ空间</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="pinterest">Pinterest</string>
 
 
 </resources>

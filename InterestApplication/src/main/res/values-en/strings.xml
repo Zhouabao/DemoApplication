@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">SugarTown</string>
+<!--Instagram 应用编号
+1602780226571020
+Instagram 应用密钥
+5bf71c428d411b3c676d0e3855993867-->
+    <string name="facebook_app_id">3546860392031186</string>
+    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
+    <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
+    <string name="server_client_id">325834510992-k6g9s9tkvnhvqpedasbc9o756vpc5se1.apps.googleusercontent.com</string>
+
+
 
     <string name="service_error">服务器出错，请重试</string>
     <string name="retry_net_error">网络异常，点击重试</string>
@@ -1187,8 +1197,10 @@
     <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="continue_with_twitter">Continue with Twitter</string>
     <string name="continue_with_google">Continue with Google</string>
-    <string name="facebook_app_id">3546860392031186</string>
     <string name="install_face_book_first">请先安装facebook</string>
     <string name="install_twitter_first">请先安装Twitter</string>
     <string name="install_google_first">请先安装Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="pinterest">Pinterest</string>
 </resources>

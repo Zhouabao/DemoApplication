@@ -433,6 +433,8 @@ class MyApplication : BaseApplication() {
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
 
+//            PlatformConfig.setPinterest()
+
             //twitter
 //            PlatformConfig.setTwitter("","")
 

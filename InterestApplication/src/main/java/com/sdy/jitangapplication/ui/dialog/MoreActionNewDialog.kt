@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.huawei.hms.framework.common.PackageUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -75,6 +76,7 @@ class MoreActionNewDialog(
     }
 
 
+    private val umShareAPI  by lazy { UMShareAPI.get(myContext) }
     private fun initView() {
         transpondFriend.isVisible = type != TYPE_SHARE_VIP_URL
         transpondFriend.setOnClickListener(this)
@@ -83,6 +85,28 @@ class MoreActionNewDialog(
         transpondWebo.setOnClickListener(this)
         transpondQQ.setOnClickListener(this)
         transpondQQZone.setOnClickListener(this)
+        transpondFacebook.setOnClickListener(this)
+        transpondIns.setOnClickListener(this)
+        transpondPinterest.setOnClickListener(this)
+
+        try {
+            transpondWechat.isVisible =
+                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.WEIXIN)
+            transpondWechatZone.isVisible =
+                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.WEIXIN)
+            transpondQQ.isVisible =
+                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.QQ)
+            transpondQQZone.isVisible =
+                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.QQ)
+            transpondWebo.isVisible =
+                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.SINA)
+
+            transpondFacebook.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.FACEBOOK)
+            transpondIns.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.INSTAGRAM)
+            transpondPinterest.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.PINTEREST)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onClick(view: View) {
@@ -95,7 +119,6 @@ class MoreActionNewDialog(
             }
             R.id.transpondWebo -> {//微博
                 shareToThirdParty(SHARE_MEDIA.SINA)
-
             }
             R.id.transpondWechat -> {//微信
                 shareToThirdParty(SHARE_MEDIA.WEIXIN)
@@ -110,6 +133,15 @@ class MoreActionNewDialog(
             }
             R.id.transpondQQZone -> {//QQ空间
                 shareToThirdParty(SHARE_MEDIA.QZONE)
+            }
+            R.id.transpondFacebook -> {//facebook
+                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
+            }
+            R.id.transpondIns -> {//instagram
+                shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
+            }
+            R.id.transpondPinterest -> {//pinterest
+                shareToThirdParty(SHARE_MEDIA.PINTEREST)
             }
         }
 
@@ -162,7 +194,10 @@ class MoreActionNewDialog(
             } else {            //文本分享
                 //                http://www.baidu.com
                 val web = UMWeb("http://")
-                web.title = myContext.getString(R.string.send_a_square_in_app,squareBean?.nickname.toString())//标题
+                web.title = myContext.getString(
+                    R.string.send_a_square_in_app,
+                    squareBean?.nickname.toString()
+                )//标题
                 web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
                 web.description = squareBean?.descr ?: ""//描述
                 if (platformConfig == SHARE_MEDIA.QQ) {
@@ -189,7 +224,8 @@ class MoreActionNewDialog(
             thumbImg.compressStyle = UMImage.CompressStyle.SCALE
             thumbImg.compressFormat = Bitmap.CompressFormat.PNG
             video.setThumb(thumbImg)
-            video.title = myContext.getString(R.string.send_a_video_in_app,squareBean?.nickname.toString())
+            video.title =
+                myContext.getString(R.string.send_a_video_in_app, squareBean?.nickname.toString())
             video.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
             } else myContext.getString(R.string.hurry_to_see_this)
@@ -202,7 +238,8 @@ class MoreActionNewDialog(
             val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
             audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
             audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
-            audio.title = myContext.getString(R.string.send_a_audio_in_app,squareBean?.nickname.toString())
+            audio.title =
+                myContext.getString(R.string.send_a_audio_in_app, squareBean?.nickname.toString())
             audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
             } else myContext.getString(R.string.hurry_to_see_this)
@@ -295,7 +332,7 @@ class MoreActionNewDialog(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        UMShareAPI.get(myContext).release()
+        umShareAPI.release()
 
     }
 
