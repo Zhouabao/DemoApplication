@@ -213,11 +213,11 @@ class OpenVipActivity : BaseActivity() {
         openVipBtn.clickWithTrigger {
             if (UserManager?.registerFileBean?.threshold == true && UserManager.getGender() == 1) {//门槛开启（成为会员）
                 if (chargeWayBeans.isNotEmpty()) {
-                    ConfirmPayCandyDialog(
+                    CommonFunction.startToPay(
                         this,
                         chargeWayBeans[0],
                         payways
-                    ).show()
+                    )
                 }
             } else {//门槛关闭（立即加入）
                 if (UserManager.getGender() == 1) {
@@ -272,7 +272,8 @@ class OpenVipActivity : BaseActivity() {
                             chargeWayBeans = it.data!!.list ?: mutableListOf()
                             setPurchaseType()
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
-                            sameSexCnt.text = getString(R.string.already_has,it.data!!.same_sex_cnt)
+                            sameSexCnt.text =
+                                getString(R.string.already_has, it.data!!.same_sex_cnt)
                         }
                     } else {
                         CommonFunction.toast(it.msg)

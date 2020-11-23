@@ -12,6 +12,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
@@ -22,7 +23,6 @@ import com.sdy.jitangapplication.ui.adapter.AllVipPowerAdapter
 import com.sdy.jitangapplication.ui.adapter.PowerInfoAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
-import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -282,7 +282,7 @@ class VipPowerActivity() :
                 }
             }
             if (position != null)
-                ConfirmPayCandyDialog(this, position, data.payway, source_type).show()
+                CommonFunction.startToPay(this, position, data.payway, source_type)
         }
 
 

@@ -583,6 +583,23 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("hasFaceUrl", has_face_url)
     }
 
+
+    /**
+     * 保存google购买的token
+     */
+    fun savePurchaseToken(purchaseToken: String) {
+        SPUtils.getInstance(Constants.SPNAME).put("purchaseToken", purchaseToken)
+    }
+
+
+    /**
+     * 保存google购买的token
+     */
+    fun getPurchaseToken(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("purchaseToken")
+    }
+
+
     fun getLocationParams(): HashMap<String, Any> {
         return hashMapOf(
             "lng" to getlongtitude().toFloat(),

@@ -254,6 +254,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-auth:19.0.0'
+    //google 结算
+    implementation 'com.android.billingclient:billing:2.2.0'
+    implementation 'com.android.billingclient:billing-ktx:2.2.0'
 //    implementation 'com.google.firebase:firebase-core:19.0.0'
 
 

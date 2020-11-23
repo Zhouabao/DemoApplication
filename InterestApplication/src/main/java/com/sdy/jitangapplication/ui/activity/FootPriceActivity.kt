@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.FootDescr
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.adapter.FootPowerAdapter
-import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.WhyPayDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -73,7 +72,7 @@ class FootPriceActivity : BaseActivity() {
 
         //立即加入
         joinNowBtn.clickWithTrigger {
-            ConfirmPayCandyDialog(this, chargeWayBeans[0], payways).show()
+            CommonFunction.startToPay(this, chargeWayBeans[0], payways)
         }
 
 

@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.android.billingclient.api.Purchase
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ScreenUtils
@@ -34,6 +36,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.googlepay.GooglePayUtils
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -44,6 +47,7 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -198,7 +202,10 @@ object CommonFunction {
                                 })
                         }
                         401 -> {//女性未认证
-                            VerifyThenChatDialog(context,VerifyThenChatDialog.FROM_APPLY_DATING).show()
+                            VerifyThenChatDialog(
+                                context,
+                                VerifyThenChatDialog.FROM_APPLY_DATING
+                            ).show()
                             loading.dismiss()
 
                         }
@@ -360,10 +367,11 @@ object CommonFunction {
         return when (item.attachment) {
             is ChatHiAttachment ->
                 when ((item.attachment as ChatHiAttachment).showType) {
-                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext().getString(R.string.msg_unlock_chat)
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext()
+                        .getString(R.string.msg_unlock_chat)
                     else -> ""
                 }
-            is ShareSquareAttachment ->DemoCache.getContext().getString(R.string.msg_share_square)
+            is ShareSquareAttachment -> DemoCache.getContext().getString(R.string.msg_share_square)
             is ChatDatingAttachment -> DemoCache.getContext().getString(R.string.msg_dating_apply)
             is SendGiftAttachment -> DemoCache.getContext().getString(R.string.msg_gift)
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
@@ -387,10 +395,11 @@ object CommonFunction {
         return when (item.attachment) {
             is ChatHiAttachment ->
                 when ((item.attachment as ChatHiAttachment).showType) {
-                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext().getString(R.string.msg_unlock_chat)
+                    ChatHiAttachment.CHATHI_CHATUP_FRIEND -> DemoCache.getContext()
+                        .getString(R.string.msg_unlock_chat)
                     else -> ""
                 }
-            is ShareSquareAttachment ->DemoCache.getContext().getString(R.string.msg_share_square)
+            is ShareSquareAttachment -> DemoCache.getContext().getString(R.string.msg_share_square)
             is ChatDatingAttachment -> DemoCache.getContext().getString(R.string.msg_dating_apply)
             is SendGiftAttachment -> DemoCache.getContext().getString(R.string.msg_gift)
             is ContactAttachment -> (item.attachment as ContactAttachment).contactContent
@@ -479,7 +488,10 @@ object CommonFunction {
 
                         }
                         401 -> {//女性未认证
-                            VerifyThenChatDialog(context,VerifyThenChatDialog.FROM_CONTACT_VERIFY).show()
+                            VerifyThenChatDialog(
+                                context,
+                                VerifyThenChatDialog.FROM_CONTACT_VERIFY
+                            ).show()
                         }
                         else -> {
                             toast(t.msg)
@@ -499,7 +511,10 @@ object CommonFunction {
             })
     }
 
-    fun sendAccostTip(target_accid: String, tipContent: String = DemoCache.getContext().getString(R.string.reply_auto_get_gift)) {
+    fun sendAccostTip(
+        target_accid: String,
+        tipContent: String = DemoCache.getContext().getString(R.string.reply_auto_get_gift)
+    ) {
         val attachment =
             SendCustomTipAttachment(tipContent, SendCustomTipAttachment.CUSTOME_TIP_NORMAL, false)
         val tip =
@@ -799,6 +814,61 @@ object CommonFunction {
 
 //        btnVerifyCode
     }
+
+
+    /**
+     * todo 验证是国内还是国外用户，拉起不同的支付
+     */
+    fun startToPay(
+        context: Context,
+        chargeBean: ChargeWayBean? = null,
+        payways: MutableList<PaywayBean> = mutableListOf(),
+        source_type: Int = -1
+    ) {
+        //支付宝、微信支付
+       // ConfirmPayCandyDialog(context, chargeBean!!, payways, source_type).show()
+
+        //谷歌支付
+        GooglePayUtils(context, mListener = object : GooglePayUtils.OnPurchaseCallback {
+            override fun onPaySuccess(purchaseToken: String) {
+                showAlert(context,context.getString(R.string.pay_success),true)
+            }
+
+            override fun onConsumeFail(purchase: Purchase) {
+                UserManager.savePurchaseToken(purchase.purchaseToken)
+
+            }
+
+            override fun onUserCancel() {
+                showAlert(context,context.getString(R.string.pay_cancel),false)
+            }
+
+            override fun responseCode(msg: String, errorCode: Int) {
+                showAlert(context,msg,false)
+            }
+
+        }).initConnection()
+    }
+
+
+    fun showAlert(ctx: Context, info: String, result: Boolean, title: Int = R.string.pay_result) {
+        CommonAlertDialog.Builder(ctx)
+            .setTitle(ctx.getString(title))
+            .setContent(info)
+            .setCancelIconIsVisibility(false)
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                override fun onClick(dialog: Dialog) {
+                    dialog.cancel()
+                    if (result) {
+                        payResultNotify(ctx)
+                    }
+                }
+
+            })
+            .create()
+            .show()
+    }
+
 
     fun payResultNotify(context: Context) {
         if (ActivityUtils.getTopActivity() is OpenVipActivity) {//注册界面支付会员进入首页

@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
-import com.sdy.jitangapplication.ui.dialog.ConfirmPayCandyDialog
 import kotlinx.android.synthetic.main.item_power_pt_vip.view.*
 import java.math.BigDecimal
 
@@ -97,7 +97,7 @@ class AllVipPowerAdapter :
                 }
             }
             if (position != null)
-                ConfirmPayCandyDialog(mContext, position, data.payway, source_type).show()
+                CommonFunction.startToPay(mContext, position, data.payway, source_type)
         }
 
 
