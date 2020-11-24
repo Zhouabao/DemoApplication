@@ -119,3 +119,16 @@ data class ViplistBean(
     var avatar: String = "",
     var nickname: String = ""
 )
+
+/**
+ * 手机区号bean
+ */
+data class CountryCodeBean(
+    var code: Int = 0,
+    var en: String = "",
+    var locale: String = "",
+    var pinyin: String = "",
+    var sc: String = "",
+    var tc: String = "",
+    var index: String = ""
+)

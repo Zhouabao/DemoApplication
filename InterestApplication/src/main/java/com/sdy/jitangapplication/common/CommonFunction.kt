@@ -926,17 +926,17 @@ object CommonFunction {
 
 
     fun toast(msg: String) {
-        ToastUtils.setBgColor(Color.parseColor("#80000000"))
-        ToastUtils.setMsgColor(Color.WHITE)
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+        ToastUtils.make().setBgColor(Color.parseColor("#80000000"))
+        ToastUtils.make().setTextColor(Color.WHITE)
+        ToastUtils.make().setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showShort(msg)
     }
 
 
     fun longToast(msg: String) {
-        ToastUtils.setBgColor(Color.parseColor("#80000000"))
-        ToastUtils.setMsgColor(Color.WHITE)
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+        ToastUtils.make().setBgColor(Color.parseColor("#80000000"))
+        ToastUtils.make().setTextColor(Color.WHITE)
+        ToastUtils.make().setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showLong(msg)
     }
 

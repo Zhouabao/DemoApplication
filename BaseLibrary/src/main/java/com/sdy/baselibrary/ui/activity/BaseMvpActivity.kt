@@ -48,7 +48,7 @@ abstract open class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), Base
      */
     override fun onError(text: String) {
         // SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(text).show()
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+        ToastUtils.make().setGravity(Gravity.CENTER, 0, 0)
         toast(text)
     }
 }

@@ -195,8 +195,8 @@ class IDVerifyActivity : FaceLivenessActivity() {
 
 
     private fun initVerify() {
-        Log.d("VVV", "MD5 = ${AppUtils.getAppSignatureMD5()}")
-        Log.d("VVV", "SHA1 = ${AppUtils.getAppSignatureSHA1()}")
+        Log.d("VVV", "MD5 = ${AppUtils.getAppSignaturesMD5()}")
+        Log.d("VVV", "SHA1 = ${AppUtils.getAppSignaturesSHA256()}")
 
         // 根据需求添加活体动作
         setFaceConfig()

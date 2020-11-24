@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
@@ -7,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -14,6 +17,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 
 /**
@@ -23,6 +27,10 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
 
     private var wxcode: String = ""
     private var login_type: String = "1"
+
+    companion object {
+        const val REQUEST_FOR_COUNTRY_CODE = 1000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +70,7 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
         btnLoginQuestion.setOnClickListener(this)
         btnVerifyCode.setOnClickListener(this)
         nickNameClean.setOnClickListener(this)
+        countryCode.setOnClickListener(this)
 
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable) {
@@ -135,6 +144,22 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
                     toast(getString(R.string.please_input_correct_phone))
                 }
             }
+            R.id.countryCode -> {
+                startActivityForResult<CountryCodeActivity>(REQUEST_FOR_COUNTRY_CODE)
+                KeyboardUtils.hideSoftInputByToggle(this)
+            }
+
         }
+    }
+
+
+    private var nowCountryCode = 86
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK)
+            if (requestCode == REQUEST_FOR_COUNTRY_CODE && data != null) {
+                nowCountryCode = data.getIntExtra("code", 86)
+                countryCode.text = "+${nowCountryCode}"
+            }
     }
 }

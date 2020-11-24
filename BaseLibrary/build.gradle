@@ -105,7 +105,7 @@ dependencies {
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
     //强大的工具类
-    api 'com.blankj:utilcodex:1.28.4'
+    api 'com.blankj:utilcodex:1.30.5'
     //屏幕适配
     api 'me.jessyan:autosize:1.2.1'
     //GSYVideoPlayer

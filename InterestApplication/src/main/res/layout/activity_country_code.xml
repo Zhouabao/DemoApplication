@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.CountryCodeActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/countryCodeRv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle" />
+
+
+    <com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
+        android:id="@+id/indexBar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
+        android:paddingRight="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/countryCodeRv"
+        app:sidebar_lazy_respond="false"
+        app:sidebar_position="right"
+        app:sidebar_text_color="@color/colorBlack"
+        app:sidebar_type="normal" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1203,4 +1203,5 @@ Instagram 应用密钥
     <string name="facebook">Facebook</string>
     <string name="instagram">Instagram</string>
     <string name="pinterest">Pinterest</string>
+    <string name="choose_country_or_region">选择国家和地区</string>
 </resources>

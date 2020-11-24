@@ -96,7 +96,12 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".faceliveness.FaceLivenessActivity"></activity>
+        <activity
+            android:name=".ui.activity.CountryCodeActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".faceliveness.FaceLivenessActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.activity.RoamingLocationActivity"
             android:launchMode="singleTop" />
@@ -340,9 +345,7 @@
         <activity
             android:name=".ui.activity.IDVerifyActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
@@ -590,8 +593,8 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="667" />
-
-        <!-- <activity
+        <!--
+ <activity
              android:name="com.umeng.facebook.FacebookActivity"
              android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
              android:label="@string/app_name"
@@ -601,25 +604,24 @@
          <meta-data
              android:name="com.facebook.sdk.ApplicationId"
              android:value="@string/facebook_app_id"
-             tools:ignore="ManifestResource" />-->
+             tools:ignore="ManifestResource" />
+        -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
             tools:ignore="ManifestResource" />
-        <activity android:name="com.facebook.FacebookActivity" />
-        <provider android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
-            android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
 
-        <!-- *****************高德地图********************** -->
+        <activity android:name="com.facebook.FacebookActivity" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
+            android:exported="true" /> <!-- *****************高德地图********************** -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ed0911965c16cc04ec36bb2360dccaa2" />
 
-        <service android:name="com.amap.api.location.APSService" />
-
-
-        <!-- *****************云信IM********************** -->
+        <service android:name="com.amap.api.location.APSService" /> <!-- *****************云信IM********************** -->
         <!-- 云信后台服务，请使用独立进程。 -->
         <service
             android:name="com.netease.nimlib.service.NimService"
