@@ -34,7 +34,6 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
@@ -133,7 +132,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     private val fromChatParams by lazy {
-        hashMapOf(
+        hashMapOf<String,Any>(
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
             "square_id" to intent.getIntExtra("id", -1)
@@ -256,7 +255,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 }
                 //点赞
                 R.id.detailPlaydianzan -> {
-                    val params = hashMapOf(
+                    val params = hashMapOf<String,Any>(
                         "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                         "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                         "type" to if (adapter.data[position].isliked == 1) {
@@ -365,7 +364,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             moreActionDialog.collect.visibility = View.VISIBLE
         }
         moreActionDialog.delete.onClick {
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to adapter.data[position]?.id!!
@@ -378,7 +377,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
         moreActionDialog.collect.onClick {
             //发起收藏请求
-            val params = hashMapOf(
+            val params = hashMapOf<String,Any>(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (adapter.data[position]?.iscollected == 0) {
@@ -403,7 +402,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 dialog.dismiss()
 
                 //发起举报请求
-                val params = hashMapOf(
+                val params = hashMapOf<String,Any>(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "type" to if (adapter.data[position]?.iscollected == 0) {
@@ -619,6 +618,5 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
     }
 }

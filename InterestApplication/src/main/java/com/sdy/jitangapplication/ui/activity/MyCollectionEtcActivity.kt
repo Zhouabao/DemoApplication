@@ -8,7 +8,6 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 
@@ -32,7 +31,6 @@ class MyCollectionEtcActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK)
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault()

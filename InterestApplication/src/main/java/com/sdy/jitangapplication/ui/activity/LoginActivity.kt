@@ -204,7 +204,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_GOOGLE_SIGN_IN) {
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)

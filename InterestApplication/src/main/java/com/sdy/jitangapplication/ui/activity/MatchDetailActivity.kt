@@ -53,7 +53,6 @@ import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.empty_layout_block.view.*
@@ -908,7 +907,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK)
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))

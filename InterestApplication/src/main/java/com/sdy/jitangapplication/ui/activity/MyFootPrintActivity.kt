@@ -12,7 +12,6 @@ import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.ui.fragment.MyCommentFragment
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_foot_print.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -72,7 +71,6 @@ class MyFootPrintActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK)
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault()

@@ -1,15 +1,18 @@
 package com.kotlin.base.ui.activity
 
 import android.annotation.TargetApi
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.BarUtils
+import com.facebook.CallbackManager
 import com.kotlin.base.common.AppManager
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
+import com.umeng.socialize.UMShareAPI
 import org.jetbrains.anko.find
 
 
@@ -18,6 +21,8 @@ import org.jetbrains.anko.find
  */
 open class BaseActivity : SwipeBackActivity() {
     public val TAG1 = this::class.java.simpleName
+    val callbackManager by lazy { CallbackManager.Factory.create() }
+
 
     companion object {
         public const val LOADING = 0
@@ -54,6 +59,8 @@ open class BaseActivity : SwipeBackActivity() {
     override fun onDestroy() {
         super.onDestroy()
         AppManager.instance.finishActivity(this)
+        UMShareAPI.get(this).release()
+
     }
 
     //获取Window中视图content
@@ -88,6 +95,13 @@ open class BaseActivity : SwipeBackActivity() {
             winParams.flags = winParams.flags and bits.inv()
         }
         win.attributes = winParams
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
 

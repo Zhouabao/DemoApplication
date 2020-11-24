@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.NetworkUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -12,6 +13,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.ui.activity.OnekeyLoginActivity
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.bean.SHARE_MEDIA
 import kotlinx.android.synthetic.main.dialog_choose_login_way.*
@@ -51,25 +53,25 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
 
     private fun initView() {
         //todo check language to show type
-//        if (LanguageUtils.getCurrentLocale() == Locale.CHINA) {
-//            loginWithPhoneBtn.isVisible = true
-//            loginWithWechatBtn.isVisible = true
-//            loginWithFacebookBtn.isVisible = false
-//            loginWithTwitterBtn.isVisible = false
-//            loginWithGoogleBtn.isVisible = false
-//        } else {
-//            loginWithFacebookBtn.isVisible = true
-//            loginWithTwitterBtn.isVisible = true
-//            loginWithGoogleBtn.isVisible = true
-//            loginWithPhoneBtn.isVisible = false
-//            loginWithWechatBtn.isVisible = false
-//        }
+        if (UserManager.overseas) {
+            loginWithFacebookBtn.isVisible = true
+            loginWithTwitterBtn.isVisible = false
+            loginWithGoogleBtn.isVisible = true
+            loginWithPhoneBtn.isVisible = true
+            loginWithWechatBtn.isVisible = false
+        } else {
+            loginWithPhoneBtn.isVisible = true
+            loginWithWechatBtn.isVisible = true
+            loginWithFacebookBtn.isVisible = false
+            loginWithTwitterBtn.isVisible = false
+            loginWithGoogleBtn.isVisible = false
+        }
 
 
         if (syCode == 1022) {
-            loginWithPhoneBtn.text = "本机号码一键登录"
+            loginWithPhoneBtn.text = context1.getString(R.string.one_key_login)
         } else {
-            loginWithPhoneBtn.text = "手机号码"
+            loginWithPhoneBtn.text = context1.getString(R.string.account_phone_num)
         }
         //手机号码登录
         loginWithPhoneBtn.clickWithTrigger {

@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,6 +23,14 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.*
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.share.Share
+import com.facebook.share.Sharer
+import com.facebook.share.model.SharePhoto
+import com.facebook.share.model.SharePhotoContent
+import com.facebook.share.widget.ShareDialog
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -63,7 +72,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.activity_square_comment_detail.headSquareView
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
@@ -917,6 +925,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareScrollView.smoothScrollTo(commentList.left, commentList.top)
             }
             R.id.squareMoreBtn1 -> {
+//                shareToFacebook()
                 showMoreDialog()
             }
             R.id.squareChatBtn1, R.id.headSquareChatBtn1 -> {
@@ -1220,9 +1229,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 GSYVideoManager.releaseAllVideos()
@@ -1286,6 +1296,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
+
+
 
 
 }

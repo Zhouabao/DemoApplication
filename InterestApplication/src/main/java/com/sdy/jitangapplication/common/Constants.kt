@@ -7,7 +7,7 @@ object Constants {
 
 //    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
     //是否处于测试环境
-    const val TEST = false
+    const val TEST = true
 
 
 

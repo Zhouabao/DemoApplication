@@ -3,18 +3,26 @@ package com.sdy.jitangapplication.ui.dialog
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
-import com.huawei.hms.framework.common.PackageUtils
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.share.Sharer
+import com.facebook.share.model.ShareHashtag
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -47,7 +55,7 @@ class MoreActionNewDialog(
     var content: String = "",
     var pic: String = ""
 ) :
-    Dialog(myContext, R.style.MyDialog), View.OnClickListener {
+    Dialog(myContext, R.style.MyDialog), View.OnClickListener, FacebookCallback<Sharer.Result> {
 
     companion object {
         const val TYPE_SHARE_SQUARE = 1
@@ -76,7 +84,7 @@ class MoreActionNewDialog(
     }
 
 
-    private val umShareAPI  by lazy { UMShareAPI.get(myContext) }
+    private val umShareAPI by lazy { UMShareAPI.get(myContext) }
     private fun initView() {
         transpondFriend.isVisible = type != TYPE_SHARE_VIP_URL
         transpondFriend.setOnClickListener(this)
@@ -87,9 +95,21 @@ class MoreActionNewDialog(
         transpondQQZone.setOnClickListener(this)
         transpondFacebook.setOnClickListener(this)
         transpondIns.setOnClickListener(this)
-        transpondPinterest.setOnClickListener(this)
 
-        try {
+
+        if (UserManager.overseas) {
+            transpondFacebook.isVisible = true
+//            umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.FACEBOOK)
+            transpondIns.isVisible = umShareAPI.isInstall(
+                myContext as Activity,
+                SHARE_MEDIA.INSTAGRAM
+            ) && !squareBean?.photo_json.isNullOrEmpty()
+            transpondWechat.isVisible = false
+            transpondWechatZone.isVisible = false
+            transpondQQ.isVisible = false
+            transpondQQZone.isVisible = false
+            transpondWebo.isVisible = false
+        } else {
             transpondWechat.isVisible =
                 umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.WEIXIN)
             transpondWechatZone.isVisible =
@@ -101,11 +121,8 @@ class MoreActionNewDialog(
             transpondWebo.isVisible =
                 umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.SINA)
 
-            transpondFacebook.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.FACEBOOK)
-            transpondIns.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.INSTAGRAM)
-            transpondPinterest.isVisible = umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.PINTEREST)
-        } catch (e: Exception) {
-            e.printStackTrace()
+            transpondFacebook.isVisible = false
+            transpondIns.isVisible = false
         }
     }
 
@@ -135,14 +152,13 @@ class MoreActionNewDialog(
                 shareToThirdParty(SHARE_MEDIA.QZONE)
             }
             R.id.transpondFacebook -> {//facebook
-                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
+                shareToFacebook()
+//                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
             }
             R.id.transpondIns -> {//instagram
                 shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
             }
-            R.id.transpondPinterest -> {//pinterest
-                shareToThirdParty(SHARE_MEDIA.PINTEREST)
-            }
+
         }
 
     }
@@ -157,6 +173,95 @@ class MoreActionNewDialog(
         } else {
             shareSquare(platformConfig)
         }
+    }
+
+
+    /**
+     * facebook分享单独封装
+     */
+    private fun shareToFacebook() {
+        val shareDialog = ShareDialog(myContext as Activity)
+        shareDialog.registerCallback((myContext as BaseActivity).callbackManager, this)
+
+
+        val shareUrl = ShareLinkContent.Builder()
+            .setContentUrl(
+                Uri.parse(
+                    if (!squareBean?.video_json.isNullOrEmpty()) {
+                        squareBean?.video_json!![0].url
+                    } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+                        squareBean?.photo_json!![0].url
+                    } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+                        squareBean?.audio_json!![0].url
+                    } else {
+                        squareBean?.avatar
+                    }
+                )
+            )
+
+            .setContentTitle(
+                if (!squareBean?.video_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_video_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_pic_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_video_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else {
+                    myContext.getString(
+                        R.string.send_a_square_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                }
+            )
+            .setContentDescription(
+                if (!squareBean?.descr.isNullOrEmpty()) {
+                    squareBean?.descr
+                } else myContext.getString(R.string.hurry_to_see_this)
+            )
+            .setQuote(
+                if (!squareBean?.video_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_video_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_pic_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+                    myContext.getString(
+                        R.string.send_a_video_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                } else {
+                    myContext.getString(
+                        R.string.send_a_square_in_app,
+                        squareBean?.nickname.toString()
+                    )
+                }
+            )
+            .setShareHashtag(
+                ShareHashtag.Builder()
+                    .setHashtag(
+                        if (!squareBean?.descr.isNullOrEmpty()) {
+                            squareBean?.descr
+                        } else myContext.getString(R.string.hurry_to_see_this)
+                    )
+                    .build()
+            )
+            .build()
+
+        shareDialog.show(shareUrl)
     }
 
 
@@ -275,9 +380,10 @@ class MoreActionNewDialog(
          * @descrption 分享成功的回调
          * @param platform 平台类型
          */
-        override fun onResult(p0: SHARE_MEDIA?) {
+        override fun onResult(p0: SHARE_MEDIA) {
+            Log.d("share===", "onresult ${p0?.getName()}================")
             if (type == TYPE_SHARE_SQUARE)
-                addShare()
+                addShare(p0)
             else
                 dismiss()
         }
@@ -287,6 +393,7 @@ class MoreActionNewDialog(
          * @param platform 平台类型
          */
         override fun onCancel(p0: SHARE_MEDIA?) {
+            Log.d("share===", "cancel ${p0?.getName()}================")
 
             dismiss()
         }
@@ -297,7 +404,7 @@ class MoreActionNewDialog(
          * @param t 错误原因
          */
         override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
-            Log.d("share===", "${p0.getName()}================${p1.message ?: ""}")
+            Log.d("share===", "onerror ${p0.getName()}================${p1.message ?: ""}")
             CommonFunction.toast(myContext.getString(R.string.share_fail))
         }
 
@@ -305,22 +412,23 @@ class MoreActionNewDialog(
          * @descrption 分享开始的回调
          * @param platform 平台类型
          */
-        override fun onStart(p0: SHARE_MEDIA?) {
-
+        override fun onStart(p0: SHARE_MEDIA) {
+            Log.d("share===", "onStart ${p0.getName()}================")
         }
 
     }
 
 
     /*-------------------------分享成功回调----------------------------*/
-    private fun addShare() {
+    private fun addShare(sharePlat: SHARE_MEDIA) {
         val params = hashMapOf<String, Any>()
         params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
             .addShare(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    CommonFunction.toast(t.msg)
+                    if (sharePlat != SHARE_MEDIA.INSTAGRAM)
+                        CommonFunction.toast(t.msg)
                     dismiss()
                 }
 
@@ -336,4 +444,29 @@ class MoreActionNewDialog(
 
     }
 
+    override fun dismiss() {
+        super.dismiss()
+        umShareAPI.release()
+    }
+
+    override fun onSuccess(result: Sharer.Result?) {
+        Log.d("share===", "onSuccess ${result}================")
+        addShare(SHARE_MEDIA.FACEBOOK)
+    }
+
+    override fun onCancel() {
+        Log.d("share===", "onCancel  ================")
+        dismiss()
+    }
+
+    override fun onError(error: FacebookException?) {
+        Log.d("share===", "onError ${error}================")
+        dismiss()
+    }
+
+
+    fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) {
+//        UMShareAPI.get(activity).onActivityResult(requestCode, resultCode, data)
+//        callbackManager.onActivityResult(requestCode, resultCode, data)
+    }
 }

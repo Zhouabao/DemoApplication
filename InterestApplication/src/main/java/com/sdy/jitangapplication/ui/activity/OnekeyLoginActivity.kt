@@ -14,7 +14,6 @@ import com.sdy.jitangapplication.presenter.OneKeyLoginPresenter
 import com.sdy.jitangapplication.presenter.view.OneKeyLoginView
 import com.sdy.jitangapplication.utils.ConfigUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.socialize.UMShareAPI
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -112,7 +111,6 @@ class OnekeyLoginActivity : BaseMvpActivity<OneKeyLoginPresenter>(), OneKeyLogin
 
     override fun onDestroy() {
         super.onDestroy()
-        UMShareAPI.get(this).release()
     }
 
     private var data: LoginBean? = null

@@ -825,29 +825,33 @@ object CommonFunction {
         payways: MutableList<PaywayBean> = mutableListOf(),
         source_type: Int = -1
     ) {
-        //支付宝、微信支付
-       // ConfirmPayCandyDialog(context, chargeBean!!, payways, source_type).show()
+        if (UserManager.overseas) {
+            //谷歌支付
+            GooglePayUtils(context, mListener = object : GooglePayUtils.OnPurchaseCallback {
+                override fun onPaySuccess(purchaseToken: String) {
+                    showAlert(context, context.getString(R.string.pay_success), true)
+                }
 
-        //谷歌支付
-        GooglePayUtils(context, mListener = object : GooglePayUtils.OnPurchaseCallback {
-            override fun onPaySuccess(purchaseToken: String) {
-                showAlert(context,context.getString(R.string.pay_success),true)
-            }
+                override fun onConsumeFail(purchase: Purchase) {
+                    UserManager.savePurchaseToken(purchase.purchaseToken)
 
-            override fun onConsumeFail(purchase: Purchase) {
-                UserManager.savePurchaseToken(purchase.purchaseToken)
+                }
 
-            }
+                override fun onUserCancel() {
+                    showAlert(context, context.getString(R.string.pay_cancel), false)
+                }
 
-            override fun onUserCancel() {
-                showAlert(context,context.getString(R.string.pay_cancel),false)
-            }
+                override fun responseCode(msg: String, errorCode: Int) {
+                    showAlert(context, msg, false)
+                }
 
-            override fun responseCode(msg: String, errorCode: Int) {
-                showAlert(context,msg,false)
-            }
+            }).initConnection()
+        } else {
+            //支付宝、微信支付
+            ConfirmPayCandyDialog(context, chargeBean!!, payways, source_type).show()
+        }
 
-        }).initConnection()
+
     }
 
 

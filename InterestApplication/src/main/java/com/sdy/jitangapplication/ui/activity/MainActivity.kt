@@ -40,7 +40,6 @@ import com.sdy.jitangapplication.ui.fragment.*
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -569,7 +568,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {

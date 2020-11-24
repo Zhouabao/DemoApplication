@@ -151,6 +151,8 @@ dependencies {
     api 'com.umeng.umsdk:share-wx:7.1.2'
     api 'com.umeng.umsdk:share-sina:7.1.2'
     api 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
+    //facebook分享
+    api 'com.facebook.android:facebook-android-sdk:[5,6)'
 //    api 'com.twitter.sdk.android:twitter-core:3.1.1'
 //    api 'com.twitter.sdk.android:tweet-composer:3.1.1'
 
