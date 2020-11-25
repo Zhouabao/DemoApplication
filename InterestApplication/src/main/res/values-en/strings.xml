@@ -1,14 +1,10 @@
 <resources>
-    <string name="app_name">SugarTown</string>
-<!--Instagram 应用编号
-1602780226571020
-Instagram 应用密钥
-5bf71c428d411b3c676d0e3855993867-->
+    <string name="app_name">积糖</string>
+
     <string name="facebook_app_id">3546860392031186</string>
     <string name="fb_login_protocol_scheme">fb3546860392031186</string>
     <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
     <string name="server_client_id">325834510992-k6g9s9tkvnhvqpedasbc9o756vpc5se1.apps.googleusercontent.com</string>
-
 
 
     <string name="service_error">服务器出错，请重试</string>
@@ -395,8 +391,8 @@ Instagram 应用密钥
     <string name="vip_verify">高端精英认证</string>
     <string name="join_now">立即加入</string>
     <string name="why_pay">为什么要付费</string>
-    <string name="inapp">在 %1$s 找到</string>
-    <string name="count_filter">个待筛选 %1$s 用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
+    <string name="inapp">在%1$s找到符合标准的</string>
+    <string name="count_filter">个待筛选%1$s用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
     <string name="count_filter_user">个待筛选用户</string>
     <string name="get_quick_match">获取更精准配对</string>
     <string name="input_knoe_channel">请先填写了解的渠道奥</string>
@@ -723,8 +719,7 @@ Instagram 应用密钥
     <string name="new_hi_message">新的招呼消息</string>
     <string name="first_charge_save">首充立减</string>
     <string name="cost">价值</string>
-    <string name="has_published">发布过</string>
-    <string name="piece_square">条动态</string>
+    <string name="has_published">发布过%1$d条动态</string>
     <string name="star_friend">☆星标好友</string>
     <string name="unread_message">未读消息</string>
     <string name="history_message">历史消息</string>
@@ -747,8 +742,7 @@ Instagram 应用密钥
     <string name="tobe_choiceness">成为“精选”用户\n获取更多聊天</string>
     <string name="tobe_choiceness1">成为精选</string>
     <string name="upgrade_vip">升级会员</string>
-    <string name="gold_vip_left">黄金会员（</string>
-    <string name="gold_vip_right">项特权）</string>
+    <string name="gold_vip_left">黄金会员（%1$d项特权）</string>
     <string name="unactive_power">暂未激活特权</string>
     <string name="timerun">到期</string>
     <string name="recommend">推荐</string>
@@ -898,14 +892,14 @@ Instagram 应用密钥
     <string name="tobe_vip_close_touch">成为会员和她们亲密接触</string>
     <string name="thaey_are_waitinf_for_you">她们在翘首期待你的加入</string>
     <string name="total_has">共有</string>
-    <string name="sugar_girl_count">%1$d 个糖宝女孩</string>
+    <string name="sugar_girl_count">%1$d个糖宝女孩</string>
     <string name="find_standard_girl">找到符合标准的</string>
-    <string name="person_cpunt">$1%s 名 $1%s</string>
+    <string name="person_cpunt">%1$s名%2$s</string>
     <string name="tobe_normal_vip">成为会员</string>
     <string name="free_chat_after_chat">成为会员无限畅聊</string>
     <string name="charge_now_to_free_chat">只有会员用户才可以聊天哦\n立即充值无限畅聊</string>
     <string name="no_thanks">不，谢谢</string>
-    <string name="already_has">已有 %1$d 名高端男士加入</string>
+    <string name="already_has">已有%1$d名高端男士加入</string>
     <string name="forver_time">/永久</string>
     <string name="higher_man_verify">高端精英认证</string>
     <string name="privacy_t1">尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了</string>
@@ -956,7 +950,7 @@ Instagram 应用密钥
     <string name="you_have_published_toady">你今天已经发布过活动了，为了活动的有效性请明日再试，我们会为你保留最新发布的活动信息</string>
     <string name="tourist_title">你目前是游客</string>
     <string name="register_now">立即注册登录</string>
-    <string name="register_in">此为注册用户功能\n加入积糖，与 %d 位糖宝达成联系</string>
+    <string name="register_in">此为注册用户功能\n加入积糖，与 $s%d 位糖宝达成联系</string>
     <string name="share_qq_zone">QQ空间</string>
     <string name="upload_clear_pic">上传清晰的本人照片作为头像会极大提高匹配率</string>
     <string name="take_picture">拍摄</string>
@@ -1054,7 +1048,7 @@ Instagram 应用密钥
     <string name="today_visit1">今日来访：%1$d</string>
     <string name="all_visit_1">总来访：%1$d</string>
     <string name="open_vip_contact_them">开通会员联系她们</string>
-    <string name="open_vip_contact_them1">在%1$s共有%1$d名糖宝女孩\n满足你的需求</string>
+    <string name="open_vip_contact_them1">在%1$s共有%2$d名糖宝女孩\n满足你的需求</string>
     <string name="true_avatar_to_recommend">当前头像非真实头像，替换后可获得首页推荐</string>
     <string name="empty_friend">您还没有好友</string>
     <string name="no_square">暂时没有动态</string>
@@ -1129,9 +1123,9 @@ Instagram 应用密钥
     <string name="gift_wall_title">礼物墙</string>
     <string name="min_record_time">录制时间不可小于5S</string>
     <string name="one_key_login">本机号码一键登录</string>
-    <string name="login_presents_you_agree">登录注册代表你已同意</string>
-    <string name="and1">和</string>
-    <string name="and2">\" 以及 \"</string>
+    <string name="login_presents_you_agree">登录注册代表你已同意 </string>
+    <string name="and1"> 和 </string>
+    <string name="and2"> 以及 </string>
     <string name="cannot_cause_duration_short">视频长不足 %1$d 秒,无法上传</string>
     <string name="alreadey_choose">\"已选取 \"</string>
     <string name="hour">时</string>
@@ -1185,23 +1179,30 @@ Instagram 应用密钥
 
 
     <string name="chat_detail">聊天详情</string>
-    <string name="do_star_friend">星标好友</string>
+    <string name="do_star_friend">星标好友</string>s
     <string name="msg_disturb">消息免打扰</string>
     <string name="find_history">查找聊天记录</string>
     <string name="clear_history">清空聊天记录</string>
     <string name="reported">投诉举报</string>
     <string name="join_sugartown">加入积糖</string>
     <string name="create_profile_start_date">创建个人资料，开始你的约会</string>
-    <string name="login_with_phone">User Phone Number</string>
+    <string name="login_with_phone">手机号</string>
     <string name="login_with_wechat">微信</string>
     <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="continue_with_twitter">Continue with Twitter</string>
     <string name="continue_with_google">Continue with Google</string>
+
+
     <string name="install_face_book_first">请先安装facebook</string>
     <string name="install_twitter_first">请先安装Twitter</string>
     <string name="install_google_first">请先安装Google</string>
+    <string name="apply_human_verify">申请人工审核</string>
+    <string name="waiting">等待中</string>
+    <string name="qqZone">QQ空间</string>
     <string name="facebook">Facebook</string>
     <string name="instagram">Instagram</string>
     <string name="pinterest">Pinterest</string>
     <string name="choose_country_or_region">选择国家和地区</string>
+
+
 </resources>

@@ -100,7 +100,7 @@ interface Api {
      * 1 人工认证 2重传头像或则取消
      */
     @FormUrlEncoded
-    @POST("member_info/humanAduit/v1.json${Constants.END_BASE_URL}")
+    @POST("member_info/humanAduit${Constants.END_BASE_URL}")
     fun humanAduit(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**

@@ -48,9 +48,9 @@ class PowerInfoAdapter : BaseQuickAdapter<VipPowerBean, BaseViewHolder>(R.layout
         when (data.type) {
             VipPowerBean.TYPE_GOLD_VIP -> {
                 itemview.vipPowerNickname.text =
-                    mContext.getString(R.string.gold_vip_left) + (data.icon_list
-                        ?: mutableListOf()).size + mContext.getString(
-                        R.string.gold_vip_right
+                    mContext.getString(
+                        R.string.gold_vip_left,
+                        (data.icon_list ?: mutableListOf()).size
                     )
                 itemview.powerUserBgExtend.setBackgroundResource(R.drawable.rectangle_left_ptvip_10dp)
                 itemview.vipOutTime.setTextColor(Color.parseColor("#ffcd7e14"))

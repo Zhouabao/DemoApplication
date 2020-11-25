@@ -101,7 +101,7 @@ public class ConfigUtils {
                 .setPrivacyOffsetBottomY(10)//设置隐私条款相对于屏幕下边缘y偏
                 .setPrivacyState(true)
                 .setPrivacyTextSize(12)
-                .setPrivacyOffsetX(20)
+                .setPrivacyOffsetX(44)
                 .setOperatorPrivacyAtLast(true)
                 .setPrivacySmhHidden(true)
                 .setCheckBoxHidden(true)

@@ -140,9 +140,9 @@ class IDVerifyActivity : FaceLivenessActivity() {
         setSwipeBackEnable(type != TYPE_LIVE_CAPTURE)
 
         if (UserManager.getAvator().isNullOrEmpty())
-            GlideUtil.loadCircleImg(this, R.drawable.icon_face_liveness_bg, faceCoverIv)
+            GlideUtil.loadAvatorImg(this, R.drawable.icon_face_liveness_bg, faceCoverIv)
         else
-            GlideUtil.loadCircleImg(this, UserManager.getAvator(), faceCoverIv)
+            GlideUtil.loadAvatorImg(this, UserManager.getAvator(), faceCoverIv)
         when (type) {
             TYPE_ACCOUNT_NORMAL,
             TYPE_LIVE_CAPTURE -> {
@@ -195,8 +195,6 @@ class IDVerifyActivity : FaceLivenessActivity() {
 
 
     private fun initVerify() {
-        Log.d("VVV", "MD5 = ${AppUtils.getAppSignaturesMD5()}")
-        Log.d("VVV", "SHA1 = ${AppUtils.getAppSignaturesSHA256()}")
 
         // 根据需求添加活体动作
         setFaceConfig()
@@ -211,7 +209,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
 
                 override fun initFailure(p0: Int, p1: String?) {
                     runOnUiThread {
-
+                        initFace = false
                         Log.e(TAG, "初始化失败 = $p0  , $p1")
                     }
                 }
@@ -284,8 +282,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
             onPause()
             faceNotice.text = getString(R.string.take_time_out)
             faceNotice.setTextColor(Color.parseColor("#fffb1919"))
-            CommonFunction.toast(getString(R.string.take_time_out))
-            onResume()
+            startPreview()
         }
     }
 

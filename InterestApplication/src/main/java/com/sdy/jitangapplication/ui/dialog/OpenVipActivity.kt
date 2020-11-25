@@ -134,8 +134,7 @@ class OpenVipActivity : BaseActivity() {
                         .append(
                             getString(
                                 R.string.person_cpunt,
-                                moreMatch?.people_amount.toString(),
-                                moreMatch?.gender_str
+                                moreMatch?.people_amount.toString(), moreMatch?.gender_str
                             )
                         )
                         .setFontSize(22, true)
@@ -296,7 +295,7 @@ class OpenVipActivity : BaseActivity() {
     private fun setPurchaseType() {
         if (chargeWayBeans.isNotEmpty()) {
             SpanUtils.with(originalPrice)
-                .append(getString(R.string.original_price) + "¥" + chargeWayBeans[0].original_price)
+                .append(getString(R.string.original_price) + chargeWayBeans[0].original_price)
                 .setFontSize(12, true)
                 .setBold()
                 .setStrikethrough()

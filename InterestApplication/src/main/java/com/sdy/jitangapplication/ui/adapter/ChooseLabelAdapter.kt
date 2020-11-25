@@ -11,7 +11,8 @@ import com.sdy.jitangapplication.model.SquareLabelBean
 import kotlinx.android.synthetic.main.item_choose_label.view.*
 import kotlinx.android.synthetic.main.item_choose_label_title.view.*
 
-class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHolder>(mutableListOf()) {
+class ChooseLabelAdapter :
+    BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHolder>(mutableListOf()) {
 
     init {
         addItemType(SquareLabelBean.TITLE, R.layout.item_choose_label_title)
@@ -27,7 +28,12 @@ class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHo
             SquareLabelBean.CONTENT -> {
                 helper.itemView.divider.isVisible = helper.layoutPosition != mData.size - 1
                 helper.itemView.labelName.text = item.title
-                GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(6F))
+                GlideUtil.loadRoundImgCenterCrop(
+                    mContext,
+                    item.icon,
+                    helper.itemView.labelIcon,
+                    SizeUtils.dp2px(6F)
+                )
 
                 if (item.checked) {
                     helper.itemView.setBackgroundColor(Color.parseColor("#FFFFEFE7"))
@@ -36,8 +42,8 @@ class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHo
                 }
                 if (item.cnt > 0) {
                     helper.itemView.labelUsedCount.isVisible = true
-                    helper.itemView.labelUsedCount.text = mContext.getString(R.string.has_published) + item.cnt + mContext.getString(
-                                            R.string.piece_square)
+                    helper.itemView.labelUsedCount.text =
+                        mContext.getString(R.string.has_published, item.cnt)
                 } else {
                     helper.itemView.labelUsedCount.isVisible = false
                 }

@@ -338,7 +338,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             t2.text =
                 getString(
                     R.string.open_vip_contact_them1,
-                    arrayOf(UserManager.getCity(), UserManager.registerFileBean?.people_amount ?: 0)
+                    UserManager.getCity(), UserManager.registerFileBean?.people_amount ?: 0
                 )
 
             openVipBtn.text = getString(R.string.open_vip_contact_them)
@@ -624,7 +624,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         adapter.setEmptyView(R.layout.empty_friend_layout, rvPeopleNearby)
         adapter.isUseEmpty(false)
         adapter.emptyView.emptyFriendTitle.text = getString(R.string.nearby_empty_content)
-        adapter.emptyView.emptyFriendTip.text =  getString(R.string.nearby_empty_content1)
+        adapter.emptyView.emptyFriendTip.text = getString(R.string.nearby_empty_content1)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.setHeaderAndEmpty(true)
 

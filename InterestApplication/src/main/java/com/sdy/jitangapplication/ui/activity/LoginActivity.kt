@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
@@ -51,9 +53,9 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         syCode = intent.getIntExtra("syCode", 0)
-//        BarUtils.setStatusBarLightMode(this, true)
-//        ScreenUtils.setFullScreen(this)
-        AbScreenUtils.hideBottomUIMenu(this)
+
+        BarUtils.setStatusBarColor(this,Color.BLACK)
+        BarUtils.setStatusBarLightMode(this, false)
         initView()
         showVideoPreview()
         mPresenter.getRegisterProcessType()
@@ -209,7 +211,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 if (task != null && task.isSuccessful) {
                     val account = task.getResult(ApiException::class.java)!!
-//                firebaseAuthWithGoogle(account.idToken!!)
+                firebaseAuthWithGoogle(account.idToken!!)
                     Log.e(TAG1, "google---${account},idToken = ${account.idToken},id = ${account.id}")
                     mPresenter.checkVerifyCode(
                         account.idToken!!,

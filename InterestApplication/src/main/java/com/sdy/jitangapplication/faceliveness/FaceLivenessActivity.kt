@@ -201,7 +201,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
         faceCoverIv.isInvisible = true
         faceBeginRl.isVisible = false
 
-        faceType!!.text = "请将脸移入取景框"
+        faceType!!.text = getString(R.string.detect_face_in)
         faceNotice!!.text = ""
 
 
@@ -382,7 +382,9 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
     ) {
         when (status) {
             FaceStatusNewEnum.OK,
-            FaceStatusNewEnum.FaceLivenessActionComplete,
+            FaceStatusNewEnum.FaceLivenessActionComplete->{
+                faceNotice.text = ""
+            }
             FaceStatusNewEnum.DetectRemindCodeTooClose,
             FaceStatusNewEnum.DetectRemindCodeTooFar,
             FaceStatusNewEnum.DetectRemindCodeBeyondPreviewFrame,

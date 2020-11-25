@@ -391,8 +391,8 @@
     <string name="vip_verify">高端精英认证</string>
     <string name="join_now">立即加入</string>
     <string name="why_pay">为什么要付费</string>
-    <string name="inapp">在 %1$s 找到</string>
-    <string name="count_filter">个待筛选 %1$s 用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
+    <string name="inapp">在%1$s找到符合标准的</string>
+    <string name="count_filter">个待筛选%1$s用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
     <string name="count_filter_user">个待筛选用户</string>
     <string name="get_quick_match">获取更精准配对</string>
     <string name="input_knoe_channel">请先填写了解的渠道奥</string>
@@ -719,8 +719,7 @@
     <string name="new_hi_message">新的招呼消息</string>
     <string name="first_charge_save">首充立减</string>
     <string name="cost">价值</string>
-    <string name="has_published">发布过</string>
-    <string name="piece_square">条动态</string>
+    <string name="has_published">发布过%1$d条动态</string>
     <string name="star_friend">☆星标好友</string>
     <string name="unread_message">未读消息</string>
     <string name="history_message">历史消息</string>
@@ -743,8 +742,7 @@
     <string name="tobe_choiceness">成为“精选”用户\n获取更多聊天</string>
     <string name="tobe_choiceness1">成为精选</string>
     <string name="upgrade_vip">升级会员</string>
-    <string name="gold_vip_left">黄金会员（</string>
-    <string name="gold_vip_right">项特权）</string>
+    <string name="gold_vip_left">黄金会员（%1$d项特权）</string>
     <string name="unactive_power">暂未激活特权</string>
     <string name="timerun">到期</string>
     <string name="recommend">推荐</string>
@@ -894,14 +892,14 @@
     <string name="tobe_vip_close_touch">成为会员和她们亲密接触</string>
     <string name="thaey_are_waitinf_for_you">她们在翘首期待你的加入</string>
     <string name="total_has">共有</string>
-    <string name="sugar_girl_count">%1$d 个糖宝女孩</string>
+    <string name="sugar_girl_count">%1$d个糖宝女孩</string>
     <string name="find_standard_girl">找到符合标准的</string>
-    <string name="person_cpunt">$1%s 名 $1%s</string>
+    <string name="person_cpunt">%1$s名%2$s</string>
     <string name="tobe_normal_vip">成为会员</string>
     <string name="free_chat_after_chat">成为会员无限畅聊</string>
     <string name="charge_now_to_free_chat">只有会员用户才可以聊天哦\n立即充值无限畅聊</string>
     <string name="no_thanks">不，谢谢</string>
-    <string name="already_has">已有 %1$d 名高端男士加入</string>
+    <string name="already_has">已有%1$d名高端男士加入</string>
     <string name="forver_time">/永久</string>
     <string name="higher_man_verify">高端精英认证</string>
     <string name="privacy_t1">尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了</string>
@@ -1050,7 +1048,7 @@
     <string name="today_visit1">今日来访：%1$d</string>
     <string name="all_visit_1">总来访：%1$d</string>
     <string name="open_vip_contact_them">开通会员联系她们</string>
-    <string name="open_vip_contact_them1">在%1$s共有%1$d名糖宝女孩\n满足你的需求</string>
+    <string name="open_vip_contact_them1">在%1$s共有%2$d名糖宝女孩\n满足你的需求</string>
     <string name="true_avatar_to_recommend">当前头像非真实头像，替换后可获得首页推荐</string>
     <string name="empty_friend">您还没有好友</string>
     <string name="no_square">暂时没有动态</string>
