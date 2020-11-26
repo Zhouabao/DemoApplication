@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.sdy.jitangapplication.R;
+
 import org.wysaid.myUtils.ImageUtil;
 import org.wysaid.view.CameraRecordGLSurfaceView;
 
@@ -28,10 +30,10 @@ public class TakePhotoFilterCallback implements CameraRecordGLSurfaceView.TakePi
         if (bmp != null) {
             String s = ImageUtil.saveBitmap(bmp);
             bmp.recycle();
-            Toast.makeText(mContext,"图片保存在:"+s,Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,mContext.getString(R.string.The_picture_is_saved_in)+s,Toast.LENGTH_SHORT).show();
             mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + s)));
         } else{
-            Toast.makeText(mContext,"拍照失败",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.take_fail,Toast.LENGTH_SHORT).show();
         }
     }
 }

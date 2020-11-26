@@ -97,7 +97,7 @@
             android:layout_marginTop="27dp"
             android:drawableTop="@mipmap/icon_liveness_full_phone"
             android:drawablePadding="10dp"
-            android:text="正对手机"
+            android:text="@string/detect_standard"
             android:textColor="#ff191919"
             android:textSize="13sp" />
 
@@ -111,7 +111,7 @@
             android:layout_toRightOf="@id/facePhone"
             android:drawableTop="@mipmap/icon_liveness_full_light"
             android:drawablePadding="10dp"
-            android:text="正对手机"
+            android:text="@string/detect_standard"
             android:textColor="#ff191919"
             android:textSize="13sp" />
 
@@ -125,7 +125,7 @@
             android:layout_toRightOf="@id/faceLight"
             android:drawableTop="@mipmap/icon_liveness_full_face"
             android:drawablePadding="10dp"
-            android:text="正对手机"
+            android:text="@string/detect_standard"
             android:textColor="#ff191919"
             android:textSize="13sp" />
 

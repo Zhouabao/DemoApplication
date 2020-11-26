@@ -17,7 +17,7 @@
 
     <TextView
             android:id="@+id/emptyTip"
-            android:text="Ta还没发布过内容"
+            android:text="@string/empty_friend_square"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:layout_centerHorizontal="true"

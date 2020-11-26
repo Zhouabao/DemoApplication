@@ -71,7 +71,7 @@
             android:layout_height="wrap_content">
 
         <TextView
-                android:text="隐私条款"
+                android:text="@string/privacy_title"
                 android:textColor="#ff333333"
                 android:textSize="16sp"
                 android:layout_weight="1"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content">
 
         <TextView
-                android:text="用户协议"
+                android:text="@string/user_title"
                 android:textColor="#ff333333"
                 android:textSize="16sp"
                 android:layout_weight="1"
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content">
 
         <TextView
-                android:text="联系我们"
+                android:text="@string/contact_us"
                 android:textColor="#ff333333"
                 android:textSize="16sp"
                 android:layout_weight="1"
@@ -144,8 +144,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="20dp"
             android:lineSpacingMultiplier="1.2"
-            android:text="Copyright© 2020\n
-成都霜冻夜科技有限公司 版权所有"
+            android:text="@string/copyright_2020"
             android:textColor="#40000000"
             android:textSize="12sp"
             />

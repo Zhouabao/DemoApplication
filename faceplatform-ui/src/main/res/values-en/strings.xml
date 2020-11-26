@@ -1,4 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="need_face_livness">需进行人脸识别</string>
+	<string name="app_name">Baidu-idl-facesdk</string>
+	<string name="detect_no_face">Faceless face</string>
+	<string name="detect_face_in">Please move your face into the view box</string>
+	<string name="detect_zoom_in">Please close your face</string>
+	<string name="detect_zoom_out">Please distinguish your face</string>
+	<string name="detect_head_up">Please look up</string>
+	<string name="detect_head_down">I wish you low down</string>
+	<string name="detect_head_left">Turned to the left</string>
+	<string name="detect_head_right">I invite slightly to right</string>
+	<string name="detect_occ_face">The face is blocked</string>
+	<string name="detect_occ_left_eye">The left eye is blocked</string>
+	<string name="detect_occ_right_eye">The right eye is blocked</string>
+	<string name="detect_occ_nose">The nose is blocked</string>
+	<string name="detect_occ_mouth">There is a shade of the mouth</string>
+	<string name="detect_occ_left_check">Left cheek is obscured</string>
+	<string name="detect_occ_right_check">The right cheeks are blocked</string>
+	<string name="detect_occ_chin">Chin is blocked</string>
+	<string name="detect_low_light">Please make the ambient light again</string>
+	<string name="detect_keep">Please hold your phone and look at the screen</string>
+	<string name="detect_standard">Please positive phone</string>
+	<string name="detect_timeout">Test the timeout, please follow the prompts.</string>
+	<string name="detect_left_eye_close">The left eye is not open</string>
+	<string name="detect_right_eye_close">The right eye is not open</string>
+	<string name="liveness_eye">Blink</string>
+	<string name="liveness_eye_left">Please blink on the left</string>
+	<string name="liveness_eye_right">Please blind on the right side</string>
+	<string name="liveness_mouth">Zhang Zhang</string>
+	<string name="liveness_head_left">Slow down to the left</string>
+	<string name="liveness_head_right">Slow down to right</string>
+	<string name="liveness_head_left_right">Left and right shoud</string>
+	<string name="liveness_head_up">Slowly look up</string>
+	<string name="liveness_head_down">Slow down</string>
+	<string name="liveness_good">Please keep your face</string>
+	<string name="home_greet_txt">welcome</string>
+	<string name="home_greet_sdk_txt">Baidu face collection SDK</string>
+	<string name="home_light_txt">Identify light</string>
+	<string name="home_light_explain_txt">Please ensure that the light should not be too dark or too bright.</string>
+	<string name="home_handset_txt">Please positive phone</string>
+	<string name="home_handset_explain_txt">Keep your face in the view box</string>
+	<string name="home_mask_txt">Support mask recognition</string>
+	<string name="home_mask_explain_txt">Collection does not need to take a mask (except for the action of living)</string>
+	<string name="home_but_txt">Start face collection</string>
+	<string name="home_agreement_titlebar_txt">Face collection agreement</string>
+	<string name="home_agreement_functional_txt">Function Description</string>
+	<string name="home_agreement_functional_explain_txt">In order to protect the security of the user account, provide better services, before providing some products and services,
+        </string>
+	<string name="home_agreement_functional_explain_old_txt">This feature requests an authoritative data source to identify information confirmation.</string>
+	<string name="home_agreement_permission_txt">Authorization and license</string>
+	<string name="home_agreement_permission_explain_txt">If you click "Confirm" or choose to accept this Agreement rule, you will be deemed to be used when using a face recognition service.
+        </string>
+	<string name="home_agreement_rmation_security_txt">Information security statement</string>
+	<string name="home_agreement_rmation_security_explaoin_txt">Commitment to your personal information strictly confidential, and data encrypted transmission, data encryption storage based on encryption algorithm recognized by the national regulatory authority.
+        </string>
+	<string name="setting_titlebar_txt">Set</string>
+	<string name="setting_prompt_txt">Tip: When using it officially, developers can hide the front end settings.</string>
+	<string name="setting_announcements_txt">Voice broadcast</string>
+	<string name="setting_live_detect_txt">Somatic body detection</string>
+	<string name="setting_actionlive_txt">Live activity sequence random</string>
+	<string name="setting_actionlive_blink_txt">Blink</string>
+	<string name="setting_actionlive_shake_head_txt">Left and right shoud</string>
+	<string name="setting_actionlive_turn_left_txt">Shake the head to the left</string>
+	<string name="setting_actionlive_turn_right_txt">Shake the head to the right</string>
+	<string name="setting_actionlive_nod_txt">Downward</string>
+	<string name="setting_actionlive_look_up_txt">Look up</string>
+	<string name="setting_actionlive_open_mouth_txt">Zhang Zhang</string>
+	<string name="collect_bottom_txt">- Baidu brain technical support -</string>
+	<string name="need_face_livness">Human face recognition</string>
+	<string name="face_liveness_for_account_danger">Detected account abnormal behavior risk \ n needs to re-perform face recognition</string>
+	<string name="begin_face_liveness">Start living body test</string>
 </resources>

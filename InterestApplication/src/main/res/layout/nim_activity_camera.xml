@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="单击拍照，长按录像"
+            android:text="@string/single_take_long_record"
             android:textColor="@color/white"
             android:textSize="12sp" />
 

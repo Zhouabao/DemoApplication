@@ -30,7 +30,7 @@
             android:paddingTop="@dimen/dp_size_10">
         </androidx.recyclerview.widget.RecyclerView>
 
-        <com.netease.nim.uikit.common.media.imagepicker.view.SuperCheckBox
+        <com.sdy.jitangapplication.nim.uikit.common.media.imagepicker.view.SuperCheckBox
             android:id="@+id/cb_origin"
             style="@style/SuperCheckboxTheme"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_marginLeft="10dp"
             android:button="@drawable/image_original_selector"
             android:paddingLeft="8dp"
-            android:text="原图"
+            android:text="@string/original_pic"
             android:textColor="#FFF"
             android:visibility="gone"/>
 

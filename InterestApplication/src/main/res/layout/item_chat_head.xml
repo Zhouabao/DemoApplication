@@ -67,7 +67,7 @@
 
             <TextView
                     android:id="@+id/targetUserDetail"
-                    android:text="个人主页"
+                    android:text="@string/homepage"
                     android:textColor="#ff191919"
                     android:textSize="14sp"
                     android:background="@drawable/rectangle_black_white_19dp"

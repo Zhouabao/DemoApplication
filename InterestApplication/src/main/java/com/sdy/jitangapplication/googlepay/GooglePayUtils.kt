@@ -86,12 +86,12 @@ class GooglePayUtils(
             ) {
                 Log.e(TAG, "onSkuDetailsResponse code = ${billingResult.responseCode}")
                 if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-                    onFail("商品不存在")
+                    onFail(context.getString(R.string.no_goods))
                     return
                 }
 
                 if (skuDetailsList.isNullOrEmpty()) {
-                    mListener?.responseCode("商品不存在")
+                    mListener?.responseCode(context.getString(R.string.no_goods))
                     return
                 }
 
@@ -106,7 +106,7 @@ class GooglePayUtils(
                 if (skuDetail != null) {
                     pay(skuDetail)
                 } else {
-                    mListener?.responseCode("商品不存在")
+                    mListener?.responseCode(context.getString(R.string.no_goods))
                 }
             }
 
@@ -122,7 +122,7 @@ class GooglePayUtils(
             .build()
         val code = mBillingClient!!.launchBillingFlow(context as Activity, flowParams).responseCode
         if (BillingClient.BillingResponseCode.OK != code) {
-            onFail("支付失败")
+            onFail(context.getString(R.string.pay_fail))
         }
     }
 
@@ -146,7 +146,7 @@ class GooglePayUtils(
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             mListener?.onUserCancel()
         } else {
-            mListener?.responseCode("支付失败", billingResult.responseCode)
+            mListener?.responseCode(context.getString(R.string.pay_fail), billingResult.responseCode)
         }
     }
 

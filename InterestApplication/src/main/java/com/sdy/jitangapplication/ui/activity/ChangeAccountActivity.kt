@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -16,6 +17,7 @@ import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.LoginOffDialog
 import kotlinx.android.synthetic.main.activity_change_account.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivityForResult
 
 /**
  * 变更账号
@@ -41,6 +43,7 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
         verifycodeBtn.setOnClickListener(this)
         confirmChangeBtn.setOnClickListener(this)
         loginOff.setOnClickListener(this)
+        countryCodeTv.setOnClickListener(this)
 
         loginOff.text = SpanUtils.with(loginOff)
             .append(getString(R.string.account_login_offtip1))
@@ -116,7 +119,8 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
                 mPresenter.sendSms(
                     hashMapOf<String, Any>(
                         "phone" to newPhoneEt.text.toString(),
-                        "scene" to "register"
+                        "scene" to "register",
+                        "region" to countryCode
                     )
                 )
             }
@@ -134,7 +138,19 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
                 mPresenter.getCauseList()
             }
 
+            //选择区号
+            countryCodeTv -> {
+                startActivityForResult<CountryCodeActivity>(1002)
+            }
+        }
+    }
 
+
+    private var countryCode = 86
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1002) {
+            countryCode = data?.getIntExtra("code", 86) ?: 86
         }
     }
 

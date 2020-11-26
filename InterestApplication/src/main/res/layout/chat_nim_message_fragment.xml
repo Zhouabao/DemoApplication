@@ -128,7 +128,7 @@
             android:paddingTop="3dp"
             android:paddingRight="7dp"
             android:paddingBottom="3dp"
-            android:text="立即认证"
+            android:text="@string/verify_now"
             android:textColor="#ffffffff"
             android:textSize="11sp" />
 

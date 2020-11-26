@@ -21,7 +21,7 @@
             android:layout_marginTop="3dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="解锁联系方式"
+            android:text="@string/unlock_contact"
             android:textSize="16sp"
             android:textColor="@color/colorWhite"
        />
@@ -57,7 +57,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="14dp"
         android:gravity="center_vertical"
-        android:text="糖果礼物"
+        android:text="@string/sugar_gift"
         android:textColor="#ffd2d3d5"
         android:textSize="12sp" />
 </LinearLayout>

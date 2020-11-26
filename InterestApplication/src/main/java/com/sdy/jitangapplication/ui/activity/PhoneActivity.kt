@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -138,7 +137,8 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
                     startActivity<VerifyCodeActivity>(
                         "phone" to etPhone.text.toString(),
                         "wxcode" to wxcode,
-                        "type" to login_type
+                        "type" to login_type,
+                        "region" to nowCountryCode
                     )
                 } else {
                     toast(getString(R.string.please_input_correct_phone))

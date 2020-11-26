@@ -14,7 +14,7 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/allT2"
-            android:text="所有评论"
+            android:text="@string/all_comment"
             android:layout_marginTop="20dp"
             android:textColor="#FF191919"
             android:textSize="12sp"

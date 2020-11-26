@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="我的会话"
+            android:text="@string/my_conversation"
             android:textColor="#ff888d92"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"

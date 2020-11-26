@@ -19,7 +19,7 @@
 
         <TextView
                 android:id="@+id/makeAvatorTip"
-                android:text="设为头像"
+                android:text="@string/make_avatar"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -53,7 +53,7 @@
 
 
         <TextView
-                android:text="删除"
+                android:text="@string/delete"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -87,7 +87,7 @@
 
 
         <TextView
-                android:text="取消"
+                android:text="@string/cancel"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:text="选择认证方式"
+        android:text="@string/choose_verify_way"
         android:textColor="#ff191919"
         android:textSize="20sp"
         android:textStyle="bold"

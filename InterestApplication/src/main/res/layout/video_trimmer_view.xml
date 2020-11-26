@@ -91,7 +91,7 @@
             android:textColor="@android:color/white"
             android:textSize="12dp"
             android:visibility="gone"
-            tools:text="拖动选择你要发表的10秒以内片段" />
+            tools:text="@string/drag_10s" />
 
 
         <FrameLayout
@@ -129,7 +129,7 @@
                 android:layout_gravity="right|center_vertical"
                 android:background="@drawable/gradient_orange_17dp"
                 android:gravity="center"
-                android:text="确认使用"
+                android:text="@string/confirm_use"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
 

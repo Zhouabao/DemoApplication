@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:background="#FFF1F1F1"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="隐私设置"
+                    android:text="@string/set_privacy"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -61,7 +61,7 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
-                    android:text="屏蔽通讯录"
+                    android:text="@string/block_contact"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -88,7 +88,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="1dp"
                     android:gravity="center_vertical"
-                    android:text="屏蔽距离"
+                    android:text="@string/block_distance"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -104,7 +104,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="隐身模式"
+                    android:text="@string/hide_mode"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -123,7 +123,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/hideModeBtn"
-                    tools:text="离线时隐身" />
+                    tools:text="@string/hide_when_offline" />
 
 
                 <ImageView
@@ -146,7 +146,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="黑名单"
+                    android:text="@string/black_list"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -217,7 +217,7 @@
                     android:background="#FFF1F1F1"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:text="通用设置"
+                    android:text="@string/common_setting"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"
                     app:layout_constraintTop_toBottomOf="@id/privacyPowerBtn" />
@@ -230,7 +230,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="消息提醒"
+                    android:text="@string/msg_notification"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -274,7 +274,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="关于"
+                    android:text="@string/about"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -301,7 +301,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="账号相关"
+                    android:text="@string/about_account"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     android:visibility="visible"
@@ -318,7 +318,7 @@
                     android:drawableRight="@drawable/icon_more_right"
                     android:gravity="center_vertical"
                     android:paddingRight="15dp"
-                    android:text="清理缓存"
+                    android:text="@string/clear_cache"
                     android:textColor="#FF333333"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -346,7 +346,7 @@
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/shape_rectangle_black_login_out"
                     android:gravity="center"
-                    android:text="退出登录"
+                    android:text="@string/login_out"
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"

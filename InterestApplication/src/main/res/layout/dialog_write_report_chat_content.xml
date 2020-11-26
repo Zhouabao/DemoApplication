@@ -43,7 +43,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_rectangle_gray_white_5dp"
-        android:hint="输入原因"
+        android:hint="@string/input_report_reason"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="@color/colorBlack"

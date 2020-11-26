@@ -45,7 +45,7 @@
         android:paddingTop="2dp"
         android:paddingRight="12dp"
         android:paddingBottom="2dp"
-        android:text="编辑兴趣"
+        android:text="@string/edit_tag"
         android:textColor="#ffffffff"
         android:textSize="13sp"
         android:visibility="gone"

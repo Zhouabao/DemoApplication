@@ -193,7 +193,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="个人权益"
+                                android:text="@string/personal_power"
                                 android:textColor="#ff191919"
                                 android:textSize="14sp" />
 
@@ -228,7 +228,7 @@
                                 android:drawableRight="@drawable/icon_more_right_gray"
                                 android:drawablePadding="5dp"
                                 android:gravity="center_vertical|right"
-                                android:text="增加曝光权益"
+                                android:text="@string/Increase_exposure_rights"
                                 android:textColor="#ff888d92"
                                 android:textSize="14sp" />
 
@@ -280,7 +280,7 @@
                                 android:paddingTop="4dp"
                                 android:paddingRight="11dp"
                                 android:paddingBottom="4dp"
-                                android:text="我的特权"
+                                android:text="@string/my_privilege"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="12sp"
                                 android:visibility="visible" />
@@ -305,7 +305,7 @@
                                 android:layout_marginTop="10dp"
                                 android:drawableLeft="@drawable/icon_candy_me"
                                 android:drawablePadding="6dp"
-                                android:text="我的糖果"
+                                android:text="@string/my_candy"
                                 android:textColor="#ff191919"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
@@ -346,7 +346,7 @@
                                 android:layout_marginTop="10dp"
                                 android:drawableLeft="@drawable/icon_see_me"
                                 android:drawablePadding="6dp"
-                                android:text="看过我的"
+                                android:text="@string/seen_mine"
                                 android:textColor="#ff191919"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
@@ -383,7 +383,7 @@
                                 android:layout_marginTop="10dp"
                                 android:drawableLeft="@drawable/icon_foot_me"
                                 android:drawablePadding="6dp"
-                                android:text="我的足迹"
+                                android:text="@string/my_footprint"
                                 android:textColor="#ff191919"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
@@ -395,7 +395,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="9dp"
-                                android:text="点赞、评论、…"
+                                android:text="@string/likes_comments"
                                 android:textColor="#ff888d92"
                                 android:textSize="12sp"
                                 app:layout_constraintLeft_toLeftOf="@id/tvFoot"

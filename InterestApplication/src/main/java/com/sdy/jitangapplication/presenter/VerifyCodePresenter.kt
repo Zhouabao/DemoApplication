@@ -121,14 +121,15 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
     /**
      * 重新获取验证码
      */
-    fun getVerifyCode(mobile: String) {
+    fun getVerifyCode(mobile: String,region:Int) {
         if (!checkNetWork()) {
             return
         }
 
         val params = hashMapOf<String, Any>(
             "phone" to mobile,
-            "scene" to "register"
+            "scene" to "register",
+            "region" to region
         )
         RetrofitFactory.instance
             .create(Api::class.java)

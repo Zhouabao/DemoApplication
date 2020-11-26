@@ -53,7 +53,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:hint="请输入话题文本"
+                            android:hint="@string/input_topic_content"
                             android:textColor="#FF6796FA"
                             android:textSize="16sp"
                             />
@@ -64,7 +64,7 @@
                             android:layout_marginTop="20dp"
                             android:paddingLeft="15dp"
                             android:gravity="center_vertical"
-                            android:text="热门标题"
+                            android:text="@string/hot_topic"
                             android:layout_marginBottom="10dp"
                             android:textColor="#ff959a9e"
                             android:textSize="14sp"

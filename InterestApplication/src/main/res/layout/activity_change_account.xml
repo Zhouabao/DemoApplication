@@ -12,7 +12,7 @@
     <include layout="@layout/layout_actionbar"/>
 
     <TextView
-            android:id="@+id/moreInfoTitle"
+            android:id="@+id/countryCodeTv"
             android:text="+86"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"

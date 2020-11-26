@@ -15,7 +15,7 @@
         android:drawableRight="@drawable/icon_down_gray"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:text="展开全部"
+        android:text="@string/expand_all"
         android:textColor="#ffa5a5a5"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

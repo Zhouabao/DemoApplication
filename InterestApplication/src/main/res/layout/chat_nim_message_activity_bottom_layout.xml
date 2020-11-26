@@ -36,7 +36,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="她给你留下了联系方式"
+            android:text="@string/she_left_contact_way"
             android:textColor="#ff191919"
             android:textSize="13sp" />
 
@@ -51,7 +51,7 @@
             android:paddingTop="3dp"
             android:paddingRight="14dp"
             android:paddingBottom="3dp"
-            android:text="查看"
+            android:text="@string/watch"
             android:textColor="#ffffffff"
             android:textSize="13sp" />
 
@@ -112,7 +112,7 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/shape_rectangle_orange_8dp"
                 android:gravity="center"
-                android:text="发送"
+                android:text="@string/send"
                 android:textColor="#ffffffff"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -151,7 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="按住录音"
+            android:text="@string/push_record"
             android:textColor="#ff666666"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/startRecordBtn"

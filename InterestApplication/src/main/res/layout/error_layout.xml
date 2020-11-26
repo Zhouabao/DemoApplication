@@ -27,7 +27,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:gravity="center"
-        android:text="重试"
+        android:text="@string/retry"
         android:textColor="#ff333333"
         android:textSize="16sp" />
 

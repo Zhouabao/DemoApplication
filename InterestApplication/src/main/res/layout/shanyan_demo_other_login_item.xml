@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="其他方式登录"
+            android:text="@string/other_login_way"
             android:textColor="#FFB5B7B9" />
 
         <View

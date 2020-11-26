@@ -33,6 +33,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
+    private val region by lazy { intent.getIntExtra("region", 86) }
 
 
     companion object {
@@ -75,7 +76,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
-        mPresenter.getVerifyCode(phone)
+        mPresenter.getVerifyCode(phone, region)
         inputVerifyCode.isEnabled = true
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
@@ -142,7 +143,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     override fun onClick(view: View) {
         when (view.id) {
             R.id.countVerifyCodeTime -> {
-                mPresenter.getVerifyCode(phone)
+                mPresenter.getVerifyCode(phone, region)
             }
             R.id.changePhone -> {
                 onBackPressed()

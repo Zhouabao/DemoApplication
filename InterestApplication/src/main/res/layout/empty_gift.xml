@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:gravity="center_vertical"
-        android:text="Ta暂时没有收到礼物"
+        android:text="@string/empty_gift"
         android:textColor="#ff696e73"
         android:textSize="14sp" />
 

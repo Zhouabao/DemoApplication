@@ -24,7 +24,7 @@
 
     <TextView
             android:id="@+id/emptyTip"
-            android:text="快写下你的评论吧"
+            android:text="@string/wirte_comment"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:layout_centerHorizontal="true"

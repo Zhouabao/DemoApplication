@@ -21,7 +21,7 @@
 
     <TextView
             android:id="@+id/emptyTip"
-            android:text="这里什么也没有"
+            android:text="@string/empty_nothing"
             android:gravity="center"
             android:layout_marginTop="20dp"
             android:layout_below="@id/emptyImg"
