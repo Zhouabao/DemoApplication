@@ -80,10 +80,7 @@ class GooglePayUtils(
             .setType(purchaseType)
             .build()
         mBillingClient!!.querySkuDetailsAsync(params, object : SkuDetailsResponseListener {
-            override fun onSkuDetailsResponse(
-                billingResult: BillingResult,
-                skuDetailsList: MutableList<SkuDetails>
-            ) {
+            override fun onSkuDetailsResponse(billingResult: BillingResult, skuDetailsList: MutableList<SkuDetails>?) {
                 Log.e(TAG, "onSkuDetailsResponse code = ${billingResult.responseCode}")
                 if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
                     onFail(context.getString(R.string.no_goods))
@@ -108,6 +105,7 @@ class GooglePayUtils(
                 } else {
                     mListener?.responseCode(context.getString(R.string.no_goods))
                 }
+
             }
 
         })
@@ -232,7 +230,6 @@ class GooglePayUtils(
         val acknowledgePutchaseParams =
             AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
-                .setDeveloperPayload(orderId)
                 .build()
         mBillingClient!!.acknowledgePurchase(acknowledgePutchaseParams) { billingResult ->
             Log.e(

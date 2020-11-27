@@ -20,11 +20,9 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.kotlin.base.rx.BaseException;
-import okhttp3.MediaType;
-import okhttp3.ResponseBody;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import retrofit2.Converter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,7 +30,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import static okhttp3.internal.Util.UTF_8;
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+
+import static kotlin.text.Charsets.UTF_8;
+
 
 final class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private final Gson gson;

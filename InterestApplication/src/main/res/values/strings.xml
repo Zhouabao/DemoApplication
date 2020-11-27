@@ -511,7 +511,6 @@
     <string name="nickname">昵称</string>
     <string name="gender">性别</string>
     <string name="birthday">生日</string>
-    <string name="contact_way">联系方式</string>
     <string name="click_hide_or_change">点击变更或隐藏</string>
     <string name="about_me">关于我</string>
     <string name="show_colorful_name">展示你的多样性，让有趣的灵魂找到你</string>
@@ -1196,7 +1195,6 @@
     <string name="install_face_book_first">请先安装facebook</string>
     <string name="install_twitter_first">请先安装Twitter</string>
     <string name="install_google_first">请先安装Google</string>
-    <string name="apply_human_verify">申请人工审核</string>
     <string name="waiting">等待中</string>
     <string name="qqZone">QQ空间</string>
     <string name="facebook">Facebook</string>
@@ -1223,17 +1221,14 @@
     <string name="set_privacy">隐私设置</string>
     <string name="block_contact">屏蔽通讯录</string>
     <string name="block_distance">屏蔽距离</string>
-    <string name="hide_mode">隐身模式</string>
     <string name="hide_when_offline">离线时隐身</string>
     <string name="black_list">黑名单</string>
     <string name="clear_cache">清理缓存</string>
-    <string name="login_out">退出登录</string>
     <string name="about_account">账号相关</string>
     <string name="msg_notification">消息提醒</string>
     <string name="common_setting">通用设置</string>
     <string name="choose_verify_way">选择认证方式</string>
     <string name="re_take">重新拍摄</string>
-    <string name="confirm_use">确认使用</string>
     <string name="she_left_contact_way">她给你留下了联系方式</string>
     <string name="watch">查看</string>
     <string name="push_record">按住录音</string>
@@ -1249,7 +1244,6 @@
     <string name="complete_label">完善兴趣</string>
     <string name="empty_nothing">这里什么也没有</string>
     <string name="empty_friend_square">Ta还没发布过内容</string>
-    <string name="all_comment">所有评论</string>
     <string name="wirte_comment">快写下你的评论吧</string>
     <string name="send_friend_gift">快去给Ta送点礼物吧</string>
     <string name="personal_power">个人权益</string>

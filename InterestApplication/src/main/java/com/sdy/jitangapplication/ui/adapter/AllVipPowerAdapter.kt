@@ -123,9 +123,5 @@ class AllVipPowerAdapter :
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        EventBus.getDefault().post(PayPalResultEvent(requestCode, resultCode, data))
-    }
 
 }

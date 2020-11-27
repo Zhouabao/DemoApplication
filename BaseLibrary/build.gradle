@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +24,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
     buildTypes {
         release {
@@ -39,19 +42,18 @@ dependencies {
 //implementation('com.android.support:appcompat-v7:28.0.0') {
 //            exclude module: 'support-v4'
 //        }
-    implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //分包
-    api 'com.android.support:multidex:1.0.0'
+    api 'com.android.support:multidex:1.0.3'
     //Android Support
     api 'androidx.legacy:legacy-support-v4:1.0.0'
-    api 'androidx.appcompat:appcompat:1.0.0'
-    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'androidx.recyclerview:recyclerview:1.1.0'
     api 'com.google.android:flexbox:1.1.0'
-    api 'com.google.android.material:material:1.0.0'
+    api 'com.google.android.material:material:1.2.1'
     api 'androidx.dynamicanimation:dynamicanimation:1.0.0'
     api 'androidx.cardview:cardview:1.0.0'
     // Anko Commons
@@ -74,13 +76,13 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     api 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     //glide加载圆角圆形图
-    api 'jp.wasabeef:glide-transformations:4.0.1'
+    api 'jp.wasabeef:glide-transformations:4.1.0'
     //Circle ImageView
     api "de.hdodenhof:circleimageview:$circle_imageView_version"
     //Alert View
 //    api "com.bigkoo:alertview:$alert_view_version"
     //七牛
-    api 'com.qiniu:qiniu-android-sdk:7.4.2'
+    api 'com.qiniu:qiniu-android-sdk:8.0.4'
     //Banner
     api 'com.github.zhpanvip:BannerViewPager:2.7.0'
     //MulitStateView
@@ -152,7 +154,7 @@ dependencies {
     api 'com.umeng.umsdk:share-sina:7.1.2'
     api 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
     //facebook分享
-    api 'com.facebook.android:facebook-android-sdk:[5,6)'
+    api 'com.facebook.android:facebook-android-sdk:5.15.3'
 //    api 'com.twitter.sdk.android:twitter-core:3.1.1'
 //    api 'com.twitter.sdk.android:tweet-composer:3.1.1'
 
@@ -162,5 +164,5 @@ dependencies {
 
     //paypal
     api 'com.braintreepayments.api:braintree:3.14.2'
-    api 'com.braintreepayments.api:drop-in:4.6.0'
+    api 'com.braintreepayments.api:drop-in:5.0.1'
 }
