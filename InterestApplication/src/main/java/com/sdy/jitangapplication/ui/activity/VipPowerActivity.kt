@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.VipPowerBean
@@ -26,6 +28,7 @@ import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.math.BigDecimal
 
@@ -303,6 +306,11 @@ class VipPowerActivity() :
             }
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        EventBus.getDefault().post(PayPalResultEvent(requestCode, resultCode, data))
     }
 
 }

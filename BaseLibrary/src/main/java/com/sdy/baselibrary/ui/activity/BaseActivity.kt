@@ -8,6 +8,11 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.BarUtils
+import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.interfaces.BraintreeListener
+import com.braintreepayments.api.interfaces.ConfigurationListener
+import com.braintreepayments.api.models.Configuration
 import com.facebook.CallbackManager
 import com.kotlin.base.common.AppManager
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
@@ -19,9 +24,10 @@ import org.jetbrains.anko.find
 /*
     Activity基类，业务无关
  */
-open class BaseActivity : SwipeBackActivity() {
+open class BaseActivity : SwipeBackActivity(), BraintreeListener {
     public val TAG1 = this::class.java.simpleName
     val callbackManager by lazy { CallbackManager.Factory.create() }
+
 
 
     companion object {

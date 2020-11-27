@@ -158,4 +158,9 @@ dependencies {
 
     //多渠道打包
     api 'com.leon.channel:helper:2.0.3'
+
+
+    //paypal
+    api 'com.braintreepayments.api:braintree:3.14.2'
+    api 'com.braintreepayments.api:drop-in:4.6.0'
 }

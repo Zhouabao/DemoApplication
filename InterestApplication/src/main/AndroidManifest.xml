@@ -616,12 +616,29 @@
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
-            android:exported="true" /> <!-- *****************高德地图********************** -->
+            android:exported="true" />
+
+
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
+
+
+        <!-- *****************高德地图********************** -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ed0911965c16cc04ec36bb2360dccaa2" />
 
-        <service android:name="com.amap.api.location.APSService" /> <!-- *****************云信IM********************** -->
+        <service android:name="com.amap.api.location.APSService" />
+
+
+        <!-- *****************云信IM********************** -->
         <!-- 云信后台服务，请使用独立进程。 -->
         <service
             android:name="com.netease.nimlib.service.NimService"

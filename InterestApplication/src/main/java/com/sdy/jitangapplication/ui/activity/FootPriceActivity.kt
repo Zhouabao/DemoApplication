@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -21,6 +22,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.FootDescr
@@ -153,6 +155,11 @@ class FootPriceActivity : BaseActivity() {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        EventBus.getDefault().post(PayPalResultEvent(requestCode, resultCode, data))
+    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -2,6 +2,8 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Typeface
@@ -12,8 +14,18 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alipay.sdk.app.PayTask
+import com.android.billingclient.api.Purchase
+import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.dropin.DropInActivity
+import com.braintreepayments.api.dropin.DropInRequest
+import com.braintreepayments.api.dropin.DropInResult
+import com.braintreepayments.api.exceptions.InvalidArgumentException
+import com.braintreepayments.api.interfaces.BraintreeCancelListener
+import com.braintreepayments.api.interfaces.BraintreeErrorListener
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -25,6 +37,8 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.PayPalResultEvent
+import com.sdy.jitangapplication.googlepay.GooglePayUtils
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.PaywayBean
@@ -98,10 +112,18 @@ class ConfirmPayCandyDialog(
         }
 
         confrimBtn.clickWithTrigger {
-            if (alipayCheck.isChecked) {
-                createOrder(PAY_ALI)
+            if (UserManager.overseas) {
+                if (alipayCheck.isChecked) {
+                    createOrder(PAY_PAYPAL)
+                } else {
+                    createOrder(PAY_GOOGLE)
+                }
             } else {
-                createOrder(PAY_WECHAT)
+                if (alipayCheck.isChecked) {
+                    createOrder(PAY_ALI)
+                } else {
+                    createOrder(PAY_WECHAT)
+                }
             }
         }
 
@@ -196,45 +218,132 @@ class ConfirmPayCandyDialog(
      * 开始支付
      *     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
      */
-    private val PAY_WECHAT = 2//微信支付
-    private val PAY_ALI = 1 //支付宝支付
+    companion object {
+        const val PAY_ALI = 1 //支付宝支付
+        const val PAY_WECHAT = 2//微信支付
+        const val PAY_PAYPAL = 3//paypal支付
+        const val PAY_GOOGLE = 4//google支付
+        const val REQUEST_CODE_PAYPAL = 888 //paypal支付回调
+    }
+
     private fun start2Pay(payment_type: Int, data: PayBean) {
         if (payment_type == PAY_WECHAT) {
-            //微信支付注册
-            val wxapi = WXAPIFactory.createWXAPI(myContext, null)
-            wxapi.registerApp(Constants.WECHAT_APP_ID)
-            if (!wxapi.isWXAppInstalled) {
-                CommonFunction.toast(myContext.getString(R.string.unload_wechat))
-                return
-            }
-
-            //封装微信支付参数
-            val request = PayReq()//吊起微信APP的对象
-            request.appId = data.wechat?.appid
-            request.prepayId = data.wechat?.prepayid
-            request.partnerId = data.wechat?.partnerid
-            request.nonceStr = data.wechat?.noncestr
-            request.timeStamp = data.wechat?.timestamp
-            request.packageValue = data.wechat?.`package`
-            request.sign = data.wechat?.sign
-
-            //发起微信支付请求
-            wxapi.sendReq(request)
+            //微信支付
+            wechatPay(data)
         } else if (payment_type == PAY_ALI) {
-            //必须异步调用
-            Thread(Runnable {
-                val alipay = PayTask(myContext as Activity)
-                val result: Map<String, String> = alipay.payV2(data.reqstr, true)
-                Log.i("msp", result.toString())
+            //支付宝支付
+            aliPay(data)
+        } else if (payment_type == PAY_GOOGLE) {
+            //谷歌支付
+            googlePay()
+        } else {
+            //todo 获取clientToken 然后开始支付
+            //PayPal支付
+            initBraintreeFragment(data.reqstr)
+            onBrainTreeSubmit(data.reqstr)
 
-                val msg = Message()
-                msg.what = SDK_PAY_FLAG
-                msg.obj = result
-                mHandler.sendMessage(msg)
-            }).start()
+
         }
 
     }
+
+    private fun onBrainTreeSubmit(clienToken: String) {
+        val dropInRequest = DropInRequest().clientToken(clienToken)
+        (myContext as Activity).startActivityForResult(
+            dropInRequest.getIntent(myContext),
+            REQUEST_CODE_PAYPAL
+        )
+    }
+
+    private fun aliPay(data: PayBean) {
+        //必须异步调用
+        Thread(Runnable {
+            val alipay = PayTask(myContext as Activity)
+            val result: Map<String, String> = alipay.payV2(data.reqstr, true)
+            Log.i("msp", result.toString())
+
+            val msg = Message()
+            msg.what = SDK_PAY_FLAG
+            msg.obj = result
+            mHandler.sendMessage(msg)
+        }).start()
+    }
+
+    private fun googlePay() {
+        GooglePayUtils(myContext, mListener = object : GooglePayUtils.OnPurchaseCallback {
+            override fun onPaySuccess(purchaseToken: String) {
+                showAlert(myContext, myContext.getString(R.string.pay_success), true)
+            }
+
+            override fun onConsumeFail(purchase: Purchase) {
+                UserManager.savePurchaseToken(purchase.purchaseToken)
+
+            }
+
+            override fun onUserCancel() {
+                showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
+            }
+
+            override fun responseCode(msg: String, errorCode: Int) {
+                showAlert(myContext, msg, false)
+            }
+
+        }).initConnection()
+    }
+
+    private fun wechatPay(data: PayBean) {
+        //微信支付注册
+        val wxapi = WXAPIFactory.createWXAPI(myContext, null)
+        wxapi.registerApp(Constants.WECHAT_APP_ID)
+        if (!wxapi.isWXAppInstalled) {
+            CommonFunction.toast(myContext.getString(R.string.unload_wechat))
+            return
+        }
+
+        //封装微信支付参数
+        val request = PayReq()//吊起微信APP的对象
+        request.appId = data.wechat?.appid
+        request.prepayId = data.wechat?.prepayid
+        request.partnerId = data.wechat?.partnerid
+        request.nonceStr = data.wechat?.noncestr
+        request.timeStamp = data.wechat?.timestamp
+        request.packageValue = data.wechat?.`package`
+        request.sign = data.wechat?.sign
+
+        //发起微信支付请求
+        wxapi.sendReq(request)
+    }
+
+    lateinit var mBraintreeFragment: BraintreeFragment
+    private val paymentMethodNonceCreatedListener by lazy { PaymentMethodNonceCreatedListener { } }
+    private val braintreeCancelListener by lazy {
+        BraintreeCancelListener {
+            showAlert(myContext, "支付取消 ${it}", false)
+        }
+    }
+    private val braintreeErrorListener by lazy {
+        BraintreeErrorListener {
+            showAlert(myContext, "支付错误 ${it}", false)
+        }
+    }
+
+    fun initBraintreeFragment(tokenization: String) {
+        try {
+            mBraintreeFragment =
+                BraintreeFragment.newInstance(myContext as AppCompatActivity, tokenization)
+            //支付完成监听
+            mBraintreeFragment.addListener(paymentMethodNonceCreatedListener)
+            //支付取消监听
+            mBraintreeFragment.addListener(braintreeCancelListener)
+            //错误监听
+            mBraintreeFragment.addListener(braintreeErrorListener)
+
+        } catch (e: InvalidArgumentException) {
+
+        }
+
+    }
+
 
     private fun showAlert(ctx: Context, info: String, result: Boolean) {
         CommonAlertDialog.Builder(ctx)
@@ -269,6 +378,28 @@ class ConfirmPayCandyDialog(
     fun onCloseDialogEvent(event: CloseDialogEvent) {
         if (isShowing) {
             dismiss()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPayPalResultEvent(event: PayPalResultEvent) {
+        if (event.requestCode == REQUEST_CODE_PAYPAL) {
+            if (event.resultCode == RESULT_OK) {
+                val result: DropInResult? =
+                    event.data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
+                if (result != null) {
+                    Log.d("onPayPalResultEvent", result.toString())
+                }
+                showAlert(myContext, myContext.getString(R.string.pay_success), true)
+            } else if (event.resultCode == RESULT_CANCELED) {
+                Log.d("onPayPalResultEvent", "用户取消支付")
+                showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
+            } else {
+                val error: Exception? =
+                    event.data?.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
+                Log.d("onPayPalResultEvent", error.toString())
+                showAlert(myContext, error.toString(), false)
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.content.Intent
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -8,9 +9,11 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import kotlinx.android.synthetic.main.item_power_pt_vip.view.*
+import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 
 /**
@@ -118,6 +121,11 @@ class AllVipPowerAdapter :
             }
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        EventBus.getDefault().post(PayPalResultEvent(requestCode, resultCode, data))
     }
 
 }

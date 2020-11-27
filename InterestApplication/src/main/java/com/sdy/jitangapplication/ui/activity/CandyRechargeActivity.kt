@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.presenter.ChargeVipPresenter
@@ -66,6 +68,11 @@ class CandyRechargeActivity : BaseMvpActivity<ChargeVipPresenter>(), ChargeVipVi
             candyPriceAdapter.addData(data?.list ?: mutableListOf())
             payments.addAll(data?.paylist ?: mutableListOf<PaywayBean>())
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        EventBus.getDefault().post(PayPalResultEvent(requestCode, resultCode, data))
     }
 
     override fun onDestroy() {
