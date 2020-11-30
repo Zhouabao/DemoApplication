@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">积糖</string>
+    <string name="app_name">SugarTown</string>
 
     <string name="facebook_app_id">3546860392031186</string>
     <string name="fb_login_protocol_scheme">fb3546860392031186</string>
@@ -458,7 +458,7 @@
     <string name="she">Her</string>
     <string name="face_has_verify">Certified</string>
     <string name="want_with_you">wants to</string>
-    <string name="black_you_did_content">Cannot check personal profile of eachother under blacklist\n Friends's right could be recovered by cancel blacklist</string>
+    <string name="black_you_did_content">Cannot check personal profile of eachother under blacklist\n Friends\'s right could be recovered by cancel blacklist</string>
     <string name="black_she_did_content">He(or her)has blocklisted you and restricted your access to their personal profile</string>
     <string name="message_find_title">Discovery message</string>
     <string name="empty_messgae">No message yet</string>
@@ -602,7 +602,7 @@
     <string name="too_many_people_notice">Too many registrations at the moment,to ensure that you have best experience,Please register after the countdown</string>
     <string name="sorry_for_trouble">We are apologize for inconvenienting you</string>
     <string name="report_reason">Reason of report</string>
-    <string name="please_choose">Select %「%1$s」 reason of report\</string>
+    <string name="please_choose">Select %1$s reason of report</string>
     <string name="addtional_report_reason">Supplementary instructions or others(optional)</string>
     <string name="detail_report_reason">Please fill in the specific reasons for reporting the user in detail, we will verify and deal with it immediately</string>
     <string name="upload_shot">Upload screenshot</string>
@@ -625,7 +625,7 @@
     <string name="privacy_chat">Private chat permission</string>
     <string name="my_info_title">My certificate info</string>
     <string name="sweet_rich_user">SugarTown proved wealthy user, do you wanna be a friend of him(her)</string>
-    <string name="sweet_luxury_car">SugarTown proved luxury car owner,  it's hot in the car</string>
+    <string name="sweet_luxury_car">SugarTown proved luxury car owner,  it\'s hot in the car</string>
     <string name="sweet_good_shencai">SugarTown proved good shape and attractive male(female) ,he(she) is intended to date</string>
     <string name="sweet_job">He(she) has legitimate profession and be intended to date if profession certification proved</string>
     <string name="verify_info">   certificated info</string>
@@ -683,10 +683,10 @@
     <string name="verify_has_commit">Certification submitted</string>
     <string name="ok_1">OK</string>
     <string name="verifying_tip">Your certification is under review , results will be notified to you in the form of assistant, please pay attention to assistant info.The audit will take about 1 working day.</string>
-    <string name="sweet_upload_id_card_figure">Upload photo of ID in hand、 front of ID and chest measurement\n make sure it's accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_job">Upload photo of ID in hand、 front of ID and working ID card\n make sure it's accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_car">Upload photo of ID in hand、 front of ID and vehicle certificate \n make sure it's accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_house">Upload photo of ID in hand、 front of ID and housing estates  \n make sure it's accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_figure">Upload photo of ID in hand、 front of ID and chest measurement\n make sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_job">Upload photo of ID in hand、 front of ID and working ID card\n make sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_car">Upload photo of ID in hand、 front of ID and vehicle certificate \n make sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_house">Upload photo of ID in hand、 front of ID and housing estates  \n make sure it\'s accordant to your avatar, this process will not display</string>
     <string name="pic_upload_fail">Photo uploading failed</string>
     <string name="commit_unopen_verify">Submit for non-public review</string>
     <string name="publish_square">Post moments</string>
@@ -728,7 +728,7 @@
     <string name="zan_your_comment">"Like" tyour dynamic comment</string>
     <string name="zan_your_dating">"Like" tyour activity</string>
     <string name="he_is_rich">SugarTown proved wealthy user, do you want be friend of him(her)</string>
-    <string name="he_has_luxury_car">SugarTown proved luxury car owner,  it's hot in the car</string>
+    <string name="he_has_luxury_car">SugarTown proved luxury car owner,  it\'s hot in the car</string>
     <string name="she_is_hot">SugarTown proved good shape and attractive male(female) ,he(she) is intended to date</string>
     <string name="she_is_professional">He(she) has legitimate profession and be intended to date if profession certification proved</string>
     <string name="media_content">「media content」</string>
@@ -793,7 +793,7 @@
     <string name="avoid_trouble_with_normal_vip">To avoid sugarbabies be disturbed\n  regular member cannot chat with sugarbabies directly</string>
     <string name="tobe_gold_to_contact_her">Upgrade to Golden Member and cotact her immediately.</string>
     <string name="her_level_privay">She setted a membership level permission</string>
-    <string name="she_allow_gold_contact_her">She only allows Golden Member to contact her. \n To be Golden Member and don't miss her</string>
+    <string name="she_allow_gold_contact_her">She only allows Golden Member to contact her. \n To be Golden Member and don\'t miss her</string>
     <string name="tobe_gold_approve_power">To be Golden Member ,prove your economic strength,unlock relationship</string>
     <string name="chat_cost_candy">Chat will cost Candy to show sincerity to  her(him)</string>
     <string name="today_has">%1$d free chat opportunities left today</string>
@@ -802,7 +802,7 @@
     <string name="time_contact"> contact info</string>
     <string name="unlock_her">Unlock her contact info</string>
     <string name="free_unlock_use_up">Free unlock opportunity run out</string>
-    <string name="use_candy_unlock_her_dont_miss">You have 0 opportunity to unlock the contact info \n  Use Candies to unlock chat, don't miss your type</string>
+    <string name="use_candy_unlock_her_dont_miss">You have 0 opportunity to unlock the contact info \n  Use Candies to unlock chat, don\'t miss your type</string>
     <string name="unlock_contact_left">Unlock contact info (%1$d Candies)</string>
     <string name="unlock_lovely_girl">Unlock your type</string>
     <string name="buy_contact_card_to_free">Purchase Supreme Card, unlock contact info for free</string>
@@ -839,13 +839,13 @@
     <string name="contact_not_pass">Contact info not approved</string>
     <string name="contact_not_pass_warnning">If the contact info not approved, your recommendation will be greatly reduced. You can revise it to improve the recommendation!</string>
     <string name="dating_allow_gold_apply">Only gold users are allowed to join</string>
-    <string name="dating_apply_dont_miss">Only gold users are allowed to join \n Get a Golden Member now and don't miss her.</string>
+    <string name="dating_apply_dont_miss">Only gold users are allowed to join \n Get a Golden Member now and don\'t miss her.</string>
     <string name="is_sure_dating">Confirm to join the activity?</string>
     <string name="apply_dating_left">Join activity（ %1$d candies）</string>
     <string name="prove_in_candy_is_better">It might be better to use Candy as proof of sincerity</string>
     <string name="tobe_gold_more_free">Get Golden Member to unlock more free opportunities.</string>
     <string name="dating_apply_cost_left">Join cost a chat opportunty \n %1$d free chat opportunities left today</string>
-    <string name="dating_apply_super_dont_miss">Only senior user are allowed to apply \n To be  Golded Member now and don't miss her.</string>
+    <string name="dating_apply_super_dont_miss">Only senior user are allowed to apply \n To be  Golded Member now and don\'t miss her.</string>
     <string name="dating_publish_only_vip">Only Golden Member can post activities</string>
     <string name="dating_tobe_vip_to_date">Activity is for Golden Member only \n To be Golden Member and Post a romantic activity with her</string>
     <string name="is_sure_delete_label">Confirm to delete the Interests?</string>
@@ -931,7 +931,7 @@
     <string name="upload_clear_face_id_pic">Upload clear front photo of holding your id card</string>
     <string name="upload_clear_front_pic">Upload clear front photo of ID card</string>
     <string name="upload_driving_more_50">Upload the photo of  vehicle certificate,it should belong to you.\n Value should over $100,0000.</string>
-    <string name="upload_house_licnese">Upload photo of property ownership certificate,it should belong to you.\n Be sure it's lafer than 5000 square feet.</string>
+    <string name="upload_house_licnese">Upload photo of property ownership certificate,it should belong to you.\n Be sure it\'s lafer than 5000 square feet.</string>
     <string name="upload_see_size">Uploaded photo should shows the tap measure clearly</string>
     <string name="upload_see_job">Upload work proof info, on which the name need match the name on your ID card.</string>
     <string name="normal_pic">Example</string>
@@ -1007,7 +1007,7 @@
     <string name="tab_recommend">Recommendation</string>
     <string name="tab_label">Interests</string>
     <string name="tab_nearby">Nearby</string>
-    <string name="publish_progress">%1$d\% is under proccessing.</string>
+    <string name="publish_progress">%1$d is under proccessing.</string>
     <string name="publish_square_success">Post moments succeed.</string>
     <string name="re_edit_obey">Content violation, please edit again</string>
     <string name="edit">Edit</string>
@@ -1211,8 +1211,8 @@
     <string name="input_contact">填写您的联系方式</string>
     <string name="input_topic_content">请输入话题文本</string>
     <string name="hot_topic">热门标题</string>
-    <string name="click_switch_mode">点击切换浏览模式</string>
-    <string name="new_add_filter">新增筛选项「位置漫游」和「上线时间」</string>
+    <string name="click_switch_mode">Switch to browse model</string>
+    <string name="new_add_filter">New screening「Location roaming」&amp;「Last log in」</string>
     <string name="collapse">收起</string>
     <string name="expand">展开</string>
     <string name="search_history">搜索聊天记录</string>
@@ -1271,4 +1271,9 @@
     <string name="drag_10s">拖动选择你要发表的10秒以内片段</string>
     <string name="pay_paypal">PayPal</string>
     <string name="pay_google">Google Pay</string>
+    <string name="withdraw_paypal">PayPal</string>
+    <string name="please_write_paypal">Name or email address</string>
+    <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
+    <string name="contact_whatsapp">whatsapp</string>
+    <string name="contact_skype">skype</string>
 </resources>

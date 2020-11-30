@@ -412,7 +412,7 @@
     <string name="link_has_copy">分享链接已复制</string>
     <string name="person_count">人</string>
     <string name="money_unit">元</string>
-    <string name="shared">享 %1$d \%分佣</string>
+    <string name="shared">享 %1$d 分佣</string>
     <string name="now_level">当前等级：</string>
     <string name="invite_rule">邀请规则</string>
     <string name="my_invited">我邀请的</string>
@@ -938,7 +938,6 @@
     <string name="upload_img">上传照片</string>
     <string name="login_out_time">登录过期\n请重新登录</string>
     <string name="hurry_give">快给%1$s们打个招呼吧</string>
-    <string name="say_hi">们打个招呼吧</string>
     <string name="send_hi_success">送出招呼成功！</string>
     <string name="today_fate">今日缘分</string>
     <string name="say_hi_with_gift">打个招呼吧，对方回复将会附带礼物</string>
@@ -1271,6 +1270,10 @@
     <string name="drag_10s">拖动选择你要发表的10秒以内片段</string>
     <string name="pay_paypal">PayPal</string>
     <string name="pay_google">Google Pay</string>
-
+    <string name="withdraw_paypal">PayPal</string>
+    <string name="please_write_paypal">Name or email address</string>
+    <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
+    <string name="contact_whatsapp">whatsapp</string>
+    <string name="contact_skype">skype</string>
 
 </resources>

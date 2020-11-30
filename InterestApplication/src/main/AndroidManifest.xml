@@ -223,6 +223,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.BindPayPalAccountActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.MyCandyActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

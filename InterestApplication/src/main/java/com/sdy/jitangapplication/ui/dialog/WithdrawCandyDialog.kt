@@ -22,6 +22,7 @@ import com.sdy.jitangapplication.event.RefreshMyWithDraw
 import com.sdy.jitangapplication.model.PullWithdrawBean
 import com.sdy.jitangapplication.model.WithDrawSuccessBean
 import com.sdy.jitangapplication.ui.activity.BindAlipayAccountActivity
+import com.sdy.jitangapplication.ui.activity.BindPayPalAccountActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_withdraw_candy.*
 import org.greenrobot.eventbus.EventBus
@@ -108,6 +109,12 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
         wirteAlipayAcount.setOnClickListener(this)
         confirmWithdraw.setOnClickListener(this)
         successBtn.setOnClickListener(this)
+
+        if (UserManager.overseas) {
+            t4.text = myContext.getString(R.string.withdraw_paypal)
+        } else {
+            t4.text = myContext.getString(R.string.alipay)
+        }
     }
 
 
@@ -155,7 +162,10 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                 inputWithdrawMoney.setSelection(inputWithdrawMoney.text.length)
             }
             R.id.wirteAlipayAcount -> {//填写支付宝账户
-                myContext.startActivity<BindAlipayAccountActivity>("alipay" to pullWithdrawBean?.alipay)
+                if (UserManager.overseas)
+                    myContext.startActivity<BindPayPalAccountActivity>("alipay" to pullWithdrawBean?.alipay)
+                else
+                    myContext.startActivity<BindAlipayAccountActivity>("alipay" to pullWithdrawBean?.alipay)
             }
             R.id.successBtn -> {//提现成功
                 dismiss()

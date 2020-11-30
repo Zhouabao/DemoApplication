@@ -9,8 +9,6 @@ import android.text.InputFilter
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -288,32 +286,6 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     }
 
 
-    private fun startAnimation(show: Boolean) {
-        //使用AnimationUtils类的静态方法loadAnimation()来加载XML中的动画XML文件
-        val animation = AnimationUtils.loadAnimation(
-            this, if (show) {
-                R.anim.dialog_center_in
-            } else {
-                R.anim.dialog_center_exit
-            }
-        )
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animation?) {
-                avatorNotifyLl.isVisible = show
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-            }
-
-        })
-        avatorNotifyLl.startAnimation(animation)
-    }
-
-
     private fun checkConfirmEnable() {
         if (userNickName.text.trim().isEmpty() || contactWayEt.text.trim().isEmpty()) {
             nextBtn.isEnabled = false
@@ -495,18 +467,35 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
      */
     private var contactWay = 2 //0手机号   1微信  2QQ
     private val contactWays by lazy {
-        mutableListOf(
-            getString(R.string.contact_phone),
-            getString(R.string.contact_wechat),
-            getString(R.string.contact_QQ)
-        )
+        if (UserManager.overseas) {
+            mutableListOf(
+                getString(R.string.contact_phone),
+                getString(R.string.contact_whatsapp),
+                getString(R.string.contact_skype)
+            )
+        } else {
+            mutableListOf(
+                getString(R.string.contact_phone),
+                getString(R.string.contact_wechat),
+                getString(R.string.contact_QQ)
+            )
+        }
     }
     private val contactWaysIcon by lazy {
-        mutableListOf(
-            R.drawable.icon_phone_reg,
-            R.drawable.icon_wechat_reg,
-            R.drawable.icon_qq_reg
-        )
+        if (UserManager.overseas) {
+            //todo 替换海外版的logo
+            mutableListOf(
+                R.drawable.icon_phone_reg,
+                R.drawable.icon_whatsapp_reg,
+                R.drawable.icon_skype_reg
+            )
+        } else {
+            mutableListOf(
+                R.drawable.icon_phone_reg,
+                R.drawable.icon_wechat_reg,
+                R.drawable.icon_qq_reg
+            )
+        }
     }
 
     private fun showContactPicker() {
