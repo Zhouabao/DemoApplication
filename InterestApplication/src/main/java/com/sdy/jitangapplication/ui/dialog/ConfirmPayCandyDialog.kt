@@ -24,6 +24,7 @@ import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.interfaces.*
+import com.braintreepayments.api.models.GooglePaymentRequest
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -110,11 +111,15 @@ class ConfirmPayCandyDialog(
         }
 
         if (UserManager.overseas) {
+            alipayIv.setImageResource(R.drawable.icon_pay_paypal)
+            wechatIv.setImageResource(R.drawable.icon_pay_google)
             alipayTv.text = myContext.getString(R.string.pay_paypal)
             wechatTv.text = myContext.getString(R.string.pay_google)
         } else {
             alipayTv.text = myContext.getString(R.string.pay_alipay)
             wechatTv.text = myContext.getString(R.string.pay_wechat)
+            alipayIv.setImageResource(R.drawable.icon_alipay)
+            wechatIv.setImageResource(R.drawable.icon_wechat1)
         }
 
         confrimBtn.clickWithTrigger {
@@ -254,7 +259,8 @@ class ConfirmPayCandyDialog(
     }
 
     private fun onBrainTreeSubmit(clienToken: String) {
-        val dropInRequest = DropInRequest().clientToken(clienToken)
+        val dropInRequest = DropInRequest()
+            .clientToken(clienToken)
         (myContext as Activity).startActivityForResult(
             dropInRequest.getIntent(myContext),
             REQUEST_CODE_PAYPAL
@@ -276,25 +282,28 @@ class ConfirmPayCandyDialog(
     }
 
     private fun googlePay(payBean: PayBean) {
-        GooglePayUtils(myContext, payBean.order_id!!,mListener =  object : GooglePayUtils.OnPurchaseCallback {
-            override fun onPaySuccess(purchaseToken: String) {
-                showAlert(myContext, myContext.getString(R.string.pay_success), true)
-            }
+        GooglePayUtils(
+            myContext,
+            payBean.order_id!!,
+            mListener = object : GooglePayUtils.OnPurchaseCallback {
+                override fun onPaySuccess(purchaseToken: String) {
+                    showAlert(myContext, myContext.getString(R.string.pay_success), true)
+                }
 
-            override fun onConsumeFail(purchase: Purchase) {
-                UserManager.savePurchaseToken(purchase.purchaseToken)
+                override fun onConsumeFail(purchase: Purchase) {
+                    UserManager.savePurchaseToken(purchase.purchaseToken)
 
-            }
+                }
 
-            override fun onUserCancel() {
-                showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
-            }
+                override fun onUserCancel() {
+                    showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
+                }
 
-            override fun responseCode(msg: String, errorCode: Int) {
-                showAlert(myContext, msg, false)
-            }
+                override fun responseCode(msg: String, errorCode: Int) {
+                    showAlert(myContext, msg, false)
+                }
 
-        }).initConnection()
+            }).initConnection()
     }
 
     private fun wechatPay(data: PayBean) {
