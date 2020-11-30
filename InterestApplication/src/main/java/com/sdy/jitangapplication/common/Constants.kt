@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.common
 
+import com.braintreepayments.api.models.TokenizationKey
+
 object Constants {
     //云信新账号
 //    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
@@ -85,6 +87,10 @@ object Constants {
     //闪验
     const val SY_APP_ID="Rr9a0DYd"
     const val SY_APP_KEY="0jsXDyqa"
+
+
+    //Paypal pay
+    const val TOKENIZATION_KEYS="sandbox_tvw57kkb_x5z663tdkvfq6vht"
 
 
     //小米

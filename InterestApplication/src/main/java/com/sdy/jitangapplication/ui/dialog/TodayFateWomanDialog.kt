@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.blankj.utilcode.util.LanguageUtils
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -30,6 +31,7 @@ import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_today_fate_woman.*
 import org.greenrobot.eventbus.EventBus
+import java.util.*
 
 /**
  *    author : ZFM
@@ -65,11 +67,18 @@ class TodayFateWomanDialog(
     }
 
     private fun initView() {
-        t2.text = context1.getString(R.string.hurry_give) + if (UserManager.getGender() == 1) {
-            context1.getString(R.string.she)
-        } else {
-            context1.getString(R.string.he)
-        } + context1.getString(R.string.say_hi)
+        t2.text = context1.getString(
+            R.string.hurry_give,
+            if (LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language) {
+                ""
+            } else {
+                if (UserManager.getGender() == 1) {
+                    context1.getString(R.string.she)
+                } else {
+                    context1.getString(R.string.he)
+                }
+            }
+        )
 
         rvFate.layoutManager = GridLayoutManager(context1, 3)
         rvFate.adapter = adapter

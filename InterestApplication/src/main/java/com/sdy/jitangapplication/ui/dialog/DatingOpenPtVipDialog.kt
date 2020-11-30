@@ -98,7 +98,10 @@ class DatingOpenPtVipDialog(
                                     context1.getString(R.string.chatup_chance_run_up)
                                 applyForDatingBtn.isVisible = false
                                 openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
-                                openPtVipBtn.text = context1.getString(R.string.apply_dating_left, chatUpBean!!.dating_amount)
+                                openPtVipBtn.text = context1.getString(
+                                    R.string.apply_dating_left,
+                                    chatUpBean!!.dating_amount
+                                )
                                 openPtVipBtn.clickWithTrigger {
                                     datingApply()
                                 }
@@ -130,10 +133,10 @@ class DatingOpenPtVipDialog(
                             openPtVipBtn.setBackgroundResource(R.drawable.gradient_orange_15_bottom)
                             applyForDatingBtn.isVisible = false
                             datingTitle.text = context1.getString(R.string.is_sure_dating)
-                            datingContent.text =
-                                context1.getString(R.string.dating_apply_cost_left) + chatUpBean!!.residue_cnt + context1.getString(
-                                    R.string.dating_apply_cost_right
-                                )
+                            datingContent.text = context1.getString(
+                                R.string.dating_apply_cost_left,
+                                chatUpBean.residue_cnt
+                            )
                             openPtVipBtn.text = context1.getString(R.string.dating_apply)
                             openPtVipBtn.clickWithTrigger {
                                 datingApply()

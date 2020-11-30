@@ -225,9 +225,7 @@ class ChatUpOpenPtVipDialog(
                         chatupUnlockChat.isVisible = true
                         if (chatUpBean.plat_cnt > 0) {
                             chatupContent.text =
-                                context1.getString(R.string.today_has) + chatUpBean.plat_cnt + context1.getString(
-                                    R.string.chat_count
-                                )
+                                context1.getString(R.string.today_has, chatUpBean.plat_cnt)
                             chatupUnlockChat.text = context1.getString(R.string.chatup_unlock)
                         } else {
                             chatupContent.text = context1.getString(R.string.chat_cost_candy)
@@ -318,7 +316,10 @@ class ChatUpOpenPtVipDialog(
                         chatupContent.isVisible = false
                         chatupTitle.text = context1.getString(R.string.unlock_lovely_girl)
                         chatupUnlockChat.text =
-                            context1.getString(R.string.unlock_contact_left,chatUpBean.contact_amount)
+                            context1.getString(
+                                R.string.unlock_contact_left,
+                                chatUpBean.contact_amount
+                            )
                         // 解锁联系方式
                         chatupUnlockChat.clickWithTrigger {
                             unlockContact()

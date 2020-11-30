@@ -22,8 +22,7 @@ import com.sdy.jitangapplication.utils.UserManager
  */
 class GooglePayUtils(
     val context: Context,
-    val orderId: String = "",
-    val purchaseId: String = "",
+    val orderID: String = "",
     var purchaseType: String = BillingClient.SkuType.INAPP,//购买类型:内购、 订阅，   默认为内购
     var mListener: OnPurchaseCallback? = null//支付结果回调接口
 ) : PurchasesUpdatedListener {
@@ -60,7 +59,7 @@ class GooglePayUtils(
                     }
                     //每次进行重连的时候都应该消耗之前缓存的商品，不然可能会导致用户支付不了
                     if (UserManager.getPurchaseToken().isNullOrEmpty())
-                        queryAndPayPurchases(purchaseId)
+                        queryAndPayPurchases(orderID)
                     else
                         queryAndConsumePurchase(true)
                 }
@@ -206,13 +205,13 @@ class GooglePayUtils(
                             //消耗品，开始消耗
                             consumePurchase(purchase)
                         } else if (isReadyPay) {
-                            queryAndPayPurchases(purchaseId)
+                            queryAndPayPurchases(orderID)
                         }
                     } else if (isReadyPay) {
-                        queryAndPayPurchases(purchaseId)
+                        queryAndPayPurchases(orderID)
                     }
                 } else if (isReadyPay) {
-                    queryAndPayPurchases(purchaseId)
+                    queryAndPayPurchases(orderID)
                 }
 
             }

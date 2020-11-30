@@ -795,8 +795,7 @@
     <string name="she_allow_gold_contact_her">她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她</string>
     <string name="tobe_gold_approve_power">成为黄金会员，证明实力解锁关系</string>
     <string name="chat_cost_candy">聊天需要消耗糖果，向对方表达诚意</string>
-    <string name="today_has">今日还有</string>
-    <string name="chat_count">次聊天机会</string>
+    <string name="today_has">今日还有 %1$d 次聊天机会</string>
     <string name="is_unlock_contact">是否解锁她的联系方式</string>
     <string name="today_free_chat">您当日还可免费解锁</string>
     <string name="time_contact">次联系方式</string>
@@ -844,8 +843,7 @@
     <string name="apply_dating_left">报名活动（ %1$d 糖果）</string>
     <string name="prove_in_candy_is_better">用糖果证明活动诚意或许更好哦</string>
     <string name="tobe_gold_more_free">成为黄金会员，更多免费机会</string>
-    <string name="dating_apply_cost_left">报名消耗一次聊天机会\n今日还有</string>
-    <string name="dating_apply_cost_right">次免费聊天机会</string>
+    <string name="dating_apply_cost_left">报名消耗一次聊天机会\n今日还有%1$d次免费聊天机会</string>
     <string name="dating_apply_super_dont_miss">对方仅允许高级用户报名\n立即成为黄金会员，不要错过她</string>
     <string name="dating_publish_only_vip">仅黄金会员能发布活动</string>
     <string name="dating_tobe_vip_to_date">活动为黄金会员独享功能\n成为黄金会员，建立和她的浪漫活动吧</string>
@@ -866,7 +864,7 @@
     <string name="open_after_verify">通过认证后可开启该筛选</string>
     <string name="show_me">向我展示</string>
     <string name="meet_any_one_come_sweet">满足下列任意一个条件即可进入甜心圈</string>
-    <string name="charge_more_than">充值金额大于 %s</string>
+    <string name="charge_more_than">充值金额大于 %1$s</string>
     <string name="pass_wealth_verify">通过资产认证</string>
     <string name="veriy_pass">认证通过</string>
     <string name="reach_auto_in_sweet">达成要求自动进入甜心圈</string>
@@ -939,7 +937,7 @@
     <string name="make_sure_its_you">请确保与本人头像一致，照片不会对外公开</string>
     <string name="upload_img">上传照片</string>
     <string name="login_out_time">登录过期\n请重新登录</string>
-    <string name="hurry_give">快给</string>
+    <string name="hurry_give">快给%1$s们打个招呼吧</string>
     <string name="say_hi">们打个招呼吧</string>
     <string name="send_hi_success">送出招呼成功！</string>
     <string name="today_fate">今日缘分</string>
@@ -992,7 +990,7 @@
     <string name="exchange_money">兑换金额:</string>
     <string name="withdraw_money">提现金额:</string>
     <string name="withdraw_max">可提现金额不能大于 %1$.2f</string>
-    <string name="can_withdraw">可提现¥%.2f</string>
+    <string name="can_withdraw">可提现¥%1$.2f</string>
     <string name="count_unit">颗</string>
     <string name="turn_money">转出金额</string>
     <string name="withdraw_all">全部提现</string>
@@ -1271,6 +1269,8 @@
     <string name="only_man">只看男士</string>
     <string name="other_login_way">其他方式登录</string>
     <string name="drag_10s">拖动选择你要发表的10秒以内片段</string>
+    <string name="pay_paypal">PayPal</string>
+    <string name="pay_google">Google Pay</string>
 
 
 </resources>

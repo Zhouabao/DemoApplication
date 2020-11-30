@@ -23,9 +23,7 @@ import com.braintreepayments.api.dropin.DropInActivity
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.braintreepayments.api.exceptions.InvalidArgumentException
-import com.braintreepayments.api.interfaces.BraintreeCancelListener
-import com.braintreepayments.api.interfaces.BraintreeErrorListener
-import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
+import com.braintreepayments.api.interfaces.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -109,6 +107,14 @@ class ConfirmPayCandyDialog(
         alipayCl.onClick {
             alipayCheck.isChecked = true
             wechatCheck.isChecked = false
+        }
+
+        if (UserManager.overseas) {
+            alipayTv.text = myContext.getString(R.string.pay_paypal)
+            wechatTv.text = myContext.getString(R.string.pay_google)
+        } else {
+            alipayTv.text = myContext.getString(R.string.pay_alipay)
+            wechatTv.text = myContext.getString(R.string.pay_wechat)
         }
 
         confrimBtn.clickWithTrigger {
@@ -216,7 +222,7 @@ class ConfirmPayCandyDialog(
 
     /**
      * 开始支付
-     *     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
+     * payment_type 支付类型 1支付宝 2微信支付 3余额支付
      */
     companion object {
         const val PAY_ALI = 1 //支付宝支付
@@ -235,7 +241,7 @@ class ConfirmPayCandyDialog(
             aliPay(data)
         } else if (payment_type == PAY_GOOGLE) {
             //谷歌支付
-            googlePay()
+            googlePay(data)
         } else {
             //todo 获取clientToken 然后开始支付
             //PayPal支付
@@ -269,8 +275,8 @@ class ConfirmPayCandyDialog(
         }).start()
     }
 
-    private fun googlePay() {
-        GooglePayUtils(myContext, mListener = object : GooglePayUtils.OnPurchaseCallback {
+    private fun googlePay(payBean: PayBean) {
+        GooglePayUtils(myContext, payBean.order_id!!,mListener =  object : GooglePayUtils.OnPurchaseCallback {
             override fun onPaySuccess(purchaseToken: String) {
                 showAlert(myContext, myContext.getString(R.string.pay_success), true)
             }
@@ -315,7 +321,12 @@ class ConfirmPayCandyDialog(
     }
 
     lateinit var mBraintreeFragment: BraintreeFragment
-    private val paymentMethodNonceCreatedListener by lazy { PaymentMethodNonceCreatedListener { } }
+    private val paymentMethodNonceCreatedListener by lazy {
+        PaymentMethodNonceCreatedListener {
+            it.nonce
+            it.description
+        }
+    }
     private val braintreeCancelListener by lazy {
         BraintreeCancelListener {
             showAlert(myContext, "支付取消 ${it}", false)
@@ -327,12 +338,30 @@ class ConfirmPayCandyDialog(
         }
     }
 
+    private val brainConfigurationListener by lazy {
+        ConfigurationListener {
+            it.merchantId
+
+        }
+    }
+    private val paymentResultListener by lazy {
+        BraintreePaymentResultListener {
+            it.describeContents()
+        }
+    }
+
     fun initBraintreeFragment(tokenization: String) {
         try {
             mBraintreeFragment =
-                BraintreeFragment.newInstance(myContext as AppCompatActivity, tokenization)
+                BraintreeFragment.newInstance(
+                    myContext as AppCompatActivity,
+                    Constants.TOKENIZATION_KEYS
+                )
+
+            mBraintreeFragment.addListener(brainConfigurationListener)
             //支付完成监听
             mBraintreeFragment.addListener(paymentMethodNonceCreatedListener)
+//            mBraintreeFragment.addListener(paymentResultListener)
             //支付取消监听
             mBraintreeFragment.addListener(braintreeCancelListener)
             //错误监听

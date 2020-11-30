@@ -160,7 +160,6 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
 
     override fun onLazyClick(v: View) {
         when (v.id) {
-
             R.id.btnBack -> {
                 finish()
             }
