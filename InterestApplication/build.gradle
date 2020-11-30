@@ -70,7 +70,7 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-    kotlinOptions {braintree
+    kotlinOptions {
         jvmTarget = "1.8"
     }
 
