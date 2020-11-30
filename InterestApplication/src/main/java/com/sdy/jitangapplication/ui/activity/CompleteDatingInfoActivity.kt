@@ -57,8 +57,15 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
     private val dating_type by lazy { intent.getSerializableExtra("dating_type") as CheckBean? }
     private var typeText = true //文本限制
 
+    val MAX_DESCR_LENGTH by lazy {
+        if (UserManager.overseas) {
+            150 * 2
+        } else {
+            150
+        }
+    }
+
     companion object {
-        const val MAX_DESCR_LENGTH = 150
         const val REQUEST_CODE_DATING_CONTENT = 1
         const val REQUEST_CODE_DATING_PLACE = 2
     }
@@ -570,7 +577,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         } else {
             1
         }
-        params["content"] = RegexUtils.getReplaceAll(sourceFile,"\\t|\\r|\\n|\\\\s*","")
+        params["content"] = RegexUtils.getReplaceAll(sourceFile, "\\t|\\r|\\n|\\\\s*", "")
         params["cost_money"] = chooseDatingPayBtn.text.split("·")[1]
         params["follow_up"] = chooseDatingPlanBtn.text
 

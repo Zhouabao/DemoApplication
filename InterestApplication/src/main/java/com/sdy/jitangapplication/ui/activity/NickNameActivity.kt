@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.StringUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_nick_name.*
 
 /**
@@ -31,13 +32,29 @@ class NickNameActivity : BaseActivity() {
         if (type == 1) {
             hotT1.text = getString(R.string.nickname_title)
             changeEt.hint = getString(R.string.nickname_change_tip)
-            changeEt.filters = arrayOf(InputFilter.LengthFilter(10))
+            changeEt.filters = arrayOf(
+                InputFilter.LengthFilter(
+                    if (UserManager.overseas) {
+                        20
+                    } else {
+                        10
+                    }
+                )
+            )
             changeEt.setText(intent.getStringExtra("content"))
             changeEt.setSelection(changeEt.text.length)
         } else {
             hotT1.text = getString(R.string.about_me_title)
             changeEt.hint = getString(R.string.about_me_tip)
-            changeEt.filters = arrayOf(InputFilter.LengthFilter(200))
+            changeEt.filters = arrayOf(
+                InputFilter.LengthFilter(
+                    if (UserManager.overseas) {
+                        200 * 2
+                    } else {
+                        200
+                    }
+                )
+            )
             val params = changeEt.layoutParams as LinearLayout.LayoutParams
             params.width = LinearLayout.LayoutParams.MATCH_PARENT
             params.height = SizeUtils.dp2px(200F)

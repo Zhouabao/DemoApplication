@@ -13,6 +13,7 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_write_dating_content.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
@@ -56,7 +57,11 @@ class WriteDatingContentActivity : BaseActivity() {
 
         datingContentEt.filters = arrayOf<InputFilter>(
             InputFilter.LengthFilter(
-                MAX_DESCR_LENGTH
+                if (UserManager.overseas) {
+                    MAX_DESCR_LENGTH * 2
+                } else {
+                    MAX_DESCR_LENGTH
+                }
             )
         )
         SpanUtils.with(datingContentLength)

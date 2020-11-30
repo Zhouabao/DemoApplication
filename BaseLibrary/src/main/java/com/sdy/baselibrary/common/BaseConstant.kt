@@ -7,9 +7,9 @@ class BaseConstant {
     companion object {
         //本地服务器地址
         //正式
-        const val SERVER_ADDRESS = "https://ppsns.duluduludala.com/ppsns/"
+//        const val SERVER_ADDRESS = "https://ppsns.duluduludala.com/ppsns/"
         //海外测试服
-//        const val SERVER_ADDRESS = "http://170.106.39.128/ppsns/"
+        const val SERVER_ADDRESS = "http://170.106.39.128/ppsns/"
 //        生产
 //        const val SERVER_ADDRESS = "https://devppsns.duluduludala.com/ppsns/"
 //        本地

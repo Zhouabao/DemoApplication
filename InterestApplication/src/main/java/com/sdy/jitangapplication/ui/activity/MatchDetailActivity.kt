@@ -315,11 +315,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserInformationAdapter.setNewData(matchBean!!.personal_info)
 
         detailUserName.text = matchBean!!.nickname ?: ""
-        detailUserName.textSize = if ((matchBean!!.nickname ?: "").length > 6) {
-            22F
-        } else {
-            25F
-        }
+        detailUserName.textSize =
+            if ((matchBean!!.nickname ?: "").length > if (UserManager.overseas) {
+                    12
+                } else {
+                    6
+                }
+            ) {
+                22F
+            } else {
+                25F
+            }
         titleUsername.text = matchBean!!.nickname ?: ""
 
         //	0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
