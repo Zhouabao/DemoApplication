@@ -60,10 +60,10 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-import iknow.android.utils.BaseUtils
+//import iknow.android.utils.BaseUtils
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
-import nl.bravobit.ffmpeg.FFmpeg
+//import nl.bravobit.ffmpeg.FFmpeg
 import org.greenrobot.eventbus.EventBus
 
 
@@ -369,10 +369,10 @@ class MyApplication : BaseApplication() {
     }
 
     private fun initFFmpegBinary() {
-        BaseUtils.init(this)
-        if (!FFmpeg.getInstance(applicationContext).isSupported) {
-            Log.e("MyApplication", "Android cup arch not supported!")
-        }
+//        BaseUtils.init(this)
+//        if (!FFmpeg.getInstance(applicationContext).isSupported) {
+//            Log.e("MyApplication", "Android cup arch not supported!")
+//        }
 
     }
 

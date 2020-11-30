@@ -19,7 +19,7 @@ import org.jetbrains.anko.startActivityForResult
 /**
  * 视频片段截取
  */
-class VideoTrimmerActivity : BaseActivity(), VideoTrimListener {
+class VideoTrimmerActivity : BaseActivity()/*, VideoTrimListener*/ {
     companion object {
         const val VIDEO_PATH_KEY = "video-file-path"
         const val VIDEO_TRIM_REQUEST_CODE = 0x001
@@ -37,10 +37,10 @@ class VideoTrimmerActivity : BaseActivity(), VideoTrimListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_trimmer)
-        initView()
+//        initView()
     }
 
-    private fun initView() {
+  /*  private fun initView() {
         hotT1.text = getString(R.string.choose_video)
         btnBack.clickWithTrigger { onCancel() }
 
@@ -71,5 +71,5 @@ class VideoTrimmerActivity : BaseActivity(), VideoTrimListener {
     override fun onDestroy() {
         super.onDestroy()
         trimmer_view.onDestroy()
-    }
+    }*/
 }

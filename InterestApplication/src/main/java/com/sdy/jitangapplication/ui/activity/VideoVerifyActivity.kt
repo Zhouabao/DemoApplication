@@ -376,7 +376,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
             }
             R.id.chooseVideoBtn -> {
                 type = 2
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                     CommonFunction.onTakePhoto(
                         this,
                         1,
@@ -385,13 +385,13 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                         minSeconds = RECORD_MIN_TIME,
                         maxSeconds = RECORD_MAX_TIME
                     )
-                } else
-                    CommonFunction.onTakePhoto(
-                        this,
-                        1,
-                        RESULT_CODE_CHOOSE_VIDEO,
-                        PictureMimeType.ofVideo()
-                    )
+//                } else
+//                    CommonFunction.onTakePhoto(
+//                        this,
+//                        1,
+//                        RESULT_CODE_CHOOSE_VIDEO,
+//                        PictureMimeType.ofVideo()
+//                    )
             }
             R.id.captureButton -> {
                 type = 1
@@ -440,15 +440,15 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
                     } else {
                         PictureSelector.obtainMultipleResult(data)[0].path
                     }
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
                     startActivityForResult<VideoVerifyConfirmActivity>(
                         VideoVerifyConfirmActivity.RESULT_CODE_CONFIRM_VIDEO,
                         "ratio" to RATIO,
                         "path" to videoSavePath,
                         "duration" to PictureSelector.obtainMultipleResult(data)[0].duration
                     )
-                else
-                    VideoTrimmerActivity.start(this, videoSavePath)
+//                else
+//                    VideoTrimmerActivity.start(this, videoSavePath)
 
 //
 
