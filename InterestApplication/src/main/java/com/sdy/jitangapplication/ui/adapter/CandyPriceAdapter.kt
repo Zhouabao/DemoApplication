@@ -31,7 +31,7 @@ class CandyPriceAdapter :
         if (item.isfirst) {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "¥${BigDecimal(item.discount_price).setScale(
+                    "${mContext.getString(R.string.currencyCode)}${BigDecimal(item.discount_price).setScale(
                         0,
                         BigDecimal.ROUND_HALF_UP
                     )}"
@@ -60,7 +60,7 @@ class CandyPriceAdapter :
         } else {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "¥${BigDecimal(
+                    "${mContext.getString(R.string.currencyCode)}${BigDecimal(
                         if (item.discount_price != 0.0) {
                             item.discount_price
                         } else {

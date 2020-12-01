@@ -819,6 +819,30 @@ interface Api {
     fun createTagsOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
 
 
+    /**
+     * 海外安卓支付获取 token
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/getToken${Constants.END_BASE_URL}")
+    fun getToken(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
+    /**
+     * 预创建订单 token
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/payCreate${Constants.END_BASE_URL}")
+    fun payCreate(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TokenBean>>
+
+
+    /**
+     * 海外安卓 支付回传 验证结果
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/checkNotify${Constants.END_BASE_URL}")
+    fun checkNotify(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TokenBean>>
+
+
     /*--------------------------------账号相关---------------------------------*/
 
     /**

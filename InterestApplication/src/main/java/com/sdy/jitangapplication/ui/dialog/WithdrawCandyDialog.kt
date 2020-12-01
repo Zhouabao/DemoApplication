@@ -248,7 +248,7 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                                 t.data?.candy_amount.toString() + context.getString(
                                     R.string.count_unit
                                 )
-                            withdrawMoney1.text = "¥${t.data?.money_amount}"
+                            withdrawMoney1.text = "${myContext.getString(R.string.currencyCode)}${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
                         } else {
@@ -281,7 +281,7 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             withdrawCandy.text = "${t.data?.candy_amount}${context.getString(
                                 R.string.count_unit
                             )}"
-                            withdrawMoney1.text = "¥${t.data?.money_amount}"
+                            withdrawMoney1.text = "${myContext.getString(R.string.currencyCode)}${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyWithDraw(t.data?.money_amount ?: 0F))
                         } else {

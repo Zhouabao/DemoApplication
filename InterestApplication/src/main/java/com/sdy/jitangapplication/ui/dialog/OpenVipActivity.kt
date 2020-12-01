@@ -304,7 +304,7 @@ class OpenVipActivity : BaseActivity() {
                 .create()
 
             SpanUtils.with(nowPrice)
-                .append("¥")
+                .append(getString(R.string.currencyCode))
                 .setFontSize(14, true)
                 .append(
                     "${if (chargeWayBeans[0].type == 1) {

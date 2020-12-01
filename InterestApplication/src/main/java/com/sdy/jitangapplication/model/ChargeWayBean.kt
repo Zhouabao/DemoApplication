@@ -175,6 +175,10 @@ data class PayBean(
 
 )
 
+data class TokenBean(
+    var order_id: String = "",
+    var clientoken: String = ""
+)
 
 data class Wechat(
     val `package`: String? = "",

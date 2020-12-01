@@ -39,7 +39,7 @@ class AllVipPowerAdapter :
             }
         }
         if (promotePos == -1) promotePos = 0
-        helper.itemView.openVipBtn.text = "¥${if (data.list[promotePos].type == 1) {
+        helper.itemView.openVipBtn.text = "${mContext.getString(R.string.currencyCode)}${if (data.list[promotePos].type == 1) {
             BigDecimal(data.list[promotePos].original_price).setScale(
                 0,
                 BigDecimal.ROUND_HALF_UP
@@ -68,7 +68,7 @@ class AllVipPowerAdapter :
             for (data in chargePriceAdapter.data) {
                 data.is_promote = data == chargePriceAdapter.data[position]
             }
-            helper.itemView.openVipBtn.text = "¥${if (chargePriceAdapter.data[position].type == 1) {
+            helper.itemView.openVipBtn.text = "${mContext.getString(R.string.currencyCode)}${if (chargePriceAdapter.data[position].type == 1) {
                 BigDecimal(chargePriceAdapter.data[position].original_price).setScale(
                     0,
                     BigDecimal.ROUND_HALF_UP

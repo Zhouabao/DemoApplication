@@ -35,7 +35,7 @@ class UplevelRewardsAdapter() :
         helper.itemView.uplevel.text = item.title
 
         SpanUtils.with(helper.itemView.uplevelRewardsMoney)
-            .append("¥")
+            .append(mContext.getString(R.string.currencyCode))
             .setFontSize(16, true)
             .append(
                 "${BigDecimal(item.reward_money).setScale(

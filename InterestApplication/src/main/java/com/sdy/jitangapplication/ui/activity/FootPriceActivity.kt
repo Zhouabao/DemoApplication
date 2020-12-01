@@ -138,7 +138,7 @@ class FootPriceActivity : BaseActivity() {
                 .create()
 
             SpanUtils.with(footNowPirce)
-                .append("¥")
+                .append(getString(R.string.currencyCode))
                 .setFontSize(14, true)
                 .append(
                     "${if (chargeWayBeans[0].type == 1) {

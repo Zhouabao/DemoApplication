@@ -42,7 +42,7 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
         holder.itemView.layoutParams = params
 
         holder.itemView.vipLong.text = item.ename ?: ""
-        holder.itemView.vipNowPrice.text = "¥${if (item.type == 1) {
+        holder.itemView.vipNowPrice.text = mContext.getString(R.string.currencyCode)+"${if (item.type == 1) {
             BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)
         } else {
             BigDecimal(item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)
