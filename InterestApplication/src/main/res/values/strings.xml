@@ -1275,5 +1275,6 @@
     <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
     <string name="contact_whatsapp">whatsapp</string>
     <string name="contact_skype">skype</string>
+    <string name="okay">好的</string>
 
 </resources>

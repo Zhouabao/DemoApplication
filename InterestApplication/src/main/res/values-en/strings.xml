@@ -468,7 +468,7 @@
     <string name="recharge">Recharge</string>
     <string name="pay_record">Deal record</string>
     <string name="mycandy">My Candies</string>
-    <string name="mycandy_count">My Candies()</string>
+    <string name="mycandy_count">My Candies</string>
     <string name="my_square_title">My moments</string>
     <string name="my_foot_print">My track</string>
     <string name="tab_zan">"Like"</string>
@@ -1120,9 +1120,9 @@
     <string name="gift_wall_title">Gift wall</string>
     <string name="min_record_time">Recording time should not be less than 5S</string>
     <string name="one_key_login">Log in with cellphone number</string>
-    <string name="login_presents_you_agree">Sign up/log in means you agree </string>
-    <string name="and1"> and </string>
-    <string name="and2"> and </string>
+    <string name="login_presents_you_agree">Sign up/log in means you agree  </string>
+    <string name="and1">  and  </string>
+    <string name="and2">  and  </string>
     <string name="cannot_cause_duration_short">The video is less than %1$d seconds long and cannot be uploaded</string>
     <string name="alreadey_choose">has chosen</string>
     <string name="hour">Hour</string>
@@ -1175,8 +1175,8 @@
     <string name="message_type_custom">Customized message</string>
 
 
-    <string name="chat_detail">聊天详情</string>
-    <string name="do_star_friend">星标好友</string>s
+    <string name="chat_detail">Chat details</string>
+    <string name="do_star_friend">Star friends</string>
     <string name="msg_disturb">消息免打扰</string>
     <string name="find_history">查找聊天记录</string>
     <string name="clear_history">清空聊天记录</string>
@@ -1276,4 +1276,5 @@
     <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
     <string name="contact_whatsapp">whatsapp</string>
     <string name="contact_skype">skype</string>
+    <string name="okay">Okay</string>
 </resources>

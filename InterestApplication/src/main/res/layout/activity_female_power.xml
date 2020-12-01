@@ -94,7 +94,7 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/powerVerify"
         app:layout_constraintRight_toRightOf="@id/powerVerify"
-        app:layout_constraintTop_toBottomOf="@id/powerContact" />
+        app:layout_constraintTop_toBottomOf="@id/powerVerify" />
 
 
     <TextView
@@ -126,7 +126,7 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/powerVideo"
         app:layout_constraintRight_toRightOf="@id/powerVideo"
-        app:layout_constraintTop_toBottomOf="@id/powerContact" />
+        app:layout_constraintTop_toBottomOf="@id/powerVideo" />
 
 
     <ImageView
