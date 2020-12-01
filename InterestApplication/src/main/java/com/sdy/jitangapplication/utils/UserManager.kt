@@ -32,7 +32,7 @@ import java.util.*
 object UserManager {
 
     //记录当前设备是否为海外
-    var overseas = true
+    var overseas = false
 
     var registerFileBean: RegisterFileBean? = null
     var my_mv_url: Boolean = false //是否上传过视频介绍

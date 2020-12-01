@@ -35,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 41
-        versionName "2.5.8"
+        versionCode 42
+        versionName "2.5.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -50,11 +50,11 @@ android {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'
         }
-        ndk {
-            //设置支持的SO库架构
-            abiFilters  "armeabi-v7a", "arm64-v8a"
+//        ndk {
+        //设置支持的SO库架构
 //            abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
-        }
+//        }
+        ndk { abiFilters  "armeabi-v7a", 'arm64-v8a'}
         // 只保留中文
 //        resConfigs "zh"
 
@@ -94,16 +94,16 @@ android {
     packagingOptions {
         pickFirst 'lib/armeabi-v7a/libRSSupport.so'
         pickFirst 'lib/arm64-v8a/libRSSupport.so'
-//        pickFirst 'lib/x86/libRSSupport.so'
-//        pickFirst 'lib/x86_64/libRSSupport.so'
+        pickFirst 'lib/x86/libRSSupport.so'
+        pickFirst 'lib/x86_64/libRSSupport.so'
         pickFirst 'lib/armeabi-v7a/librsjni.so'
         pickFirst 'lib/arm64-v8a/librsjni.so'
-//        pickFirst 'lib/x86/librsjni.so'
-//        pickFirst 'lib/x86_64/librsjni.so'
+        pickFirst 'lib/x86/librsjni.so'
+        pickFirst 'lib/x86_64/librsjni.so'
         pickFirst 'lib/armeabi-v7a/librsjni_androidx.so'
         pickFirst 'lib/arm64-v8a/librsjni_androidx.so'
-//        pickFirst 'lib/x86/librsjni_androidx.so'
-//        pickFirst 'lib/x86_64/librsjni_androidx.so'
+        pickFirst 'lib/x86/librsjni_androidx.so'
+        pickFirst 'lib/x86_64/librsjni_androidx.so'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
 
     }
@@ -256,7 +256,7 @@ dependencies {
     implementation 'org.wysaid:gpuimage-plus:2.6.3'
     implementation 'com.youth.banner:banner:2.1.0'
     implementation 'com.qhutch.bottomsheetlayout:bottomsheetlayout:0.1.9'
-    implementation  'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.22'
+    implementation 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.22'
 
 
     //谷歌服务
@@ -267,8 +267,6 @@ dependencies {
     //google 结算
     implementation 'com.android.billingclient:billing:3.0.2'
     implementation 'com.android.billingclient:billing-ktx:3.0.2'
-
-
 
 
 //    implementation 'com.google.firebase:firebase-core:19.0.0'
