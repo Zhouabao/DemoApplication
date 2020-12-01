@@ -55,7 +55,7 @@ class MoreActionNewDialog(
     var content: String = "",
     var pic: String = ""
 ) :
-    Dialog(myContext, R.style.MyDialog), View.OnClickListener, FacebookCallback<Sharer.Result> {
+    Dialog(myContext, R.style.MyDialog), View.OnClickListener {
 
     companion object {
         const val TYPE_SHARE_SQUARE = 1
@@ -152,8 +152,8 @@ class MoreActionNewDialog(
                 shareToThirdParty(SHARE_MEDIA.QZONE)
             }
             R.id.transpondFacebook -> {//facebook
-                shareToFacebook()
-//                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
+//                shareToFacebook()
+                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
             }
             R.id.transpondIns -> {//instagram
                 shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
@@ -179,90 +179,90 @@ class MoreActionNewDialog(
     /**
      * facebook分享单独封装
      */
-    private fun shareToFacebook() {
-        val shareDialog = ShareDialog(myContext as Activity)
-        shareDialog.registerCallback((myContext as BaseActivity).callbackManager, this)
-
-
-        val shareUrl = ShareLinkContent.Builder()
-            .setContentUrl(
-                Uri.parse(
-                    if (!squareBean?.video_json.isNullOrEmpty()) {
-                        squareBean?.video_json!![0].url
-                    } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-                        squareBean?.photo_json!![0].url
-                    } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-                        squareBean?.audio_json!![0].url
-                    } else {
-                        squareBean?.avatar
-                    }
-                )
-            )
-
-            .setContentTitle(
-                if (!squareBean?.video_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_video_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_pic_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_video_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else {
-                    myContext.getString(
-                        R.string.send_a_square_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                }
-            )
-            .setContentDescription(
-                if (!squareBean?.descr.isNullOrEmpty()) {
-                    squareBean?.descr
-                } else myContext.getString(R.string.hurry_to_see_this)
-            )
-            .setQuote(
-                if (!squareBean?.video_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_video_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_pic_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-                    myContext.getString(
-                        R.string.send_a_video_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                } else {
-                    myContext.getString(
-                        R.string.send_a_square_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                }
-            )
-            .setShareHashtag(
-                ShareHashtag.Builder()
-                    .setHashtag(
-                        if (!squareBean?.descr.isNullOrEmpty()) {
-                            squareBean?.descr
-                        } else myContext.getString(R.string.hurry_to_see_this)
-                    )
-                    .build()
-            )
-            .build()
-
-        shareDialog.show(shareUrl)
-    }
+//    private fun shareToFacebook() {
+//        val shareDialog = ShareDialog(myContext as Activity)
+//        shareDialog.registerCallback((myContext as BaseActivity).callbackManager, this)
+//
+//
+//        val shareUrl = ShareLinkContent.Builder()
+//            .setContentUrl(
+//                Uri.parse(
+//                    if (!squareBean?.video_json.isNullOrEmpty()) {
+//                        squareBean?.video_json!![0].url
+//                    } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+//                        squareBean?.photo_json!![0].url
+//                    } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+//                        squareBean?.audio_json!![0].url
+//                    } else {
+//                        squareBean?.avatar
+//                    }
+//                )
+//            )
+//
+//            .setContentTitle(
+//                if (!squareBean?.video_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_video_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_pic_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_video_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else {
+//                    myContext.getString(
+//                        R.string.send_a_square_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                }
+//            )
+//            .setContentDescription(
+//                if (!squareBean?.descr.isNullOrEmpty()) {
+//                    squareBean?.descr
+//                } else myContext.getString(R.string.hurry_to_see_this)
+//            )
+//            .setQuote(
+//                if (!squareBean?.video_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_video_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_pic_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+//                    myContext.getString(
+//                        R.string.send_a_video_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                } else {
+//                    myContext.getString(
+//                        R.string.send_a_square_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                }
+//            )
+//            .setShareHashtag(
+//                ShareHashtag.Builder()
+//                    .setHashtag(
+//                        if (!squareBean?.descr.isNullOrEmpty()) {
+//                            squareBean?.descr
+//                        } else myContext.getString(R.string.hurry_to_see_this)
+//                    )
+//                    .build()
+//            )
+//            .build()
+//
+//        shareDialog.show(shareUrl)
+//    }
 
 
     /**
@@ -447,21 +447,6 @@ class MoreActionNewDialog(
     override fun dismiss() {
         super.dismiss()
         umShareAPI.release()
-    }
-
-    override fun onSuccess(result: Sharer.Result?) {
-        Log.d("share===", "onSuccess ${result}================")
-        addShare(SHARE_MEDIA.FACEBOOK)
-    }
-
-    override fun onCancel() {
-        Log.d("share===", "onCancel  ================")
-        dismiss()
-    }
-
-    override fun onError(error: FacebookException?) {
-        Log.d("share===", "onError ${error}================")
-        dismiss()
     }
 
 

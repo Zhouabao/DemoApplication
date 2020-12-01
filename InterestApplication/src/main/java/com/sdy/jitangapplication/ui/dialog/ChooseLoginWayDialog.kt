@@ -55,7 +55,6 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
         //todo check language to show type
         if (UserManager.overseas) {
             loginWithFacebookBtn.isVisible = true
-            loginWithTwitterBtn.isVisible = false
             loginWithGoogleBtn.isVisible = true
             loginWithPhoneBtn.isVisible = true
             loginWithWechatBtn.isVisible = false
@@ -63,7 +62,6 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
             loginWithPhoneBtn.isVisible = true
             loginWithWechatBtn.isVisible = true
             loginWithFacebookBtn.isVisible = false
-            loginWithTwitterBtn.isVisible = false
             loginWithGoogleBtn.isVisible = false
         }
 
@@ -97,13 +95,6 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
         //facebook登录
         loginWithFacebookBtn.clickWithTrigger {
             (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.FACEBOOK)
-            dismiss()
-        }
-
-
-        //Twitter登陆
-        loginWithTwitterBtn.clickWithTrigger {
-            (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.TWITTER)
             dismiss()
         }
 

@@ -589,38 +589,29 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="667" />
-        <!--
- <activity
-             android:name="com.umeng.facebook.FacebookActivity"
-             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-             android:label="@string/app_name"
-             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-             tools:ignore="Instantiatable" />
 
-         <meta-data
-             android:name="com.facebook.sdk.ApplicationId"
-             android:value="@string/facebook_app_id"
-             tools:ignore="ManifestResource" />
-        -->
+        <activity
+            android:name="com.umeng.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:ignore="Instantiatable" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
             tools:ignore="ManifestResource" />
 
-        <activity android:name="com.facebook.FacebookActivity" />
 
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
-            android:exported="true" />
-
-
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="com.sdy.jitangapplication.braintree" />
             </intent-filter>
         </activity>
