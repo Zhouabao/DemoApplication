@@ -22,6 +22,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.RecommendSquareBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
@@ -70,16 +71,16 @@ class RecommendSquareAdapter :
             //0普通动态 1 资产 2豪车 3身材 4职业
             helper.itemView.squareSweet.text = when (item.approve_type) {
                 1 -> {
-                     mContext.getString(R.string.sweet_wealth_title)
+                    mContext.getString(R.string.sweet_wealth_title)
                 }
                 2 -> {
-                     mContext.getString(R.string.sweet_luxury_car_title)
+                    mContext.getString(R.string.sweet_luxury_car_title)
                 }
                 3 -> {
-                     mContext.getString(R.string.sweet_figure_title)
+                    mContext.getString(R.string.sweet_figure_title)
                 }
                 4 -> {
-                     mContext.getString(R.string.sweet_job_title)
+                    mContext.getString(R.string.sweet_job_title)
                 }
                 else -> {
                     ""
@@ -87,16 +88,26 @@ class RecommendSquareAdapter :
             }
 
             if (item.approve_type == 1 || item.approve_type == 2 || item.approve_type == 5) {
-                helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
-                helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_man.json")
+                if (CommonFunction.isEnglishLanguage()) {
+                    helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_man_en"
+                    helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_man_en.json")
+                } else {
+                    helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                    helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_man.json")
+                }
                 helper.itemView.squareSweetLogo.playAnimation()
 
                 helper.itemView.squareSweet.setTextColor(Color.parseColor("#FFFFCD52"))
                 helper.itemView.squareSweet.setBackgroundResource(R.drawable.shape_black_9dp)
                 helper.itemView.squareContent.setTextColor(Color.parseColor("#FFFFCD52"))
             } else {
-                helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
-                helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                if (CommonFunction.isEnglishLanguage()) {
+                    helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_woman_en"
+                    helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_woman_en.json")
+                } else {
+                    helper.itemView.squareSweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
+                    helper.itemView.squareSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                }
                 helper.itemView.squareSweetLogo.playAnimation()
 
                 helper.itemView.squareSweet.setTextColor(Color.WHITE)

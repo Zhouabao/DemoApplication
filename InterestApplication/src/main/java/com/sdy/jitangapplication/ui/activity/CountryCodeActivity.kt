@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.LanguageUtils
 import com.google.gson.Gson
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CountryCodeBean
 import com.sdy.jitangapplication.model.LetterCountryCodeComparator
@@ -111,7 +112,7 @@ class CountryCodeActivity : BaseActivity() {
         val datas = parseData(data)
         for (tdata in datas) {
 
-            tdata.index = if (LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language) {
+            tdata.index = if (CommonFunction.isEnglishLanguage()) {
                 tdata.en.substring(0, 1)
             } else {
                 Cn2Spell.getPinYinFirstLetter(

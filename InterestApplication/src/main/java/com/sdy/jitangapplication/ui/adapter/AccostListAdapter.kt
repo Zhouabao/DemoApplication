@@ -80,11 +80,21 @@ class AccostListAdapter : BaseQuickAdapter<AccostBean, BaseViewHolder>(R.layout.
         if (!extensionMap.isNullOrEmpty() && extensionMap["assets_audit_way"] != null && extensionMap["assets_audit_way"] != 0) {
             holder.itemView.sweetLogo.isVisible = true
             if (extensionMap["assets_audit_way"] == 1 || extensionMap["assets_audit_way"] == 2 || extensionMap["assets_audit_way"] == 5) {
-                holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_man"
-                holder.itemView.sweetLogo.setAnimation("data_sweet_logo_man.json")
+                if (CommonFunction.isEnglishLanguage()) {
+                    holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_man_en"
+                    holder.itemView.sweetLogo.setAnimation("data_sweet_logo_man_en.json")
+                } else {
+                    holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                    holder.itemView.sweetLogo.setAnimation("data_sweet_logo_man.json")
+                }
             } else {
-                holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
-                holder.itemView.sweetLogo.setAnimation("data_sweet_logo_woman.json")
+                if (CommonFunction.isEnglishLanguage()) {
+                    holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_woman_en"
+                    holder.itemView.sweetLogo.setAnimation("data_sweet_logo_woman_en.json")
+                } else {
+                    holder.itemView.sweetLogo.imageAssetsFolder = "images_sweet_logo_woman"
+                    holder.itemView.sweetLogo.setAnimation("data_sweet_logo_woman.json")
+                }
             }
 
             if (holder.itemView.sweetLogo.tag != null) {

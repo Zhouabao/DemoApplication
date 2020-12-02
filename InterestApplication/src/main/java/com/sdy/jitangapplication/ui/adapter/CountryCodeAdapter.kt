@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LanguageUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.CountryCodeBean
 import kotlinx.android.synthetic.main.item_country_code.view.*
 import java.util.*
@@ -34,7 +35,7 @@ class CountryCodeAdapter :
 
 
         helper.itemView.friendName.text =
-            "${if (LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language) item.en else item.sc}\t+${item.code}"
+            "${if (CommonFunction.isEnglishLanguage()) item.en else item.sc}\t+${item.code}"
     }
 
 }

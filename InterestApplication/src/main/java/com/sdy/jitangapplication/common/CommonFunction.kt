@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -13,11 +12,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.android.billingclient.api.Purchase
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -36,7 +31,6 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.googlepay.GooglePayUtils
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -47,7 +41,6 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -56,6 +49,7 @@ import org.jetbrains.anko.startActivity
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
+import java.util.*
 
 /**
  *    author : ZFM
@@ -825,9 +819,8 @@ object CommonFunction {
         payways: MutableList<PaywayBean> = mutableListOf(),
         source_type: Int = -1
     ) {
-            ConfirmPayCandyDialog(context, chargeBean!!, payways, source_type).show()
+        ConfirmPayCandyDialog(context, chargeBean!!, payways, source_type).show()
     }
-
 
 
     fun payResultNotify(context: Context) {
@@ -927,5 +920,9 @@ object CommonFunction {
 
         gsyVideoPlayer.setUp(url, true, "")
         gsyVideoPlayer.startPlayLogic()
+    }
+
+    fun isEnglishLanguage(): Boolean {
+        return LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language
     }
 }

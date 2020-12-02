@@ -160,13 +160,27 @@ class MultiListSquareAdapter(
                 //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证  5充值认证
                 if (item.approve_type == 1 || item.approve_type == 2 || item.approve_type == 5) {
                     holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
-                    holder.itemView.squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
-                    holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                    if (CommonFunction.isEnglishLanguage()) {
+                        holder.itemView.squareUserSweetLogo.imageAssetsFolder =
+                            "images_sweet_logo_man_en"
+                        holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man_en.json")
+                    } else {
+
+                        holder.itemView.squareUserSweetLogo.imageAssetsFolder =
+                            "images_sweet_logo_man"
+                        holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                    }
                     holder.itemView.squareUserSweetLogo.playAnimation()
                 } else {
-                    holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFF7CA8"))
-                    holder.itemView.squareUserSweetLogo.imageAssetsFolder =
-                        "images_sweet_logo_woman"
+                    if (CommonFunction.isEnglishLanguage()) {
+                        holder.itemView.squareUserSweetLogo.imageAssetsFolder =
+                            "images_sweet_logo_woman_en"
+                        holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_woman_en.json")
+                    } else {
+                        holder.itemView.squareContent1.setTextColor(Color.parseColor("#FFFF7CA8"))
+                        holder.itemView.squareUserSweetLogo.imageAssetsFolder =
+                            "images_sweet_logo_woman"
+                    }
                     holder.itemView.squareUserSweetLogo.setAnimation("data_sweet_logo_woman.json")
                     holder.itemView.squareUserSweetLogo.playAnimation()
                 }

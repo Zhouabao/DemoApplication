@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,14 +22,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.*
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.share.Share
-import com.facebook.share.Sharer
-import com.facebook.share.model.SharePhoto
-import com.facebook.share.model.SharePhotoContent
-import com.facebook.share.widget.ShareDialog
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -267,15 +258,29 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             //// 0普通 1资产认证 2豪车认证 3 身材认证 4 职业认证
             if (squareBean!!.approve_type == 1 || squareBean!!.approve_type == 2 || squareBean!!.approve_type == 5) {
                 squareContent1.setTextColor(Color.parseColor("#FFFFCD52"))
-                squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
-                squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                if (CommonFunction.isEnglishLanguage()) {
+                    squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man_en"
+                    squareUserSweetLogo.setAnimation("data_sweet_logo_man_en.json")
+                } else {
+                    squareUserSweetLogo.imageAssetsFolder = "images_sweet_logo_man"
+                    squareUserSweetLogo.setAnimation("data_sweet_logo_man.json")
+                }
                 squareUserSweetLogo.playAnimation()
             } else {
                 squareContent1.setTextColor(Color.parseColor("#FFFF7CA8"))
-                squareUserSweetLogo.imageAssetsFolder =
-                    "images_sweet_logo_woman"
-                squareUserSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                if (CommonFunction.isEnglishLanguage()) {
+
+                    squareUserSweetLogo.imageAssetsFolder =
+                        "images_sweet_logo_woman_en"
+                    squareUserSweetLogo.setAnimation("data_sweet_logo_woman_en.json")
+                } else {
+
+                    squareUserSweetLogo.imageAssetsFolder =
+                        "images_sweet_logo_woman"
+                    squareUserSweetLogo.setAnimation("data_sweet_logo_woman.json")
+                }
                 squareUserSweetLogo.playAnimation()
+
             }
 
             squareSweetVerifyName.text = squareBean!!.assets_audit_descr
@@ -440,7 +445,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             reply = true
             reply_id = adapter.data[position].id!!.toInt()
             showCommentEt.isFocusable = true
-            showCommentEt.hint = "『${getString(R.string.reply)}" + "\t${adapter.data[position].nickname}" + "：』"
+            showCommentEt.hint =
+                "『${getString(R.string.reply)}" + "\t${adapter.data[position].nickname}" + "：』"
             KeyboardUtils.showSoftInput(showCommentEt)
         }
 
@@ -478,7 +484,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 R.id.commentReplyBtn -> {
                     reply = true
                     reply_id = adapter.data[position].id!!
-                    showCommentEt.hint = "『${getString(R.string.reply)}${adapter.data[position].replyed_nickname}：』"
+                    showCommentEt.hint =
+                        "『${getString(R.string.reply)}${adapter.data[position].replyed_nickname}：』"
                     KeyboardUtils.showSoftInput(showCommentEt)
                 }
             }
@@ -750,14 +757,24 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.setNoMoreData(false)
             if (allCommentBean != null) {
                 if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                    adapter.addData(CommentBean(content = getString(R.string.hot_comment), type = CommentBean.TITLE))
+                    adapter.addData(
+                        CommentBean(
+                            content = getString(R.string.hot_comment),
+                            type = CommentBean.TITLE
+                        )
+                    )
                     for (i in 0 until allCommentBean.hotlist!!.size) {
                         allCommentBean.hotlist!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                    adapter.addData(CommentBean(content = getString(R.string.all_comment), type = CommentBean.TITLE))
+                    adapter.addData(
+                        CommentBean(
+                            content = getString(R.string.all_comment),
+                            type = CommentBean.TITLE
+                        )
+                    )
                     for (i in 0 until allCommentBean.list!!.size) {
                         allCommentBean.list!![i]!!.type = CommentBean.CONTENT
                     }
@@ -1085,7 +1102,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         commentActionDialog!!.replyComment.onClick {
             reply = true
             reply_id = adapter.data[position].id!!
-            showCommentEt.hint = "『${getString(R.string.reply)}\t${adapter.data[position].nickname}：』"
+            showCommentEt.hint =
+                "『${getString(R.string.reply)}\t${adapter.data[position].nickname}：』"
             showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 100L)
 
             commentActionDialog!!.dismiss()
@@ -1229,8 +1247,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -1296,8 +1312,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
-
-
 
 
 }

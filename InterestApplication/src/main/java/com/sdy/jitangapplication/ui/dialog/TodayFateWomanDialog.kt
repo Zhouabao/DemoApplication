@@ -69,7 +69,7 @@ class TodayFateWomanDialog(
     private fun initView() {
         t2.text = context1.getString(
             R.string.hurry_give,
-            if (LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language) {
+            if (CommonFunction.isEnglishLanguage()) {
                 ""
             } else {
                 if (UserManager.getGender() == 1) {
