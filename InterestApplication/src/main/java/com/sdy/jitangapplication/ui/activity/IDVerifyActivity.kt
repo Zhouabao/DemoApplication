@@ -246,7 +246,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
         // LivenessTypeEunm.HeadRight, LivenessTypeEunm.HeadLeftOrRight
         config.livenessTypeList = MyApplication.livenessList
         // 设置动作活体是否随机
-        config.isLivenessRandom = false
+        config.isLivenessRandom = true
         // 设置开启提示音
         config.isSound = false
         // 原图缩放系数
@@ -276,9 +276,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
         if (status == FaceStatusNewEnum.OK && mIsCompletion) {
             onPause()
             uploadFaceImg()
-        } else if (status == FaceStatusNewEnum.FaceLivenessActionCodeTimeout
-            || status == FaceStatusNewEnum.DetectRemindCodeTimeout
-        ) {
+        } else if ( status == FaceStatusNewEnum.DetectRemindCodeTimeout) {
             onPause()
             faceNotice.text = getString(R.string.take_time_out)
             faceNotice.setTextColor(Color.parseColor("#fffb1919"))
