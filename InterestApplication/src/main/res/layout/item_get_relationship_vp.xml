@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="你想在积糖寻求什么关系"
+        android:text="@string/what_are_you_looking_for"
         android:textColor="#ff191919"
         android:textSize="16sp"
         android:layout_marginLeft="25dp"

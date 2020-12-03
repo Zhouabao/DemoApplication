@@ -27,7 +27,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="35dp"
         android:background="@null"
-        android:hint="请输入你看到积糖的渠道"
+        android:hint="@string/input_channel_you_know_us"
         android:overScrollMode="never"
         android:textColor="@color/colorBlack19"
         android:textColorHint="#ffc1c3c4"

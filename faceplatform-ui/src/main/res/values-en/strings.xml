@@ -31,5 +31,5 @@
 	<string name="liveness_good">Please keep your face</string>
     <string name="need_face_livness">Human face recognition</string>
 	<string name="face_liveness_for_account_danger">Detected account abnormal behavior risk \ n needs to re-perform face recognition</string>
-	<string name="begin_face_liveness">Start living body test</string>
+	<string name="begin_face_liveness">Start identify</string>
 </resources>

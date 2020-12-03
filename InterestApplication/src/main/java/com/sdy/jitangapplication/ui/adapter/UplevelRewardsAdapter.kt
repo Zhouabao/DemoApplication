@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.Level
 import kotlinx.android.synthetic.main.item_uplevel_rewards.view.*
 import java.math.BigDecimal
@@ -35,7 +36,7 @@ class UplevelRewardsAdapter() :
         helper.itemView.uplevel.text = item.title
 
         SpanUtils.with(helper.itemView.uplevelRewardsMoney)
-            .append(mContext.getString(R.string.currencyCode))
+            .append(CommonFunction.getNowMoneyUnit())
             .setFontSize(16, true)
             .append(
                 "${BigDecimal(item.reward_money).setScale(

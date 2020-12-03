@@ -119,7 +119,7 @@ class OpenVipActivity : BaseActivity() {
                         moreInfoTitle.layoutParams = params
                     }
                     SpanUtils.with(moreInfoTitle)
-                        .append(getString(R.string.inapp, moreMatch?.city_name))
+                        .append(getString(R.string.find_standard_girl, moreMatch?.city_name))
                         .setFontSize(16, true)
                         .create()
                     standardPeople.text =
@@ -129,7 +129,7 @@ class OpenVipActivity : BaseActivity() {
 
                 } else {
                     SpanUtils.with(moreInfoTitle)
-                        .append(getString(R.string.inapp, moreMatch?.city_name))
+                        .append(getString(R.string.find_standard_girl, moreMatch?.city_name))
                         .setFontSize(16, true)
                         .create()
                     SpanUtils.with(standardPeople)
@@ -297,14 +297,14 @@ class OpenVipActivity : BaseActivity() {
     private fun setPurchaseType() {
         if (chargeWayBeans.isNotEmpty()) {
             SpanUtils.with(originalPrice)
-                .append(getString(R.string.original_price) + chargeWayBeans[0].original_price)
+                .append(getString(R.string.original_price) + CommonFunction.getNowMoneyUnit() + chargeWayBeans[0].original_price)
                 .setFontSize(12, true)
                 .setBold()
                 .setStrikethrough()
                 .create()
 
             SpanUtils.with(nowPrice)
-                .append(getString(R.string.currencyCode))
+                .append(CommonFunction.getNowMoneyUnit())
                 .setFontSize(14, true)
                 .append(
                     "${if (chargeWayBeans[0].type == 1) {

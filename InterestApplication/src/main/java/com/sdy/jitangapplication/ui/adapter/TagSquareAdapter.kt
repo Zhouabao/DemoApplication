@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.view.MotionEvent
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.ActivityUtils.isActivityExistsInStack
@@ -28,9 +30,7 @@ class TagSquareAdapter :
         val adapter = TagSquarePicAdapter(3)
         adapter.addData(item.cover_list)
 
-        itemview.rvTagSquareImg.onTouch { _, event ->
-            helper.itemView.onTouchEvent(event)
-        }
+        itemview.rvTagSquareImg.setOnTouchListener { _, event -> helper.itemView.onTouchEvent(event) }
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.touristMode) {
                 TouristDialog(mContext).show()

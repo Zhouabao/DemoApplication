@@ -64,7 +64,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         )
         filterAge.text =
             seekBarAge.leftSeekBar.progress.toInt()
-                .toString() + "-" + seekBarAge.rightSeekBar.progress.toInt() + context1.getString(R.string.years)
+                .toString() + "-" + seekBarAge.rightSeekBar.progress.toInt()+"+"
 
         rgOnlineTime.check(
             when (sp.getInt("online_type")) {

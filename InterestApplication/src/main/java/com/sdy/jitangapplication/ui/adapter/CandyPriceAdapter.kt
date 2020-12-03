@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.ChargeWayBean
 import kotlinx.android.synthetic.main.item_candy_price.view.*
 import java.math.BigDecimal
@@ -31,7 +32,7 @@ class CandyPriceAdapter :
         if (item.isfirst) {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "${mContext.getString(R.string.currencyCode)}${BigDecimal(item.discount_price).setScale(
+                    "${CommonFunction.getNowMoneyUnit()}${BigDecimal(item.discount_price).setScale(
                         0,
                         BigDecimal.ROUND_HALF_UP
                     )}"
@@ -60,7 +61,7 @@ class CandyPriceAdapter :
         } else {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "${mContext.getString(R.string.currencyCode)}${BigDecimal(
+                    "${CommonFunction.getNowMoneyUnit()}${BigDecimal(
                         if (item.discount_price != 0.0) {
                             item.discount_price
                         } else {

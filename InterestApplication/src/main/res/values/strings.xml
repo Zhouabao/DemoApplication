@@ -453,7 +453,7 @@
     <string name="expand_all">展开全部</string>
     <string name="collapse_all">收起展示</string>
     <string name="has_noticed">已通知</string>
-    <string name="hope">希望</string>
+    <string name="hope">希望%1$s添加</string>
     <string name="he">他</string>
     <string name="she">她</string>
     <string name="face_has_verify">已认证</string>
@@ -890,7 +890,7 @@
     <string name="thaey_are_waitinf_for_you">她们在翘首期待你的加入</string>
     <string name="total_has">共有</string>
     <string name="sugar_girl_count">%1$d个糖宝女孩</string>
-    <string name="find_standard_girl">找到符合标准的</string>
+    <string name="find_standard_girl">在%1$s找到符合标准的</string>
     <string name="person_cpunt">%1$s名%2$s</string>
     <string name="tobe_normal_vip">成为会员</string>
     <string name="free_chat_after_chat">成为会员无限畅聊</string>
@@ -1219,7 +1219,6 @@
     <string name="block_contact">屏蔽通讯录</string>
     <string name="block_distance">屏蔽距离</string>
     <string name="hide_when_offline">离线时隐身</string>
-    <string name="black_list">黑名单</string>
     <string name="clear_cache">清理缓存</string>
     <string name="about_account">账号相关</string>
     <string name="msg_notification">消息提醒</string>
@@ -1277,5 +1276,7 @@
     <string name="contact_skype">skype</string>
     <string name="okay">好的</string>
     <string name="currencyCode">¥</string>
+    <string name="input_channel_you_know_us">请输入你看到积糖的渠道</string>
+    <string name="what_are_you_looking_for">你想在积糖寻求什么关系</string>
 
 </resources>

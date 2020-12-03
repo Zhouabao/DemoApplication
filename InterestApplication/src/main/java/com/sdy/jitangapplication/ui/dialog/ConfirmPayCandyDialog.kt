@@ -87,7 +87,7 @@ class ConfirmPayCandyDialog(
 
 
     private fun initView() {
-        price.text = "${myContext.getString(R.string.currencyCode)}${
+        price.text = "${CommonFunction.getNowMoneyUnit()}${
         if (!chargeBean.isfirst) {
             if (chargeBean.discount_price != 0.0) {
                 chargeBean.discount_price

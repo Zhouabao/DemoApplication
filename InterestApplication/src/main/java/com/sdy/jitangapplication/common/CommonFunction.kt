@@ -925,4 +925,12 @@ object CommonFunction {
     fun isEnglishLanguage(): Boolean {
         return LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language
     }
+
+    fun getNowMoneyUnit():String{
+        if (UserManager.overseas) {
+            return "$"
+        } else {
+            return "¥"
+        }
+    }
 }

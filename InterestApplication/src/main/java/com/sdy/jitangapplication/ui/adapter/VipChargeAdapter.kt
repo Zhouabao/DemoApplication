@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
@@ -42,7 +43,7 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
         holder.itemView.layoutParams = params
 
         holder.itemView.vipLong.text = item.ename ?: ""
-        holder.itemView.vipNowPrice.text = mContext.getString(R.string.currencyCode)+"${if (item.type == 1) {
+        holder.itemView.vipNowPrice.text = CommonFunction.getNowMoneyUnit()+"${if (item.type == 1) {
             BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)
         } else {
             BigDecimal(item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -38,29 +39,16 @@ import kotlinx.android.synthetic.main.item_recommend_square.view.*
 class RecommendSquareAdapter :
     BaseQuickAdapter<RecommendSquareBean, BaseViewHolder>(R.layout.item_recommend_square) {
     override fun convert(helper: BaseViewHolder, item: RecommendSquareBean) {
-        val params = helper.itemView.squareImg.layoutParams as ConstraintLayout.LayoutParams
-//        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
-        val width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
-//        (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = params.width
-        params.height =
-            if (item.type == 0 || item.type == 3) { //纯文本和语音是1:1
-                width
-            } else if (item.type == 1) { //图片
+        (helper.itemView.squareImg.layoutParams as ConstraintLayout.LayoutParams ).dimensionRatio =
+            if (item.type == 0 || item.type == 3) { //0纯文本和3语音是1:1
+                "1:1"
+            } else  { //2图片
                 when {
-                    item.width > item.height -> (3 / 4F * width).toInt()
-                    item.width < item.height -> (4 / 3F * width).toInt()
-                    else -> width
+                    item.width > item.height -> "4:3"
+                    item.width < item.height -> "3:4"
+                    else -> "1:1"
                 }
-            } else {
-                when {
-                    item.width > item.height -> (3 / 4F * width).toInt()
-                    item.width < item.height -> (4 / 3F * width).toInt()
-                    else -> width
-                }
-                width
             }
-        helper.itemView.squareImg.layoutParams = params
-        helper.itemView.squareOnlyTextContent.layoutParams = params
 
 
         if (item.approve_type != 0) {

@@ -61,7 +61,6 @@ import kotlinx.android.synthetic.main.footer_tag_quality.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 
@@ -287,11 +286,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         } else if (matchBean!!.label_quality.isNullOrEmpty()) {
             notifyAddTagBtn.isVisible = true
             if (matchBean!!.need_notice) {
-                notifyAddTagBtn.text = getString(R.string.hope) + if (matchBean!!.gender == 1) {
-                    getString(R.string.he)
-                } else {
-                    getString(R.string.she)
-                } + getString(R.string.add)
+                notifyAddTagBtn.text = getString(
+                    R.string.hope, if (matchBean!!.gender == 1) {
+                        getString(R.string.he)
+                    } else {
+                        getString(R.string.she)
+                    }
+                )
                 notifyAddTagBtn.setTextColor(Color.parseColor("#789EFF"))
                 notifyAddTagBtn.isEnabled = true
             } else {
@@ -531,7 +532,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private var downX = 0F
     private var upX = 0F
     private fun setViewpagerAndIndicator() {
-        detailPhotosVp.onTouch { v, event ->
+        detailPhotosVp.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     downX = event.x
@@ -552,6 +553,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     downX = 0F
                 }
             }
+            false
         }
 
 
