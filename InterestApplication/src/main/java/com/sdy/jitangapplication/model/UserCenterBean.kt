@@ -36,6 +36,9 @@ data class SettingsBean(
     val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证
     val notify_square_like_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
     val notify_square_comment_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
+    val wechat_public_state: Boolean = false,//true 公众号已绑定
+    val wechat_open_state: Boolean = false,//true 开启微信推送
+    val wechat_qrcode: String= "",//true 开启微信推送
     val invisible_state: StateBean = StateBean(),// 选中的隐身状态
     val invisible_list: MutableList<StateBean> = mutableListOf(),// 1 不隐身 2 离线时间隐身 3 一直隐身
     val private_chat_state: StateBean = StateBean(),//选中的私聊权限

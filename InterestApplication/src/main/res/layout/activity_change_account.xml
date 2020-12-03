@@ -40,10 +40,10 @@
             android:background="@null"
             android:layout_marginLeft="23dp"
             android:textColor="@color/colorBlack"
-            app:layout_constraintBottom_toBottomOf="@id/moreInfoTitle"
-            app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+            app:layout_constraintBottom_toBottomOf="@id/countryCodeTv"
+            app:layout_constraintLeft_toRightOf="@id/countryCodeTv"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/moreInfoTitle"/>
+            app:layout_constraintTop_toTopOf="@id/countryCodeTv"/>
 
     <View
             android:background="@color/colorDivider"
@@ -51,7 +51,7 @@
             android:layout_height="1dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"/>
+            app:layout_constraintTop_toBottomOf="@id/countryCodeTv"/>
 
     <TextView
             android:id="@+id/t2"
@@ -62,8 +62,8 @@
             android:text="@string/verify_code"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
-            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"
+            app:layout_constraintLeft_toLeftOf="@id/countryCodeTv"
+            app:layout_constraintTop_toBottomOf="@id/countryCodeTv"
             />
 
 
@@ -111,7 +111,7 @@
             android:enabled="false"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+            app:layout_constraintLeft_toLeftOf="@id/countryCodeTv"
             app:layout_constraintRight_toRightOf="@id/newPhoneEt"
             app:layout_constraintTop_toBottomOf="@id/t2"
             />
@@ -127,7 +127,7 @@
             android:textSize="13sp"
             android:lineSpacingMultiplier="1.2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+            app:layout_constraintLeft_toLeftOf="@id/countryCodeTv"
             app:layout_constraintRight_toRightOf="@id/newPhoneEt"
             />
 

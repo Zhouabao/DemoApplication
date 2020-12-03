@@ -96,46 +96,54 @@
                     app:layout_constraintTop_toBottomOf="@id/filterContacts" />
 
 
-                <TextView
-                    android:id="@+id/hideModeBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:gravity="center_vertical"
-                    android:paddingRight="15dp"
-                    android:text="@string/hide_mode"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/hideModeCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filterDistance"
-                    app:layout_goneMarginTop="1dp" />
+                    app:layout_goneMarginTop="1dp">
+
+                    <TextView
+                        android:id="@+id/hideModeBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/hide_mode"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
-                <TextView
-                    android:id="@+id/hideModeContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="37dp"
-                    android:textColor="#ffc8c8c8"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/hideModeBtn"
-                    tools:text="@string/hide_when_offline" />
+                    <TextView
+                        android:id="@+id/hideModeContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:drawableRight="@drawable/icon_more_right"
+                        android:drawablePadding="15dp"
+                        android:textColor="#ffc8c8c8"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/hideModeBtn"
+                        tools:text="@string/hide_when_offline" />
 
 
-                <ImageView
-                    android:id="@+id/hideModeNew"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="74dp"
-                    android:visibility="gone"
-                    android:src="@drawable/icon_new"
-                    app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
-                    app:layout_constraintLeft_toLeftOf="@id/hideModeBtn"
-                    app:layout_constraintTop_toTopOf="@id/hideModeBtn" />
+                    <ImageView
+                        android:id="@+id/hideModeNew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_new"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/hideModeBtn"
+                        app:layout_constraintLeft_toRightOf="@id/hideModeBtn"
+                        app:layout_constraintTop_toTopOf="@id/hideModeBtn" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <TextView
@@ -151,7 +159,7 @@
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/hideModeBtn"
+                    app:layout_constraintTop_toBottomOf="@id/hideModeCl"
                     app:layout_goneMarginTop="1dp" />
 
 
@@ -167,47 +175,57 @@
                     app:layout_constraintTop_toTopOf="@id/blackListBtn"
                     tools:text="查看所有" />
 
-                <TextView
-                    android:id="@+id/privacyPowerBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:gravity="center_vertical"
-                    android:paddingRight="15dp"
-                    android:text="@string/privacy_power"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/privacyPowerCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/blackListBtn"
-                    app:layout_goneMarginTop="1dp" />
+                    app:layout_goneMarginTop="1dp">
+
+                    <TextView
+                        android:id="@+id/privacyPowerBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/privacy_power"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginTop="1dp" />
 
 
-                <ImageView
-                    android:id="@+id/privacyNew"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="74dp"
-                    android:visibility="visible"
-                    android:src="@drawable/icon_new"
-                    app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
-                    app:layout_constraintLeft_toLeftOf="@id/privacyPowerBtn"
-                    app:layout_constraintTop_toTopOf="@id/privacyPowerBtn" />
+                    <ImageView
+                        android:id="@+id/privacyNew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_new"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
+                        app:layout_constraintLeft_toRightOf="@id/privacyPowerBtn"
+                        app:layout_constraintTop_toTopOf="@id/privacyPowerBtn" />
 
 
-                <TextView
-                    android:id="@+id/privacyPowerContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="37dp"
-                    android:textColor="#ffc8c8c8"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/privacyPowerBtn"
-                    tools:text="对所有用户" />
+                    <TextView
+                        android:id="@+id/privacyPowerContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:drawableRight="@drawable/icon_more_right"
+                        android:drawablePadding="15dp"
+                        android:textColor="#ffc8c8c8"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/privacyPowerBtn"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/privacyPowerBtn"
+                        tools:text="对所有用户" />
 
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <TextView
@@ -220,34 +238,48 @@
                     android:text="@string/common_setting"
                     android:textColor="@color/colorGrayText"
                     android:textSize="12sp"
-                    app:layout_constraintTop_toBottomOf="@id/privacyPowerBtn" />
+                    app:layout_constraintTop_toBottomOf="@id/privacyPowerCl" />
 
-                <TextView
-                    android:id="@+id/msgNotificate"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:gravity="center_vertical"
-                    android:paddingRight="15dp"
-                    android:text="@string/msg_notification"
-                    android:textColor="#FF333333"
-                    android:textSize="16sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/t2" />
-
-                <ImageView
-                    android:id="@+id/notificationNew"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/msgNotificateCl"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="74dp"
-                    android:src="@drawable/icon_new"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/msgNotificate"
-                    app:layout_constraintLeft_toLeftOf="@id/msgNotificate"
-                    app:layout_constraintTop_toTopOf="@id/msgNotificate" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/t2">
 
+                    <TextView
+                        android:id="@+id/msgNotificate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/msg_notification"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/icon_more_right"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/notificationNew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_new"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/msgNotificate"
+                        app:layout_constraintLeft_toRightOf="@id/msgNotificate"
+                        app:layout_constraintTop_toTopOf="@id/msgNotificate" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/helpCenter"
@@ -262,7 +294,7 @@
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/msgNotificate" />
+                    app:layout_constraintTop_toBottomOf="@id/msgNotificateCl" />
 
 
                 <TextView

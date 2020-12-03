@@ -41,7 +41,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
 
 
     /**
-     * type  1短信 2隐身 3私聊
+     * type  1短信 2隐身 3私聊  4微信
      * state  	短信(1开启 2关闭)
      *          隐身（1 不隐身 2离线隐身 3一直隐身 ）
      */
@@ -56,7 +56,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     CommonFunction.toast(t.msg)
-                    mView.onGreetApproveResult(3, t.code == 200)
+                    mView.onGreetApproveResult(type, t.code == 200)
 
                 }
 

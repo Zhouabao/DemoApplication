@@ -1278,5 +1278,11 @@
     <string name="currencyCode">¥</string>
     <string name="input_channel_you_know_us">请输入你看到积糖的渠道</string>
     <string name="what_are_you_looking_for">你想在积糖寻求什么关系</string>
+    <string name="wechat_receive_message">微信接收消息通知</string>
+    <string name="jitang_wechat_public">积糖微信公众账号</string>
+    <string name="focus_sugartown">开启微信推送需要先关注积糖微信公众号\n 请保存二维码并使用微信扫一扫关注绑定</string>
+    <string name="save_and_goto_wechat">保存并前往微信扫码</string>
+    <string name="Binded">已绑定</string>
+    <string name="Bind_now">去绑定</string>
 
 </resources>

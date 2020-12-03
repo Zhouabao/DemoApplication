@@ -119,7 +119,6 @@
         android:id="@+id/moreInfoTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:background="@color/colorDivider"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
@@ -173,7 +172,6 @@
         android:id="@+id/switchMusic"
         android:layout_width="48dp"
         android:layout_height="24dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
         android:checked="true"
         android:showText="false"
@@ -199,7 +197,6 @@
         android:id="@+id/switchVibrator"
         android:layout_width="48dp"
         android:layout_height="24dp"
-        android:layout_marginTop="20dp"
         android:checked="true"
         android:showText="false"
         android:thumb="@drawable/switch_ios_thumb"
@@ -210,10 +207,77 @@
 
 
     <TextView
+        android:id="@+id/wechatTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorDivider"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="微信推送"
+        android:textColor="@color/colorGrayText"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/t2" />
+
+
+    <Switch
+        android:id="@+id/switchWechat"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:checked="false"
+        android:enabled="false"
+        android:showText="false"
+        android:thumb="@drawable/switch_ios_thumb"
+        android:track="@drawable/selector_switch_ios_track"
+        app:layout_constraintBottom_toBottomOf="@id/switchWechatBtn"
+        app:layout_constraintRight_toRightOf="@id/switchMusic"
+        app:layout_constraintTop_toTopOf="@id/switchWechatBtn" />
+
+
+    <TextView
+        android:id="@+id/switchWechatBtn"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="@string/wechat_receive_message"
+        android:textColor="@color/colorBlackTitle"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wechatTv" />
+
+    <TextView
+        android:id="@+id/wechatPublicTv"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="@string/jitang_wechat_public"
+        android:textColor="@color/colorBlackTitle"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/switchWechatBtn" />
+
+    <TextView
+        android:id="@+id/wechatPublic"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:layout_marginRight="15dp"
+        android:text="未绑定"
+        android:textColor="#ffc8c8c8"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/wechatPublicTv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/wechatPublicTv" />
+
+
+    <TextView
         android:id="@+id/other"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:background="@color/colorDivider"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
@@ -222,7 +286,7 @@
         android:text="@string/other"
         android:textColor="@color/colorGrayText"
         android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/t2" />
+        app:layout_constraintTop_toBottomOf="@id/wechatPublicTv" />
 
 
     <Switch
@@ -237,7 +301,6 @@
         app:layout_constraintBottom_toBottomOf="@id/switchMessageBtn"
         app:layout_constraintRight_toRightOf="@id/switchMusic"
         app:layout_constraintTop_toTopOf="@id/switchMessageBtn" />
-
 
     <TextView
         android:id="@+id/switchMessageBtn"

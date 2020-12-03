@@ -63,6 +63,7 @@ class CandyRecordActivity : BaseMvpActivity<CandyRecordPresenter>(), CandyRecord
 
         rvRecord.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvRecord.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout,rvRecord)
 
     }
 

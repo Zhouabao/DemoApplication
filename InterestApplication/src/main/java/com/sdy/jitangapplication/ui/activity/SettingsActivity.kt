@@ -90,7 +90,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
         blackListBtn.setOnClickListener(this)
         seeBlackListBtn.setOnClickListener(this)
-        msgNotificate.setOnClickListener(this)
+        msgNotificateCl.setOnClickListener(this)
         helpCenter.setOnClickListener(this)
         aboutUs.setOnClickListener(this)
         clearData.setOnClickListener(this)
@@ -99,8 +99,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         filterContacts.setOnClickListener(this)
         filterDistance.setOnClickListener(this)
 
-        hideModeBtn.setOnClickListener(this)
-        privacyPowerBtn.setOnClickListener(this)
+        hideModeCl.setOnClickListener(this)
+        privacyPowerCl.setOnClickListener(this)
 
 
         aboutAccount.setOnClickListener(this)
@@ -139,11 +139,14 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 startActivity<BlackListActivity>()
             }
             //消息提醒
-            R.id.msgNotificate -> {
+            R.id.msgNotificateCl -> {
                 // notify_square_like_state  notify_square_comment_state
                 startActivity<NotificationActivity>(
                     "notify_square_like_state" to settingsBean?.notify_square_like_state,
                     "notify_square_comment_state" to settingsBean?.notify_square_comment_state,
+                    "wechat_public_state" to settingsBean?.wechat_public_state,
+                    "wechat_open_state" to settingsBean?.wechat_open_state,
+                    "wechat_qrcode" to settingsBean?.wechat_qrcode,
                     "sms_state" to settingsBean?.sms_state
                 )
             }
@@ -216,10 +219,10 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 }
             }
 
-            R.id.hideModeBtn -> {
+            R.id.hideModeCl -> {
                 showHideModePicker(hideModeContent, invisible_state, hideMode, getString(R.string.hide_mode), 2)
             }
-            R.id.privacyPowerBtn -> {
+            R.id.privacyPowerCl -> {
                 showHideModePicker(
                     privacyPowerContent,
                     private_chat_state,

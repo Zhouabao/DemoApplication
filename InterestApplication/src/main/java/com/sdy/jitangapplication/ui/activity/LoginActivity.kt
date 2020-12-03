@@ -11,7 +11,6 @@ import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -29,7 +28,6 @@ import com.sdy.jitangapplication.model.RegisterFileBean
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.ui.dialog.ChooseLoginWayDialog
-import com.sdy.jitangapplication.utils.AbScreenUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.umeng.socialize.UMAuthListener
 import com.umeng.socialize.UMShareAPI
@@ -54,7 +52,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         setContentView(R.layout.activity_login)
         syCode = intent.getIntExtra("syCode", 0)
 
-        BarUtils.setStatusBarColor(this,Color.BLACK)
+        BarUtils.setStatusBarColor(this, Color.BLACK)
         BarUtils.setStatusBarLightMode(this, false)
         initView()
         showVideoPreview()
@@ -163,7 +161,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
         if (data != null) {
             UserManager.registerFileBean = data
-            if (data?.tourists) {
+            UserManager.overseas = data.region == 2
+            if (data.tourists) {
                 touristBtn.visibility = View.VISIBLE
             } else {
                 if (syCode == 1022) {
@@ -211,8 +210,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 if (task != null && task.isSuccessful) {
                     val account = task.getResult(ApiException::class.java)!!
-                firebaseAuthWithGoogle(account.idToken!!)
-                    Log.e(TAG1, "google---${account},idToken = ${account.idToken},id = ${account.id}")
+                    firebaseAuthWithGoogle(account.idToken!!)
+                    Log.e(
+                        TAG1,
+                        "google---${account},idToken = ${account.idToken},id = ${account.id}"
+                    )
                     mPresenter.checkVerifyCode(
                         account.idToken!!,
                         VerifyCodeActivity.TYPE_LOGIN_GOOGLE

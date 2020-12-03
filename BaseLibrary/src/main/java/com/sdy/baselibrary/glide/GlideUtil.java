@@ -379,8 +379,7 @@ public class GlideUtil {
      * @param context
      * @param url
      */
-    public static void downLoadImage(Context context, String url) {
-
+    public static void downLoadImage(Context context, String url,BitmapLoadCallbacks callbacks) {
         try {
             Glide.with(context).asBitmap().apply(getOptions()).load(url).listener(new RequestListener<Bitmap>() {
                 @Override
@@ -392,14 +391,18 @@ public class GlideUtil {
                 @Override
                 public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource
                         dataSource, boolean isFirstResource) {
+                    callbacks.getBitmapResult(resource);
                     return false;
                 }
             }).submit().get();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
 
+    public interface BitmapLoadCallbacks{
+        public void getBitmapResult(Bitmap bitmap);
     }
 
     /**
