@@ -100,7 +100,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**
      * 获取我的设置
      */
-    fun mySettings(token: String, accid: String) {
+    fun mySettings() {
         RetrofitFactory.instance.create(Api::class.java)
             .mySettings(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {

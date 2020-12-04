@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -70,6 +72,9 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
         btnVerifyCode.setOnClickListener(this)
         nickNameClean.setOnClickListener(this)
         countryCode.setOnClickListener(this)
+        if (!UserManager.overseas) {
+            etPhone.filters = arrayOf(InputFilter.LengthFilter(11))
+        }
 
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable) {

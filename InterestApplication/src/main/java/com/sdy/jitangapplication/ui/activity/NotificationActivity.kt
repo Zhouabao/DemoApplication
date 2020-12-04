@@ -11,6 +11,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.UpdateSettingEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.presenter.NotificationPresenter
 import com.sdy.jitangapplication.presenter.view.NotificationView
@@ -18,6 +19,7 @@ import com.sdy.jitangapplication.ui.dialog.SaveQRCodeDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * 通知提醒
@@ -126,7 +128,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
             switchMessageBtn -> {//短信通知开关
                 mPresenter.switchSet(
-                    1, if (switchMessage.isChecked) {
+                    3, if (switchMessage.isChecked) {
                         2
                     } else {
                         1
@@ -158,6 +160,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
     //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论  3短信提醒   4 微信推送
     override fun onGreetApproveResult(type: Int, success: Boolean) {
+        EventBus.getDefault().post(UpdateSettingEvent())
         when (type) {
             1 -> {
                 switchDianzan.isChecked = !switchDianzan.isChecked

@@ -22,6 +22,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.event.UpdateSettingEvent
 import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.model.StateBean
 import com.sdy.jitangapplication.model.VersionBean
@@ -34,6 +35,9 @@ import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -47,7 +51,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         initView()
-        mPresenter.mySettings(UserManager.getToken(), UserManager.getAccid())
+        mPresenter.mySettings()
         mPresenter.getVersion()
 
         initData()
@@ -84,6 +88,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         mPresenter = SettingsPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -107,7 +112,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         hotT1.text = getString(R.string.setting)
         stateSettings.retryBtn.onClick {
             stateSettings.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.mySettings(UserManager.getToken(), UserManager.getAccid())
+            mPresenter.mySettings()
         }
 
     }
@@ -331,5 +336,16 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         } else {
             stateSettings.viewState = MultiStateView.VIEW_STATE_ERROR
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSettingEvent(event: UpdateSettingEvent) {
+        mPresenter.mySettings()
     }
 }

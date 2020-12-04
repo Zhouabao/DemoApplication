@@ -51,3 +51,9 @@ class UpdateStarEvent(val star: Boolean)
  * 更新发送礼物的事件
  */
 class UpdateSendGiftEvent(val message: IMMessage)
+
+
+/**
+ * 更新设置
+ */
+class UpdateSettingEvent()

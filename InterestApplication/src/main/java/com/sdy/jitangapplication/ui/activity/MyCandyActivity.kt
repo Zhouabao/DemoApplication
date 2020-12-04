@@ -32,7 +32,6 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 
 
 /**
@@ -74,6 +73,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
         }
         recordRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recordRv.adapter = candyProductAdapter
+        candyProductAdapter.setEmptyView(R.layout.empty_layout, recordRv)
     }
 
 
@@ -150,6 +150,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
 
     //    candyCount
     var mycandy = 0
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
         mycandy -= event.candyCount
