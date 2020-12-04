@@ -12,6 +12,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.UpdateSettingEvent
+import com.sdy.jitangapplication.event.UpdateWechatSettingsEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.presenter.NotificationPresenter
 import com.sdy.jitangapplication.presenter.view.NotificationView
@@ -20,6 +21,8 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 通知提醒
@@ -34,10 +37,10 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
     }
 
     //    private val wechat_qrcode by lazy { intent.getStringExtra("wechat_qrcode") }
-    private val wechat_qrcode = "https://www.qedev.com/res/ad/ad2.png"
     var wechatPublicState = false //微信公众号是否绑定状态
     var wechatState = false //微信推送开启状态
     private fun initView() {
+        EventBus.getDefault().register(this)
         mPresenter = NotificationPresenter()
         mPresenter.context = this
         mPresenter.mView = this
@@ -152,7 +155,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
             wechatPublic -> {//开启微信公众号
                 if (!wechatPublicState)
-                    SaveQRCodeDialog(this, wechat_qrcode).show()
+                    SaveQRCodeDialog(this).show()
             }
         }
     }
@@ -184,13 +187,37 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
                     }
 
                     if (switchWechat.isChecked && !wechatPublicState) {
-                        SaveQRCodeDialog(this, wechat_qrcode).show()
+                        SaveQRCodeDialog(this).show()
                     }
                 }
 
             }
 
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSettingEvent(event: UpdateWechatSettingsEvent) {
+        if (event.isFollowPublic)
+            wechatState = true
+        wechatPublicState = event.isFollowPublic
+        switchWechat.isChecked = wechatState
+        wechatPublicTv.isVisible = wechatState
+        wechatPublic.isVisible = wechatState
+
+        if (wechatPublicState) {
+            wechatPublic.text = getString(R.string.Binded)
+        } else {
+            wechatPublic.text = getString(R.string.Bind_now)
+        }
+
     }
 
 }

@@ -56,4 +56,10 @@ class UpdateSendGiftEvent(val message: IMMessage)
 /**
  * 更新设置
  */
-class UpdateSettingEvent()
+class UpdateSettingEvent
+
+
+/**
+ * 更新推送开关
+ */
+class UpdateWechatSettingsEvent(val isFollowPublic: Boolean)

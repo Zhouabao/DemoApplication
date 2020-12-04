@@ -41,7 +41,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
 
 
     /**
-     * type  1短信 2隐身 3私聊  4微信
+     * type  1短信 2隐身 3私聊  4微信公众号
      * state  	短信(1开启 2关闭)
      *          隐身（1 不隐身 2离线隐身 3一直隐身 ）
      */

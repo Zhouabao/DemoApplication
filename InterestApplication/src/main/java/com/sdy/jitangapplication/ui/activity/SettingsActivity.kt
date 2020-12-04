@@ -149,9 +149,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 startActivity<NotificationActivity>(
                     "notify_square_like_state" to settingsBean?.notify_square_like_state,
                     "notify_square_comment_state" to settingsBean?.notify_square_comment_state,
-                    "wechat_public_state" to settingsBean?.wechat_public_state,
-                    "wechat_open_state" to settingsBean?.wechat_open_state,
-                    "wechat_qrcode" to settingsBean?.wechat_qrcode,
+                    "wechat_open_state" to settingsBean?.wechat_tem_state,
+                    "wechat_public_state" to settingsBean?.we_openid,
                     "sms_state" to settingsBean?.sms_state
                 )
             }

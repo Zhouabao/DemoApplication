@@ -69,6 +69,7 @@ import org.greenrobot.eventbus.EventBus
 
 class MyApplication : BaseApplication() {
     val appContext by lazy { this }
+
     init {
         SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
@@ -98,6 +99,7 @@ class MyApplication : BaseApplication() {
         public var isLivewnessRandom = false
 
     }
+
     init {
         livenessList.add(LivenessTypeEnum.Mouth)
         livenessList.add(LivenessTypeEnum.HeadLeft)
@@ -274,6 +276,11 @@ class MyApplication : BaseApplication() {
                         EventBus.getDefault().post(RefreshSweetEvent())
                     }
 
+                    111, 112 -> {//微信公众号绑定成功
+                        EventBus.getDefault().post(UpdateWechatSettingsEvent(customerMsgBean.type == 111))
+
+                    }
+
                 }
 
 
@@ -361,7 +368,8 @@ class MyApplication : BaseApplication() {
     private fun initBugly() {
         //设置上报进程为主进程
         val strategy = CrashReport.UserStrategy(this)
-        strategy.isUploadProcess = ProcessUtils.getCurrentProcessName().isNullOrEmpty() || ProcessUtils.isMainProcess()
+        strategy.isUploadProcess =
+            ProcessUtils.getCurrentProcessName().isNullOrEmpty() || ProcessUtils.isMainProcess()
         //bugly初始化
         Bugly.init(this, Constants.BUGLY_APP_ID, Constants.TEST, strategy)
         //崩溃日志
