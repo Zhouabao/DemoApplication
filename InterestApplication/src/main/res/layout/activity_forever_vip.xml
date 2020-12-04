@@ -59,7 +59,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"
-                tools:text="200糖果女孩" />
+                tools:text="@string/sugar_girl_count" />
 
             <TextView
                 android:id="@+id/moreInfoText"
@@ -72,7 +72,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/standardPeople"
-                tools:text="在成都找到符合标准的" />
+                tools:text="@string/find_standard_girl" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/vipChargeCl"
@@ -176,7 +176,7 @@
                 android:background="@drawable/icon_bg_open_vip"
                 android:drawablePadding="9dp"
                 android:gravity="center"
-                android:text="成为会员获取精准配对"
+                android:text="@string/tobe_normal_vip"
                 android:textColor="#ffffffff"
                 android:textSize="17sp"
                 android:textStyle="bold"

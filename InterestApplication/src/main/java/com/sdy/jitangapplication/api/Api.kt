@@ -684,12 +684,22 @@ interface Api {
     fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
 
 
+
     /**
      * 设置用户的短信/隐身/私聊接收状态
      */
     @FormUrlEncoded
     @POST("UserSet/switchSet${Constants.END_BASE_URL}")
     fun switchSet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+    /**
+     * 获取用户的二维码照片
+     */
+    @FormUrlEncoded
+    @POST("UserSet/getQrCode${Constants.END_BASE_URL}")
+    fun getQrCode(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<QRCodeBean>>
 
 
     /**

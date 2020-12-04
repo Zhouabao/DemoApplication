@@ -726,7 +726,8 @@ object UserManager {
                     "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0
+                        data?.extra_data?.people_amount ?: 0,
+                        data?.userinfo?.avatar, living_btn = data.extra_data?.living_btn ?: true
                     )
                 )
             } else if (data?.extra_data?.living_btn) {

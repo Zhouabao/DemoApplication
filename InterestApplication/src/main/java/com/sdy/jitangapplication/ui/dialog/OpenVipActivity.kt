@@ -112,11 +112,14 @@ class OpenVipActivity : BaseActivity() {
                         val params = moreInfoTitle.layoutParams as ConstraintLayout.LayoutParams
                         params.topMargin = SizeUtils.dp2px(20f)
                         moreInfoTitle.layoutParams = params
+                        moreInfoText.isVisible = false
                     } else {
                         moreInfoText.text = getString(R.string.thaey_are_waitinf_for_you)
                         val params = moreInfoTitle.layoutParams as ConstraintLayout.LayoutParams
                         params.topMargin = SizeUtils.dp2px(90f)
                         moreInfoTitle.layoutParams = params
+                        moreInfoText.isVisible = true
+
                     }
                     SpanUtils.with(moreInfoTitle)
                         .append(getString(R.string.find_standard_girl, moreMatch?.city_name))
@@ -124,7 +127,6 @@ class OpenVipActivity : BaseActivity() {
                         .create()
                     standardPeople.text =
                         getString(R.string.sugar_girl_count, moreMatch?.people_amount)
-                    moreInfoText.isVisible = true
                     standardPeople.dance()
 
                 } else {
@@ -172,13 +174,21 @@ class OpenVipActivity : BaseActivity() {
             }
         }
 
-
-        if (UserManager.getGender() == 1) {
-            pictureBg.imageAssetsFolder = "images_open_vip_girl"
-            pictureBg.setAnimation("data_open_vip_girl.json")
+        if (UserManager.overseas) {
+            if (UserManager.getGender() == 1) {
+                pictureBg.setAnimation("data_open_vip_girl_en.json")
+            } else {
+                pictureBg.setAnimation("data_open_vip_boy_en.json")
+            }
         } else {
-            pictureBg.imageAssetsFolder = "images_open_vip_boy"
-            pictureBg.setAnimation("data_open_vip_boy.json")
+
+            if (UserManager.getGender() == 1) {
+                pictureBg.imageAssetsFolder = "images_open_vip_girl"
+                pictureBg.setAnimation("data_open_vip_girl.json")
+            } else {
+                pictureBg.imageAssetsFolder = "images_open_vip_boy"
+                pictureBg.setAnimation("data_open_vip_boy.json")
+            }
         }
 
 

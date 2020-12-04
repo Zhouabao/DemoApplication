@@ -390,7 +390,7 @@
     <string name="forver">Permanent</string>
     <string name="vip_verify">High-end Elite Certification</string>
     <string name="join_now">Join now</string>
-    <string name="why_pay">Why need to pay</string>
+    <string name="why_pay">Why need to pay?</string>
     <string name="inapp">in %1$s , we found \t</string>
     <string name="count_filter">\t qualified %1$s users to be screened\nWe\'ll ask you some more questions\nProvide you with more accurate matching requirements</string>
     <string name="count_filter_user">\t users to be screened</string>
@@ -430,7 +430,7 @@
     <string name="choose_location">Select  location</string>
     <string name="poi_name">商务住宅|餐饮服务|生活服务|地名地址信息|体育休闲服务|购物服务|住宿服务|风景名胜|交通设施服务|事件活动|通行设施</string>
     <string name="search_place">Searching location</string>
-    <string name="help">Guide</string>
+    <string name="help">Help</string>
     <string name="login_help_try">Recommend try following ways when unable to log in</string>
     <string name="feedback">Problem feedback</string>
     <string name="input_phone_to_contact">Fill in your number in order to expediently contact</string>
@@ -545,8 +545,8 @@
     <string name="virate_push">Vibrating notification</string>
     <string name="other">Others</string>
     <string name="message_push">Message notification</string>
-    <string name="please_bind_phone">Banding number</string>
-    <string name="hurry_make_phone">Type your number,now!</string>
+    <string name="please_bind_phone">Phone Number</string>
+    <string name="hurry_make_phone">Send Verification Code</string>
     <string name="please_input_correct_phone">Fill in correct number please!</string>
     <string name="please_input_phone">Fill in your number</string>
     <string name="permission_media">Please re-enter the page and unlock media permission</string>
@@ -890,14 +890,14 @@
     <string name="tobe_vip_close_touch">To be a member of SugarTown and get in touch with them</string>
     <string name="thaey_are_waitinf_for_you">They\'re waiting for you</string>
     <string name="total_has">in common</string>
-    <string name="sugar_girl_count">%1$d Sugarbabies</string>
-    <string name="find_standard_girl">in %1$s find</string>
+    <string name="find_standard_girl">At %1$s</string>
+    <string name="sugar_girl_count">%1$d verified sugar babies nearby</string>
     <string name="person_cpunt">%1$s %2$s</string>
-    <string name="tobe_normal_vip">To be a member of SugarTown</string>
+    <string name="tobe_normal_vip">Get membership start dating</string>
     <string name="free_chat_after_chat">To be a member of SugarTown having Infinite chat</string>
     <string name="charge_now_to_free_chat">Only Member users can unlock chat \n To be a member of SugarTown and chat now</string>
     <string name="no_thanks">No, thanks</string>
-    <string name="already_has">%1$d Elite male joined</string>
+    <string name="already_has">%1$d Elite male have joined</string>
     <string name="forver_time">/ ever</string>
     <string name="higher_man_verify">Elite certification</string>
     <string name="privacy_t1">Dear user, welcome to SugarTown. \n In accordance with the latest laws and regulations,to better fit our business situation, we updated</string>
@@ -983,9 +983,9 @@
     <string name="see_her_video_introduce">Watch her video introduce</string>
     <string name="tobe_vip_sha_add_video">She added video introduce, you can watch the video once you become a Golden Member</string>
     <string name="unlock_her_introduce_after_vip">To be a Golden Member , unlock her video introduce</string>
-    <string name="why_pay1">Ensure all info of suagrbabies is true (Manual review every day)</string>
-    <string name="why_pay2">Prevent low-end users from harassing sugarbabies</string>
-    <string name="why_pay3">Improve dating efficiency (Get anthentificated as Elite and sugarbabies would filrt actively)</string>
+    <string name="why_pay1">We verify sugar babies manually</string>
+    <string name="why_pay2">Prevent low-end users harassing sugar babies</string>
+    <string name="why_pay3">Improve dating efficiency(sugar babies would like to flirt with verified Elite)</string>
     <string name="i_know1">I got it</string>
     <string name="exchange_money"> Exchange amount</string>
     <string name="withdraw_money">Cash withdrawal amount:</string>
@@ -1181,13 +1181,13 @@
     <string name="find_history">check chat record</string>
     <string name="clear_history">clear chat record</string>
     <string name="reported">complain and report</string>
-    <string name="join_sugartown">join sugartown</string>
-    <string name="create_profile_start_date">create personal profile，start date</string>
-    <string name="login_with_phone">cellphone</string>
+    <string name="join_sugartown">Join Now</string>
+    <string name="create_profile_start_date">Create Account Start Flirting</string>
+    <string name="login_with_phone">Phone Number</string>
     <string name="login_with_wechat">WetChat</string>
-    <string name="continue_with_facebook">Sign in with Facebook</string>
-    <string name="continue_with_twitter">Sign in with Twitter</string>
-    <string name="continue_with_google">Sign in Google</string>
+    <string name="continue_with_facebook">Facebook</string>
+    <string name="continue_with_twitter">Twitter</string>
+    <string name="continue_with_google">Google</string>
 
 
     <string name="install_face_book_first">install facebook first</string>
@@ -1286,5 +1286,6 @@
     <string name="save_and_goto_wechat">保存并前往微信扫码</string>
     <string name="Binded">Binded</string>
     <string name="Bind_now">Bind now</string>
+    <string name="sign_up">Sign Up</string>
 
 </resources>
