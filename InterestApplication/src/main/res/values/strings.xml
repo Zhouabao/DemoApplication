@@ -1285,5 +1285,6 @@
     <string name="Binded">已绑定</string>
     <string name="Bind_now">去绑定</string>
     <string name="sign_up">加入积糖</string>
+    <string name="wechat_push">微信推送</string>
 
 </resources>

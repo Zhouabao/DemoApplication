@@ -428,7 +428,7 @@
     <string name="create_your_label">Post traits that fit your Interestss</string>
     <string name="choose_or_create_label">Select or Post an Interestss</string>
     <string name="choose_location">Select  location</string>
-    <string name="poi_name">商务住宅|餐饮服务|生活服务|地名地址信息|体育休闲服务|购物服务|住宿服务|风景名胜|交通设施服务|事件活动|通行设施</string>
+    <string name="poi_name">Commercial House Related|Food &amp; Beverages Related|Daily Life Service Place|Place Name &amp; Address|Sports &amp; Recreation Places|Shopping Related Places|Accommodation Service Related|Tourist Attraction Related|Transportation Service Related|Incidents and Events|Pass Facilities</string>
     <string name="search_place">Searching location</string>
     <string name="help">Help</string>
     <string name="login_help_try">Recommend try following ways when unable to log in</string>
@@ -1280,12 +1280,13 @@
     <string name="currencyCode">$</string>
     <string name="input_channel_you_know_us">Input the channel you see SugarTown</string>
     <string name="what_are_you_looking_for">What kind of relationship are you looking for</string>
-    <string name="wechat_receive_message">微信接收消息通知</string>
-    <string name="jitang_wechat_public">积糖微信公众账号</string>
-    <string name="focus_sugartown">开启微信推送需要先关注积糖微信公众号\n 请保存二维码并使用微信扫一扫关注绑定</string>
-    <string name="save_and_goto_wechat">保存并前往微信扫码</string>
-    <string name="Binded">Binded</string>
+    <string name="wechat_receive_message">Recieve WeChat Notification</string>
+    <string name="jitang_wechat_public">SugarTown Official WeChat Account</string>
+    <string name="focus_sugartown">Follow WeChat Official Account of SugarTown before receiving Notification</string>
+    <string name="save_and_goto_wechat">Scan QR code by WeChat</string>
+    <string name="Binded">Connected</string>
     <string name="Bind_now">Bind now</string>
     <string name="sign_up">Sign Up</string>
+    <string name="wechat_push">WeChat Notification</string>
 
 </resources>
