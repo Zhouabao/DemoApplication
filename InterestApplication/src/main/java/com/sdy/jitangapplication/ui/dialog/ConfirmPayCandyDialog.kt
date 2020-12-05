@@ -129,7 +129,8 @@ class ConfirmPayCandyDialog(
                     initBraintreeFragment()
                     payCreate(source_type, chargeBean.id)
                 } else {
-                    createOrder(PAY_GOOGLE)
+                    //谷歌支付
+                    googlePay(chargeBean.product_id)
                 }
             } else {
                 if (alipayCheck.isChecked) {
@@ -208,9 +209,6 @@ class ConfirmPayCandyDialog(
         } else if (payment_type == PAY_ALI) {
             //支付宝支付
             aliPay(data)
-        } else if (payment_type == PAY_GOOGLE) {
-            //谷歌支付
-            googlePay(data)
         }
     }
 
@@ -294,10 +292,8 @@ class ConfirmPayCandyDialog(
 
 
     /************************   GOOGLE支付   ***************************/
-    private fun googlePay(payBean: PayBean) {
-        GooglePayUtils(
-            myContext,
-            payBean.order_id!!,
+    private fun googlePay(order_id: String) {
+        GooglePayUtils(myContext, order_id,
             mListener = object : GooglePayUtils.OnPurchaseCallback {
                 override fun onPaySuccess(purchaseToken: String) {
                     showAlert(myContext, myContext.getString(R.string.pay_success), true)
