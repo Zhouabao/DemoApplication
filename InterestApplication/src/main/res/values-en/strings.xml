@@ -51,7 +51,7 @@
     <string name="location_loading">Locating</string>
     <string name="location_map">Map location</string>
     <string name="my_location">My location</string>
-    <string name="location_address_unkown">Location info is not avilable</string>
+    <string name="location_address_unkown">Location info is not available</string>
     <string name="format_mylocation">My location：%s</string>
     <string name="location_address_fail">Location failed</string>
     <string name="tools_selected">Selection tool</string>
@@ -277,7 +277,7 @@
 
     <string name="input_verify_code">Enter verification code</string>
     <string name="input_new_phone">Fill in new number</string>
-    <string name="get_verify_code">Obtain verification code</string>
+    <string name="get_verify_code">Obtain</string>
     <string name="account_change_title">Alternate account</string>
     <string name="account_confirm_change">Alteration comfirm</string>
     <string name="seconds_resend">Resend after  ( )  seconds</string>
@@ -301,7 +301,7 @@
     <string name="next">Next</string>
 
 
-    <string name="label_publish_someone">Which Interests want to post?</string>
+    <string name="label_publish_someone">Choose a Interests</string>
     <string name="skip">Ignore</string>
     <string name="label_frequently_use">Frequently-used Interestss</string>
     <string name="label_all">All Interestss</string>
@@ -403,7 +403,7 @@
     <string name="take_time_out">Collection overtime,log out and try again</string>
     <string name="verify_commit_fail">Certification audit submit failed, re-entry certification</string>
     <string name="verify_commit_success">Audit submit succeed</string>
-    <string name="invite_gift">Get reward from inviting others</string>
+    <string name="invite_gift">Invite rewards</string>
     <string name="contact_us">Contact us</string>
     <string name="invite_gift_content">Sharing the profit of commission once invite friends to recharge and pay,Invite more for extra income,If you have a large number of user channels, you can contact customer service directly</string>
     <string name="invite_beizhu">,remark「invite new one」</string>
@@ -411,7 +411,7 @@
     <string name="copy_link">Copy link</string>
     <string name="link_has_copy">Sharing link copied</string>
     <string name="person_count">people</string>
-    <string name="money_unit">dollars</string>
+    <string name="money_unit">RMB</string>
     <string name="shared"> get %1$d  commission</string>
     <string name="now_level">Current class</string>
     <string name="invite_rule">Invitation rules</string>
@@ -486,9 +486,9 @@
     <string name="deleta_label">Delect Interests</string>
     <string name="is_confirm_delete">Comfirm to delect Interests?</string>
     <string name="most_maintain">At most have %1$d Interests</string>
-    <string name="withdraw_record">Record of Cash withdrawal</string>
+    <string name="withdraw_record">Record</string>
     <string name="has_withdraw">Cash withdrawal already</string>
-    <string name="can_withdraw_money">Avilable amount for cash withdrawal</string>
+    <string name="can_withdraw_money">Available amount for cash withdrawal</string>
     <string name="visit_me">Who checked my profile</string>
     <string name="today_visit">Visited today</string>
     <string name="all_visir">All visitors</string>
@@ -575,7 +575,7 @@
     <string name="dating_publish_tip">Activity post tips</string>
     <string name="dating_publish_warming">Thank you for being a member of the SugarTown light luxury dating community,here are some guidelines you should keep in mind and agree with other users</string>
     <string name="dating_publish_reliable">Posted activity is genuine and believable</string>
-    <string name="dating_publish_reliable_content">活动真实性保证且有明确意向，不以活动目的导流</string>
+    <string name="dating_publish_reliable_content">Activity is believable and clear intention, advertising in activity is forbiden</string>
     <string name="dating_publish_legal">Posted content is not voilation</string>
     <string name="dating_publish_legal_content">Pornography, prostitution, advertising and other illegal info are forbidden,otherwise account would be blocked</string>
     <string name="dating_publish_active">Be positive to the applicants</string>
@@ -683,10 +683,10 @@
     <string name="verify_has_commit">Certification submitted</string>
     <string name="ok_1">OK</string>
     <string name="verifying_tip">Your certification is under review , results will be notified to you in the form of assistant, please pay attention to assistant info.The audit will take about 1 working day.</string>
-    <string name="sweet_upload_id_card_figure">Upload photo of ID in hand、 front of ID and chest measurement\n make sure it\'s accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_job">Upload photo of ID in hand、 front of ID and working ID card\n make sure it\'s accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_car">Upload photo of ID in hand、 front of ID and vehicle certificate \n make sure it\'s accordant to your avatar, this process will not display</string>
-    <string name="sweet_upload_id_card_house">Upload photo of ID in hand、 front of ID and housing estates  \n make sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_figure">Upload photo of ID in hand、 front of ID and chest measurement\nMake sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_job">Upload photo of ID in hand、 front of ID and working ID card\nMake sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_car">Upload photo of ID in hand、 front of ID and vehicle certificate \nMake sure it\'s accordant to your avatar, this process will not display</string>
+    <string name="sweet_upload_id_card_house">Upload photo of ID in hand、 front of ID and housing estates  \nMake sure it\'s accordant to your avatar, this process will not display</string>
     <string name="pic_upload_fail">Photo uploading failed</string>
     <string name="commit_unopen_verify">Submit for non-public review</string>
     <string name="publish_square">Post moments</string>
@@ -709,7 +709,7 @@
     <string name="vip_gold">Golden Member</string>
     <string name="vip_connection_card">Supreme Card</string>
     <string name="please_write_dating_content">Fill in activity content</string>
-    <string name="dating_preview_mode">Examples from other users as below,please describe properly</string>
+    <string name="dating_preview_mode">Examples from other users as below,please describe properly.</string>
     <string name="dating_elegal_warnning">Posting prohibited content may result in block account or disable equipment</string>
     <string name="wait_descr">Not described</string>
     <string name="dating_descr_detail">Describe specific activity content</string>
@@ -791,7 +791,7 @@
     <string name="unlock_chat_left">Unlock chat (%1$d Candy(ies))</string>
     <string name="cannot_contact_in_level">She\'s not available for chat under your current level of membership.</string>
     <string name="avoid_trouble_with_normal_vip">To avoid sugarbabies be disturbed\n  regular member cannot chat with sugarbabies directly</string>
-    <string name="tobe_gold_to_contact_her">Upgrade to Golden Member and cotact her immediately.</string>
+    <string name="tobe_gold_to_contact_her">Upgrade to Golden Member and contact her immediately.</string>
     <string name="her_level_privay">She setted a membership level permission</string>
     <string name="she_allow_gold_contact_her">She only allows Golden Member to contact her. \n To be Golden Member and don\'t miss her</string>
     <string name="tobe_gold_approve_power">To be Golden Member ,prove your economic strength,unlock relationship</string>
@@ -990,10 +990,10 @@
     <string name="exchange_money"> Exchange amount</string>
     <string name="withdraw_money">Cash withdrawal amount:</string>
     <string name="withdraw_max">Withdrawable money at most %1$.2f</string>
-    <string name="can_withdraw">Withdrawable  amount ¥%1$.2f</string>
+    <string name="can_withdraw">Available ¥%1$.2f</string>
     <string name="count_unit">颗</string>
-    <string name="turn_money">Transfered amount</string>
-    <string name="withdraw_all">All cash withdrawal</string>
+    <string name="turn_money">A amount</string>
+    <string name="withdraw_all">All</string>
     <string name="input_money">Enter the amount</string>
     <string name="alipay">Alipay</string>
     <string name="click_input">Click to fill in</string>
@@ -1127,7 +1127,7 @@
     <string name="alreadey_choose">has chosen</string>
     <string name="hour">Hour</string>
     <string name="minute">Minute</string>
-    <string name="second">Second</string>
+    <string name="second">s</string>
     <string name="year">Year</string>
     <string name="month">Month</string>
     <string name="day">Day</string>
@@ -1246,10 +1246,10 @@
     <string name="personal_power">personal rights</string>
     <string name="Increase_exposure_rights">improve exposure</string>
     <string name="my_privilege">my privilege</string>
-    <string name="my_candy">my candies</string>
+    <string name="my_candy">candies</string>
     <string name="seen_mine">visitor</string>
-    <string name="my_footprint">my tracks</string>
-    <string name="likes_comments">likes, comments…</string>
+    <string name="my_footprint">tracks</string>
+    <string name="likes_comments">likes,comments…</string>
     <string name="my_conversation">my conversation</string>
     <string name="new_strike_up">new flirting</string>
     <string name="more">more</string>
@@ -1289,5 +1289,18 @@
     <string name="sign_up">Sign Up</string>
     <string name="wechat_push">WeChat Notification</string>
     <string name="privacy_for_share">\nOur App has integrated Umeng+ U-Share SDK , which will collect your device identifiable information and public information of social account in order to share information with social account.</string>
-
+    <string name="empty_contact1">The contact list is empty</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="AM_ling">AM </string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="PM_1">PM</string>
 </resources>

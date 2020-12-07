@@ -8,7 +8,7 @@
     android:background="@color/colorWhite"
     app:msv_errorView="@layout/error_layout"
     app:msv_loadingView="@layout/loading_layout"
-    app:msv_viewState="content">
+    app:msv_viewState="loading">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -398,7 +398,8 @@
                                 android:text="@string/likes_comments"
                                 android:textColor="#ff888d92"
                                 android:textSize="12sp"
-                                app:layout_constraintLeft_toLeftOf="@id/tvFoot"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvFoot" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

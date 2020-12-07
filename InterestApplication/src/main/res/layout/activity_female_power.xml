@@ -144,7 +144,6 @@
         android:layout_height="279dp"
         android:layout_marginTop="30dp"
         android:scaleType="fitXY"
-        android:src="@drawable/icon_female_power"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/changeContact" />

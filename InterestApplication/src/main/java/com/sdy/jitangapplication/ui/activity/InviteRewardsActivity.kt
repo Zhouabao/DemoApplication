@@ -161,7 +161,7 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
                 .append("${invitePoliteBean?.invite_amount}")
                 .setFontSize(30, true)
                 .setBold()
-                .append(getString(R.string.money_unit))
+                .append(CommonFunction.getNowMoneyUnitWord())
                 .setFontSize(12, true)
                 .create()
 

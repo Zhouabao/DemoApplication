@@ -90,7 +90,8 @@
         <TextView
             android:id="@+id/withdrawCandy"
             android:layout_width="108dp"
-            android:layout_height="38dp"
+            android:layout_height="wrap_content"
+            android:minHeight="38dp"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rectangle_transparent_white_19dp"

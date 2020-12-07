@@ -224,7 +224,13 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
 
             R.id.hideModeCl -> {
-                showHideModePicker(hideModeContent, invisible_state, hideMode, getString(R.string.hide_mode), 2)
+                showHideModePicker(
+                    hideModeContent,
+                    invisible_state,
+                    hideMode,
+                    getString(R.string.hide_mode),
+                    2
+                )
             }
             R.id.privacyPowerCl -> {
                 showHideModePicker(
@@ -279,11 +285,16 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     private fun obtainContacts() {
         //权限申请成功
         val contacts = UriUtils.getPhoneContacts(this)
+        if (contacts.isNullOrEmpty()) {
+            CommonFunction.toast(getString(R.string.empty_contact1))
+            return
+        }
         val content = mutableListOf<String?>()
         for (contact in contacts.withIndex()) {
             content.add(contact.value.phone)
             Log.d("contacts", "${contact.value.name}：${contact.value.phone}")
         }
+
         mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken(), content)
     }
 

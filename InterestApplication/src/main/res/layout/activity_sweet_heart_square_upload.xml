@@ -60,7 +60,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/uploadTypeCl"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_rectangle_dash_gray_10dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -69,12 +70,14 @@
 
             <TextView
                 android:id="@+id/uploadType"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginRight="10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="豪车照片或人车合照"
+                android:text="@string/sweet_appropriate_suit"
                 android:textColor="#ff191919"
                 android:textSize="14sp"
+                app:layout_constraintRight_toLeftOf="@id/seeUploadNormalBtn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +85,8 @@
             <TextView
                 android:id="@+id/seeUploadNormalBtn"
                 android:layout_width="64dp"
-                android:layout_height="26dp"
+                android:minHeight="26dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/shape_rectangle_enable_btn_15dp"
                 android:gravity="center"
@@ -102,7 +106,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="上传一张或多张图片、照片将对外展示"
+        android:text="@string/sweet_upload_one_or_more_pic"
         android:textColor="#ffc5c6c8"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

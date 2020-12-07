@@ -25,10 +25,10 @@
         android:id="@+id/cameraFilterBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:visibility="gone"
         android:layout_marginTop="100dp"
         android:layout_marginRight="20dp"
         android:src="@drawable/icon_filter_gallery"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,13 +50,15 @@
 
         <TextView
             android:id="@+id/recordTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:text="@string/say_something"
             android:textColor="#ffffffff"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/switchRecordContentBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView

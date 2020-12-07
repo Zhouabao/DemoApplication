@@ -47,7 +47,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/squareSweetVerifyContentCl"
         android:layout_width="345dp"
-        android:layout_height="59dp"
+        android:layout_height="wrap_content"
+        android:minHeight="59dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/icon_sweet_type_man"
         app:layout_constraintLeft_toLeftOf="@id/squareContent1"
@@ -56,7 +57,8 @@
 
         <TextView
             android:id="@+id/squareSweetVerifyName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="59dp"
             android:text="认证身材 36D"
@@ -69,11 +71,12 @@
 
         <TextView
             android:id="@+id/squareSweetVerifyContent"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="身材经平台评估具有一定吸引力和用户有一定高端约会意向"
             android:textColor="#ff989898"
             android:textSize="11sp"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/squareSweetVerifyName"
             app:layout_constraintTop_toBottomOf="@id/squareSweetVerifyName" />

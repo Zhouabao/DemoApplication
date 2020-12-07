@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
+import com.sdy.jitangapplication.common.getZodiacEn
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MoreMatchBean
 import com.sdy.jitangapplication.presenter.RegisterInfoPresenter
@@ -413,7 +414,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 "${TimeUtils.date2String(
                     date,
                     SimpleDateFormat("yyyy-MM-dd")
-                )}/${TimeUtils.getZodiac(date)}"
+                )}/${getZodiacEn(TimeUtils.getZodiac(date))}"
             params["birth"] = TimeUtils.date2Millis(date) / 1000L
             checkConfirmEnable()
         })

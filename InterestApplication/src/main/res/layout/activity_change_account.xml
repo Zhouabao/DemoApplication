@@ -81,7 +81,7 @@
             android:background="@null"
             android:textColor="@color/colorBlack"
             app:layout_constraintBottom_toBottomOf="@id/t2"
-            app:layout_constraintLeft_toLeftOf="@id/newPhoneEt"
+            app:layout_constraintLeft_toRightOf="@id/t2"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/t2"/>
 

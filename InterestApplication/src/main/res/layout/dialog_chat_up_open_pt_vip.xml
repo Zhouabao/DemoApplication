@@ -50,6 +50,7 @@
         android:textColor="#ff191919"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chatupContact" />
@@ -86,7 +87,8 @@
     <TextView
         android:id="@+id/openPtVipBtn"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:minHeight="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/gradient_gold_vip"
         android:gravity="center"

@@ -5,13 +5,13 @@ import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.flexbox.*
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -159,7 +159,8 @@ class PeopleNearBigCardAdapter :
             itemView.userIntention.isVisible = false
         } else {
             itemView.userIntention.isVisible = true
-            itemView.userIntentionContent.text = mContext.getString(R.string.shw_want_to_with_you) + item.title + "·" + item.dating_title
+            itemView.userIntentionContent.text =
+                mContext.getString(R.string.shw_want_to_with_you) + item.title + "·" + item.dating_title
             itemView.userIntention.clickWithTrigger {
                 DatingDetailActivity.start2Detail(mContext, item.invitation_id)
             }
@@ -176,7 +177,10 @@ class PeopleNearBigCardAdapter :
         if (!item.want.isNullOrEmpty() && (item.assets_audit_way == 0 || item.title.isNullOrEmpty())) {
             itemView.userRelationshipRv.isVisible = true
             itemView.userRelationshipRv.layoutManager =
-                LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+                FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP).apply {
+                    alignItems = AlignItems.STRETCH
+                    justifyContent = JustifyContent.FLEX_START
+                }
             val adapter = UserRelationshipAdapter()
             itemView.userRelationshipRv.adapter = adapter
             val datas = mutableListOf<UserRelationshipBean>()

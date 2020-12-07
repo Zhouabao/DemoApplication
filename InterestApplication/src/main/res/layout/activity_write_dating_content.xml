@@ -54,7 +54,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         android:lineSpacingMultiplier="1.2"
-        android:text="其他用户预览样式如下，请妥善描述，发布违禁内容或导致封号及设备禁用"
+        android:text="@string/dating_preview_mode"
         android:textColor="#ff606060"
         android:textSize="14sp" />
 

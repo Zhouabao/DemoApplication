@@ -120,7 +120,7 @@
                     android:layout_marginTop="8dp"
                     android:textSize="14sp"
                     android:textColor="#FF787C7F"
-                    android:text="完善兴趣"
+                    android:text="@string/complete_label"
                     android:visibility="gone"
                     android:paddingLeft="9dp"
                     android:paddingRight="9dp"

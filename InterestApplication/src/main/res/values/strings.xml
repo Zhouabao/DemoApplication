@@ -1287,5 +1287,19 @@
     <string name="sign_up">加入积糖</string>
     <string name="wechat_push">微信推送</string>
     <string name="privacy_for_share">\n为了提供分享功能，我们的产品集成友盟+SDK，SDK将采集您的设备标识和您需要分享的社交账户。</string>
+    <string name="empty_contact1">通讯录为空</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="sunday">星期日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="AM_ling">凌晨 </string>
+    <string name="am">上午 </string>
+    <string name="pm">下午 </string>
+    <string name="PM_1">晚上 </string>
 
 </resources>

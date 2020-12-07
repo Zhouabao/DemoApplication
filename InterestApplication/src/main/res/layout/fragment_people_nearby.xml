@@ -42,8 +42,9 @@
             <LinearLayout
                 android:id="@+id/lieAvatorLl"
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
+                android:layout_height="wrap_content"
                 android:background="#1AFF6318"
+                android:minHeight="41dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -81,8 +82,6 @@
                     android:layout_marginRight="15dp"
                     android:src="@drawable/icon_close_small" />
             </LinearLayout>
-
-
 
 
         </FrameLayout>

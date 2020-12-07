@@ -3,8 +3,8 @@ package com.sdy.jitangapplication.utils
 import android.app.Activity
 import android.content.Context
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.SPUtils
-import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.AppManager
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
@@ -619,7 +619,7 @@ object UserManager {
             "token" to getToken(),
             "accid" to getAccid(),
             "_timestamp" to System.currentTimeMillis(),
-            "device_id" to SmAntiFraud.getDeviceId()
+            "device_id" to DeviceUtils.getUniqueDeviceId()
         )
     }
 

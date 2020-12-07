@@ -40,6 +40,7 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.getZodiacEn
 import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
@@ -1109,7 +1110,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 "${TimeUtils.date2String(
                     date,
                     SimpleDateFormat("yyyy-MM-dd")
-                )}/${TimeUtils.getZodiac(date)}"
+                )}/${getZodiacEn(TimeUtils.getZodiac(date))}"
             savePersonalParams["birth"] = TimeUtils.date2Millis(date) / 1000L
 //            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
             isChange = true

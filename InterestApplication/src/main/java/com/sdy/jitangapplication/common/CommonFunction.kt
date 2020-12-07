@@ -933,4 +933,11 @@ object CommonFunction {
             return "¥"
         }
     }
+    fun getNowMoneyUnitWord():String{
+        if (UserManager.overseas) {
+            return "dollars"
+        } else {
+            return "RMB"
+        }
+    }
 }

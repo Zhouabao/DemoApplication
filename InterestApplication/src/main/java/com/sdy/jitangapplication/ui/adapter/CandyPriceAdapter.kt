@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -88,7 +89,7 @@ class CandyPriceAdapter :
 
         }
 
-        holder.itemView.candyDiscount.isVisible = item.isfirst
+        holder.itemView.candyDiscount.isInvisible = !item.isfirst
     }
 
 }

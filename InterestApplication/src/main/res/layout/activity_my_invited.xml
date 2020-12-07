@@ -100,12 +100,13 @@
 
                         <TextView
                             android:id="@+id/rewardsMoreLevel"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="再邀请0人可升级为二级XXX，享0%分佣"
                             android:textColor="#ff888d92"
                             android:textSize="14sp"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintLeft_toLeftOf="@id/t1"
                             app:layout_constraintTop_toBottomOf="@id/rewardsPercent" />
 

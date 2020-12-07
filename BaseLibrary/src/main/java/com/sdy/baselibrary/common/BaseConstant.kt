@@ -11,7 +11,7 @@ class BaseConstant {
         //海外测试服
 //        const val SERVER_ADDRESS = "http://170.106.39.128/ppsns/"
 //        测试
-        const val SERVER_ADDRESS = "http://testppsns.talkdating.cn/ppsns/"
+//        const val SERVER_ADDRESS = "http://testppsns.talkdating.cn/ppsns/"
 //        本地
 //        const val SERVER_ADDRESS = "http://192.168.0.120/ppsns/"
         //SP表名

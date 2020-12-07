@@ -29,8 +29,12 @@ class WriteDatingContentActivity : BaseActivity() {
         initView()
     }
 
-    companion object {
-        const val MAX_DESCR_LENGTH = 10
+    val MAX_DESCR_LENGTH by lazy {
+        if (UserManager.overseas) {
+            20
+        } else {
+            10
+        }
     }
 
     private fun initView() {
@@ -56,13 +60,7 @@ class WriteDatingContentActivity : BaseActivity() {
 
 
         datingContentEt.filters = arrayOf<InputFilter>(
-            InputFilter.LengthFilter(
-                if (UserManager.overseas) {
-                    MAX_DESCR_LENGTH * 2
-                } else {
-                    MAX_DESCR_LENGTH
-                }
-            )
+            InputFilter.LengthFilter(MAX_DESCR_LENGTH)
         )
         SpanUtils.with(datingContentLength)
             .append(datingContentEt.length().toString())

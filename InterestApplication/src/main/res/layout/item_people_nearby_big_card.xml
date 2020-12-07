@@ -140,11 +140,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRelationshipRv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:overScrollMode="never"
+        app:layout_constraintRight_toRightOf="@id/userChatBtn"
         app:layout_constraintBottom_toTopOf="@id/userIntention"
         app:layout_constraintLeft_toLeftOf="@id/userOnline" />
 

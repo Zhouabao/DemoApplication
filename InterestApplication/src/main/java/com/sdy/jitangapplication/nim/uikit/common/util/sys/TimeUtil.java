@@ -1,5 +1,8 @@
 package com.sdy.jitangapplication.nim.uikit.common.util.sys;
 
+import com.sdy.jitangapplication.R;
+import com.umeng.socialize.utils.ContextUtil;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -147,14 +150,14 @@ public class TimeUtil {
         Date preyesterday = new Date(yesterdaybegin.getTime() - 3600 * 24 * 1000);
 
         if (!currentTime.before(todaybegin)) {
-            dataString = "今天";
+            dataString = ContextUtil.getContext().getString(R.string.today);
         } else if (!currentTime.before(yesterdaybegin)) {
-            dataString = "昨天";
-        } else if (!currentTime.before(preyesterday)) {
+            dataString = ContextUtil.getContext().getString(R.string.yesterday);
+        } /*else if (!currentTime.before(preyesterday)) {
             dataString = "前天";
         } else if (isSameWeekDates(currentTime, today)) {
             dataString = getWeekOfDate(currentTime);
-        } else {
+        }*/ else {
             SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             dataString = dateformatter.format(currentTime);
         }
@@ -186,13 +189,13 @@ public class TimeUtil {
         SimpleDateFormat timeformatter1to12 = new SimpleDateFormat("hh:mm", Locale.getDefault());
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         if (hour >= 0 && hour < 5) {
-            return "凌晨 " + timeformatter0to11.format(date);
+            return ContextUtil.getContext().getString(R.string.AM_ling) + timeformatter0to11.format(date);
         } else if (hour >= 5 && hour < 12) {
-            return "上午 " + timeformatter0to11.format(date);
+            return ContextUtil.getContext().getString(R.string.am) + timeformatter0to11.format(date);
         } else if (hour >= 12 && hour < 18) {
-            return "下午 " + timeformatter1to12.format(date);
+            return ContextUtil.getContext().getString(R.string.pm) + timeformatter1to12.format(date);
         } else if (hour >= 18 && hour < 24) {
-            return "晚上 " + timeformatter1to12.format(date);
+            return ContextUtil.getContext().getString(R.string.PM_1) + timeformatter1to12.format(date);
         }
         return "";
     }
@@ -204,7 +207,13 @@ public class TimeUtil {
      * @return
      */
     public static String getWeekOfDate(Date date) {
-        String[] weekDaysName = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        String[] weekDaysName = {ContextUtil.getContext().getString(R.string.sunday),
+                ContextUtil.getContext().getString(R.string.monday),
+                ContextUtil.getContext().getString(R.string.tuesday),
+                ContextUtil.getContext().getString(R.string.wednesday),
+                ContextUtil.getContext().getString(R.string.thursday),
+                ContextUtil.getContext().getString(R.string.friday),
+                ContextUtil.getContext().getString(R.string.saturday)};
         // String[] weekDaysCode = { "0", "1", "2", "3", "4", "5", "6" };
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
