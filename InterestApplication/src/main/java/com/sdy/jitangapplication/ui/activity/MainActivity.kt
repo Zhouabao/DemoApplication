@@ -40,7 +40,11 @@ import com.sdy.jitangapplication.ui.fragment.*
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.zhy.http.okhttp.OkHttpUtils
+import com.zhy.http.okhttp.callback.Callback
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Call
+import okhttp3.Response
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -105,6 +109,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         initView()
 
+        getCode()
 
         Log.d("channel", ChannelUtils.getChannel(this))
 
@@ -670,4 +675,36 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    fun getCode() {
+        OkHttpUtils.post()
+            .url("https://accounts.google.com/o/oauth2/token")
+            .addParams("code", "4/1AY0e-g78wChv7S9N9IWpgFJSld26b_xUQg48euTYoZ1tTqI38Tuu-zOJWd0")
+            .addParams(
+                "client_id",
+                "325834510992-tainpp0lkfm8le7hpff1lksoqhe4bjtm.apps.googleusercontent.com"
+            )
+            .addParams("client_secret", "AIzaSyDAPU5SjWQwgc4kEq7LQ8ibVxjD5aLEVOc")
+            .addParams("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
+            .addParams("grant_type", "authorization_code")
+            .build()
+            .execute(object : Callback<Any>() {
+                override fun onResponse(response: Any?, id: Int) {
+                    Log.d(TAG1, "onResponse: $response")
+
+
+                }
+
+                override fun parseNetworkResponse(response: Response?, id: Int): Any {
+                    Log.d(TAG1, "onResponse: $response")
+                    return response?.body?.string() ?: ""
+                }
+
+                override fun onError(call: Call?, e: Exception?, id: Int) {
+                    Log.d(TAG1, "onResponse: ${e.toString()}")
+
+                }
+
+            })
+
+    }
 }

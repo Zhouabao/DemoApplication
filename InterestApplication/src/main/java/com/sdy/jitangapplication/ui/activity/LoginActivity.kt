@@ -162,6 +162,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         if (data != null) {
             UserManager.registerFileBean = data
             UserManager.overseas = data.region == 2
+//            UserManager.overseas = data.region == 2
             if (data.tourists) {
                 touristBtn.visibility = View.VISIBLE
             } else {

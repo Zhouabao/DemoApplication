@@ -53,7 +53,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
 
     // 状态标识
     @Volatile
-    protected var mIsEnableSound = true
+    protected var mIsEnableSound = false
     protected var mIsCreateSurface = false
     protected var mIsCompletion = false
 
@@ -84,7 +84,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
         val am =
             getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val vol = am.getStreamVolume(AudioManager.STREAM_MUSIC)
-        mIsEnableSound = if (vol > 0) mFaceConfig.isSound() else false
+//        mIsEnableSound = if (vol > 0) mFaceConfig.isSound() else false
 
         mSurfaceView = SurfaceView(this)
         mSurfaceHolder = mSurfaceView!!.holder
@@ -152,9 +152,6 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
                 this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             if (am != null) {
                 val cv = am.getStreamVolume(AudioManager.STREAM_MUSIC)
-                mIsEnableSound = cv > 0
-                //                mSoundView.setImageResource(mIsEnableSound
-//                        ? R.mipmap.icon_titlebar_voice2 : R.mipmap.icon_titlebar_voice1);
                 if (mILivenessStrategy != null) {
                     mILivenessStrategy!!.setLivenessStrategySoundEnable(mIsEnableSound)
                 }

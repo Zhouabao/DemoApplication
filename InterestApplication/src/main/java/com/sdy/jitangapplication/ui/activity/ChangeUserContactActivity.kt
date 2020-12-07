@@ -80,6 +80,7 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
                 mPresenter.setContact(
                     contactWay,
                     contactEt.text.trim().toString(),
+                    //	是否显示 1显示 2隐藏
                     if (switchShowContact.isChecked) {
                         2
                     } else {
@@ -147,7 +148,7 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
                 contactEt.setSelection(contactEt.text.length)
             }
 
-//            是隐藏就开，默认不隐藏
+//            是隐藏就开，默认不隐藏( 1 显示 2隐藏)
             switchShowContact.isChecked = data.contact_way_hide == 2
             getCandy.isVisible = !data.contact_way_str.isNullOrEmpty()
             getCandy.text = data.contact_way_str

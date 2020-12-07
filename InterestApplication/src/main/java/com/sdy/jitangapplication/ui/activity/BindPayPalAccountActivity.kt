@@ -2,11 +2,9 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
@@ -14,8 +12,7 @@ import com.sdy.jitangapplication.event.GetAlipayAccountEvent
 import com.sdy.jitangapplication.model.Alipay
 import com.sdy.jitangapplication.presenter.BindAlipayAccountPresenter
 import com.sdy.jitangapplication.presenter.view.BindAlipayAccountView
-import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_bind_alipay_account.*
+import kotlinx.android.synthetic.main.activity_bind_paypal_account.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 
@@ -45,37 +42,23 @@ class BindPayPalAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
         rightBtn1.text = getString(R.string.save)
 
 
-        etTelephone.filters = arrayOf(InputFilter.LengthFilter(11))
-
-        etAlipayAccount.addTextChangedListener(this)
-        etAlipayName.addTextChangedListener(this)
-        etTelephone.addTextChangedListener(this)
 
         rightBtn1.onClick {
             val params = hashMapOf<String, Any>(
-                "ali_account" to etAlipayAccount.text.trim().toString(),
-                "nickname" to etAlipayName.text.toString(),
-                "phone" to etTelephone.text.toString()
+                "ali_account" to etPaypalAccount.text.trim().toString()
             )
             mPresenter.saveWithdrawAccount(params)
         }
 
         if (alipay != null) {
-            etAlipayAccount.setText(alipay?.ali_account)
-            etAlipayAccount.setSelection((alipay?.ali_account?:"").length)
-            etAlipayName.setText(alipay?.nickname)
-            etAlipayName.setSelection((alipay?.nickname?:"").length)
-            etTelephone.setText(alipay?.phone)
-            etTelephone.setSelection((alipay?.phone?:"").length)
+            etPaypalAccount.setText(alipay?.ali_account)
+            etPaypalAccount.setSelection(etPaypalAccount.text.length)
             checkConfirm()
         }
     }
 
     fun checkConfirm() {
-        rightBtn1.isEnabled =
-            !etAlipayAccount.text.trim().isNullOrEmpty() && !RegexUtils.isZh(etAlipayAccount.text.trim().toString())
-                    && !etAlipayName.text.trim().isNullOrEmpty()
-                    && (!etTelephone.text.trim().isNullOrEmpty() && etTelephone.text.length == 11)
+        rightBtn1.isEnabled = !etPaypalAccount.text.trim().isNullOrEmpty()
     }
 
     override fun afterTextChanged(s: Editable?) {
@@ -91,12 +74,12 @@ class BindPayPalAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
 
     override fun onPause() {
         super.onPause()
-        KeyboardUtils.hideSoftInput(etAlipayAccount)
+        KeyboardUtils.hideSoftInput(etPaypalAccount)
     }
 
     override fun onResume() {
         super.onResume()
-        etAlipayAccount.postDelayed({ KeyboardUtils.showSoftInput(etAlipayAccount) }, 200L)
+        etPaypalAccount.postDelayed({ KeyboardUtils.showSoftInput(etPaypalAccount) }, 200L)
     }
 
     override fun saveWithdrawAccountResult(success: Boolean, alipay: Alipay?) {

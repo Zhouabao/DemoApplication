@@ -21,6 +21,7 @@ class ChangeUserContactPresenter : BasePresenter<ChangeUserContactView>() {
 
     /**
      * 获取我的联系方式
+     *
      */
     fun getContact() {
         RetrofitFactory.instance.create(Api::class.java)
