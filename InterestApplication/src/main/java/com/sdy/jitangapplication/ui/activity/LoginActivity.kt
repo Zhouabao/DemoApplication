@@ -74,12 +74,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             }
         }
 
-        userAgreement.text =
-            SpanUtils.with(userAgreement).append(resources.getString(R.string.user_protocol))
-                .setUnderline().create()
-        privacyPolicy.text =
-            SpanUtils.with(privacyPolicy).append(resources.getString(R.string.privacy_protocol))
-                .setUnderline().create()
 
         //判断是否有登录
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
@@ -99,14 +93,20 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             ChooseLoginWayDialog(this, syCode).show()
         }
 
-        //隐私协议
-        privacyPolicy.clickWithTrigger {
-            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
-        }
-        //用户协议
-        userAgreement.clickWithTrigger {
-            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
-        }
+        SpanUtils.with(userAgreement)
+            .append(getString(R.string.login_presents_you_agree))
+            .append(getString(R.string.user_protocol))
+            .setClickSpan(Color.parseColor("#FF6796FA"),true) {
+                startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
+            }
+            .append(getString(R.string.login_tip_and))
+            .append(getString(R.string.privacy_protocol))
+            .setClickSpan(Color.parseColor("#FF6796FA"),true) {
+                startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
+            }
+            .append(getString(R.string.privacy_for_share))
+            .create()
+
 
         //游客
         touristBtn.clickWithTrigger {

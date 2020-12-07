@@ -54,7 +54,7 @@ public class ConfigUtils {
         LayoutInflater inflater1 = LayoutInflater.from(context);
         RelativeLayout relativeLayout = (RelativeLayout) inflater1.inflate(R.layout.shanyan_demo_other_login_item, null);
         RelativeLayout.LayoutParams layoutParamsOther = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParamsOther.setMargins(0, 0, 0, SizeUtils.dp2px(80));
+        layoutParamsOther.setMargins(0, 0, 0, SizeUtils.dp2px(200));
         layoutParamsOther.addRule(RelativeLayout.CENTER_HORIZONTAL);
         layoutParamsOther.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         relativeLayout.setLayoutParams(layoutParamsOther);
@@ -97,7 +97,7 @@ public class ConfigUtils {
                 .setAppPrivacyOne(context.getResources().getString(R.string.user_protocol), BaseConstant.SERVER_ADDRESS + "protocol/userProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款1名称和URL(名称，url)
                 .setAppPrivacyTwo(context.getResources().getString(R.string.privacy_protocol), BaseConstant.SERVER_ADDRESS + "protocol/privacyProtocol" + Constants.END_BASE_URL)  //设置开发者隐私条款2名称和URL(名称，url)
                 .setAppPrivacyColor(Color.BLACK, Color.parseColor("#FF6796FA"))    //	设置隐私条款名称颜色(基础文字颜色，协议文字颜色)
-                .setPrivacyText(context.getString(R.string.login_presents_you_agree), context.getString(R.string.and1), context.getString(R.string.and2), "、", "")
+                .setPrivacyText(context.getString(R.string.login_presents_you_agree), context.getString(R.string.and1), context.getString(R.string.and2), "、", context.getString(R.string.privacy_for_share))
                 .setPrivacyOffsetBottomY(10)//设置隐私条款相对于屏幕下边缘y偏
                 .setPrivacyState(true)
                 .setPrivacyTextSize(12)

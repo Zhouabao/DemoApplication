@@ -16,7 +16,6 @@ import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 //import com.facebook.FacebookSdk
 //import com.facebook.appevents.AppEventsLogger
 import com.google.gson.Gson
-import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -357,8 +356,6 @@ class MyApplication : BaseApplication() {
 
         initFFmpegBinary()
 
-        //数美黑产
-        initSM()
 
         //闪验
         initSy()
@@ -513,20 +510,4 @@ class MyApplication : BaseApplication() {
     }
 
 
-    private fun initSM() {
-        try {//指定主进程才能执行
-            if (NIMUtil.isMainProcess(this)) {
-                val option = SmAntiFraud.SmOption()
-                option.organization = Constants.SM_ORGANIZATION
-                option.channel = ChannelUtils.getChannel(this)
-                //            option.channel ="debug"
-                option.publicKey = Constants.SM_PUBLICKEY
-                option.ainfoKey = Constants.SM_AINFOKEY
-                Log.d("smOption", "${option.organization},${option.channel}")
-                SmAntiFraud.create(this, option)
-            }
-        } catch (e: Exception) {
-            Log.d("SmAntiFraud", e.message ?: "")
-        }
-    }
 }

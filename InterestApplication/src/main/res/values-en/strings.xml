@@ -1288,5 +1288,6 @@
     <string name="Bind_now">Bind now</string>
     <string name="sign_up">Sign Up</string>
     <string name="wechat_push">WeChat Notification</string>
+    <string name="privacy_for_share">\nOur App has integrated Umeng+ U-Share SDK , which will collect your device identifiable information and public information of social account in order to share information with social account.</string>
 
 </resources>

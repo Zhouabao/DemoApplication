@@ -69,52 +69,29 @@
 
         <LinearLayout
             android:id="@+id/t2"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_width="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal"
-            android:visibility="invisible"
+            android:visibility="visible"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="@string/login_tip"
-                android:textColor="#ffffffff"
-                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/userAgreement"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/user_protocol"
                 android:textColor="#ffffffff"
                 android:textSize="12sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="@string/login_tip_and"
-                android:textColor="#ffffffff"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/privacyPolicy"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="@string/privacy_protocol"
-                android:textColor="#ffffffff"
-                android:textSize="12sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
