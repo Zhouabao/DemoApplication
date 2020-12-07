@@ -642,6 +642,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             }
     }
 
+
     private fun updateFilterParams() {
         //加入本地的筛选对话框的筛选条件
         if (params["audit_only"] != null)

@@ -149,10 +149,10 @@ class PrivacyDialog(
 //            else
             TodayFateWomanDialog(context1, nearBean, indexRecommends).show()
         } else if (nearBean?.today_pull_share == false) {
-            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            //邀请有礼
             InviteFriendDialog(context1).show()
         } else if (nearBean?.today_pull_dating == false) {
-            //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+            //发布约会
             PublishDatingDialog(context1).show()
         } else {
             EventBus.getDefault().post(ShowGuideChangeStyleEvent())

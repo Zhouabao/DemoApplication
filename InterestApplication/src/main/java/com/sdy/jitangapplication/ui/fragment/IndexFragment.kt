@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -218,6 +219,41 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         isHoney = event.isHoney
         if ((FragmentUtils.getTopShow(fragmentManager!!) as PeopleNearbyFragment?)?.type == PeopleNearbyFragment.TYPE_SWEET_HEART)
             addToSweetBtnFl.isVisible = !isHoney
+    }
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onShowGuideChangeStyleEvent(event: ShowGuideChangeStyleEvent) {
+        if (!UserManager.isGuideBrowseStyleCl()) {
+            initGuideCl()
+        } else {
+            guideBrowseStyleCl.isVisible = false
+        }
+
+    }
+
+
+
+    private fun initGuideCl() {
+        BarUtils.setStatusBarColor(requireActivity(), resources.getColor(R.color.colorHalfBlack))
+        guideBrowseStyleCl.isVisible = true
+        nextBtn1.clickWithTrigger {
+            iv1.isVisible = false
+            iv2.isVisible = false
+            tv1.isVisible = false
+            nextBtn1.isVisible = false
+
+            iv11.isVisible = true
+            iv21.isVisible = true
+            tv11.isVisible = true
+            nextBtn11.isVisible = true
+        }
+        nextBtn11.clickWithTrigger {
+            guideBrowseStyleCl.isVisible = false
+            BarUtils.setStatusBarColor(requireActivity(), Color.WHITE)
+            UserManager.saveGuideBrowseStyleCl(true)
+        }
     }
 
     override fun indexTopResult(data: IndexListBean?) {

@@ -147,26 +147,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     }
 
-    private fun initGuideCl() {
-        BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorHalfBlack))
-        guideBrowseStyleCl.isVisible = true
-        nextBtn1.clickWithTrigger {
-            iv1.isVisible = false
-            iv2.isVisible = false
-            tv1.isVisible = false
-            nextBtn1.isVisible = false
-
-            iv11.isVisible = true
-            iv21.isVisible = true
-            tv11.isVisible = true
-            nextBtn11.isVisible = true
-        }
-        nextBtn11.clickWithTrigger {
-            guideBrowseStyleCl.isVisible = false
-            BarUtils.setStatusBarColor(this, Color.WHITE)
-            UserManager.saveGuideBrowseStyleCl(true)
-        }
-    }
 
 
     override fun onNewIntent(intent: Intent?) {
@@ -666,15 +646,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private var accountDangerDialog: AccountDangerDialog? = null
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onShowGuideChangeStyleEvent(event: ShowGuideChangeStyleEvent) {
-        if (!UserManager.isGuideBrowseStyleCl()) {
-            initGuideCl()
-        } else {
-            guideBrowseStyleCl.isVisible = false
-        }
 
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAccountDangerEvent(event: AccountDangerEvent) {
