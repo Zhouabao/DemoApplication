@@ -619,9 +619,12 @@
 
 
         <!-- *****************高德地图********************** -->
+<!--        <meta-data-->
+<!--            android:name="com.amap.api.v2.apikey"-->
+<!--            android:value="ed0911965c16cc04ec36bb2360dccaa2" />       -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="ed0911965c16cc04ec36bb2360dccaa2" />
+            android:value="3b6b810a7ad78b17f523bdd05279b48c" />
 
         <service android:name="com.amap.api.location.APSService" />
 

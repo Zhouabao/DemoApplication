@@ -31,6 +31,8 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import java.io.IOException
+import java.io.InputStream
 import kotlin.math.sqrt
 
 /**
@@ -155,11 +157,19 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         locationMap.onCreate(savedInstanceState)
         //初始化地图控制器对象
         aMap = locationMap.map
+        aMap.setCustomMapStyle(
+            CustomMapStyleOptions()
+                .setEnable(true)
+                .setStyleData(getAssetsStyle("style.data"))
+                .setStyleExtraData(getAssetsStyle("style_extra.data"))
+        )
+        aMap.setWorldVectorMapStyle("style_local")
+        if (!UserManager.overseas) {
+            aMap.accelerateNetworkInChinese(true)
+        }
         aMap.mapType = AMap.MAP_TYPE_NORMAL
 //        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
         aMap.uiSettings.isZoomControlsEnabled = false
-
-
         // 对amap添加移动地图事件监听器
         aMap.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
             override fun onCameraChangeFinish(p0: CameraPosition) {
@@ -218,7 +228,12 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
-        mQuery = PoiSearch.Query("", poiCode, "")
+        mQuery = if (UserManager.overseas) {
+            PoiSearch.Query(UserManager.getCity(), "", "")
+        } else {
+            PoiSearch.Query("", poiCode, "")
+        }
+
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)
@@ -238,7 +253,13 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施
-        mQuery = PoiSearch.Query(keyword, poiCode, UserManager.getCity())
+        mQuery = PoiSearch.Query(
+            keyword, if (UserManager.overseas) {
+                ""
+            } else {
+                poiCode
+            }, UserManager.getCity()
+        )
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)
@@ -322,8 +343,19 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         if (rCode == 1000) {
             if (result != null && result.query != null) {
                 adapter.setNewData(result.pois)
-                if (!adapter.data.contains( PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), "")))
-                     adapter.addData(0, PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), ""))
+                if (!adapter.data.contains(
+                        PoiItem(
+                            "",
+                            LatLonPoint(0.0, 0.0),
+                            getString(R.string.no_yaoqiu),
+                            ""
+                        )
+                    )
+                )
+                    adapter.addData(
+                        0,
+                        PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), "")
+                    )
                 rightBtn1.isEnabled = true
 
                 if (adapter.data.size > 1) {
@@ -377,4 +409,24 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
     }
 
+
+    private fun getAssetsStyle(fileName: String): ByteArray? {
+        var buffer1: ByteArray? = null
+        var is1: InputStream? = null
+        try {
+            is1 = resources.assets.open(fileName)
+            val length1 = is1.available()
+            buffer1 = ByteArray(length1)
+            is1.read(buffer1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                is1?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return buffer1
+    }
 }

@@ -11,8 +11,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.amap.api.maps.*;
+
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.CustomMapStyleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
@@ -22,6 +29,10 @@ import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.ToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
+import com.sdy.jitangapplication.utils.UserManager;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListener, OnClickListener
         , NimLocationManager.NimLocationListener {
@@ -95,6 +106,19 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     private void initAmap() {
         try {
             amap = mapView.getMap();
+            if (UserManager.INSTANCE.getOverseas()) {
+                amap.setWorldVectorMapStyle("style_en");
+            } else {
+                amap.setWorldVectorMapStyle("style_local");
+                amap.accelerateNetworkInChinese(true);
+            }
+
+            amap.setCustomMapStyle(
+                    new CustomMapStyleOptions()
+                            .setEnable(true)
+                            .setStyleData(getAssetsStyle("style.data"))
+                            .setStyleExtraData(getAssetsStyle("style_extra.data"))
+            );
             amap.setOnCameraChangeListener(this);
 
             UiSettings uiSettings = amap.getUiSettings();
@@ -107,6 +131,29 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
             e.printStackTrace();
         }
     }
+
+    private byte[] getAssetsStyle(String fileName) {
+        byte[] buffer1 = null;
+        InputStream is1 = null;
+        try {
+            is1 = getResources().getAssets().open(fileName);
+            int lenght1 = is1.available();
+            buffer1 = new byte[lenght1];
+            is1.read(buffer1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (is1 != null) {
+                    is1.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return buffer1;
+    }
+
 
     private void initLocation() {
         locationManager = new NimLocationManager(this, this);
