@@ -4,16 +4,22 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.CloseRegVipEvent
+import com.sdy.jitangapplication.ui.dialog.OpenVipActivity
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import org.greenrobot.eventbus.EventBus
 
 class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
     private val wxApi by lazy { WXAPIFactory.createWXAPI(this, Constants.WECHAT_APP_ID) }
@@ -37,10 +43,19 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     showAlert(0, this, getString(R.string.pay_success))
                 }
                 BaseResp.ErrCode.ERR_USER_CANCEL -> {
-                    showAlert(-2, this,  getString(R.string.pay_cancel))
+                    if (UserManager.registerFileBean?.experience_state == true) {
+                        finish()
+                        overridePendingTransition(0, 0)
+                        if (ActivityUtils.getTopActivity() is OpenVipActivity) {
+                            EventBus.getDefault().post(CloseDialogEvent())
+                            EventBus.getDefault().post(CloseRegVipEvent(false))
+                        }
+                    } else {
+                        showAlert(-2, this, getString(R.string.pay_cancel))
+                    }
                 }
                 BaseResp.ErrCode.ERR_COMM -> {
-                    showAlert(-1, this,  getString(R.string.pay_cancel))
+                    showAlert(-1, this, getString(R.string.pay_cancel))
                 }
                 else -> {
                     showAlert(-3, this, getString(R.string.pay_error))
@@ -64,9 +79,8 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     dialog.cancel()
                     finish()
                     overridePendingTransition(0, 0)
-                    if (code == BaseResp.ErrCode.ERR_OK) {
+                    if (code == BaseResp.ErrCode.ERR_OK)
                         CommonFunction.payResultNotify(this@WXPayEntryActivity)
-                    }
                 }
             })
             .create()

@@ -325,6 +325,18 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isvip1", vip)
     }
 
+
+    /**
+     * 用户是否是门槛会员
+     */
+    fun isUserFoot(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("userFoot", false)
+    }
+
+    fun saveUserFoot(userFoot: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("userFoot", userFoot)
+    }
+
     /**
      * 判断用户是否是认证
      */
@@ -411,6 +423,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("gender")
         SPUtils.getInstance(Constants.SPNAME).remove("birth")
         SPUtils.getInstance(Constants.SPNAME).remove("isvip1")
+        SPUtils.getInstance(Constants.SPNAME).remove("userFoot")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
@@ -446,7 +459,7 @@ object UserManager {
          * 认证相关缓存清空
          */
         SPUtils.getInstance(Constants.SPNAME).remove("isShowSettingNew")
-        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideVerify")
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideWechat")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         SPUtils.getInstance(Constants.SPNAME).remove("notice")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
@@ -511,8 +524,8 @@ object UserManager {
     /**
      * 是否展示认证提醒
      */
-    fun isShowGuideVerify(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideVerify", false)
+    fun isShowGuideWechat(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideWechat", false)
     }
 
     /**
@@ -551,8 +564,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("sweetHeartNew", isShow)
     }
 
-    fun saveShowGuideVerify(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideVerify", isShow)
+    fun saveShowGuideWechat(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideWechat", isShow)
     }
 
 
@@ -662,6 +675,7 @@ object UserManager {
             data?.extra_data?.living_btn ?: false,
             data?.extra_data?.tourists ?: false
         )
+        saveUserFoot(data?.extra_data?.isvip ?: false)
 
         SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
         SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
@@ -682,29 +696,30 @@ object UserManager {
             context.startActivity<RigisterGenderActivity>()
             return
         } else if (data.userinfo.gender == 1) {//男生流程：性别、更多配对、更多关系、充值VIP、填写个人信息、落地
-            data.userinfo.gender?.let { saveGender(it) }
-            if (data?.extra_data?.want_steps != true) { //更多配对、更多关系、
+            data.userinfo.gender.let { saveGender(it) }
+            if (data.extra_data?.want_steps != true) { //更多配对、更多关系、
                 context.startActivity<GetMoreMatchActivity>(
                     "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0
+                        data.extra_data?.people_amount ?: 0
                     )
                 )
-            } else if (data.extra_data?.want_steps && registerFileBean?.threshold == true && !data.extra_data?.isvip) {//门槛付费
+            } else if (registerFileBean?.threshold == true && !data.extra_data.isvip && !data.extra_data.my_experience_card_state) {//门槛付费
+                //todo want_steps填写了，并且门槛开启，用户不是会员或者用户的体验卡状态为false
                 OpenVipActivity.start(
                     context, MoreMatchBean(
-                        data?.extra_data?.city_name,
-                        data?.extra_data?.gender_str,
-                        data?.extra_data?.people_amount,
-                        share_btn = data?.extra_data?.share_btn
+                        data.extra_data.city_name,
+                        data.extra_data.gender_str,
+                        data.extra_data.people_amount,
+                        share_btn = data.extra_data.share_btn
                     ),
                     OpenVipActivity.FROM_REGISTER_OPEN_VIP
                 )
             } else if (data.userinfo.nickname.isNullOrEmpty()
                 || data.userinfo.birth == 0
                 || data.userinfo.avatar.isNullOrEmpty()
-                || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)
+                || data.userinfo.avatar.contains(Constants.DEFAULT_AVATAR)
             ) { //填写个人信息
                 context.startActivity<RegisterInfoActivity>()
             } else {//完成注册
@@ -714,11 +729,11 @@ object UserManager {
                 context.startActivity<MainActivity>()
             }
         } else if (data.userinfo.gender == 2) {//女生流程：性别、填写个人信息、活体、更多配对、更多关系、充值VIP、落地
-            data.userinfo.gender?.let { saveGender(it) }
+            data.userinfo.gender.let { saveGender(it) }
             if (data.userinfo.nickname.isNullOrEmpty()
                 || data.userinfo.birth == 0
                 || data.userinfo.avatar.isNullOrEmpty()
-                || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)
+                || data.userinfo.avatar.contains(Constants.DEFAULT_AVATAR)
             ) {
                 context.startActivity<RegisterInfoActivity>()
             } else if (data?.extra_data?.want_steps != true) {
@@ -726,17 +741,17 @@ object UserManager {
                     "morematchbean" to MoreMatchBean(
                         data.extra_data?.city_name ?: "",
                         data.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0,
+                        data.extra_data?.people_amount ?: 0,
                         data?.userinfo?.avatar, living_btn = data.extra_data?.living_btn ?: true
                     )
                 )
-            } else if (data?.extra_data?.living_btn) {
+            } else if (data.extra_data.living_btn) {
                 context.startActivity<IDVerifyActivity>(
                     "type" to IDVerifyActivity.TYPE_LIVE_CAPTURE,
                     "morematchbean" to MoreMatchBean(
-                        data.extra_data?.city_name ?: "",
-                        data.extra_data?.gender_str ?: "",
-                        data?.extra_data?.people_amount ?: 0
+                        data.extra_data.city_name,
+                        data.extra_data.gender_str,
+                        data.extra_data.people_amount
                     )
                 )
             } else {

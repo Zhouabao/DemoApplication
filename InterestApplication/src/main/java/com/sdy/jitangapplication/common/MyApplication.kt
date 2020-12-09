@@ -256,10 +256,10 @@ class MyApplication : BaseApplication() {
                     }
                     SnackBarFragment.SOMEONE_LIKE_YOU,
                     SnackBarFragment.SOMEONE_MATCH_SUCCESS,
-                    SnackBarFragment.GREET_SUCCESS,
                     SnackBarFragment.FLASH_SUCCESS,
                     SnackBarFragment.CHAT_SUCCESS,
                     SnackBarFragment.HELP_CANDY,
+                    SnackBarFragment.GREET_SUCCESS,
                     SnackBarFragment.GIVE_GIFT -> {
                         if (ActivityUtils.getTopActivity() is MainActivity)
                             FragmentUtils.add(
@@ -276,7 +276,12 @@ class MyApplication : BaseApplication() {
                     }
 
                     111, 112 -> {//微信公众号绑定成功
-                        EventBus.getDefault().post(UpdateWechatSettingsEvent(customerMsgBean.type == 111))
+                        EventBus.getDefault()
+                            .post(UpdateWechatSettingsEvent(customerMsgBean.type == 111))
+
+                    }
+                    401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
+                        EventBus.getDefault().post(UpdateNewMsgEvent(customerMsgBean))
 
                     }
 

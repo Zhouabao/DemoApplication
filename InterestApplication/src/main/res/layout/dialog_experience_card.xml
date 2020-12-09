@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/rectangle_white_15dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/send_a_experience_card"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:text="@string/limit_free_experience"
+        android:textColor="#ffb5b7b9"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t1" />
+
+    <ImageView
+        android:id="@+id/iv1"
+        android:layout_width="305dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/icon_experience_card"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2" />
+
+    <TextView
+        android:id="@+id/t3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/include_all_visit_power"
+        android:textColor="#ff714300"
+        android:textSize="10sp"
+        app:layout_constraintLeft_toLeftOf="@id/iv1"
+        app:layout_constraintRight_toRightOf="@id/iv1"
+        app:layout_constraintTop_toTopOf="@id/iv1" />
+
+    <TextView
+        android:id="@+id/costPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="¥199"
+        android:textColor="#ff8c5200"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="@id/iv1"
+        app:layout_constraintRight_toLeftOf="@id/goldVipCard"
+        app:layout_constraintTop_toBottomOf="@id/t3" />
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:id="@+id/goldVipCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gold_experience_card"
+        android:textColor="#ff8c5200"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/costPrice"
+        app:layout_constraintLeft_toRightOf="@id/costPrice"
+        app:layout_constraintRight_toRightOf="@id/iv1"
+        app:layout_constraintTop_toTopOf="@id/costPrice" />
+
+    <TextView
+        android:id="@+id/expireTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/expire_time"
+        android:textColor="#ff714300"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/costPrice" />
+
+    <TextView
+        android:id="@+id/getCardBtn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/gradient_gold_vip"
+        android:gravity="center"
+        android:text="@string/get_vip_card"
+        android:textColor="#ffffffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv1" />
+</androidx.constraintlayout.widget.ConstraintLayout>

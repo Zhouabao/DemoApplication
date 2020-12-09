@@ -104,6 +104,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
+        noticeSettingIv.setOnClickListener(this)
         femalePowerLl.setOnClickListener(this)
         shareRedBtn.setOnClickListener(this)
         candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
@@ -202,6 +203,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         }
         candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isplatinum ?: false)
+        UserManager.saveUserFoot(userInfoBean?.userinfo?.isvip ?: false)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
         checkVerify()
@@ -212,7 +214,12 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
         EventBus.getDefault().post(userInfoBean?.userinfo?.isplatinum ?: false)
 
-        if (!UserManager.isShowGuideVerify()) {
+//        showWechatGuide()
+
+    }
+
+    private fun showWechatGuide() {
+        if (!UserManager.isShowGuideWechat()) {
             noticeSettingIv.isVisible = true
             val trans = ObjectAnimator.ofFloat(
                 noticeSettingIv,
@@ -231,7 +238,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
                 override fun onAnimationEnd(animation: Animator?) {
                     noticeSettingIv.isVisible = false
-                    UserManager.saveShowGuideVerify(true)
+                    UserManager.saveShowGuideWechat(true)
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
@@ -245,7 +252,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
         } else {
             noticeSettingIv.isVisible = false
         }
-
     }
 
 
@@ -403,6 +409,11 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             R.id.candyCl -> {
                 startActivity<MyCandyActivity>()
             }
+            //微信推送设置提醒
+            R.id.noticeSettingIv->{
+                startActivity<NotificationActivity>()
+            }
+
             //分享红包
             R.id.shareRedBtn -> {
                 startActivity<InviteRewardsActivity>()
@@ -423,6 +434,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     //更新用户中心信息
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: UserCenterEvent) {
+        showWechatGuide()
+
         if (!UserManager.touristMode)
             mPresenter.myInfoCandy()
     }

@@ -825,7 +825,7 @@ object CommonFunction {
 
     fun payResultNotify(context: Context) {
         if (ActivityUtils.getTopActivity() is OpenVipActivity) {//注册界面支付会员进入首页
-            EventBus.getDefault().post(CloseRegVipEvent())
+            EventBus.getDefault().post(CloseRegVipEvent(true))
         } else if (ActivityUtils.getTopActivity() is MainActivity) {
             EventBus.getDefault().post(RefreshEvent(true))
         } else {
@@ -845,6 +845,7 @@ object CommonFunction {
 
 
     }
+
 
     /**
      * 字符串 千位符
@@ -926,14 +927,15 @@ object CommonFunction {
         return LanguageUtils.getSystemLanguage().language == Locale.ENGLISH.language
     }
 
-    fun getNowMoneyUnit():String{
+    fun getNowMoneyUnit(): String {
         if (UserManager.overseas) {
             return "$"
         } else {
             return "¥"
         }
     }
-    fun getNowMoneyUnitWord():String{
+
+    fun getNowMoneyUnitWord(): String {
         if (UserManager.overseas) {
             return "dollars"
         } else {

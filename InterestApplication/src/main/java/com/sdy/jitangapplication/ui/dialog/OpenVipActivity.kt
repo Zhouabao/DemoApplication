@@ -362,8 +362,15 @@ class OpenVipActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCloseDialogEvent(event: CloseRegVipEvent) {
         if (from == FROM_REGISTER_OPEN_VIP) {
-            startActivity<RegisterInfoActivity>()
+            if (event.paySuccess) {
+                startActivity<RegisterInfoActivity>()
+                finish()
+            } else {
+                if (UserManager.registerFileBean?.experience_state == true)
+                    ExperienceCardDialog(this).show()
+            }
+        } else {
+            finish()
         }
-        finish()
     }
 }

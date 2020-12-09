@@ -35,6 +35,8 @@ data class ExtraBean(
     var supplement: Int = 0,//补充资料 1 前置 2后置 3 关闭
     var threshold: Boolean = false,//门槛开关 开启true 关闭false
     var living_btn: Boolean = false,//活体认证的性别判断
+    val experience_state: Boolean = false,//	体验券状态 true 开启 false 关闭（我已经领取过的则也为关闭） （）
+    val my_experience_card_state: Boolean = false,//	我的体验券是否在有效期内 true (可以注册登录/跳过付费) 有效 false过期
     var tourists: Boolean = false//	游客模式 开启true 关闭false
 )
 

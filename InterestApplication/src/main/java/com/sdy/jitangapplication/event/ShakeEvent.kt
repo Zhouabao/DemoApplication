@@ -1,6 +1,6 @@
 package com.sdy.jitangapplication.event
 
-import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.CustomerMsgBean
 
 
 class MatchByWishHelpEvent(val isFirend: Boolean, val target_accid: String = "")
@@ -10,7 +10,7 @@ class UpdateMyCandyAmountEvent(val reduceAmout: Int)
 
 class CloseDialogEvent()
 
-class CloseRegVipEvent()
+class CloseRegVipEvent(val paySuccess: Boolean)
 
 //更新首页兴趣列表数据
 class UpdateFindByTagEvent()
@@ -28,8 +28,8 @@ class UpdateSameCityVipEvent(val isVip: Boolean)
 //更新头部横幅
 class UpdateShowTopAlert()
 
-//更新今日意向
-class UpdateTodayWantEvent(val todayWantBean: CheckBean?)
+//更新新的搭讪消息以及系统发送的假消息
+class UpdateNewMsgEvent(val customerMsgBean: CustomerMsgBean)
 
 //允许列表滑动
 class EnableRvScrollEvent(val enable: Boolean)

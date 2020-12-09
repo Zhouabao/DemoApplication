@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.qiniu.android.http.UserAgent
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -522,6 +523,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             }
 
             //根据是否是会员判断是否显示会员页面
+            UserManager.saveUserFoot(nearBean.isvip)
             showOpenVipCl(nearBean.isvip)
 //            EventBus.getDefault().post(UpdateSameCityVipEvent(nearBean.isvip))
 

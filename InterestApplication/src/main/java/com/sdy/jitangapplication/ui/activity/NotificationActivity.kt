@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.UpdateSettingEvent
 import com.sdy.jitangapplication.event.UpdateWechatSettingsEvent
+import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.presenter.NotificationPresenter
 import com.sdy.jitangapplication.presenter.view.NotificationView
@@ -64,27 +65,6 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
 
         //// notify_square_like_state  notify_square_comment_state
-
-        switchDianzan.isChecked = intent.getBooleanExtra("notify_square_like_state", true)
-        switchComment.isChecked = intent.getBooleanExtra("notify_square_comment_state", true)
-        switchMessage.isChecked = intent.getBooleanExtra("sms_state", true)
-        if (UserManager.overseas) {
-            wechatPublic.isVisible = false
-            wechatPublicTv.isVisible = false
-            switchWechat.isVisible = false
-        } else {
-            wechatPublicState = intent.getBooleanExtra("wechat_public_state", false)
-            wechatState = intent.getBooleanExtra("wechat_open_state", false)
-            switchWechat.isChecked = wechatState
-            wechatPublicTv.isVisible = wechatState
-            wechatPublic.isVisible = wechatState
-
-            if (wechatPublicState) {
-                wechatPublic.text = getString(R.string.Binded)
-            } else {
-                wechatPublic.text = getString(R.string.Bind_now)
-            }
-        }
 
 
         switchMusic.isChecked = DemoCache.getNotificationConfig().ring
@@ -193,6 +173,31 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
 
             }
 
+        }
+    }
+
+    override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
+        if (success) {
+            switchDianzan.isChecked = settingsBean!!.notify_square_like_state
+            switchComment.isChecked = settingsBean!!.notify_square_comment_state
+            switchMessage.isChecked = settingsBean!!.sms_state
+            if (UserManager.overseas) {
+                wechatPublic.isVisible = false
+                wechatPublicTv.isVisible = false
+                switchWechat.isVisible = false
+            } else {
+                wechatPublicState = intent.getBooleanExtra("wechat_public_state", false)
+                wechatState = intent.getBooleanExtra("wechat_open_state", false)
+                switchWechat.isChecked = wechatState
+                wechatPublicTv.isVisible = wechatState
+                wechatPublic.isVisible = wechatState
+
+                if (wechatPublicState) {
+                    wechatPublic.text = getString(R.string.Binded)
+                } else {
+                    wechatPublic.text = getString(R.string.Bind_now)
+                }
+            }
         }
     }
 

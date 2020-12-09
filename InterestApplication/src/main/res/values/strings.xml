@@ -1301,5 +1301,14 @@
     <string name="am">上午 </string>
     <string name="pm">下午 </string>
     <string name="PM_1">晚上 </string>
+    <string name="send_a_experience_card">赠送你一张体验卡</string>
+    <string name="limit_free_experience">限时免费体验App所有功能\n感受被异性围绕的感觉</string>
+    <string name="include_all_visit_power">包含查看所有功能的权限</string>
+    <string name="get_vip_card">领取会员体验卡</string>
+    <string name="gold_experience_card">黄金会员\n体验卡</string>
+    <string name="expire_time">有效时间：%1$s</string>
+    <string name="they_greet_you">她们和你打了招呼</string>
+    <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
+    <string name="tobe_vip">成为积糖会员</string>
 
 </resources>

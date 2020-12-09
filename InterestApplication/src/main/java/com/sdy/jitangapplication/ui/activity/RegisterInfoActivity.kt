@@ -484,7 +484,6 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
     }
     private val contactWaysIcon by lazy {
         if (UserManager.overseas) {
-            //todo 替换海外版的logo
             mutableListOf(
                 R.drawable.icon_phone_reg,
                 R.drawable.icon_whatsapp_reg,

@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.SettingsBean
 
 /**
  *    author : ZFM
@@ -12,5 +13,8 @@ interface NotificationView : BaseView {
 
 
     fun onGreetApproveResult(type: Int, success: Boolean)
+
+    fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?)
+
 
 }
