@@ -407,7 +407,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
                 faceNotice.setTextColor(Color.parseColor("#fffb1919"))
             }
             FaceStatusNewEnum.FaceLivenessActionCodeTimeout -> {
-                //todo 提醒动作超时
+                // 提醒动作超时
                 faceNotice.text = message
                 faceNotice.setTextColor(Color.parseColor("#fffb1919"))
             }
@@ -434,7 +434,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
                 java.lang.Float.valueOf(score2).compareTo(java.lang.Float.valueOf(score1))
             }
 
-            // TODO:发送加密的base64字符串
+            // :发送加密的base64字符串
 //            int secType = mFaceConfig.getSecType();
 //            String base64;
 //            if (secType == 0) {
@@ -459,7 +459,7 @@ open class FaceLivenessActivity : BaseActivity(), SurfaceHolder.Callback,
                     .compareTo(java.lang.Float.valueOf(score1))
             }
             mBmpStr = list2[0].value.base64
-            // TODO:发送底层加密的base64字符串
+            // :发送底层加密的base64字符串
 //            int secType = mFaceConfig.getSecType();
 //            String base64;
 //            if (secType == 0) {

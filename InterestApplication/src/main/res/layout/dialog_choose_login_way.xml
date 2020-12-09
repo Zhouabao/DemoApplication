@@ -54,6 +54,7 @@
         app:layout_constraintTop_toBottomOf="@id/t2" />
 
     <ImageView
+        android:id="@+id/loginWithPhoneIv"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginLeft="30dp"
@@ -133,6 +134,7 @@
         app:layout_constraintTop_toBottomOf="@id/loginWithFacebookBtn" />
 
     <ImageView
+        android:id="@+id/loginWithGoogleIv"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginLeft="30dp"

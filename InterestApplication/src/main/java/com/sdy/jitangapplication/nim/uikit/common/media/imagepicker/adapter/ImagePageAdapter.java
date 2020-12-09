@@ -59,7 +59,7 @@ public abstract class ImagePageAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         if (object instanceof View) {
-            //FIXME YXFImageLoader
+            // YXFImageLoader
             ImagePicker.getInstance().getImageLoader().clearRequest((View) object);
             container.removeView((View) object);
         }

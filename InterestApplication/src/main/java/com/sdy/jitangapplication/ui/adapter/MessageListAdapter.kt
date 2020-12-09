@@ -76,7 +76,7 @@ class MessageListAdapter :
 
         //0 不是甜心圈 1 资产认证 2豪车认证 3身材 4职业  5高额充值
 
-        //todo remove Log
+        // remove Log
 //        Log.d(
 //            "extensionMap",
 //            "extensionMap = ${(NimUIKit.getUserInfoProvider()

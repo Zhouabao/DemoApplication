@@ -88,7 +88,7 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
     fun loadData() {
         mPresenter = IndexPresenter()
         mPresenter.mView = this
-        mPresenter.context = activity!!
+        mPresenter.context = requireContext()
         EventBus.getDefault().register(this)
         EventBus.getDefault().post(EnableRvScrollEvent(false))
 
@@ -107,15 +107,15 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
         filterBtn.clickWithTrigger {
             if (UserManager.touristMode)
-                TouristDialog(activity!!).show()
+                TouristDialog(requireContext()).show()
             else
-                FilterUserDialog(activity!!).show()
+                FilterUserDialog(requireContext()).show()
         }
 
 
-        GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), topMyAvator)
+        GlideUtil.loadCircleImg(requireContext(), UserManager.getAvator(), topMyAvator)
         tobeChoicessBtn.clickWithTrigger {
-            ChoicenessOpenPtVipDialog(activity!!).show()
+            ChoicenessOpenPtVipDialog(requireContext()).show()
         }
 
 
@@ -129,11 +129,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         unrealMsgNotice.setDirection(GreetHiView.DIRECTION_RIGHT)
     }
 
-    private val adapter by lazy { IndexHiAdater() }
-
-    /**
-     *todo 如果是真消息 就是左边的，如果是假消息，就是右边的
-     */
 
     private fun initNewMessages(view1: GreetHiView, customerMsgBean: CustomerMsgBean) {
         view1.loadImg(customerMsgBean.avatar, customerMsgBean.accid)
@@ -175,14 +170,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             }
 
         })
-//        rvNewMessages.layoutManager =
-//            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-//        rvNewMessages.adapter = adapter
-//        adapter.addData("https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1607419677&di=7ef0a941f4cf3cf82bec695b2cc4ca8d&src=http://pan.iqiyi.com/ext/paopao/?token=eJxjYGBgmGrnfZoBDEyZARQ0AiI.jpg")
-//        adapter.addData("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1607429800934&di=ec26c9fe2f25477b92917d67a873d6d1&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201901%2F26%2F20190126235253_grkjp.thumb.700_0.jpg")
-//        adapter.addData("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1607429800933&di=1f489dd34b4ca97aa1ecf829ef705f87&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201809%2F17%2F20180917115945_sdtoj.jpg")
-//        adapter.addData("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1607429800932&di=e4d1129ce20f8cdba0b5ba88f9f8f9c2&imgtype=0&src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201712%2F01%2F20171201215912_3WLY5.thumb.700_0.jpeg")
-//        adapter.addData("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1607429800931&di=574685e41ea8c080503feee905fdb880&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201809%2F14%2F20180914220438_cbgxp.jpg")
     }
 
 
@@ -207,11 +194,11 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             if (!UserManager.touristMode) {
                 if (peopleRecommendTopAdapter.data[position].type == 1)
                     MatchDetailActivity.start(
-                        activity!!,
+                        requireContext(),
                         peopleRecommendTopAdapter.data[position].accid
                     )
             } else {
-                TouristDialog(activity!!).show()
+                TouristDialog(requireContext()).show()
             }
         }
 
@@ -331,22 +318,22 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
 
     override fun indexTopResult(data: IndexListBean?) {
         if (data != null) {
-            if (data?.list.isNullOrEmpty()) {
-                data?.list = mutableListOf()
+            if (data.list.isNullOrEmpty()) {
+                data.list = mutableListOf()
             }
-            data?.list.add(0, IndexTopBean(type = 0))
-            peopleRecommendTopAdapter.setNewData(data?.list)
+            data.list.add(0, IndexTopBean(type = 0))
+            peopleRecommendTopAdapter.setNewData(data.list)
 
-            peopleRecommendTopAdapter.todayvisit = data!!.today_visit_cnt
-            peopleRecommendTopAdapter.todayExplosure = data!!.today_exposure_cnt
-            peopleRecommendTopAdapter.total_exposure_cnt = data!!.total_exposure_cnt
-            peopleRecommendTopAdapter.free_show = data!!.free_show
-            peopleRecommendTopAdapter.allvisit = data!!.total_visit_cnt
-            peopleRecommendTopAdapter.mv_url = data!!.mv_url
-            peopleRecommendTopAdapter.isplatinum = data!!.isplatinumvip
+            peopleRecommendTopAdapter.todayvisit = data.today_visit_cnt
+            peopleRecommendTopAdapter.todayExplosure = data.today_exposure_cnt
+            peopleRecommendTopAdapter.total_exposure_cnt = data.total_exposure_cnt
+            peopleRecommendTopAdapter.free_show = data.free_show
+            peopleRecommendTopAdapter.allvisit = data.total_visit_cnt
+            peopleRecommendTopAdapter.mv_url = data.mv_url
+            peopleRecommendTopAdapter.isplatinum = data.isplatinumvip
 
             UserManager.saveGender(data.gender)
-            if ((data!!.gender == 1 && data!!.isplatinumvip) || (data.gender == 2 && data!!.mv_url)) {
+            if ((data.gender == 1 && data.isplatinumvip) || (data.gender == 2 && data.mv_url)) {
                 tobeChoicenessCl.isVisible = false
             } else {
                 tobeChoicenessCl.isVisible = true

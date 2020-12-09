@@ -58,51 +58,85 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
             loginWithGoogleBtn.isVisible = true
             loginWithPhoneBtn.isVisible = true
             loginWithWechatBtn.isVisible = false
+
+
+            //google账号登陆
+            loginWithPhoneBtn.text = context1.getString(R.string.continue_with_google)
+            loginWithPhoneIv.setImageResource(R.drawable.icon_login_with_google)
+            loginWithPhoneBtn.clickWithTrigger {
+                (context1 as LoginActivity).googleLogin()
+                dismiss()
+            }
+
+
+            //facebook登录
+            loginWithFacebookBtn.clickWithTrigger {
+                (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.FACEBOOK)
+                dismiss()
+            }
+
+
+            //手机号码登录
+            loginWithGoogleBtn.text = context1.getString(R.string.login_with_phone)
+            loginWithGoogleIv.setImageResource(R.drawable.icon_login_way_phone)
+            if (syCode == 1022) {
+                loginWithGoogleBtn.text = context1.getString(R.string.one_key_login)
+            } else {
+                loginWithGoogleBtn.text = context1.getString(R.string.account_phone_num)
+            }
+            loginWithGoogleBtn.clickWithTrigger {
+                if (syCode == 1022) {
+                    if (!NetworkUtils.getMobileDataEnabled()) {
+                        CommonFunction.toast(context1.getString(R.string.open_internet))
+                        return@clickWithTrigger
+                    }
+                    context1.startActivity<OnekeyLoginActivity>()
+                } else {
+                    context1.startActivity<PhoneActivity>("type" to "1")
+                }
+                dismiss()
+            }
         } else {
             loginWithPhoneBtn.isVisible = true
             loginWithWechatBtn.isVisible = true
             loginWithFacebookBtn.isVisible = false
             loginWithGoogleBtn.isVisible = false
-        }
 
 
-        if (syCode == 1022) {
-            loginWithPhoneBtn.text = context1.getString(R.string.one_key_login)
-        } else {
-            loginWithPhoneBtn.text = context1.getString(R.string.account_phone_num)
-        }
-        //手机号码登录
-        loginWithPhoneBtn.clickWithTrigger {
+            //手机号码登录
+            loginWithPhoneBtn.clickWithTrigger {
+
+                if (syCode == 1022) {
+                    if (!NetworkUtils.getMobileDataEnabled()) {
+                        CommonFunction.toast(context1.getString(R.string.open_internet))
+                        return@clickWithTrigger
+                    }
+                    context1.startActivity<OnekeyLoginActivity>()
+                } else {
+                    context1.startActivity<PhoneActivity>("type" to "1")
+                }
+                dismiss()
+            }
+
+            //微信登录
+            loginWithWechatBtn.clickWithTrigger {
+                CommonFunction.wechatLogin(context1, WXEntryActivity.WECHAT_LOGIN)
+                dismiss()
+            }
+
+
 
             if (syCode == 1022) {
-                if (!NetworkUtils.getMobileDataEnabled()) {
-                    CommonFunction.toast(context1.getString(R.string.open_internet))
-                    return@clickWithTrigger
-                }
-                context1.startActivity<OnekeyLoginActivity>()
+                loginWithPhoneBtn.text = context1.getString(R.string.one_key_login)
             } else {
-                context1.startActivity<PhoneActivity>("type" to "1")
+                loginWithPhoneBtn.text = context1.getString(R.string.account_phone_num)
             }
-            dismiss()
+
+
         }
 
-        //微信登录
-        loginWithWechatBtn.clickWithTrigger {
-            CommonFunction.wechatLogin(context1, WXEntryActivity.WECHAT_LOGIN)
-            dismiss()
-        }
 
-        //facebook登录
-        loginWithFacebookBtn.clickWithTrigger {
-            (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.FACEBOOK)
-            dismiss()
-        }
 
-        //google账号登陆
-        loginWithGoogleBtn.clickWithTrigger {
-            (context1 as LoginActivity).googleLogin()
-            dismiss()
-        }
 
     }
 

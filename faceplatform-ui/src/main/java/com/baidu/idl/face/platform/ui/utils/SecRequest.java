@@ -53,7 +53,7 @@ public class SecRequest {
                     jsonObject.put("name", URLDecoder.decode("张三", "UTF-8"));
                     jsonObject.put("quality_control", "NONE");
                     jsonObject.put("liveness_control", "NONE");
-                    // TODO：是否开启风控认证，但如果sceType为false时，该参数必须传入false
+                    // ：是否开启风控认证，但如果sceType为false时，该参数必须传入false
                     jsonObject.put("risk_identify", false);
                     jsonObject.put("zid", FaceSDKManager.getInstance().getZid(context, 5001));
                     jsonObject.put("ip", "172.30.154.173");
