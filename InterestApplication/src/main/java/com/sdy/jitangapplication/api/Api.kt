@@ -152,6 +152,14 @@ interface Api {
     fun addWant(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MoreMatchBean?>>
 
 
+    /**
+     * 获取体验卡
+     */
+    @FormUrlEncoded
+    @POST("ExperienceCard/getCard${Constants.END_BASE_URL}")
+    fun getCard(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
     /************************广场列表*****************************/
     /**
      * 广场获取兴趣
