@@ -110,22 +110,14 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-
-                lottieMoreMatchRipple1.postDelayed({
-                    lottieMoreMatchRipple1.playAnimation()
-                }, 2000L)
-
-                lottieMoreMatchRipple2.postDelayed({
-                    lottieMoreMatchRipple2.playAnimation()
-                }, 4000L)
-
+                lottieMoreMatchRipple.playAnimation()
             }
 
             override fun onAnimationCancel(animation: Animator?) {
             }
 
             override fun onAnimationStart(animation: Animator?) {
-                lottieMoreMatchRipple.playAnimation()
+//                lottieMoreMatchRipple.playAnimation()
 
             }
 
