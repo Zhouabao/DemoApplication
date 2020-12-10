@@ -9,9 +9,15 @@ import android.view.WindowManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_experience_card.*
 import org.jetbrains.anko.startActivity
 
@@ -34,9 +40,7 @@ class ExperienceCardDialog(val context1: Context) : Dialog(context1, R.style.MyD
     private fun initView() {
         //todo 获取体验卡，接下来走注册流程 填写信息
         getCardBtn.clickWithTrigger {
-            dismiss()
-            ActivityUtils.finishActivity(context1 as Activity)
-            context1.startActivity<RegisterInfoActivity>()
+            getCard()
         }
 
     }
@@ -50,6 +54,25 @@ class ExperienceCardDialog(val context1: Context) : Dialog(context1, R.style.MyD
         params?.windowAnimations = R.style.MyDialogBottomAnimation
         window?.attributes = params
 
+    }
+
+    /**
+     * 领取体验卡
+     */
+    private fun getCard() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getCard(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<Any>>() {
+                override fun onNext(t: BaseResp<Any>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        dismiss()
+                        ActivityUtils.finishActivity(context1 as Activity)
+                        context1.startActivity<RegisterInfoActivity>()
+                    }
+                }
+
+            })
     }
 
     override fun show() {
