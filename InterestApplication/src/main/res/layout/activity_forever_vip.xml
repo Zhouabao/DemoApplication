@@ -72,7 +72,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/standardPeople"
-                tools:text="@string/find_standard_girl" />
+                tools:text="@string/tobe_vip_close_touch" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/vipChargeCl"

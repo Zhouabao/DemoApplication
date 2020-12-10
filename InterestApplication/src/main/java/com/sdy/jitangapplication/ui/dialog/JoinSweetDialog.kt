@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.JoinSweetEvent
 import com.sdy.jitangapplication.model.SweetProgressBean
 import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
+import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyUploadActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.dialog_join_sweet.*
 import org.greenrobot.eventbus.EventBus
@@ -161,7 +162,9 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 dismiss()
             }
             verifyNowBtn2.clickWithTrigger {
-                context1.startActivity<SweetHeartVerifyActivity>()
+                context1.startActivity<SweetHeartVerifyUploadActivity>("type" to SweetHeartVerifyUploadActivity.TYPE_PROFESSION)
+
+//                context1.startActivity<SweetHeartVerifyActivity>()
                 dismiss()
             }
 

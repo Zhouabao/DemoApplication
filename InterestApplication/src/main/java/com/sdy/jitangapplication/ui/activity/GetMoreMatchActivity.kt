@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -51,13 +50,21 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
 
 
         if (moreMatch != null) {
-            SpanUtils.with(t2)
-                .append(getString(R.string.inapp, moreMatch!!.city_name))
-                .append("${moreMatch!!.people_amount}")
-                .setBold()
-                .setForegroundColor(resources.getColor(R.color.colorOrange))
-                .append(getString(R.string.count_filter,moreMatch!!.gender_str))
-                .create()
+            t2.text = getString(
+                R.string.inapp,
+                if (UserManager.getGender() == 1) {
+                    getString(R.string.better_woman)
+                } else {
+                    getString(R.string.better_man)
+                },
+                moreMatch!!.city_name,
+                moreMatch!!.people_amount,
+                if (UserManager.getGender() == 1) {
+                    getString(R.string.attractive_women)
+                } else {
+                    getString(R.string.elite_men)
+                }
+            )
         }
 
         nextStep.setOnClickListener(this)

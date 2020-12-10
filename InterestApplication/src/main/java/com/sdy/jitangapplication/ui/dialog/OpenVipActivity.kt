@@ -126,7 +126,15 @@ class OpenVipActivity : BaseActivity() {
                         .setFontSize(16, true)
                         .create()
                     standardPeople.text =
-                        getString(R.string.sugar_girl_count, moreMatch?.people_amount)
+                        getString(
+                            R.string.sugar_girl_count,
+                            moreMatch?.people_amount,
+                            if (UserManager.getGender() == 1) {
+                                getString(R.string.attractive_women)
+                            } else {
+                                getString(R.string.elite_men)
+                            }
+                        )
                     standardPeople.dance()
 
                 } else {
@@ -144,6 +152,7 @@ class OpenVipActivity : BaseActivity() {
                         .setFontSize(22, true)
                         .setBold()
                         .create()
+                    moreInfoText.text = getString(R.string.off_single_in_sugartown)
                     moreInfoText.isVisible = false
                     standardPeople.dance()
                 }

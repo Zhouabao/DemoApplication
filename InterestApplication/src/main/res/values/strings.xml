@@ -391,8 +391,7 @@
     <string name="vip_verify">高端精英认证</string>
     <string name="join_now">立即加入</string>
     <string name="why_pay">为什么要付费</string>
-    <string name="inapp">在%1$s找到符合标准的</string>
-    <string name="count_filter">个待筛选%1$s用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
+    <string name="inapp">为你找到更优质的%1$s\n在%2$s找到%3$d个%4$s待筛选\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
     <string name="count_filter_user">个待筛选用户</string>
     <string name="get_quick_match">获取更精准配对</string>
     <string name="input_knoe_channel">请先填写了解的渠道奥</string>
@@ -665,10 +664,10 @@
     <string name="verify_condition">认证条件：</string>
     <string name="see_normal">查看示例</string>
     <string name="sweet_wealth_title">资产认证</string>
-    <string name="sweet_girl_title">甜心圈认证</string>
+    <string name="sweet_girl_title">恋爱圈认证</string>
     <string name="need_commit_house">需提交房产</string>
     <string name="bigger_than_200">大于200平米</string>
-    <string name="approve__ability">的证明\n房产认证是个人实力的表现\n认证成功后可直接加入甜心圈，提高交友效率</string>
+    <string name="approve__ability">的证明\n房产认证是个人实力的表现\n认证成功后可直接加入恋爱圈，提高交友效率</string>
     <string name="chest_size">胸围需</string>
     <string name="bigger_than_c">大于C罩杯\n</string>
     <string name="to_show_magic">身材是您个人魅力的体现\n认证后关注度会大幅提高</string>
@@ -789,7 +788,7 @@
     <string name="chatup_chance_run_up">今日免费聊天机会已用完</string>
     <string name="unlock_chat_left">解锁聊天 （ %1$d 糖果）</string>
     <string name="cannot_contact_in_level">当前会员等级无法与她联系</string>
-    <string name="avoid_trouble_with_normal_vip">因避免甜心圈用户被骚扰\n普通会员不能直接与甜心圈用户建立联系</string>
+    <string name="avoid_trouble_with_normal_vip">因避免恋爱圈用户被骚扰\n普通会员不能直接与恋爱圈用户建立联系</string>
     <string name="tobe_gold_to_contact_her">升级黄金会员，立即与她取得联系</string>
     <string name="her_level_privay">她设置了等级权限</string>
     <string name="she_allow_gold_contact_her">她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她</string>
@@ -863,13 +862,13 @@
     <string name="only_show_verify_user">仅显示认证用户</string>
     <string name="open_after_verify">通过认证后可开启该筛选</string>
     <string name="show_me">向我展示</string>
-    <string name="meet_any_one_come_sweet">满足下列任意一个条件即可进入甜心圈</string>
+    <string name="meet_any_one_come_sweet">满足下列任意一个条件即可进入恋爱圈</string>
     <string name="charge_more_than">充值金额大于 %1$s</string>
     <string name="pass_wealth_verify">通过资产认证</string>
     <string name="veriy_pass">认证通过</string>
-    <string name="reach_auto_in_sweet">达成要求自动进入甜心圈</string>
+    <string name="reach_auto_in_sweet">达成要求自动进入恋爱圈</string>
     <string name="upload_verify_video">上传认证视频</string>
-    <string name="verify_figure_or_job">认证职业或身材</string>
+    <string name="verify_figure_or_job">认证职业</string>
     <string name="login_off_tip">您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n 您即将离开积糖，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用</string>
     <string name="login_off_success">注销成功</string>
     <string name="login_off_success_content">15天内登录可取消注销\n过期数据将全部清空且不可恢复</string>
@@ -886,11 +885,11 @@
     <string name="share_wechat_friend">微信好友</string>
     <string name="share_wechat_zone">朋友圈</string>
     <string name="share_sina">微博</string>
-    <string name="tobe_vip_close_touch">成为会员和她们亲密接触</string>
+    <string name="tobe_vip_close_touch">成为会员立即脱单</string>
     <string name="thaey_are_waitinf_for_you">她们在翘首期待你的加入</string>
     <string name="total_has">共有</string>
-    <string name="sugar_girl_count">%1$d个糖宝女孩</string>
-    <string name="find_standard_girl">在%1$s找到符合标准的</string>
+    <string name="sugar_girl_count">%1$d个符合您择偶条件的%2$s</string>
+    <string name="find_standard_girl">为您在%1$s精选出</string>
     <string name="person_cpunt">%1$s名%2$s</string>
     <string name="tobe_normal_vip">成为会员</string>
     <string name="free_chat_after_chat">成为会员无限畅聊</string>
@@ -982,8 +981,8 @@
     <string name="see_her_video_introduce">查看她的视频介绍</string>
     <string name="tobe_vip_sha_add_video">她添加了视频介绍，成为黄金会员查看更真实的她</string>
     <string name="unlock_her_introduce_after_vip">成为黄金会员，解锁她的视频介绍</string>
-    <string name="why_pay1">保证平台内女生全面真实（每天人工审核）</string>
-    <string name="why_pay2">杜绝低端用户骚扰女生（未认证用户无法骚扰女生）</string>
+    <string name="why_pay1">保证平台内女生全面真实，平台均为人工全天候审核</string>
+    <string name="why_pay2">杜绝骚扰，未认证用户无法骚扰有真正婚恋</string>
     <string name="why_pay3">提升社交效率（认证加入成为精英，女生主动撩你）</string>
     <string name="i_know1">我已知晓</string>
     <string name="exchange_money">兑换金额:</string>
@@ -1021,7 +1020,7 @@
     <string name="publish_ing">正在发布</string>
     <string name="empty_dating">什么也没有</string>
     <string name="later_see">一会儿再回来看看吧</string>
-    <string name="tab_sweet">甜心圈</string>
+    <string name="tab_sweet">恋爱圈</string>
     <string name="choiceness">精选</string>
     <string name="someone_zan_your_square">%1$s 赞了你的动态</string>
     <string name="someone_comment_your_square">%1$s 评论了你的动态</string>
@@ -1310,5 +1309,11 @@
     <string name="they_greet_you">她们和你打了招呼</string>
     <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
     <string name="tobe_vip">成为积糖会员</string>
+    <string name="better_woman">她</string>
+    <string name="better_man">他</string>
+    <string name="attractive_women">魅力女性</string>
+    <string name="elite_men">精英男士</string>
+    <string name="off_single_in_sugartown">进入积糖立即脱单</string>
+    <string name="why_pay_explain">精英认证是为了积糖更好的服务用户\n全面提升用户相亲交友体验</string>
 
 </resources>

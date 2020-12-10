@@ -391,8 +391,8 @@
     <string name="vip_verify">High-end Elite Certification</string>
     <string name="join_now">Join now</string>
     <string name="why_pay">Why need to pay?</string>
-    <string name="inapp">in %1$s , we found \t</string>
-    <string name="count_filter">\t qualified %1$s users to be screened\nWe\'ll ask you some more questions\nProvide you with more accurate matching requirements</string>
+
+    <string name="inapp">Find more and better %1$s for you \nThere\'re %3$d %4$s to screen in %2$s \nWe\'ll ask you some more questions\nProvide you with more accurate matching requirements</string>
     <string name="count_filter_user">\t users to be screened</string>
     <string name="get_quick_match">Obtain more accurate matches</string>
     <string name="input_knoe_channel">Please fill in the way you know SugarTown first</string>
@@ -887,11 +887,11 @@
     <string name="share_wechat_friend">Wechat friends</string>
     <string name="share_wechat_zone">Moments</string>
     <string name="share_sina">Weibo</string>
-    <string name="tobe_vip_close_touch">To be a member of SugarTown and get in touch with them</string>
+    <string name="tobe_vip_close_touch">Become a member immediately off the list</string>
     <string name="thaey_are_waitinf_for_you">They\'re waiting for you</string>
     <string name="total_has">in common</string>
     <string name="find_standard_girl">At %1$s</string>
-    <string name="sugar_girl_count">%1$d verified sugar babies nearby</string>
+    <string name="sugar_girl_count">%1$d verified %2$s nearby</string>
     <string name="person_cpunt">%1$s %2$s</string>
     <string name="tobe_normal_vip">Get membership start dating</string>
     <string name="free_chat_after_chat">To be a member of SugarTown having Infinite chat</string>
@@ -1312,4 +1312,10 @@
     <string name="they_greet_you">她们和你打了招呼</string>
     <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
     <string name="tobe_vip">成为积糖会员</string>
+    <string name="better_woman">她</string>
+    <string name="better_man">他</string>
+    <string name="attractive_women">attractive women</string>
+    <string name="elite_men">elite men</string>
+    <string name="off_single_in_sugartown">Enter the sugar immediately off the single</string>
+    <string name="why_pay_explain">Elite certification is to serve users better\nComprehensively improve the user dating experience</string>
 </resources>
