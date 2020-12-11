@@ -1303,6 +1303,16 @@ interface Api {
 
     /**
      *
+     * 验证解锁聊天
+     *
+     */
+    @FormUrlEncoded
+    @POST("Home/fakeChatupList${Constants.END_BASE_URL}")
+    fun fakeChatupList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ArrayList<VisitChatBean>>>
+
+
+    /**
+     *
      * 我邀请他人注册
      *
      */

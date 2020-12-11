@@ -89,7 +89,7 @@ class ChatUpOpenPtVipDialog(
                     null
                 )
                 SpanUtils.with(chatupContact)
-                    .append(context1.getString(R.string.phone))
+                    .append(context1.getString(R.string.contact_phone))
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
                     .append("\t${chatUpBean.contact}")
                     .setForegroundColor(Color.parseColor("#FFFF6318"))
@@ -178,16 +178,14 @@ class ChatUpOpenPtVipDialog(
                     if (chatUpBean.avatar.isNotEmpty())
                         GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                     chatupUnlockChat.isVisible = false
-                    chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
+                    chatupTitle.text = context1.getString(R.string.chatup_is_chat_her)
                     openPtVipBtn.text = context1.getString(R.string.chatup_to_be_vip)
                     if (chatUpBean.plat_cnt > 0) {
-                        chatupTitle.text = context1.getString(R.string.chatup_is_chat_her)
                         chatupContent.text =
                             context1.getString(R.string.chatup_free_time_left, chatUpBean.plat_cnt)
                         openPtVipBtn.text = context1.getString(R.string.chatup_unlock)
 
                     } else {
-                        chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
                         chatupContent.text = context1.getString(R.string.chatup_chance_run_up)
                         openPtVipBtn.text =
                             context1.getString(R.string.unlock_chat_left, chatUpBean.chat_amount)
@@ -221,11 +219,11 @@ class ChatUpOpenPtVipDialog(
                         if (chatUpBean.avatar.isNotEmpty())
                             GlideUtil.loadCircleImg(context1, chatUpBean.avatar, chatupAvator)
                         openPtVipBtn.text = context1.getString(R.string.chatup_to_be_vip)
-                        chatupTitle.text = context1.getString(R.string.chatup_get_chance_title)
+                        chatupTitle.text = context1.getString(R.string.chatup_is_chat_her)
                         chatupUnlockChat.isVisible = true
                         if (chatUpBean.plat_cnt > 0) {
                             chatupContent.text =
-                                context1.getString(R.string.today_has, chatUpBean.plat_cnt)
+                                context1.getString(R.string.today_has, chatUpBean.chat_amount,chatUpBean.vip_normal_cnt)
                             chatupUnlockChat.text = context1.getString(R.string.chatup_unlock)
                         } else {
                             chatupContent.text = context1.getString(R.string.chat_cost_candy)

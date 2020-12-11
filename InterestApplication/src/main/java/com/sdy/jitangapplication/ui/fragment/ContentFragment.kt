@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.fragment
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
@@ -92,6 +94,39 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
     fun loadData() {
         initView()
+
+        if (!UserManager.isShowGuidePublish()) {
+            closeGuide.onClick {
+                guidePublishCl.isVisible = false
+            }
+            guidePublishCl.isVisible = true
+            val translationX = ObjectAnimator.ofFloat(
+                guidePublishCl,
+                "translationX",
+                0F,
+                SizeUtils.dp2px(10F).toFloat(),
+                0F
+            )
+            translationX.duration = 800
+            translationX.repeatCount = -1
+            translationX.start()
+            translationX.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    guidePublishCl.isVisible = false
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+        }
 
     }
 
@@ -228,6 +263,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        guidePublishCl.clearAnimation()
     }
 
 
@@ -353,8 +389,8 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
             if (event.context == MySquareFragment::class.java.simpleName) {
                 startActivity<PublishActivity>("from" to 2)
             } else {
-                activity!!.intent.setClass(activity!!, PublishActivity::class.java)
-                startActivity(activity!!.intent)
+                requireActivity().intent.setClass(requireActivity(), PublishActivity::class.java)
+                startActivity(requireActivity().intent)
             }
         }
     }

@@ -287,6 +287,7 @@ data class ChatUpBean(
     var isplatinum: Boolean = false,
     var ishoney: Boolean = false,
     var isdirect: Boolean = false, //是否是直连卡
+    var vip_normal_cnt: Int = 0, //开通vip获得的聊天次数
     var private_chat_btn: Boolean = false  //
 
 

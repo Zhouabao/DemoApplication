@@ -141,12 +141,38 @@
             android:overScrollMode="never" />
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/guidePublishCl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:visibility="gone"
+        android:layout_marginRight="81dp"
+        android:layout_marginBottom="37dp">
+
+        <ImageView
+            android:id="@+id/closeGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_close_transparent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/icon_guide_publish"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/closeGuide" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ImageView
         android:id="@+id/publishSquareBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="39dp"
+        android:layout_marginBottom="68dp"
         android:src="@drawable/icon_publish_square" />
 </FrameLayout>

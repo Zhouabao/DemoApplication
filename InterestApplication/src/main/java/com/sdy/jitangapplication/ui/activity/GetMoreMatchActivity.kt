@@ -139,6 +139,11 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        myAvator.clearAnimation()
+    }
+
     override fun scrollToFinishActivity() {
 
     }

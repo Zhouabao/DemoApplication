@@ -221,3 +221,13 @@ data class BatchGreetBean(
     var order_id: String = "",
     var msg: String = ""
 )
+
+
+/**
+ * 游客打招呼列表
+ */
+data class VisitChatBean(
+    var accid: String = "",
+    var avatar: String = "",
+    var nickname: String = ""
+)

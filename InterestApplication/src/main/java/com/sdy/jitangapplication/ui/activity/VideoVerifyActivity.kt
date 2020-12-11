@@ -282,6 +282,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
 
     }
 
+
     //开始按下按钮动画
     private fun startButtonAnimation() {
         captureButton.setImageResource(R.drawable.icon_video_verify_pause)
@@ -481,6 +482,7 @@ class VideoVerifyActivity : BaseMvpActivity<VideoVerifyPresenter>(), VideoVerify
     override fun onDestroy() {
         super.onDestroy()
         camera_preview.release(null)
+        view1.clearAnimation()
         EventBus.getDefault().unregister(this)
     }
 

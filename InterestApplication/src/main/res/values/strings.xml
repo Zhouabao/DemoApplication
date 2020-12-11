@@ -340,7 +340,7 @@
     <string name="input_dating_content">填写活动具体内容</string>
     <string name="dating_place">活动地点</string>
     <string name="choose_dating_place">选择位置</string>
-    <string name="dating_person">活动对象</string>
+    <string name="dating_person">期望活动对象</string>
     <string name="choose_dating_type">选择意向类型</string>
     <string name="dating_cost">费用开支</string>
     <string name="choose_dating_cost_way">选择买单方式</string>
@@ -570,8 +570,8 @@
     <string name="dont_show_location">不显示位置</string>
     <string name="choose_publish_location">选择发布位置</string>
     <string name="choose_hot_topic">选择热门话题</string>
-    <string name="dating_publish_tip">活动发布提示</string>
-    <string name="dating_publish_warming">感谢您成为积糖的轻奢约会社区的一员，这里有一些使用须知希望您能记住并与其他用户达成一致</string>
+    <string name="dating_publish_tip">相亲活动发布提示</string>
+    <string name="dating_publish_warming">感谢您成为积糖相亲交友社区的一员，这里是关于发布相亲活动的一些使用须知，确认后即可发布活动</string>
     <string name="dating_publish_reliable">发布的活动真实可信</string>
     <string name="dating_publish_reliable_content">活动真实性保证且有明确意向，不以活动目的导流</string>
     <string name="dating_publish_legal">发布内容不违规</string>
@@ -781,12 +781,12 @@
     <string name="please_change_real_avatar">请更换真人头像</string>
     <string name="send_to">送给</string>
     <string name="chatup_get_chance_title">获得聊天机会</string>
-    <string name="chatup_to_be_vip">成为黄金会员，免费更多聊天</string>
+    <string name="chatup_to_be_vip">成为黄金会员，获取免费机会</string>
     <string name="chatup_is_chat_her">要给她打个招呼吗</string>
-    <string name="chatup_free_time_left">今日还可免费解锁 %1$d 次聊天</string>
+    <string name="chatup_free_time_left">今日还有%1$d次打招呼的机会</string>
     <string name="chatup_unlock">解锁聊天</string>
-    <string name="chatup_chance_run_up">今日免费聊天机会已用完</string>
-    <string name="unlock_chat_left">解锁聊天 （ %1$d 糖果）</string>
+    <string name="chatup_chance_run_up">今日免费打招呼的机会已用完</string>
+    <string name="unlock_chat_left">解锁聊天 （%1$d糖果）</string>
     <string name="cannot_contact_in_level">当前会员等级无法与她联系</string>
     <string name="avoid_trouble_with_normal_vip">因避免恋爱圈用户被骚扰\n普通会员不能直接与恋爱圈用户建立联系</string>
     <string name="tobe_gold_to_contact_her">升级黄金会员，立即与她取得联系</string>
@@ -794,7 +794,7 @@
     <string name="she_allow_gold_contact_her">她仅允许黄金会员联系她\n立即成为黄金会员，不要错过她</string>
     <string name="tobe_gold_approve_power">成为黄金会员，证明实力解锁关系</string>
     <string name="chat_cost_candy">聊天需要消耗糖果，向对方表达诚意</string>
-    <string name="today_has">今日还有 %1$d 次聊天机会</string>
+    <string name="today_has">为表达交友诚意需向对方赠送%1$d糖果，您也可以充值会员每日获取%2$d次免费聊天机会</string>
     <string name="is_unlock_contact">是否解锁她的联系方式</string>
     <string name="today_free_chat">您当日还可免费解锁</string>
     <string name="time_contact">次联系方式</string>
@@ -1315,5 +1315,6 @@
     <string name="elite_men">精英男士</string>
     <string name="off_single_in_sugartown">进入积糖立即脱单</string>
     <string name="why_pay_explain">精英认证是为了积糖更好的服务用户\n全面提升用户相亲交友体验</string>
+    <string name="more_funny_with_description">生动有趣的描述会让你的活动更有吸引力哦</string>
 
 </resources>

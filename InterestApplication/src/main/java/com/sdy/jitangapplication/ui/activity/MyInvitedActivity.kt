@@ -147,4 +147,9 @@ class MyInvitedActivity : BaseMvpActivity<MyInvitedPresenter>(), MyInvitedView, 
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        rewardsMoney.clearAnimation()
+    }
+
 }

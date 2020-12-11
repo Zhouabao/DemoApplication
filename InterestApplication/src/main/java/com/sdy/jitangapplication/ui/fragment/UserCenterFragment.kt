@@ -496,6 +496,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     override fun onDestroyView() {
         super.onDestroyView()
+        noticeSettingIv.clearAnimation()
+
     }
 }
 

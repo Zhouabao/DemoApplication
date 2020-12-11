@@ -202,6 +202,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (inputPanel != null) {
             inputPanel.onDestroy();
         }
+        giftIcon.clearAnimation();
 
     }
 

@@ -313,7 +313,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@null"
                 android:gravity="top|left"
-                android:hint="@string/share_mood"
+                android:hint="@string/more_funny_with_description"
                 android:maxLength="150"
                 android:textColor="@color/colorBlack19"
                 android:textColorHint="#ffc1c2c8"

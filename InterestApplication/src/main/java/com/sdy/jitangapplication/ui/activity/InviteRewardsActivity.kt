@@ -242,4 +242,9 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
             CommonFunction.toast(getString(R.string.link_has_copy))
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        rewardsMoney.clearAnimation()
+    }
 }

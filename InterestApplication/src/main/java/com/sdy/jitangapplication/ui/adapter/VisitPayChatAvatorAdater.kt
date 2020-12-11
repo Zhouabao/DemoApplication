@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.VisitChatBean
 import kotlinx.android.synthetic.main.item_user_center_visit_cover.view.*
 
 /**
@@ -14,9 +15,9 @@ import kotlinx.android.synthetic.main.item_user_center_visit_cover.view.*
  *    desc   : 个人中心的动态封面适配器
  *    version: 1.0
  */
-class VisitPayChatAvatorAdater : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_user_center_visit_cover) {
+class VisitPayChatAvatorAdater : BaseQuickAdapter<VisitChatBean, BaseViewHolder>(R.layout.item_user_center_visit_cover) {
 
-    override fun convert(holder: BaseViewHolder, item: String) {
+    override fun convert(holder: BaseViewHolder, item: VisitChatBean) {
         val params = holder.itemView.visitCoverImg.layoutParams as RecyclerView.LayoutParams
         params.setMargins(if (holder.layoutPosition != 0) SizeUtils.dp2px(-15F) else 0, 0, 0, 0)
 
@@ -25,7 +26,7 @@ class VisitPayChatAvatorAdater : BaseQuickAdapter<String, BaseViewHolder>(R.layo
 
         holder.itemView.visitCoverImg.layoutParams = params
         //如果不是会员，就高斯模糊看过我的
-        GlideUtil.loadImg(mContext, item, holder.itemView.visitCoverImg)
+        GlideUtil.loadImg(mContext, item.avatar, holder.itemView.visitCoverImg)
 
     }
 

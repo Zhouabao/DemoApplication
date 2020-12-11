@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:background="@drawable/icon_sweet_man_detail_nobtn_bg"
         android:gravity="center_vertical"
-        android:text="豪车认证进入甜心圈"
+        android:text="豪车认证进入恋爱圈"
         android:textColor="#ffffcd52"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="parent"

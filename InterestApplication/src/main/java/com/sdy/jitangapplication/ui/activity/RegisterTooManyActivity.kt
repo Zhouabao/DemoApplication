@@ -32,7 +32,6 @@ class RegisterTooManyActivity : BaseActivity(), MediaPlayer.OnErrorListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_too_many)
         initView()
-        showVideoPreview()
     }
 
     private fun initView() {
@@ -49,29 +48,22 @@ class RegisterTooManyActivity : BaseActivity(), MediaPlayer.OnErrorListener {
 
     override fun onRestart() {
         super.onRestart()
-        showVideoPreview()
+        loginFlashLottie.playAnimation()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!videoPreview.isPlaying)
-            videoPreview.start()
+        loginFlashLottie.resumeAnimation()
     }
 
+    override fun onPause() {
+        super.onPause()
+        loginFlashLottie.pauseAnimation()
+    }
     override fun onDestroy() {
         super.onDestroy()
-        videoPreview.stopPlayback()
+        loginFlashLottie.cancelAnimation()
         timeRunTextView.stopTime()
-    }
-
-
-    private fun showVideoPreview() {
-        videoPreview.setVideoURI(Uri.parse("android.resource://com.sdy.jitangapplication/${R.raw.login_video}"))
-        videoPreview.setOnCompletionListener {
-            videoPreview.start()
-        }
-        videoPreview.setOnErrorListener(this)
-        videoPreview.start()
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {

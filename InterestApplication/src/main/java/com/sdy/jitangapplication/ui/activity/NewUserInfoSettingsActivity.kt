@@ -766,7 +766,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollUser.clearAnimation()
+    }
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnBack -> {

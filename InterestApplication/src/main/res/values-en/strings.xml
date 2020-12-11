@@ -796,7 +796,7 @@
     <string name="she_allow_gold_contact_her">She only allows Golden Member to contact her. \n To be Golden Member and don\'t miss her</string>
     <string name="tobe_gold_approve_power">To be Golden Member ,prove your economic strength,unlock relationship</string>
     <string name="chat_cost_candy">Chat will cost Candy to show sincerity to  her(him)</string>
-    <string name="today_has">%1$d free chat opportunities left today</string>
+    <string name="today_has">To show your sincerity in making friends, you need to give %1$d candies to each other. You can also recharge your membership and get %2$d free chat opportunities every day</string>
     <string name="is_unlock_contact">Unlock her contact info?</string>
     <string name="today_free_chat">You can unlock  XX today for free</string>
     <string name="time_contact"> contact info</string>
@@ -1318,4 +1318,5 @@
     <string name="elite_men">elite men</string>
     <string name="off_single_in_sugartown">Enter the sugar immediately off the single</string>
     <string name="why_pay_explain">Elite certification is to serve users better\nComprehensively improve the user dating experience</string>
+    <string name="more_funny_with_description">Vivid and interesting descriptions will make your activities more appealing</string>
 </resources>
