@@ -24,24 +24,27 @@ import com.sdy.jitangapplication.utils.UserManager
 class MySquarePresenter : BasePresenter<MySquareView>() {
 
     fun aboutMeSquareCandy(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .aboutMeSquareCandy(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
-                override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
-                    if (t.code == 200)
-                        mView.onGetSquareListResult(t.data, true)
-                    else
-                        mView.onGetSquareListResult(t.data, false)
+        addDisposable(
+            RetrofitFactory.instance.create(Api::class.java)
+                .aboutMeSquareCandy(UserManager.getSignParams(params))
+                .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
+                    override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
+                        if (t.code == 200)
+                            mView.onGetSquareListResult(t.data, true)
+                        else
+                            mView.onGetSquareListResult(t.data, false)
 
-                }
+                    }
 
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onGetSquareListResult(null, false)
-                }
-            })
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else
+                            mView.onGetSquareListResult(null, false)
+                    }
+                })
+        )
+
     }
 
 
@@ -52,39 +55,42 @@ class MySquarePresenter : BasePresenter<MySquareView>() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(context) }
 
     fun checkBlock() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .checkBlock(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onStart() {
-                    if (!loadingDialog.isShowing)
-                        loadingDialog.show()
-                }
-
-                override fun onNext(t: BaseResp<Any?>) {
-                    super.onNext(t)
-                    if (loadingDialog.isShowing)
-                        loadingDialog.dismiss()
-                    if (t.code == 200)
-                        mView.onCheckBlockResult(true)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onCheckBlockResult(false)
+        addDisposable(
+            RetrofitFactory.instance.create(Api::class.java)
+                .checkBlock(UserManager.getSignParams())
+                .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                    override fun onStart() {
+                        if (!loadingDialog.isShowing)
+                            loadingDialog.show()
                     }
-                }
 
-                override fun onError(e: Throwable?) {
-                    if (loadingDialog.isShowing)
-                        loadingDialog.dismiss()
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                        mView.onCheckBlockResult(false)
+                    override fun onNext(t: BaseResp<Any?>) {
+                        super.onNext(t)
+                        if (loadingDialog.isShowing)
+                            loadingDialog.dismiss()
+                        if (t.code == 200)
+                            mView.onCheckBlockResult(true)
+                        else if (t.code == 403) {
+                            UserManager.startToLogin(context as Activity)
+                        } else {
+                            CommonFunction.toast(t.msg)
+                            mView.onCheckBlockResult(false)
+                        }
                     }
-                }
-            })
+
+                    override fun onError(e: Throwable?) {
+                        if (loadingDialog.isShowing)
+                            loadingDialog.dismiss()
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                            mView.onCheckBlockResult(false)
+                        }
+                    }
+                })
+        )
+
     }
 
 

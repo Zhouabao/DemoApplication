@@ -23,7 +23,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
      */
     fun squareEliteList(params: HashMap<String, Any>) {
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(RetrofitFactory.instance.create(Api::class.java)
                 .thresholdSquareEliteList(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
                     override fun onStart() {
@@ -48,8 +48,10 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                         }
                     }
                 })
+            )
+
         } else {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(RetrofitFactory.instance.create(Api::class.java)
                 .squareEliteList(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
                     override fun onStart() {
@@ -74,6 +76,8 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                         }
                     }
                 })
+            )
+
         }
 
     }
@@ -85,7 +89,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(context) }
 
     fun checkBlock(banner: SquareBannerBean) {
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
@@ -118,6 +122,8 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                     }
                 }
             })
+        )
+
     }
 
 }

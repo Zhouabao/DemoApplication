@@ -528,6 +528,13 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideWechat", false)
     }
 
+    fun saveShowGuideWechat(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideWechat", isShow)
+    }
+
+
+
+
     /**
      * 是否是列表形式展示
      */
@@ -562,10 +569,6 @@ object UserManager {
 
     fun saveShowSweetHeartNew(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("sweetHeartNew", isShow)
-    }
-
-    fun saveShowGuideWechat(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideWechat", isShow)
     }
 
 

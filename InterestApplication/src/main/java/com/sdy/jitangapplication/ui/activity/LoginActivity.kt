@@ -96,12 +96,12 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         SpanUtils.with(userAgreement)
             .append(getString(R.string.login_presents_you_agree))
             .append(getString(R.string.user_protocol))
-            .setClickSpan(Color.parseColor("#FF6796FA"),true) {
+            .setClickSpan(Color.parseColor("#FF6796FA"), true) {
                 startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
             }
             .append(getString(R.string.login_tip_and))
             .append(getString(R.string.privacy_protocol))
-            .setClickSpan(Color.parseColor("#FF6796FA"),true) {
+            .setClickSpan(Color.parseColor("#FF6796FA"), true) {
                 startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
             }
             .append(getString(R.string.privacy_for_share))
@@ -160,6 +160,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
         if (data != null) {
+            onekeyLoginBtn.isEnabled = true
             UserManager.registerFileBean = data
             UserManager.overseas = data.region == 2
 //            UserManager.overseas = data.region == 2
@@ -172,6 +173,9 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                     touristBtn.isVisible = false
                 }
             }
+        } else {
+            onekeyLoginBtn.isEnabled = false
+            mPresenter.getRegisterProcessType()
         }
 
     }
@@ -207,11 +211,12 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_GOOGLE_SIGN_IN) {
+            mPresenter.loading.dismiss()
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 if (task != null && task.isSuccessful) {
                     val account = task.getResult(ApiException::class.java)!!
-                    firebaseAuthWithGoogle(account.idToken!!)
+//                    firebaseAuthWithGoogle(account.idToken!!)
                     Log.e(
                         TAG1,
                         "google---${account},idToken = ${account.idToken},id = ${account.id}"
@@ -220,7 +225,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                         account.idToken!!,
                         VerifyCodeActivity.TYPE_LOGIN_GOOGLE
                     )
-                    mPresenter.loading.dismiss()
                 }
             } catch (e: ApiException) {
                 Log.e(TAG1, "google error---${e}")
@@ -264,14 +268,14 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         //初始化gso
         val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestId().requestProfile()
+//            .requestId().requestProfile()
             .requestIdToken(getString(R.string.server_client_id))
             .build()
         //初始化google登录实例，activity为当前activity
         val googleSignInClient = GoogleSignIn.getClient(this, options)
         val intent = googleSignInClient.signInIntent
-        startActivityForResult(intent, RC_GOOGLE_SIGN_IN)
         mPresenter.loading.show()
+        startActivityForResult(intent, RC_GOOGLE_SIGN_IN)
 //        }
     }
 

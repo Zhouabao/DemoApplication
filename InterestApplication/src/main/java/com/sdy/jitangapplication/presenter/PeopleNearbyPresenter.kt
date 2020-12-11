@@ -31,7 +31,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
     fun nearlyIndex(params: HashMap<String, Any>, type: Int, firstLoad: Boolean) {
         //游客模式则提醒登录
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(RetrofitFactory.instance.create(Api::class.java)
                 .thresholdIndex(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
                     override fun onStart() {
@@ -60,10 +60,12 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                             mView.nearlyIndexResult(false, null)
                     }
                 })
+            )
+
         } else
             when (type) {
                 PeopleNearbyFragment.TYPE_RECOMMEND -> {
-                    RetrofitFactory.instance.create(Api::class.java)
+                    addDisposable(RetrofitFactory.instance.create(Api::class.java)
                         .recommendIndex(UserManager.getSignParams(params))
                         .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
                             override fun onStart() {
@@ -89,9 +91,11 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                                     mView.nearlyIndexResult(false, null)
                             }
                         })
+                    )
+
                 }
                 PeopleNearbyFragment.TYPE_SAMECITY -> {
-                    RetrofitFactory.instance.create(Api::class.java)
+                    addDisposable(RetrofitFactory.instance.create(Api::class.java)
                         .theSameCity(UserManager.getSignParams(params))
                         .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
                             override fun onNext(t: BaseResp<NearBean?>) {
@@ -107,9 +111,11 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                                     mView.nearlyIndexResult(false, null)
                             }
                         })
+                    )
+
                 }
-                PeopleNearbyFragment.TYPE_SWEET_HEART-> {
-                    RetrofitFactory.instance.create(Api::class.java)
+                PeopleNearbyFragment.TYPE_SWEET_HEART -> {
+                    addDisposable(RetrofitFactory.instance.create(Api::class.java)
                         .indexList(UserManager.getSignParams(params))
                         .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
                             override fun onNext(t: BaseResp<NearBean?>) {
@@ -125,6 +131,8 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                                     mView.nearlyIndexResult(false, null)
                             }
                         })
+                    )
+
                 }
             }
 
@@ -135,7 +143,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
      * 获取今日缘分
      */
     fun todayRecommend(firstLoad: Boolean) {
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(RetrofitFactory.instance.create(Api::class.java)
             .todayRecommend(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<TodayFateBean?>>() {
                 override fun onStart() {
@@ -155,13 +163,15 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                 }
 
             })
+        )
+
     }
 
     /**
      * 男性充值加入甜心圈
      */
     fun joinSweetApply() {
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(RetrofitFactory.instance.create(Api::class.java)
             .joinSweetApply(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>() {
                 override fun onStart() {
@@ -169,7 +179,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
-                    mView.joinSweetApplyResult(t.code==200)
+                    mView.joinSweetApplyResult(t.code == 200)
                 }
 
                 override fun onError(e: Throwable?) {
@@ -177,5 +187,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                 }
 
             })
+        )
+
     }
 }

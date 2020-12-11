@@ -16,6 +16,7 @@ import com.kotlin.base.widgets.DefaultTextWatcher
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.CustomClickListener
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -25,8 +26,8 @@ import rx.schedulers.Schedulers
 /*
     扩展Observable执行
  */
-public fun <T> Observable<T>.excute(subscriber: BaseSubscriber<T>) {
-    this.subscribeOn(Schedulers.io())
+public fun <T> Observable<T>.excute(subscriber: BaseSubscriber<T>) :Subscription{
+   return this.subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(subscriber)
 }

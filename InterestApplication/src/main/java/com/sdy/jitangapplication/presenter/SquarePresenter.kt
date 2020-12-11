@@ -29,7 +29,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
         firstIn: Boolean = false
     ) {
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(  RetrofitFactory.instance.create(Api::class.java)
                 .thresholdSquareList(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                     override fun onStart() {
@@ -54,9 +54,10 @@ class SquarePresenter : BasePresenter<SquareView>() {
                             mView.onGetSquareListResult(null, false, isRefresh)
                         }
                     }
-                })
+                }))
+
         } else {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(    RetrofitFactory.instance.create(Api::class.java)
                 .squareNewestLists(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                     override fun onStart() {
@@ -81,7 +82,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
                             mView.onGetSquareListResult(null, false, isRefresh)
                         }
                     }
-                })
+                }))
+
         }
     }
 

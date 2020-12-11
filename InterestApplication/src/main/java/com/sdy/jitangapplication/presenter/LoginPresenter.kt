@@ -27,15 +27,17 @@ class LoginPresenter : BasePresenter<LoginView>() {
      * 获取登录配置开关
      */
     fun getRegisterProcessType() {
-        RetrofitFactory.instance
-            .create(Api::class.java)
-            .getRegisterProcessType()
-            .excute(object : BaseSubscriber<BaseResp<RegisterFileBean?>>(mView) {
-                override fun onNext(t: BaseResp<RegisterFileBean?>) {
-                    super.onNext(t)
-                    mView.onGetRegisterProcessType(t.data)
-                }
-            })
+        addDisposable(
+            RetrofitFactory.instance
+                .create(Api::class.java)
+                .getRegisterProcessType()
+                .excute(object : BaseSubscriber<BaseResp<RegisterFileBean?>>(mView) {
+                    override fun onNext(t: BaseResp<RegisterFileBean?>) {
+                        super.onNext(t)
+                        mView.onGetRegisterProcessType(t.data)
+                    }
+                }))
+
     }
 
 

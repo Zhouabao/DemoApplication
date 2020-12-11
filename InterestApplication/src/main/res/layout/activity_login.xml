@@ -45,6 +45,7 @@
             android:textColor="#191919"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:enabled="false"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/touristBtn"
             app:layout_constraintLeft_toLeftOf="parent"

@@ -131,6 +131,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 override fun onClick(dialog: Dialog) {
                     NIMClient.getService(AuthService::class.java).logout()
                     UserManager.startToLogin(this@SettingsActivity)
+                    dialog.cancel()
                 }
 
             })

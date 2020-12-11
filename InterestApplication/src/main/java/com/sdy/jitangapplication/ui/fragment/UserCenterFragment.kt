@@ -164,13 +164,25 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles by lazy { arrayOf(getString(R.string.tab_square), getString(R.string.tab_dating), getString(
-        R.string.tab_label)) }
+    private val titles by lazy {
+        arrayOf(
+            getString(R.string.tab_square), getString(R.string.tab_dating), getString(
+                R.string.tab_label
+            )
+        )
+    }
 
+
+    override fun onStop() {
+        super.onStop()
+        noticeSettingIv.clearAnimation()
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+
     }
 
     private fun initData() {
@@ -237,7 +249,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
-                    noticeSettingIv.isVisible = false
+                    if (noticeSettingIv != null)
+                        noticeSettingIv.isVisible = false
                     UserManager.saveShowGuideWechat(true)
                 }
 
@@ -249,8 +262,6 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
 
             })
             trans.start()
-        } else {
-            noticeSettingIv.isVisible = false
         }
     }
 
@@ -410,7 +421,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
                 startActivity<MyCandyActivity>()
             }
             //微信推送设置提醒
-            R.id.noticeSettingIv->{
+            R.id.noticeSettingIv -> {
                 startActivity<NotificationActivity>()
             }
 
@@ -494,8 +505,5 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
 }
 
