@@ -52,4 +52,11 @@ abstract open class BaseMvpFragment<T : BasePresenter<*>> : BaseFragment(), Base
     override fun onError(text:String) {
         toast(text)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::mPresenter.isInitialized) {
+            mPresenter.detachView()
+        }
+    }
 }

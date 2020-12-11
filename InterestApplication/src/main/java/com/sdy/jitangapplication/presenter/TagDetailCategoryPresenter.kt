@@ -22,7 +22,7 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
      */
     fun squareTagInfo(params: HashMap<String, Any>) {
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable( RetrofitFactory.instance.create(Api::class.java)
                 .thresholdSquareTagInfo(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<TagSquareListBean?>>(mView) {
                     override fun onStart() {
@@ -46,9 +46,10 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
                             mView.onGetSquareRecommendResult(null, false)
                         }
                     }
-                })
+                }))
+
         } else
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(  RetrofitFactory.instance.create(Api::class.java)
                 .squareTagInfo(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<TagSquareListBean?>>(mView) {
                     override fun onStart() {
@@ -72,7 +73,8 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
                             mView.onGetSquareRecommendResult(null, false)
                         }
                     }
-                })
+                }))
+
     }
 
 
@@ -82,7 +84,7 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(context) }
 
     fun checkBlock() {
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
@@ -114,7 +116,8 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
                         mView.onCheckBlockResult(false)
                     }
                 }
-            })
+            }))
+
     }
 
 }

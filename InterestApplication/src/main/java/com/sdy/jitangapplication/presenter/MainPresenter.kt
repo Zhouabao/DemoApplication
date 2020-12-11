@@ -26,19 +26,21 @@ class MainPresenter : BasePresenter<MainView>() {
     fun msgList() {
         if (UserManager.touristMode)
             return
-        RetrofitFactory.instance.create(Api::class.java)
-            .msgList(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
-                override fun onNext(t: BaseResp<AllMsgCount?>) {
-                    if (t.code == 200) {
-                        mView.onMsgListResult(t.data)
+        addDisposable(
+            RetrofitFactory.instance.create(Api::class.java)
+                .msgList(UserManager.getSignParams())
+                .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
+                    override fun onNext(t: BaseResp<AllMsgCount?>) {
+                        if (t.code == 200) {
+                            mView.onMsgListResult(t.data)
+                        }
                     }
-                }
 
-                override fun onError(e: Throwable?) {
+                    override fun onError(e: Throwable?) {
 
-                }
-            })
+                    }
+                })
+        )
 
 
     }

@@ -21,7 +21,7 @@ class DatingPresenter : BasePresenter<DatingView>() {
      */
     fun getDatingList(page: Int, type_id: Int) {
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(RetrofitFactory.instance.create(Api::class.java)
                 .datingList(
                     UserManager.getSignParams(
                         hashMapOf(
@@ -49,8 +49,10 @@ class DatingPresenter : BasePresenter<DatingView>() {
                         }
                     }
                 })
+            )
+
         } else
-            RetrofitFactory.instance.create(Api::class.java)
+            addDisposable(RetrofitFactory.instance.create(Api::class.java)
                 .datingList(
                     UserManager.getSignParams(
                         hashMapOf(
@@ -79,6 +81,8 @@ class DatingPresenter : BasePresenter<DatingView>() {
                         }
                     }
                 })
+            )
+
     }
 
 

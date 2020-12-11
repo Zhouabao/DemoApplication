@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.tick_dialog_layout.*
  *    desc   :
  *    version: 1.0
  */
-class TickDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
+class TickDialog(var context1: Context) : Dialog(ActivityUtils.getTopActivity(), R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow()
@@ -40,7 +41,7 @@ class TickDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
 
     fun initview() {
         confirm.onClick {
-            UserManager.startToLogin(context1 as Activity)
+            UserManager.startToLogin(ActivityUtils.getTopActivity())
             dismiss()
         }
     }

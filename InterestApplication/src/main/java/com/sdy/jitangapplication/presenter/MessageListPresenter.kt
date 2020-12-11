@@ -31,7 +31,7 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
     fun messageCensus(param: HashMap<String, String>) {
         val params = UserManager.getBaseParams()
         params.putAll(param)
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable( RetrofitFactory.instance.create(Api::class.java)
             .messageCensus(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MessageListBean1?>>(mView) {
                 override fun onNext(t: BaseResp<MessageListBean1?>) {
@@ -48,7 +48,8 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
                     } else
                         mView.onError("")
                 }
-            })
+            }))
+
     }
 
 

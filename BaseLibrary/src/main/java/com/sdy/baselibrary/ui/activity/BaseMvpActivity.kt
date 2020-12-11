@@ -50,4 +50,11 @@ abstract open class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), Base
         ToastUtils.make().setGravity(Gravity.CENTER, 0, 0)
         toast(text)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::mPresenter.isInitialized) {
+            mPresenter.detachView()
+        }
+    }
 }

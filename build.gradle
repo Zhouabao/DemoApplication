@@ -14,8 +14,8 @@ buildscript {
     ext.rx_kotlin_version = '1.0.0'
     ext.rx_android_version = '1.2.1'
 
-    ext.ok_http_version = '3.4.1'
-    ext.retrofit_version = '2.1.0'
+    ext.ok_http_version = '4.9.0'
+    ext.retrofit_version = '2.9.0'
 
 
     ext.glide_version = "4.9.0"

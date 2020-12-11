@@ -21,27 +21,30 @@ import com.sdy.jitangapplication.utils.UserManager
 class MyDatingPresenter : BasePresenter<MyDatingView>() {
 
     fun myDating(){
-        RetrofitFactory.instance.create(Api::class.java)
-            .myDating(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<DatingBean>?>>(mView) {
+        addDisposable(
+            RetrofitFactory.instance.create(Api::class.java)
+                .myDating(UserManager.getSignParams())
+                .excute(object : BaseSubscriber<BaseResp<MutableList<DatingBean>?>>(mView) {
 
-                override fun onNext(t: BaseResp<MutableList<DatingBean>?>) {
-                    super.onNext(t)
-                    if (t.code == 200) {
-                        mView.onGetMyDatingResult(t.data)
-                    } else {
-                        mView.onGetMyDatingResult(t.data)
+                    override fun onNext(t: BaseResp<MutableList<DatingBean>?>) {
+                        super.onNext(t)
+                        if (t.code == 200) {
+                            mView.onGetMyDatingResult(t.data)
+                        } else {
+                            mView.onGetMyDatingResult(t.data)
+                        }
                     }
-                }
 
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onGetMyDatingResult(null)
+                    override fun onError(e: Throwable?) {
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onGetMyDatingResult(null)
+                        }
                     }
-                }
-            })
+                })
+        )
+
     }
 
 }

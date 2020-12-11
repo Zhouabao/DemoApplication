@@ -25,7 +25,7 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
         if (!checkNetWork()) {
             mView.onError("")
         }
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(RetrofitFactory.instance.create(Api::class.java)
             .myInfoCandy(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<UserInfoBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoBean?>) {
@@ -39,6 +39,9 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
                         mView.onGetMyInfoResult(null)
                 }
             })
+        )
+
+
     }
 
 }

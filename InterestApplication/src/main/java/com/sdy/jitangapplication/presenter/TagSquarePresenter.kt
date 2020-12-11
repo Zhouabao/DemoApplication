@@ -19,49 +19,55 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
      */
     fun getSquareList() {
         if (UserManager.touristMode) {
-            RetrofitFactory.instance.create(Api::class.java)
-                .thresholdSquareTagList(UserManager.getSignParams())
-                .excute(object : BaseSubscriber<BaseResp<MutableList<SquareTagBean>?>>(mView) {
+            addDisposable(
+                RetrofitFactory.instance.create(Api::class.java)
+                    .thresholdSquareTagList(UserManager.getSignParams())
+                    .excute(object : BaseSubscriber<BaseResp<MutableList<SquareTagBean>?>>(mView) {
 
-                    override fun onNext(t: BaseResp<MutableList<SquareTagBean>?>) {
-                        super.onNext(t)
-                        if (t.code == 200) {
-                            mView.onGetSquareTagResult(t.data, true)
-                        } else {
-                            mView.onGetSquareTagResult(t.data, false)
+                        override fun onNext(t: BaseResp<MutableList<SquareTagBean>?>) {
+                            super.onNext(t)
+                            if (t.code == 200) {
+                                mView.onGetSquareTagResult(t.data, true)
+                            } else {
+                                mView.onGetSquareTagResult(t.data, false)
+                            }
                         }
-                    }
 
-                    override fun onError(e: Throwable?) {
-                        if (e is BaseException) {
-                            TickDialog(context).show()
-                        } else {
-                            mView.onGetSquareTagResult(null, false)
+                        override fun onError(e: Throwable?) {
+                            if (e is BaseException) {
+                                TickDialog(context).show()
+                            } else {
+                                mView.onGetSquareTagResult(null, false)
+                            }
                         }
-                    }
-                })
+                    })
+            )
+
         } else
-            RetrofitFactory.instance.create(Api::class.java)
-                .squareTagList(UserManager.getSignParams())
-                .excute(object : BaseSubscriber<BaseResp<MutableList<SquareTagBean>?>>(mView) {
+            addDisposable(
+                RetrofitFactory.instance.create(Api::class.java)
+                    .squareTagList(UserManager.getSignParams())
+                    .excute(object : BaseSubscriber<BaseResp<MutableList<SquareTagBean>?>>(mView) {
 
-                    override fun onNext(t: BaseResp<MutableList<SquareTagBean>?>) {
-                        super.onNext(t)
-                        if (t.code == 200) {
-                            mView.onGetSquareTagResult(t.data, true)
-                        } else {
-                            mView.onGetSquareTagResult(t.data, false)
+                        override fun onNext(t: BaseResp<MutableList<SquareTagBean>?>) {
+                            super.onNext(t)
+                            if (t.code == 200) {
+                                mView.onGetSquareTagResult(t.data, true)
+                            } else {
+                                mView.onGetSquareTagResult(t.data, false)
+                            }
                         }
-                    }
 
-                    override fun onError(e: Throwable?) {
-                        if (e is BaseException) {
-                            TickDialog(context).show()
-                        } else {
-                            mView.onGetSquareTagResult(null, false)
+                        override fun onError(e: Throwable?) {
+                            if (e is BaseException) {
+                                TickDialog(context).show()
+                            } else {
+                                mView.onGetSquareTagResult(null, false)
+                            }
                         }
-                    }
-                })
+                    })
+            )
+
     }
 
 
@@ -72,7 +78,7 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
         val params = UserManager.getBaseParams()
         params["tag_id"] = tag_id
         params["type"] = type
-        RetrofitFactory.instance.create(Api::class.java)
+        addDisposable(   RetrofitFactory.instance.create(Api::class.java)
             .markTag(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
 
@@ -91,7 +97,8 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
                     } else
                         mView.onGetMarkTagResult(false)
                 }
-            })
+            }))
+
 
     }
 }
