@@ -79,7 +79,10 @@ class GooglePayUtils(
             .setType(purchaseType)
             .build()
         mBillingClient!!.querySkuDetailsAsync(params, object : SkuDetailsResponseListener {
-            override fun onSkuDetailsResponse(billingResult: BillingResult, skuDetailsList: MutableList<SkuDetails>?) {
+            override fun onSkuDetailsResponse(
+                billingResult: BillingResult,
+                skuDetailsList: MutableList<SkuDetails>?
+            ) {
                 Log.e(TAG, "onSkuDetailsResponse code = ${billingResult.responseCode}")
                 if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
                     onFail(context.getString(R.string.no_goods))
@@ -131,19 +134,25 @@ class GooglePayUtils(
         Log.e(TAG, "onPurchasesUpdated ")
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
+                Log.e(TAG, "Purchased product=$purchase")
                 //支付成功，去消费此次支付，支付成功后，不消费会自动退款
                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                    mListener?.onPaySuccess(purchase.purchaseToken)
                     //确认购买交易，不然三天后会退款给用户
                     if (!purchase.isAcknowledged) {
                         consumePurchase(purchase)
                     }
                 }
 
+
             }
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             mListener?.onUserCancel()
         } else {
-            mListener?.responseCode(context.getString(R.string.pay_fail), billingResult.responseCode)
+            mListener?.responseCode(
+                context.getString(R.string.pay_fail),
+                billingResult.responseCode
+            )
         }
     }
 
@@ -173,9 +182,10 @@ class GooglePayUtils(
                 TAG,
                 "onConsumeResponse code = ${billingResult.responseCode},msg = ${billingResult.debugMessage},purchaseToken = $purchaseToken"
             )
+
             // 消费成功  处理自己的流程，我选择先存入数据库
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                mListener?.onPaySuccess(purchase.purchaseToken)
+                mListener?.onConsumeSuccess(purchase)
             } else {
                 //消费失败，再次消费
                 // 消费失败,后面查询消费记录后再次消费，否则，就只能等待退款
@@ -250,7 +260,11 @@ class GooglePayUtils(
         //支付成功
         fun onPaySuccess(purchaseToken: String)
 
+        //消费失败
         fun onConsumeFail(purchase: Purchase)
+
+        //消费成功(最终支付成功)
+        fun onConsumeSuccess(purchase: Purchase)
 
         //用户取消购买流程引起的错误
         fun onUserCancel()

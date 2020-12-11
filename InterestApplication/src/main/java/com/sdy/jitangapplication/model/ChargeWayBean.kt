@@ -30,7 +30,10 @@ data class ChargeWayBeans(
     val isplatinum: Boolean = false,
     val platinum_save_str: String = "",
     val direct_save_str: String = "",
-    val platinum_vip_express: String = ""
+    val platinum_vip_express: String = "",
+    val experience_title: String = "",
+    val experience_amount: Int = 0,
+    val experience_time: String = ""
 )
 
 data class VipPowerBean(
@@ -175,10 +178,23 @@ data class PayBean(
 
 )
 
-data class TokenBean(
+data class PaypalTokenBean(
     var order_id: String = "",
     var clientoken: String = ""
 )
+
+data class GoogleTokenBean(
+    var acknowledgementState: Int = 0,
+    var consumptionState: Int = 0,
+    var developerPayload: String = "",
+    var kind: String = "",
+    var orderId: String = "",
+    var purchaseState: Int = 0,
+    var purchaseTimeMillis: String = "",
+    var purchaseType: Int = 0,
+    var regionCode: String = ""
+)
+
 
 data class Wechat(
     val `package`: String? = "",

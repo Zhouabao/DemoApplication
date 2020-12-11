@@ -39,10 +39,7 @@ import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.CloseRegVipEvent
 import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.googlepay.GooglePayUtils
-import com.sdy.jitangapplication.model.ChargeWayBean
-import com.sdy.jitangapplication.model.PayBean
-import com.sdy.jitangapplication.model.PaywayBean
-import com.sdy.jitangapplication.model.TokenBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
@@ -101,6 +98,10 @@ class ConfirmPayCandyDialog(
         }}"
         price.typeface = Typeface.createFromAsset(myContext.assets, "DIN_Alternate_Bold.ttf")
         close.onClick {
+            if (ActivityUtils.getTopActivity() is OpenVipActivity && UserManager.registerFileBean?.experience_state == true) {
+                // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                EventBus.getDefault().post(CloseRegVipEvent(false))
+            }
             dismiss()
         }
         wechatCl.onClick {
@@ -257,19 +258,13 @@ class ConfirmPayCandyDialog(
                                 false
                             )
                         } else if (TextUtils.equals(resultStatus, "6001")) {
+// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                            showAlert(
+                                myContext,
+                                myContext.getString(R.string.pay_cancel),
+                                false, true
+                            )
 
-                            if (ActivityUtils.getTopActivity() is OpenVipActivity && UserManager.registerFileBean?.experience_state == true) {
-                                // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                                EventBus.getDefault().post(CloseRegVipEvent(false))
-                                dismiss()
-                            } else {
-                                // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                                showAlert(
-                                    myContext,
-                                    myContext.getString(R.string.pay_cancel),
-                                    false
-                                )
-                            }
 
                         } else {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
@@ -313,16 +308,19 @@ class ConfirmPayCandyDialog(
         GooglePayUtils(myContext, order_id,
             mListener = object : GooglePayUtils.OnPurchaseCallback {
                 override fun onPaySuccess(purchaseToken: String) {
-                    showAlert(myContext, myContext.getString(R.string.pay_success), true)
+                    androidCheck(order_id, purchaseToken)
                 }
 
                 override fun onConsumeFail(purchase: Purchase) {
                     UserManager.savePurchaseToken(purchase.purchaseToken)
+                }
+
+                override fun onConsumeSuccess(purchase: Purchase) {
 
                 }
 
                 override fun onUserCancel() {
-                    showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
+                    showAlert(myContext, myContext.getString(R.string.pay_cancel), false, true)
                 }
 
                 override fun responseCode(msg: String, errorCode: Int) {
@@ -353,7 +351,7 @@ class ConfirmPayCandyDialog(
     }
 
 
-    private var clientToken = TokenBean()
+    private var clientToken = PaypalTokenBean()
 
     /**
      * paypal支付先从服务器获取clientToken
@@ -368,13 +366,13 @@ class ConfirmPayCandyDialog(
                     )
                 )
             )
-            .excute(object : BaseSubscriber<BaseResp<TokenBean>>(null) {
+            .excute(object : BaseSubscriber<BaseResp<PaypalTokenBean>>(null) {
                 override fun onStart() {
                     super.onStart()
                     loadingDialog.show()
                 }
 
-                override fun onNext(t: BaseResp<TokenBean>) {
+                override fun onNext(t: BaseResp<PaypalTokenBean>) {
                     loadingDialog.dismiss()
                     clientToken = t.data
                     if (!clientToken.clientoken.isEmpty()) {
@@ -405,14 +403,48 @@ class ConfirmPayCandyDialog(
                     )
                 )
             )
-            .excute(object : BaseSubscriber<BaseResp<TokenBean>>(null) {
+            .excute(object : BaseSubscriber<BaseResp<PaypalTokenBean>>(null) {
                 override fun onStart() {
                     super.onStart()
                     loadingDialog.show()
                 }
 
-                override fun onNext(t: BaseResp<TokenBean>) {
+                override fun onNext(t: BaseResp<PaypalTokenBean>) {
                     loadingDialog.dismiss()
+//                    clientToken = t.data
+//                    onBrainTreeSubmit()
+                }
+
+                override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
+                    CommonFunction.toast(CommonFunction.getErrorMsg(myContext))
+                }
+            })
+    }
+
+
+    /**
+     * Google支付回传结果
+     */
+    private fun androidCheck(purchase_id: String, purchase_token: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .androidCheck(
+                UserManager.getSignParams(
+                    hashMapOf(
+                        "purchase_token" to purchase_token,
+                        "purchase_id" to purchase_id
+                    )
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<GoogleTokenBean>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
+
+                override fun onNext(t: BaseResp<GoogleTokenBean>) {
+                    loadingDialog.dismiss()
+                    showAlert(myContext, myContext.getString(R.string.pay_success), true)
 //                    clientToken = t.data
 //                    onBrainTreeSubmit()
                 }
@@ -467,13 +499,13 @@ class ConfirmPayCandyDialog(
                         "onPayPalResultEvent",
                         "nonce=${result!!.paymentMethodNonce!!.nonce},order_id=${clientToken.order_id}"
                     )
+                    //todo 上传给服务器端 支付成功
                     checkNotify(result!!.paymentMethodNonce!!.nonce, clientToken.order_id)
                 }
-                //todo 上传给服务器端 支付成功
                 showAlert(myContext, myContext.getString(R.string.pay_success), true)
             } else if (event.resultCode == RESULT_CANCELED) {
                 Log.d("onPayPalResultEvent", "用户取消支付")
-                showAlert(myContext, myContext.getString(R.string.pay_cancel), false)
+                showAlert(myContext, myContext.getString(R.string.pay_cancel), false, true)
             } else {
                 val error: Exception? =
                     event.data?.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
@@ -484,23 +516,36 @@ class ConfirmPayCandyDialog(
     }
 
 
-    private fun showAlert(ctx: Context, info: String, result: Boolean) {
-        CommonAlertDialog.Builder(ctx)
-            .setTitle(myContext.getString(R.string.pay_result))
-            .setContent(info)
-            .setCancelIconIsVisibility(false)
-            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                override fun onClick(dialog: Dialog) {
-                    dialog.cancel()
-                    if (result) {
-                        CommonFunction.payResultNotify(myContext)
-                        dismiss()
-                    }
-                }
+    private fun showAlert(
+        ctx: Context,
+        info: String,
+        result: Boolean,
+        userCancel: Boolean = false
+    ) {
 
-            })
-            .create()
-            .show()
+        if (userCancel && ActivityUtils.getTopActivity() is OpenVipActivity && UserManager.registerFileBean?.experience_state == true) {
+            // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+            EventBus.getDefault().post(CloseRegVipEvent(false))
+            dismiss()
+        } else {
+            CommonAlertDialog.Builder(ctx)
+                .setTitle(myContext.getString(R.string.pay_result))
+                .setContent(info)
+                .setCancelIconIsVisibility(false)
+                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                    override fun onClick(dialog: Dialog) {
+                        dialog.cancel()
+                        if (result) {
+                            CommonFunction.payResultNotify(myContext)
+                            dismiss()
+                        }
+                    }
+
+                })
+                .create()
+                .show()
+        }
+
     }
 
 

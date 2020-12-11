@@ -280,6 +280,9 @@ class OpenVipActivity : BaseActivity() {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.code == 200) {
                         if (it.data != null) {
+                            experience_amount = it.data!!.experience_amount
+                            experience_time = it.data!!.experience_time
+                            experience_title = it.data!!.experience_title
                             chargeWayBeans = it.data!!.list ?: mutableListOf()
                             setPurchaseType()
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
@@ -359,6 +362,11 @@ class OpenVipActivity : BaseActivity() {
         }
     }
 
+
+    var experience_time: String = ""
+    var experience_amount: Int = 0
+    var experience_title: String = ""
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCloseDialogEvent(event: CloseRegVipEvent) {
         if (from == FROM_REGISTER_OPEN_VIP) {
@@ -367,7 +375,12 @@ class OpenVipActivity : BaseActivity() {
                 finish()
             } else {
                 if (UserManager.registerFileBean?.experience_state == true)
-                    ExperienceCardDialog(this).show()
+                    ExperienceCardDialog(
+                        this,
+                        experience_time,
+                        experience_amount,
+                        experience_title
+                    ).show()
             }
         } else {
             finish()
