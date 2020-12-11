@@ -9,12 +9,14 @@ import android.view.WindowManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.activity.RegisterInfoActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -27,7 +29,12 @@ import org.jetbrains.anko.startActivity
  *    desc   : 黄金会员体验卡
  *    version: 1.0
  */
-class ExperienceCardDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class ExperienceCardDialog(
+    val context1: Context,
+    val experience_time: String,
+    val experience_amount: Int = 0,
+    val experience_title: String = ""
+) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +45,16 @@ class ExperienceCardDialog(val context1: Context) : Dialog(context1, R.style.MyD
     }
 
     private fun initView() {
-        //todo 获取体验卡，接下来走注册流程 填写信息
+        SpanUtils.with(costPrice)
+            .append(CommonFunction.getNowMoneyUnit())
+            .setFontSize(30,true)
+            .append("$experience_amount")
+            .setFontSize(60,true)
+            .create()
+        expireTime.text = context1.getString(R.string.expire_time, experience_time)
+        goldVipCard.text = experience_title
+
+
         getCardBtn.clickWithTrigger {
             getCard()
         }

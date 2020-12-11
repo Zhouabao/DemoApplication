@@ -850,7 +850,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("PayOrder/payCreate${Constants.END_BASE_URL}")
-    fun payCreate(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TokenBean>>
+    fun payCreate(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
 
 
     /**
@@ -858,7 +858,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("PayOrder/checkNotify${Constants.END_BASE_URL}")
-    fun checkNotify(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TokenBean>>
+    fun checkNotify(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
+
+    /**
+     * 海外安卓 支付回传 验证结果/ppsns//androidCheck/v1.json
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/androidCheck${Constants.END_BASE_URL}")
+    fun androidCheck(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GoogleTokenBean>>
 
 
     /*--------------------------------账号相关---------------------------------*/
