@@ -414,7 +414,10 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
                 "${TimeUtils.date2String(
                     date,
                     SimpleDateFormat("yyyy-MM-dd")
-                )}/${getZodiacEn(TimeUtils.getZodiac(date))}"
+                )}/${if (CommonFunction.isEnglishLanguage())
+                    getZodiacEn(TimeUtils.getZodiac(date))
+                else
+                    TimeUtils.getZodiac(date)}"
             params["birth"] = TimeUtils.date2Millis(date) / 1000L
             checkConfirmEnable()
         })
