@@ -142,16 +142,17 @@ class OpenVipActivity : BaseActivity() {
                         .append(getString(R.string.find_standard_girl, moreMatch?.city_name))
                         .setFontSize(16, true)
                         .create()
-                    SpanUtils.with(standardPeople)
-                        .append(
-                            getString(
-                                R.string.person_cpunt,
-                                moreMatch?.people_amount.toString(), moreMatch?.gender_str
-                            )
+
+                    standardPeople.text =
+                        getString(
+                            R.string.sugar_girl_count,
+                            moreMatch?.people_amount,
+                            if (UserManager.getGender() == 1) {
+                                getString(R.string.attractive_women)
+                            } else {
+                                getString(R.string.elite_men)
+                            }
                         )
-                        .setFontSize(22, true)
-                        .setBold()
-                        .create()
                     moreInfoText.text = getString(R.string.off_single_in_sugartown)
                     moreInfoText.isVisible = false
                     standardPeople.dance()

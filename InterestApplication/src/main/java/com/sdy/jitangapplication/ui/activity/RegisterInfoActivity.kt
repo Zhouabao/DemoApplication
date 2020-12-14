@@ -18,10 +18,7 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.TimeUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -409,12 +406,18 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             )
         )
         val clOptions = TimePickerBuilder(this, OnTimeSelectListener { date, v ->
+
+            LanguageUtils.getSystemLanguage()
             //            getZodiac
             userBirth.text =
                 "${TimeUtils.date2String(
                     date,
                     SimpleDateFormat("yyyy-MM-dd")
-                )}/${getZodiacEn(TimeUtils.getZodiac(date))}"
+                )}/${if (CommonFunction.isEnglishLanguage())
+                    getZodiacEn(TimeUtils.getZodiac(date))
+                else
+                    TimeUtils.getZodiac(date)}"
+
             params["birth"] = TimeUtils.date2Millis(date) / 1000L
             checkConfirmEnable()
         })

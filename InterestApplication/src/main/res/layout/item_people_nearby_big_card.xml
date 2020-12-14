@@ -89,7 +89,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/sweetHeartContent"
         app:layout_constraintLeft_toLeftOf="@id/userOnline"
-        app:layout_goneMarginBottom="0dp" />
+        app:layout_goneMarginBottom="10dp" />
 
     <ImageView
         android:id="@+id/userVip"
@@ -143,6 +143,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        app:layout_goneMarginBottom="10dp"
         android:orientation="horizontal"
         android:overScrollMode="never"
         app:layout_constraintRight_toRightOf="@id/userChatBtn"

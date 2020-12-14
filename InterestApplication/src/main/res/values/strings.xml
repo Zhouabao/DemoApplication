@@ -1058,7 +1058,7 @@
     <string name="unverify_today_residue_count">今日还有 %1$d 次聊天机会，追加视频聊天不设限</string>
     <string name="hide_message_if_gold_vip">消息太多？你可以设置私聊权限仅黄金会员过滤消息</string>
     <string name="charge_to_free">免费消息会被归于对方搭讪列表，可能回复率偏低，充值黄金会员可提升消息回复</string>
-    <string name="cost_one_candy_for_quanlity">为提高男性用户质量，将交友机会留给诚意用户。每次发送消息会消耗一个糖果</string>
+    <string name="cost_one_candy_for_quanlity">为筛选高质量用户男性保证女性会员不被过度骚扰，将交友机会留给更有诚意的用户。每次发送消息将消耗一个糖果</string>
     <string name="send_messgae">发送消息</string>
     <string name="confirm_send">确认发送</string>
     <string name="video_send_by">视频发送于%s</string>

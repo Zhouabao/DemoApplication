@@ -97,6 +97,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
 
         if (!UserManager.isShowGuidePublish()) {
             closeGuide.onClick {
+                UserManager.saveShowGuidePublish(true)
                 guidePublishCl.isVisible = false
             }
             guidePublishCl.isVisible = true
@@ -107,7 +108,7 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 SizeUtils.dp2px(10F).toFloat(),
                 0F
             )
-            translationX.duration = 800
+            translationX.duration = 600
             translationX.repeatCount = -1
             translationX.start()
             translationX.addListener(object : Animator.AnimatorListener {
@@ -116,7 +117,6 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
-                    guidePublishCl.isVisible = false
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
