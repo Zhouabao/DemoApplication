@@ -35,6 +35,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
         initView()
+        mPresenter.mySettings()
     }
 
     //    private val wechat_qrcode by lazy { intent.getStringExtra("wechat_qrcode") }
@@ -179,15 +180,15 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
             switchDianzan.isChecked = settingsBean!!.notify_square_like_state
-            switchComment.isChecked = settingsBean!!.notify_square_comment_state
-            switchMessage.isChecked = settingsBean!!.sms_state
+            switchComment.isChecked = settingsBean.notify_square_comment_state
+            switchMessage.isChecked = settingsBean.sms_state
             if (UserManager.overseas) {
                 wechatPublic.isVisible = false
                 wechatPublicTv.isVisible = false
                 switchWechat.isVisible = false
             } else {
-                wechatPublicState = intent.getBooleanExtra("wechat_public_state", false)
-                wechatState = intent.getBooleanExtra("wechat_open_state", false)
+                wechatPublicState = settingsBean.we_openid
+                wechatState = settingsBean.wechat_tem_state
                 switchWechat.isChecked = wechatState
                 wechatPublicTv.isVisible = wechatState
                 wechatPublic.isVisible = wechatState
