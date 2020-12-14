@@ -499,7 +499,7 @@ class ConfirmPayCandyDialog(
                         "onPayPalResultEvent",
                         "nonce=${result!!.paymentMethodNonce!!.nonce},order_id=${clientToken.order_id}"
                     )
-                    //todo 上传给服务器端 支付成功
+                    // 上传给服务器端 支付成功
                     checkNotify(result!!.paymentMethodNonce!!.nonce, clientToken.order_id)
                 }
                 showAlert(myContext, myContext.getString(R.string.pay_success), true)

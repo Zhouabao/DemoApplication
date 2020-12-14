@@ -52,7 +52,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         setContentView(R.layout.activity_login)
         syCode = intent.getIntExtra("syCode", 0)
 
-        BarUtils.setStatusBarColor(this, Color.BLACK)
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
         BarUtils.setStatusBarLightMode(this, false)
         initView()
 //        showVideoPreview()

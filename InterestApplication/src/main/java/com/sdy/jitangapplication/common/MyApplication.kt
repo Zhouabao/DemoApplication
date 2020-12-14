@@ -258,6 +258,7 @@ class MyApplication : BaseApplication() {
                     SnackBarFragment.SOMEONE_MATCH_SUCCESS,
                     SnackBarFragment.FLASH_SUCCESS,
                     SnackBarFragment.HELP_CANDY,
+                    SnackBarFragment.CHAT_SUCCESS,
                     SnackBarFragment.GREET_SUCCESS,
                     SnackBarFragment.GIVE_GIFT -> {
                         if (ActivityUtils.getTopActivity() is MainActivity)
@@ -279,8 +280,7 @@ class MyApplication : BaseApplication() {
                             .post(UpdateWechatSettingsEvent(customerMsgBean.type == 111))
 
                     }
-                    SnackBarFragment.CHAT_SUCCESS,
-                    401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
+                    401 -> { // 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
                         EventBus.getDefault().post(UpdateNewMsgEvent(customerMsgBean))
 
                     }

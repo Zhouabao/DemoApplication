@@ -263,6 +263,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
         guidePublishCl.clearAnimation()
     }
 

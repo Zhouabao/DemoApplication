@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.FootDescr
+import com.sdy.jitangapplication.model.VipDescr
 import kotlinx.android.synthetic.main.item_foot_power.view.*
 
 /**
@@ -14,10 +15,9 @@ import kotlinx.android.synthetic.main.item_foot_power.view.*
  *    version: 1.0
  */
 class FootPowerAdapter :
-    BaseQuickAdapter<FootDescr, BaseViewHolder>(R.layout.item_foot_power) {
-    override fun convert(helper: BaseViewHolder, item: FootDescr) {
-
-        helper.itemView.footPowerIv.setImageResource(item.icon)
+    BaseQuickAdapter<VipDescr, BaseViewHolder>(R.layout.item_foot_power) {
+    override fun convert(helper: BaseViewHolder, item: VipDescr) {
+        GlideUtil.loadImg(mContext,item.url,helper.itemView.footPowerIv)
 //        GlideUtil.loadImg(mContext, item.icon, helper.itemView.footPowerIv)
         helper.itemView.footPowerContent.text = item.title
 

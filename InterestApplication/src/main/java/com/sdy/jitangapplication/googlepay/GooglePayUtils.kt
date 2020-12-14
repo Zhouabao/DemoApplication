@@ -159,7 +159,7 @@ class GooglePayUtils(
 
     /**
      * 消耗用户购买的一次性商品，不然用户无法进行二次购买
-     * //todo 先请求服务器，成功返回后再进行 consume
+     * // 先请求服务器，成功返回后再进行 consume
      */
     private fun consumePurchase(purchase: Purchase) {
         //确认购买交易，不然三天后会退款给用户

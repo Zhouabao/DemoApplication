@@ -66,12 +66,6 @@ class FootPriceActivity : BaseActivity() {
 
         footPowerRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         footPowerRv.adapter = adapter
-        adapter.addData(FootDescr(getString(R.string.pay_why1), R.drawable.icon_foot_price1))
-        adapter.addData(FootDescr(getString(R.string.pay_why2), R.drawable.icon_foot_price2))
-        adapter.addData(FootDescr(getString(R.string.pay_why3), R.drawable.icon_foot_price3))
-        adapter.addData(FootDescr(getString(R.string.pay_why4), R.drawable.icon_foot_price4))
-
-
         //立即加入
         joinNowBtn.clickWithTrigger {
             CommonFunction.startToPay(this, chargeWayBeans[0], payways)
@@ -99,15 +93,8 @@ class FootPriceActivity : BaseActivity() {
                             payways.addAll(it.data!!.paylist ?: mutableListOf())
                             footUserCount.text = getString(R.string.has, it.data!!.same_sex_cnt)
 
-                            if (!chargeWayBeans.isNullOrEmpty() && chargeWayBeans[0].giving_amount > 0)
-                                adapter.addData(
-                                    FootDescr(
-                                        getString(
-                                            R.string.give,
-                                            chargeWayBeans[0].giving_amount
-                                        ), R.drawable.icon_foot_price5
-                                    )
-                                )
+                            if (!it.data!!.icon_list.isNullOrEmpty())
+                                adapter.setNewData(it.data!!.icon_list)
 
                         }
                     } else {
