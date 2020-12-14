@@ -229,7 +229,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
         mQuery = if (UserManager.overseas) {
-            PoiSearch.Query(UserManager.getCity(), "", "")
+            PoiSearch.Query(UserManager.getCity(), poiCode, "")
         } else {
             PoiSearch.Query("", poiCode, "")
         }
@@ -253,13 +253,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施
-        mQuery = PoiSearch.Query(
-            keyword, if (UserManager.overseas) {
-                ""
-            } else {
-                poiCode
-            }, UserManager.getCity()
-        )
+        mQuery = PoiSearch.Query(keyword, poiCode, UserManager.getCity())
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)

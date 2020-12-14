@@ -27,16 +27,15 @@ class LoginPresenter : BasePresenter<LoginView>() {
      * 获取登录配置开关
      */
     fun getRegisterProcessType() {
-        addDisposable(
-            RetrofitFactory.instance
-                .create(Api::class.java)
-                .getRegisterProcessType()
-                .excute(object : BaseSubscriber<BaseResp<RegisterFileBean?>>(mView) {
-                    override fun onNext(t: BaseResp<RegisterFileBean?>) {
-                        super.onNext(t)
-                        mView.onGetRegisterProcessType(t.data)
-                    }
-                }))
+        RetrofitFactory.instance
+            .create(Api::class.java)
+            .getRegisterProcessType()
+            .excute(object : BaseSubscriber<BaseResp<RegisterFileBean?>>(mView) {
+                override fun onNext(t: BaseResp<RegisterFileBean?>) {
+                    super.onNext(t)
+                    mView.onGetRegisterProcessType(t.data)
+                }
+            })
 
     }
 
@@ -49,7 +48,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             return
         }
 
-        val params = hashMapOf<String,Any>()
+        val params = hashMapOf<String, Any>()
         params["overseas_token"] = flash_token
         params["type"] = type
         params.putAll(UserManager.getLocationParams())

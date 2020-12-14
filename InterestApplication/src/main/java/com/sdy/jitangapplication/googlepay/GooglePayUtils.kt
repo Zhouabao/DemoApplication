@@ -35,10 +35,11 @@ class GooglePayUtils(
 
     //1.建立连接
     fun initConnection(): GooglePayUtils {
-        mBillingClient = BillingClient.newBuilder(context)
-            .enablePendingPurchases()
-            .setListener(this)
-            .build()
+        if (mBillingClient == null)
+            mBillingClient = BillingClient.newBuilder(context)
+                .enablePendingPurchases()
+                .setListener(this)
+                .build()
 
         //连接服务
         mBillingClient!!.startConnection(object : BillingClientStateListener {
@@ -131,7 +132,7 @@ class GooglePayUtils(
         billingResult: BillingResult,
         purchases: MutableList<Purchase>?
     ) {
-        Log.e(TAG, "onPurchasesUpdated ")
+        Log.e(TAG, "onPurchasesUpdated ,billingResult.responseCode =${billingResult.responseCode}")
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
                 Log.e(TAG, "Purchased product=$purchase")
