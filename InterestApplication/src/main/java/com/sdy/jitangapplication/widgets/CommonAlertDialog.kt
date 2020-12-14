@@ -6,11 +6,10 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isVisible
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import kotlinx.android.synthetic.main.customer_alert_dialog_layout.*
 
 /**
  *    author : ZFM
@@ -19,14 +18,6 @@ import com.sdy.jitangapplication.R
  *    version: 1.0
  */
 class CommonAlertDialog : Dialog {
-
-    //  var  ImageView ivDialogCancel? = null;
-    var tvTitle: TextView? = null
-    var ivDialogIcon: ImageView? = null
-    var tvDialogContent: TextView? = null
-    var btDialogConfirm: TextView? = null //确定按钮可通过外部自定义按钮内容
-    var tvDialogCancel: TextView? = null //取消
-    var viewDialog: View? = null //分割线
 
 
     constructor(context: Context) : super(context) {
@@ -43,13 +34,6 @@ class CommonAlertDialog : Dialog {
         //点击外部可取消
         setCanceledOnTouchOutside(false)
         setCancelable(false)
-        //        ivDialogCancel = findViewById(R.id.iv_dialog_cancel);
-        tvTitle = findViewById(R.id.title)
-        ivDialogIcon = findViewById(R.id.icon)
-        tvDialogContent = findViewById(R.id.message)
-        btDialogConfirm = findViewById(R.id.confirm)
-        tvDialogCancel = findViewById(R.id.cancel)
-        viewDialog = findViewById(R.id.cancelView)
     }
 
 
@@ -133,33 +117,33 @@ class CommonAlertDialog : Dialog {
         fun create(): CommonAlertDialog {
             val dialog = CommonAlertDialog(context, R.style.MyDialog)
             if (!TextUtils.isEmpty(title1)) {
-                dialog.tvTitle?.text = this.title1
+                dialog.title.text = this.title1
             } else {
-                dialog.tvTitle?.visibility = View.GONE
+                dialog.title.visibility = View.GONE
             }
 
-            dialog.tvDialogContent?.text = this.content1
+            dialog.message.text = this.content1
             if (icon != 0) {
-                GlideUtil.loadImg(context, this.icon, dialog.ivDialogIcon)
-//                dialog.ivDialogIcon?.setImageResource(this.icon!!)
+                GlideUtil.loadImg(context, this.icon, dialog.icon)
+//                dialog.icon .setImageResource(this.icon!!)
             }
-            dialog.ivDialogIcon?.isVisible = this.iconVisble
+            dialog.icon.isVisible = this.iconVisble
 
-            dialog.btDialogConfirm?.text = this.btConfirmText ?: context.getString(R.string.ok)
+            dialog.confirm.text = this.btConfirmText ?: context.getString(R.string.ok)
             if (this.cancelIsVisibility!!) {
-                dialog.tvDialogCancel?.text = this.tvCancelText ?: context.getString(R.string.cancel)
+                dialog.cancel.text = this.tvCancelText ?: context.getString(R.string.cancel)
             } else {
-                dialog.tvDialogCancel?.visibility = View.GONE
-                dialog.viewDialog?.visibility = View.GONE
+                dialog.cancel.visibility = View.GONE
+                dialog.cancelView.visibility = View.GONE
             }
             dialog.setCancelable(this.cancelAble1)
 
 
             if (cancelListener != null) {
-                dialog.tvDialogCancel?.setOnClickListener { v -> cancelListener!!.onClick(dialog) }
+                dialog.cancel.setOnClickListener { v -> cancelListener!!.onClick(dialog) }
             }
             if (confirmListener != null) {
-                dialog.btDialogConfirm?.setOnClickListener { v -> confirmListener!!.onClick(dialog) }
+                dialog.confirm.setOnClickListener { v -> confirmListener!!.onClick(dialog) }
             }
             return dialog
         }
@@ -174,5 +158,14 @@ class CommonAlertDialog : Dialog {
     // 点击弹窗跳转回调
     interface OnConfirmListener {
         fun onClick(dialog: Dialog)
+    }
+
+    fun setCancelBtnable(cancelIsVisibility: Boolean) {
+        if (cancelIsVisibility) {
+            cancel.text = context.getString(R.string.cancel)
+        } else {
+            cancel.visibility = View.GONE
+            cancelView.visibility = View.GONE
+        }
     }
 }

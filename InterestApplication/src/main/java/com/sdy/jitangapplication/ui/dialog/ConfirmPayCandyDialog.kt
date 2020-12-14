@@ -45,6 +45,7 @@ import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import kotlinx.android.synthetic.main.customer_alert_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_confirm_recharge_candy.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -125,7 +126,7 @@ class ConfirmPayCandyDialog(
             wechatIv.setImageResource(R.drawable.icon_wechat1)
         }
 
-        confrimBtn.clickWithTrigger {
+        confrimBtn.clickWithTrigger(1000L) {
             if (UserManager.overseas) {
                 if (alipayCheck.isChecked) {
                     //PayPal支付
@@ -258,7 +259,7 @@ class ConfirmPayCandyDialog(
                                 false
                             )
                         } else if (TextUtils.equals(resultStatus, "6001")) {
-// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                            // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                             showAlert(
                                 myContext,
                                 myContext.getString(R.string.pay_cancel),
@@ -516,6 +517,12 @@ class ConfirmPayCandyDialog(
     }
 
 
+    private val alertDialog by lazy {
+        CommonAlertDialog.Builder(myContext)
+            .setTitle(myContext.getString(R.string.pay_result))
+            .create()
+    }
+
     private fun showAlert(
         ctx: Context,
         info: String,
@@ -528,24 +535,17 @@ class ConfirmPayCandyDialog(
             EventBus.getDefault().post(CloseRegVipEvent(false))
             dismiss()
         } else {
-            CommonAlertDialog.Builder(ctx)
-                .setTitle(myContext.getString(R.string.pay_result))
-                .setContent(info)
-                .setCancelIconIsVisibility(false)
-                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                    override fun onClick(dialog: Dialog) {
-                        dialog.cancel()
-                        if (result) {
-                            CommonFunction.payResultNotify(myContext)
-                            dismiss()
-                        }
-                    }
-
-                })
-                .create()
-                .show()
+            alertDialog.message.text = info
+            alertDialog.setCancelBtnable(false)
+            alertDialog.confirm.clickWithTrigger {
+                alertDialog.cancel()
+                if (result) {
+                    CommonFunction.payResultNotify(myContext)
+                    dismiss()
+                }
+            }
+            alertDialog.show()
         }
-
     }
 
 
