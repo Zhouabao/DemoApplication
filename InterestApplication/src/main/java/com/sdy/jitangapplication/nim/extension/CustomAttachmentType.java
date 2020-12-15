@@ -14,6 +14,7 @@ public interface CustomAttachmentType {
     int AccostGift = 6;// 搭讪礼物
     int ChatContactCandy = 7;// 联系方式赠送糖果
     int ChatDating = 8;// 约会
+    int ChatUp = 9;// 搭讪语发送
 
     // 没有用到
     int Sticker = 5;

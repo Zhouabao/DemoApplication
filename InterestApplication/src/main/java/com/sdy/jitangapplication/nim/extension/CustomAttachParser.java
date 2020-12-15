@@ -2,9 +2,20 @@ package com.sdy.jitangapplication.nim.extension;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sdy.jitangapplication.nim.attachment.*;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachmentParser;
+import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatUpAttachment;
+import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
+import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment;
+import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
+import com.sdy.jitangapplication.nim.attachment.DefaultCustomAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 
 /**
  * Created by zhoujianghua on 2015/4/9.
@@ -30,7 +41,7 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.ShareSquare:
                     attachment = new ShareSquareAttachment();
                     break;
-                    case CustomAttachmentType.ChatDating:
+                case CustomAttachmentType.ChatDating:
                     attachment = new ChatDatingAttachment();
                     break;
                 case CustomAttachmentType.SendGift:
@@ -48,8 +59,11 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.AccostGift:
                     attachment = new AccostGiftAttachment();
                     break;
-                    case CustomAttachmentType.ChatContactCandy:
+                case CustomAttachmentType.ChatContactCandy:
                     attachment = new ContactCandyAttachment();
+                    break;
+                case CustomAttachmentType.ChatUp:
+                    attachment = new ChatUpAttachment();
                     break;
                 default:
                     attachment = new DefaultCustomAttachment();

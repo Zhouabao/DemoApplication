@@ -390,7 +390,7 @@
     <string name="forver">/永久</string>
     <string name="vip_verify">高端精英认证</string>
     <string name="join_now">立即加入</string>
-    <string name="why_pay">为什么要付费</string>
+    <string name="why_pay">为什么需要付费</string>
     <string name="inapp">为你找到更优质的%1$s\n在%2$s找到%3$d个%4$s待筛选\n我们将进一步问您一些问题\n提供给你更精准的配对需求</string>
     <string name="count_filter_user">个待筛选用户</string>
     <string name="get_quick_match">获取更精准配对</string>
@@ -981,9 +981,9 @@
     <string name="see_her_video_introduce">查看她的视频介绍</string>
     <string name="tobe_vip_sha_add_video">她添加了视频介绍，成为黄金会员查看更真实的她</string>
     <string name="unlock_her_introduce_after_vip">成为黄金会员，解锁她的视频介绍</string>
-    <string name="why_pay1">保证平台内女生全面真实，平台均为人工全天候审核</string>
-    <string name="why_pay2">杜绝骚扰，未认证用户无法骚扰有真正婚恋</string>
-    <string name="why_pay3">提升社交效率（认证加入成为精英，女生主动撩你）</string>
+    <string name="why_pay1">保证平台内女性真实，平台均为人工全天候审核</string>
+    <string name="why_pay2">杜绝骚扰，未认证用户无法骚扰有真正婚恋意愿的用户</string>
+    <string name="why_pay3">认证精英即表达婚恋意愿，提升社交效率，女生会主动找你</string>
     <string name="i_know1">我已知晓</string>
     <string name="exchange_money">兑换金额:</string>
     <string name="withdraw_money">提现金额:</string>
@@ -1316,5 +1316,8 @@
     <string name="off_single_in_sugartown">进入积糖立即脱单</string>
     <string name="why_pay_explain">精英认证是为了积糖更好的服务用户\n全面提升用户相亲交友体验</string>
     <string name="more_funny_with_description">生动有趣的描述会让你的活动更有吸引力哦</string>
+    <string name="custom_chat_up">自定搭讪语</string>
+    <string name="input_custom_chat_up">请输入自定搭讪语</string>
+    <string name="custom_chatup">自定义搭讪语</string>
 
 </resources>

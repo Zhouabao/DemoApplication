@@ -62,7 +62,7 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
 
 
             if (item.giving_amount > 0) {
-                holder.itemView.vipSendCandy.text =  mContext.getString(R.string.give) + item.giving_amount + mContext.getString(R.string.candy)
+                holder.itemView.vipSendCandy.text =  mContext.getString(R.string.give,item.giving_amount)
                 holder.itemView.vipSendCandy.isVisible = true
             } else {
                 holder.itemView.vipSendCandy.isVisible = false

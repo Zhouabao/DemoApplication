@@ -26,6 +26,7 @@ import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatUpAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactAttachment;
 import com.sdy.jitangapplication.nim.attachment.ContactCandyAttachment;
 import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
@@ -51,6 +52,7 @@ import com.sdy.jitangapplication.nim.uikit.impl.customization.DefaultRecentCusto
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderAccostGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatDating;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatUp;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContact;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderContactCandy;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendCustomTip;
@@ -232,6 +234,7 @@ public class SessionHelper {
         NimUIKit.registerMsgItemViewHolder(ChatDatingAttachment.class, MsgViewHolderChatDating.class);
         NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
         NimUIKit.registerMsgItemViewHolder(ContactAttachment.class, MsgViewHolderContact.class);
+        NimUIKit.registerMsgItemViewHolder(ChatUpAttachment.class, MsgViewHolderChatUp.class);
         NimUIKit.registerTipMsgViewHolder(MsgViewHolderTip.class);
         // NimUIKit.registerMsgItemViewHolder(FileAttachment.class, MsgViewHolderFile.class);
         // NimUIKit.registerMsgItemViewHolder(CustomAttachment.class, MsgViewHolderDefCustom.class);

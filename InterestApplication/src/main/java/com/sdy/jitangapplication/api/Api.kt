@@ -619,6 +619,13 @@ interface Api {
         @Field("gender") gender: Int
     ): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
+    /**
+     * /ppsns/MemberInfo/saveChatupMsg/v1.json 保存搭讪消息
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/saveChatupMsg${Constants.END_BASE_URL}")
+    fun saveChatupMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
     /****************************消息************************************/
 
 
@@ -692,14 +699,12 @@ interface Api {
     fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
 
 
-
     /**
      * 设置用户的短信/隐身/私聊接收状态
      */
     @FormUrlEncoded
     @POST("UserSet/switchSet${Constants.END_BASE_URL}")
     fun switchSet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
-
 
 
     /**

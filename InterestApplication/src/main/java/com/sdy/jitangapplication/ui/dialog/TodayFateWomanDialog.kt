@@ -26,6 +26,7 @@ import com.sdy.jitangapplication.model.BatchGreetBean
 import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.model.TodayFateBean
+import com.sdy.jitangapplication.nim.attachment.ChatUpAttachment
 import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.util.RecyclerViewUtil
 import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -150,12 +151,15 @@ class TodayFateWomanDialog(
                     if (t.code == 200 && !t.data.isNullOrEmpty()) {
                         for (data in (t.data ?: mutableListOf()).withIndex()) {
                             if (!data.value.msg.isNullOrEmpty()) {
-                                //随机发送一条招呼文本消息
-                                val msg = MessageBuilder.createTextMessage(
+                                //随机发送一条搭讪语消息
+                                val chatUpAttachment = ChatUpAttachment(data.value.msg)
+                                val msg = MessageBuilder.createCustomMessage(
                                     data.value.accid,
                                     SessionTypeEnum.P2P,
-                                    data.value.msg
+                                    chatUpAttachment
                                 )
+
+
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {

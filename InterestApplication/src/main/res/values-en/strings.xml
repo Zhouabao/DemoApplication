@@ -1319,4 +1319,7 @@
     <string name="off_single_in_sugartown">Enter the sugar immediately off the single</string>
     <string name="why_pay_explain">Elite certification is to serve users better\nComprehensively improve the user dating experience</string>
     <string name="more_funny_with_description">Vivid and interesting descriptions will make your activities more appealing</string>
+    <string name="custom_chat_up">自定搭讪语</string>
+    <string name="input_custom_chat_up">请输入自定搭讪语</string>
+    <string name="custom_chatup">自定义搭讪语</string>
 </resources>

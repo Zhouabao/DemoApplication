@@ -314,11 +314,13 @@ object CommonFunction {
                         }
                         207 -> { //女性对男性搭讪
                             //随机发送一条招呼文本消息
-                            val msg = MessageBuilder.createTextMessage(
+                            val chatUpAttachment = ChatUpAttachment(t.msg)
+                            val msg = MessageBuilder.createCustomMessage(
                                 target_accid,
                                 SessionTypeEnum.P2P,
-                                t.msg
+                                chatUpAttachment
                             )
+
                             NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                 .setCallback(object : RequestCallback<Void> {
                                     override fun onSuccess(p0: Void?) {
@@ -377,6 +379,9 @@ object CommonFunction {
             } else {
                 (item.attachment as SendCustomTipAttachment).content
             }
+            is ChatUpAttachment -> {
+                (item.attachment as ChatUpAttachment).chatUpContent
+            }
             else -> item.content
         }
     }
@@ -404,6 +409,9 @@ object CommonFunction {
                 DemoCache.getContext().getString(R.string.msg_prompt)
             } else {
                 (item.attachment as SendCustomTipAttachment).content
+            }
+            is ChatUpAttachment -> {
+                (item.attachment as ChatUpAttachment).chatUpContent
             }
             else -> item.content
         }
@@ -457,10 +465,12 @@ object CommonFunction {
                                         ChatActivity.start(context, target_accid)
                                     }, 500L)
                                 } else {
-                                    val msg = MessageBuilder.createTextMessage(
+                                    //随机发送一条招呼文本消息
+                                    val chatUpAttachment = ChatUpAttachment(t.msg)
+                                    val msg = MessageBuilder.createCustomMessage(
                                         target_accid,
                                         SessionTypeEnum.P2P,
-                                        t.msg
+                                        chatUpAttachment
                                     )
                                     NIMClient.getService(MsgService::class.java)
                                         .sendMessage(msg, false)

@@ -268,6 +268,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.CustomChatUpContentActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.LabelQualityActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -623,9 +627,9 @@
 
 
         <!-- *****************高德地图********************** -->
-<!--        <meta-data-->
-<!--            android:name="com.amap.api.v2.apikey"-->
-<!--            android:value="ed0911965c16cc04ec36bb2360dccaa2" />       -->
+        <!--        <meta-data-->
+        <!--            android:name="com.amap.api.v2.apikey"-->
+        <!--            android:value="ed0911965c16cc04ec36bb2360dccaa2" />       -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="3b6b810a7ad78b17f523bdd05279b48c" />
@@ -776,14 +780,13 @@
         </service>
 
 
-
         <!--Oppo推送配置项 需要配置以下两项-->
         <service
             android:name="com.netease.nimlib.mixpush.oppo.OppoPushService"
 
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
         <!--兼容Q以下版本-->
@@ -793,14 +796,11 @@
             android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
 
             <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
 
-                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
-
-
-
 
 
         <!-- 魅族配置的service和receiver -->

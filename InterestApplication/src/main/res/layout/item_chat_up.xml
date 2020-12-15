@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/chatUpContentTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="238dp"
+        android:minWidth="44dp"
+        android:padding="14dp" />
+
+    <TextView
+        android:id="@+id/chatUpCustomBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/shape_rectangle_gray_6dp"
+        android:drawableLeft="@drawable/icon_edit_chatup"
+        android:drawablePadding="2dp"
+        android:paddingLeft="6dp"
+        android:paddingTop="3dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="3dp"
+        android:text="@string/custom_chat_up"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp" />
+
+
+</LinearLayout>

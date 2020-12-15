@@ -14,12 +14,8 @@ import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.nim.attachment.AccostGiftAttachment;
-import com.sdy.jitangapplication.nim.attachment.ChatDatingAttachment;
-import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
-import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
-import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.MessageRevokeTip;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimUserInfoProvider;
@@ -170,19 +166,7 @@ public class NimSDKOptionConfig {
 
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
-            if (message.getAttachment() instanceof AccostGiftAttachment) {
-                return DemoCache.getContext().getString(R.string.msg_chat_up_gift);
-            } else if (message.getAttachment() instanceof ShareSquareAttachment) {
-                return DemoCache.getContext().getString(R.string.msg_share_square);
-            } else if (message.getAttachment() instanceof SendGiftAttachment) {
-                return DemoCache.getContext().getString(R.string.msg_candy_gift);
-            } else if (message.getAttachment() instanceof WishHelpAttachment) {
-                return DemoCache.getContext().getString(R.string.msg_want_help);
-            } else if (message.getAttachment() instanceof ChatDatingAttachment) {
-                return DemoCache.getContext().getString(R.string.msg_dating_apply);
-            }
-
-            return null;
+            return CommonFunction.INSTANCE.getMessageContent(message);
         }
 
         @Override

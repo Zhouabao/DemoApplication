@@ -1,82 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        tools:context=".ui.activity.NickNameActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.activity.NickNameActivity">
 
 
     <LinearLayout
-            android:id="@+id/llTitle"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            >
+        android:id="@+id/llTitle"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
-                android:id="@+id/btnBack"
-                style="@style/BckBtnStyle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/btnBack"
+            style="@style/BckBtnStyle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-                android:id="@+id/hotT1"
-                android:text="@string/nickname_change"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
+            android:id="@+id/hotT1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/nickname_change"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Button
-                android:id="@+id/saveChangeBtn"
-                android:layout_width="50dp"
-                android:enabled="false"
-                android:textSize="14sp"
-                android:layout_height="28dp"
-                android:background="@drawable/selector_confirm_btn_15dp"
-                android:textColor="@color/complete_btn_color_selector"
-                android:text="@string/save"
-                android:layout_marginRight="15dp"
-                />
+            android:id="@+id/saveChangeBtn"
+            android:layout_width="50dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/selector_confirm_btn_15dp"
+            android:enabled="false"
+            android:text="@string/save"
+            android:textColor="@color/complete_btn_color_selector"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View
-            android:background="@color/colorDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider" />
 
 
     <EditText
-            android:id="@+id/changeEt"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:focusable="true"
-            android:textSize="16sp"
-            android:textColorHint="@color/colorGrayText"
-            android:layout_gravity="top"
-            android:gravity="top"
-            android:focusableInTouchMode="true"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/changeEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="top"
+        android:inputType="text"
+        android:lines="1"
+        android:textColorHint="@color/colorGrayText"
+        android:textSize="16sp" />
 
     <TextView
-            android:id="@+id/changeEtInputLength"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_gravity="right"
-            android:text="0/0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:id="@+id/changeEtInputLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:text="0/0" />
 
 </LinearLayout>
