@@ -214,7 +214,7 @@
         android:layout_height="125dp"
         android:layout_gravity="bottom"
         android:background="@drawable/gradient_cover_bg_sweet_add"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/addToSweetBtn"

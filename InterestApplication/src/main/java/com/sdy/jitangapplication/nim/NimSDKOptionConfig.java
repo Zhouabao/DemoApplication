@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.netease.nimlib.sdk.NosTokenSceneConfig;
+import com.netease.nimlib.sdk.NotificationFoldStyle;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.ServerAddresses;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
@@ -133,7 +134,7 @@ public class NimSDKOptionConfig {
             // 新增 notificationColor 存储，兼容3.6以前版本
             // APP默认 StatusBarNotificationConfig 配置修改后，使其生效
             userConfig.notificationEntrance = config.notificationEntrance;
-            userConfig.notificationFolded = config.notificationFolded;
+            userConfig.notificationFoldStyle = config.notificationFoldStyle;
             userConfig.notificationColor = config.notificationColor;
         }
         // 持久化生效
@@ -147,11 +148,11 @@ public class NimSDKOptionConfig {
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         // 点击通知需要跳转到的界面
         config.notificationEntrance = MainActivity.class;
-        // config.notificationSmallIconId = R.drawable.icon_logo;
-        // config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
+//         config.notificationSmallIconId = R.drawable.icon_logo;
+//         config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
         // 通知铃声的uri字符串
-        config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
-        config.notificationFolded = true;
+//        config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
+        config.notificationFoldStyle = NotificationFoldStyle.CONTACT;
         // config.notificationFolded = false;
         config.downTimeEnableNotification = true;
         // 呼吸灯配置
@@ -219,6 +220,9 @@ public class NimSDKOptionConfig {
         config.oppoAppKey = "e0b41df3486b416ca44457141a803959";
         config.oppoAppSercet = "6372b4b60b5d44a69ee534782ee0a273";
         config.oppoCertificateName = "JITANGOPPO";
+
+        //FCM谷歌推送
+        config.fcmCertificateName = "JITANG_GOOGLE";
         return config;
     }
 }

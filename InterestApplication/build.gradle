@@ -222,6 +222,7 @@ dependencies {
     //带索引的通讯录
     implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
     // 云信推送
+    implementation files('libs/com.heytap.msp.aar')
     implementation 'com.huawei.hms:push:4.0.4.301'
     implementation 'com.meizu.flyme.internet:push-internal:3.9.7'
 
@@ -262,6 +263,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
+
+    //谷歌推送
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
+    implementation 'com.google.android.gms:play-services-base:17.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+//    implementation 'com.google.firebase:firebase-messaging-ktx'
+//    implementation 'com.google.firebase:firebase-analytics-ktx'
     //google 结算
     implementation 'com.android.billingclient:billing-ktx:3.0.2'
 //    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
