@@ -612,6 +612,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
 
     private void uploadImgToQN(IMMessage content, String target_accid, String imageUrl) {
+        if (loadingDialog == null)
+            loadingDialog = new LoadingDialog(getActivity());
+        loadingDialog.show();
         String key = Constants.FILE_NAME_INDEX + Constants.CHATCHECK + UserManager.INSTANCE.getAccid()
                 + System.currentTimeMillis() + RandomUtils.INSTANCE.getRandomString(16);
         QNUploadManager.INSTANCE.getInstance().put(imageUrl, key, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), (key1, info, response) -> {
@@ -619,13 +622,17 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             Log.d("sendMessage", "key1===" + key1);
             if (info.isOK()) {
                 sendMsgRequest(content, target_accid, key1);
+            } else {
+                loadingDialog.dismiss();
+                CommonFunction.INSTANCE.toast("消息发送失败");
             }
         }, null);
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid, String qnMediaUrl) {
-
-
+        if (loadingDialog == null)
+            loadingDialog = new LoadingDialog(getActivity());
+        loadingDialog.show();
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
         if (content.getMsgType() == MsgTypeEnum.text) {
@@ -646,10 +653,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
             }
 
             @Override
             public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
                 if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                     inputPanel.restoreText(true);
                     // 搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
