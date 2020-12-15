@@ -146,7 +146,6 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        contentView.clearAnimation()
 //        EventBus.getDefault().unregister(this)
     }
 

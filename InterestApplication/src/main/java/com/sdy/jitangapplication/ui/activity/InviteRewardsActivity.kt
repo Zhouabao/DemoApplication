@@ -243,8 +243,4 @@ class InviteRewardsActivity : BaseMvpActivity<InviteRewardsPresenter>(), InviteR
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        rewardsMoney.clearAnimation()
-    }
 }
