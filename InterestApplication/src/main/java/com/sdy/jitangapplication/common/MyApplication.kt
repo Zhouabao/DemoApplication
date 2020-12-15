@@ -16,6 +16,7 @@ import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 //import com.facebook.FacebookSdk
 //import com.facebook.appevents.AppEventsLogger
 import com.google.gson.Gson
+import com.heytap.msp.push.HeytapPushManager
 import com.kotlin.base.common.BaseApplication
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -477,6 +478,8 @@ class MyApplication : BaseApplication() {
         NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
 
         if (NIMUtil.isMainProcess(this)) {
+            //oppo推送init
+            HeytapPushManager.init(this,true)
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
