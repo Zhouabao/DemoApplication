@@ -31,6 +31,7 @@ object Constants {
     const val USERCENTER = "usecenter/"//个人中心
     const val REPORTUSER = "report/"//舉報用户
     const val CANDYPRODUCT = "candyproduct/"//舉報用户
+    const val CHATCHECK = "chatcheck/"//聊天上传内容
     const val FEEDBACK = "feedback/"//问题反馈
     const val VIDEOFACE = "verifyVideo/"//认证视频
     const val DEFAULT_AVATAR = "/meta/default_avatar.jpg"//默认图

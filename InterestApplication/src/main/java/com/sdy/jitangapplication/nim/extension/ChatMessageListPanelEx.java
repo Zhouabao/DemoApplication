@@ -879,7 +879,8 @@ public class ChatMessageListPanelEx {
                 onMsgSend(item);
             }
 
-            NIMClient.getService(MsgService.class).sendMessage(message, true);
+            container.proxy.sendMessage(message);
+//            NIMClient.getService(MsgService.class).sendMessage(message, true);
         }
 
         /**

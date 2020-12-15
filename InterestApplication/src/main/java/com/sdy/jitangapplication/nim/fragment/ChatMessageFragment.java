@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
@@ -26,6 +27,9 @@ import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
+import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
+import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
@@ -33,6 +37,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.MessageReceipt;
+import com.sdy.baselibrary.utils.RandomUtils;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
@@ -71,6 +76,7 @@ import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
+import com.sdy.jitangapplication.utils.QNUploadManager;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 
@@ -202,8 +208,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (inputPanel != null) {
             inputPanel.onDestroy();
         }
-        giftIcon.clearAnimation();
-
     }
 
     public boolean onBackPressed() {
@@ -341,13 +345,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             // 男性,非会员 弹充值界面
             if (nimBean.getForce_isvip()) {
                 CommonFunction.INSTANCE.startToFootPrice(getActivity());
-                // OpenVipActivity.Companion.start(getActivity(), null, OpenVipActivity.FROM_P2P_CHAT, -1);
             } else {
-                // if (message.getMsgType() == MsgTypeEnum.text) {
                 sendMsgRequest(message, sessionId);
-                // } else {
-                // sendMsgS(message, true);
-                // }
             }
         }
 
@@ -466,38 +465,38 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         RetrofitFactory.Companion.getInstance().create(Api.class)
                 .getTargetInfoCandy(UserManager.INSTANCE.getSignParams(params)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new rx.Observer<BaseResp<NimBean>>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+            }
 
-                    @Override
-                    public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
-                        }
-                        if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
-                            nimBean = nimBeanBaseResp.getData();
-                            setTargetInfoData();
-                        } else if (nimBeanBaseResp.getCode() == 409) {
-                            new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
-                                    .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
-                                    .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
-                                        dialog.cancel();
-                                        NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
-                                                SessionTypeEnum.P2P);
-                                        getActivity().finish();
-                                    }).create().show();
-                        }
-                    }
-                });
+            @Override
+            public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+                if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
+                    nimBean = nimBeanBaseResp.getData();
+                    setTargetInfoData();
+                } else if (nimBeanBaseResp.getCode() == 409) {
+                    new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
+                            .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
+                            .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
+                        dialog.cancel();
+                        NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
+                                SessionTypeEnum.P2P);
+                        getActivity().finish();
+                    }).create().show();
+                }
+            }
+        });
     }
 
     /**
@@ -520,13 +519,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             if (!nimBean.getMy_isfaced()) {
                 gotoVerifyBtn.setText(getString(R.string.verify_now));
                 if (nimBean.getResidue_msg_cnt() == nimBean.getNormal_chat_times()) {
-                    leftChatTimes.setText(getString(R.string.unverify_only_some_can_chat,nimBean.getNormal_chat_times()));
+                    leftChatTimes.setText(getString(R.string.unverify_only_some_can_chat, nimBean.getNormal_chat_times()));
                 } else {
-                    leftChatTimes.setText(getString(R.string.unverify_residue_count,nimBean.getResidue_msg_cnt()));
+                    leftChatTimes.setText(getString(R.string.unverify_residue_count, nimBean.getResidue_msg_cnt()));
                 }
             } else {
                 gotoVerifyBtn.setText(getString(R.string.video_introduce));
-                leftChatTimes.setText(getString(R.string.unverify_today_residue_count,nimBean.getResidue_msg_cnt()));
+                leftChatTimes.setText(getString(R.string.unverify_today_residue_count, nimBean.getResidue_msg_cnt()));
             }
         } else {
             verifyLl.setVisibility(View.INVISIBLE);
@@ -570,7 +569,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && UserManager.INSTANCE.getGender() == 2
                 && !nimBean.getPrivate_chat_state() && !isSendChargePtVip && !messageListPanel.getItems().isEmpty()
                 && messageListPanel.getItems().get(messageListPanel.getItems().size() - 1)
-                        .getDirect() == MsgDirectionEnum.In) {
+                .getDirect() == MsgDirectionEnum.In) {
             ArrayList<SendTipBean> tips = new ArrayList<>();
             tips.add(new SendTipBean(getString(R.string.hide_message_if_gold_vip), true,
                     SendCustomTipAttachment.CUSTOME_TIP_PRIVICY_SETTINGS));
@@ -592,7 +591,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 IMMessage message = messageListPanel.getItems().get(i);
                 if (message.getAttachment() instanceof SendCustomTipAttachment
                         && ((SendCustomTipAttachment) message.getAttachment())
-                                .getShowType() == SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP) {
+                        .getShowType() == SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP) {
                     isSendChargePtVip = true;
                     break;
                 }
@@ -600,7 +599,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
             if (nimBean.getMy_gender() == 1 && nimBean.getTarget_gender() == 2 && nimBean.getTarget_ishoney()) {
                 EventBus.getDefault().post(new EnablePicEvent(5));
-                if (!nimBean.getLockbtn() && !showSendGift) {
+                if (!nimBean.getLockbtn() && !nimBean.is_send_msg() && !showSendGift) {
                     showSendGiftEvent();
                     // EventBus.getDefault().post(new ShowSendGiftEvent(true));
                     showSendGift = true;
@@ -611,76 +610,101 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     }
 
-    private void sendMsgRequest(IMMessage content, String target_accid) {
+
+    private void uploadImgToQN(IMMessage content, String target_accid, String imageUrl) {
+        String key = Constants.FILE_NAME_INDEX + Constants.CHATCHECK + UserManager.INSTANCE.getAccid()
+                + System.currentTimeMillis() + RandomUtils.INSTANCE.getRandomString(16);
+        QNUploadManager.INSTANCE.getInstance().put(imageUrl, key, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), (key1, info, response) -> {
+            Log.d("sendMessage", "response===" + response.toString());
+            Log.d("sendMessage", "key1===" + key1);
+            if (info.isOK()) {
+                sendMsgRequest(content, target_accid, key1);
+            }
+        }, null);
+    }
+
+    private void sendMsgRequest(IMMessage content, String target_accid, String qnMediaUrl) {
+
+
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
         if (content.getMsgType() == MsgTypeEnum.text) {
             params.put("content", content.getContent());
+        } else {
+            params.put("content", qnMediaUrl);
         }
-        // else if (content.getMsgType() == MsgTypeEnum.image) {
-        // params.put("content", ((ImageAttachment) content.getAttachment()).getUrl());
-        // } else if (content.getMsgType() == MsgTypeEnum.audio) {
-        // params.put("content", ((AudioAttachment) content.getAttachment()).getUrl());
-        // } else if (content.getMsgType() == MsgTypeEnum.video) {
-        // params.put("content", ((VideoAttachment) content.getAttachment()).getUrl());
-        // }
+
         params.put("type", content.getMsgType().getValue());
         RetrofitFactory.Companion.getInstance().create(Api.class)
                 .sendMsgRequest(UserManager.INSTANCE.getSignParams(params)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new rx.Observer<BaseResp<ResidueCountBean>>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+                if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
+                    inputPanel.restoreText(true);
+                    // 搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
+                    if (nimBeanBaseResp.getData().getRid_data() != null
+                            && !nimBeanBaseResp.getData().getRid_data().getIcon().isEmpty()) {
+                        new ReceiveAccostGiftDialog(getActivity(), nimBeanBaseResp.getData().getRid_data())
+                                .show();
                     }
+                    sendMsgS(content, false);
+                    if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
+                        CommonFunction.INSTANCE.sendTips(sessionId,
+                                nimBeanBaseResp.getData().getRet_tips_arr());
+                    nimBean.set_send_msg(true);
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
+                    if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
+                            && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
+                        ArrayList<SendTipBean> tips = new ArrayList<>();
+                        tips.add(new SendTipBean(getString(R.string.charge_to_free), true,
+                                SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
+                        CommonFunction.INSTANCE.sendTips(sessionId, tips);
+                        isSendChargePtVip = true;
                     }
+                } else if (nimBeanBaseResp.getCode() == 409) {// 用户被封禁
 
-                    @Override
-                    public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
-                        if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
-                            inputPanel.restoreText(true);
-                            // 搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
-                            if (nimBeanBaseResp.getData().getRid_data() != null
-                                    && !nimBeanBaseResp.getData().getRid_data().getIcon().isEmpty()) {
-                                new ReceiveAccostGiftDialog(getActivity(), nimBeanBaseResp.getData().getRid_data())
-                                        .show();
-                            }
-                            // if (content.getMsgType() == MsgTypeEnum.text)
-                            sendMsgS(content, false);
-                            if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
-                                CommonFunction.INSTANCE.sendTips(sessionId,
-                                        nimBeanBaseResp.getData().getRet_tips_arr());
-                            nimBean.set_send_msg(true);
+                    new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
+                            .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
+                            .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
+                        dialog.cancel();
+                        NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
+                                SessionTypeEnum.P2P);
+                        getActivity().finish();
+                    }).create().show();
+                } else if (nimBeanBaseResp.getCode() == 411) {// 糖果余额不足
+                    new AlertCandyEnoughDialog(getActivity(),
+                            AlertCandyEnoughDialog.Companion.getFROM_SEND_GIFT()).show();
+                } else if (nimBeanBaseResp.getCode() == 201) {// 门槛会员充值
+                    CommonFunction.INSTANCE.startToFootPrice(getActivity());
+                } else {
+                    CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
+                }
+            }
 
-                            if (UserManager.INSTANCE.getGender() == 1 && !isSendChargePtVip
-                                    && !sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsplatinum()) {
-                                ArrayList<SendTipBean> tips = new ArrayList<>();
-                                tips.add(new SendTipBean(getString(R.string.charge_to_free), true,
-                                        SendCustomTipAttachment.CUSTOME_TIP_CHARGE_PT_VIP));
-                                CommonFunction.INSTANCE.sendTips(sessionId, tips);
-                                isSendChargePtVip = true;
-                            }
-                        } else if (nimBeanBaseResp.getCode() == 409) {// 用户被封禁
-                            new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
-                                    .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
-                                    .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
-                                        dialog.cancel();
-                                        NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId,
-                                                SessionTypeEnum.P2P);
-                                        getActivity().finish();
-                                    }).create().show();
-                        } else if (nimBeanBaseResp.getCode() == 411) {// 糖果余额不足
-                            new AlertCandyEnoughDialog(getActivity(),
-                                    AlertCandyEnoughDialog.Companion.getFROM_SEND_GIFT()).show();
-                        } else {
-                            CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
-                        }
-                    }
+        });
+    }
 
-                });
+    private void sendMsgRequest(IMMessage content, String target_accid) {
+        if (content.getMsgType() == MsgTypeEnum.audio) {
+            uploadImgToQN(content, target_accid, ((AudioAttachment) content.getAttachment()).getPath());
+        } else if (content.getMsgType() == MsgTypeEnum.image) {
+            uploadImgToQN(content, target_accid, ((ImageAttachment) content.getAttachment()).getPath());
+        } else if (content.getMsgType() == MsgTypeEnum.video) {
+            uploadImgToQN(content, target_accid, ((VideoAttachment) content.getAttachment()).getPath());
+        } else {
+            sendMsgRequest(content, target_accid, "");
+        }
     }
 
     private void aideSendMsg(IMMessage content) {
@@ -691,22 +715,22 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         RetrofitFactory.Companion.getInstance().create(Api.class)
                 .aideSendMsg(UserManager.INSTANCE.getSignParams(params)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new rx.Observer<BaseResp<ResidueCountBean>>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+            @Override
+            public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
 
-                    }
+            }
 
-                });
+        });
     }
 
     private void sendMsgS(IMMessage content, boolean requestMsg) {
@@ -743,11 +767,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 .setOnConfirmListener(dialog -> {
                     dialog.dismiss();
                     if (canSendMsg()) {
-                        // if (message.getMsgType() == MsgTypeEnum.text) {
                         sendMsgRequest(message, sessionId);
-                        // } else {
-                        // sendMsgS(message, true);
-                        // }
                     }
                 }).setOnCancelListener(dialog -> dialog.dismiss()).create().show();
     }
