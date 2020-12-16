@@ -2,7 +2,6 @@
     <string name="app_name">SugarTown</string>
 
     <string name="facebook_app_id">3546860392031186</string>
-    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
     <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
     <string name="server_client_id">325834510992-5o1upod7qkkgjh2bk9lg0th1abhfb6i7.apps.googleusercontent.com</string>
 
@@ -211,7 +210,6 @@
     <string name="user_title">User Agreement</string>
 
     <string name="login_error">Login failed! Retry</string>
-    <string name="login_tip">Login means consent</string>
     <string name="login_tip_and"> and </string>
     <string name="tourist">Vistor pattern</string>
     <string name="open_internet">Please unlock data traffic</string>
@@ -250,7 +248,6 @@
     <string name="label_no_choose">No selected Interestscan be saved</string>
 
 
-    <string name="label_publish_tip">Post Interestsand moments now,gain more "Likes"</string>
     <string name="permission_storage">File storage permission has been denied, please allow permission before uploading the photo</string>
     <string name="permission_camera">Camera permission has been denied, please grant permission before uploading photos</string>
     <string name="upload_photo">Please select the picture to upload</string>
@@ -379,10 +376,6 @@
     <string name="video_verify_first_then_introduce">Please record video introduceduction before real person certification</string>
     <string name="real_verify">Real person certification</string>
     <string name="video_introduce">Video introduceduction</string>
-    <string name="pay_why1">Invalid dating contact is forbiden</string>
-    <string name="pay_why2">Meet female member directly</string>
-    <string name="pay_why3">Date for travel and dinner with sugarbaby</string>
-    <string name="pay_why4">Unlock nearby high quality sugarbady permanently</string>
     <string name="has">%1$d Sugardaddy joined</string>
     <string name="give">Give %1$d Candies as gift</string>
     <string name="candy">Candy</string>
@@ -420,7 +413,6 @@
     <string name="my_reward">My rewards</string>
     <string name="comple_label_quality">Complete Interestss</string>
     <string name="more_choose">Select %1$d more</string>
-    <string name="count">个</string>
     <string name="choose_least">At least select  %d</string>
     <string name="choose_most">At most select %1$d Interestss</string>
     <string name="lazy_choose">Direct selection for lazy</string>
@@ -481,7 +473,6 @@
     <string name="label_manager">Interests managment</string>
     <string name="delete">Delect</string>
     <string name="at_least_main">Keep %1$d Interests at least</string>
-    <string name="label_count">Interests</string>
     <string name="add_label">Add Interests</string>
     <string name="deleta_label">Delect Interests</string>
     <string name="is_confirm_delete">Comfirm to delect Interests?</string>
@@ -695,7 +686,6 @@
     <string name="label_introduce_tip">Warning!!! Check this out\n what is your wish?\n introduce twishes what you can help other to make it \n type here about「Wishing Welfare Society」etc. \n data shows that rate of been flirting would increase \n do it now</string>
     <string name="see_other_how_to_write">Check out texts from others</string>
     <string name="replace">Edit</string>
-    <string name="choose_video">Select video</string>
     <string name="current_version_unsupport">Photography is not available in current system</string>
     <string name="start_record">Start to video recording</string>
     <string name="record_fail">Video recording failed</string>
@@ -782,7 +772,6 @@
     <string name="please_change_standard_avatar">The current photo is not approved \n Please replace it</string>
     <string name="please_change_real_avatar">Please replace photo of yourself</string>
     <string name="send_to">Give to</string>
-    <string name="chatup_get_chance_title">Get a chat opportunity</string>
     <string name="chatup_to_be_vip">To be Golden Member to unlock more chats</string>
     <string name="chatup_is_chat_her">Greet to her?</string>
     <string name="chatup_free_time_left">%1$d free chats left today</string>
@@ -889,10 +878,8 @@
     <string name="share_sina">Weibo</string>
     <string name="tobe_vip_close_touch">Become a member immediately off the list</string>
     <string name="thaey_are_waitinf_for_you">They\'re waiting for you</string>
-    <string name="total_has">in common</string>
     <string name="find_standard_girl">At %1$s</string>
     <string name="sugar_girl_count">%1$d verified %2$s nearby</string>
-    <string name="person_cpunt">%1$s %2$s</string>
     <string name="tobe_normal_vip">Get membership start dating</string>
     <string name="free_chat_after_chat">To be a member of SugarTown having Infinite chat</string>
     <string name="charge_now_to_free_chat">Only Member users can unlock chat \n To be a member of SugarTown and chat now</string>
@@ -1123,8 +1110,6 @@
     <string name="login_presents_you_agree">Sign up/Log in means you agree\t</string>
     <string name="and1">\tand\t</string>
     <string name="and2">\tand\t</string>
-    <string name="cannot_cause_duration_short">The video is less than %1$d seconds long and cannot be uploaded</string>
-    <string name="alreadey_choose">has chosen</string>
     <string name="hour">Hour</string>
     <string name="minute">Minute</string>
     <string name="second">s</string>
@@ -1186,18 +1171,15 @@
     <string name="login_with_phone">Phone Number</string>
     <string name="login_with_wechat">WetChat</string>
     <string name="continue_with_facebook">Facebook</string>
-    <string name="continue_with_twitter">Twitter</string>
     <string name="continue_with_google">Google</string>
 
 
     <string name="install_face_book_first">install facebook first</string>
     <string name="install_twitter_first">install Twitter first</string>
-    <string name="install_google_first">install with Google first</string>
     <string name="waiting">accessing</string>
     <string name="qqZone">QQ zone</string>
     <string name="facebook">Facebook</string>
     <string name="instagram">Instagram</string>
-    <string name="pinterest">Pinterest</string>
     <string name="choose_country_or_region">region</string>
 
     <string name="The_picture_is_saved_in">picture saved to:</string>
@@ -1267,7 +1249,6 @@
     <string name="only_woman">female only</string>
     <string name="only_man">male only</string>
     <string name="other_login_way">other methods</string>
-    <string name="drag_10s">video time length limitation 10 seconds</string>
     <string name="pay_paypal">PayPal</string>
     <string name="pay_google">Google Pay</string>
 
@@ -1276,8 +1257,6 @@
     <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
     <string name="contact_whatsapp">whatsapp</string>
     <string name="contact_skype">skype</string>
-    <string name="okay">Okay</string>
-    <string name="currencyCode">$</string>
     <string name="input_channel_you_know_us">Input the channel you see SugarTown</string>
     <string name="what_are_you_looking_for">What kind of relationship are you looking for</string>
     <string name="wechat_receive_message">Recieve WeChat Notification</string>

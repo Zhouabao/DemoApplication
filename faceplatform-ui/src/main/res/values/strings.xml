@@ -16,7 +16,6 @@
     <string name="detect_occ_chin">下巴有遮挡</string>
     <string name="detect_low_light">请使环境光线再亮些</string>
     <string name="detect_keep">请握稳手机，视线正对屏幕</string>
-    <string name="detect_standard">请正对手机</string>
     <string name="detect_timeout">检测超时，请按照提示重试</string>
     <string name="detect_left_eye_close">左眼未睁开</string>
     <string name="detect_right_eye_close">右眼未睁开</string>
