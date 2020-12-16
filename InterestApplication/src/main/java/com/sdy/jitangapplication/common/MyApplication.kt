@@ -119,10 +119,10 @@ class MyApplication : BaseApplication() {
     private val userStatusObserver: Observer<StatusCode> by lazy {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
-                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
-                    TickDialog(ActivityUtils.getTopActivity()).show()
-                else
-                    UserManager.startToLogin(this)
+//                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
+//                    TickDialog(ActivityUtils.getTopActivity()).show()
+//                else
+                UserManager.startToLogin(this)
             }
         }
     }
