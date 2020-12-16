@@ -184,12 +184,14 @@ object UserManager {
     /**
      * 跳至登录界面
      */
-    fun startToLogin(activity: Activity) {
-        touristMode = false
-        clearLoginData()
-        AppManager.instance.finishAllActivity()
+    fun startToLogin(activity: Activity, fromNimNotification: Boolean = false) {
+        if (fromNimNotification) {
+            touristMode = false
+            clearLoginData()
+            AppManager.instance.finishAllActivity()
 //        ActivityUtils.startLauncherActivity()
-        activity.startActivity<SplashActivity>()
+            activity.startActivity<SplashActivity>()
+        }
     }
 
     /**
@@ -531,8 +533,6 @@ object UserManager {
     fun saveShowGuideWechat(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideWechat", isShow)
     }
-
-
 
 
     /**

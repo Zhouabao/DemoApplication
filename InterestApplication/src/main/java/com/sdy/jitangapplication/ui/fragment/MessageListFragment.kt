@@ -274,7 +274,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(), MessageList
             EventBus.getDefault().post(GetNewMsgEvent())
         headAdapter.data[1].msg = when (data?.square_type) {
             1 -> {
-                getString(R.string.someone_zan_your_square, data?.square_nickname)
+                getString(R.string.someone_zan_your_square,data?.square_nickname)
             }
             2 -> {
                 getString(R.string.someone_comment_your_square, data?.square_nickname)

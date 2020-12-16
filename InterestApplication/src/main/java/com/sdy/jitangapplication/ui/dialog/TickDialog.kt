@@ -37,11 +37,16 @@ class TickDialog(var context1: Context) : Dialog(ActivityUtils.getTopActivity(),
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)
+        setCancelable(false)
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        UserManager.startToLogin(ActivityUtils.getTopActivity(), true)
     }
 
     fun initview() {
         confirm.onClick {
-            UserManager.startToLogin(ActivityUtils.getTopActivity())
             dismiss()
         }
     }

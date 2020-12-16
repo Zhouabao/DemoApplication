@@ -215,7 +215,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     override fun onGetUserActionResult(b: Boolean, msg: String?) {
         CommonFunction.toast("$msg")
         if (b) {
-            UserManager.startToLogin(this)
+            UserManager.startToLogin(this,true)
         }
     }
 

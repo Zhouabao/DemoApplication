@@ -934,7 +934,7 @@
     <string name="you_have_published_toady">You\'ve already posted activity today. For the validity please try again tomorrow. We will keep the latest event info for you.</string>
     <string name="tourist_title">You are just a vistor of SugarTown</string>
     <string name="register_now">Sign up/log in now</string>
-    <string name="register_in">It\'s for registered user \n Join SugarTown and contact with %d Sugarbabies</string>
+    <string name="register_in">It\'s for registered user \n Join SugarTown and contact with %s$d Sugarbabies</string>
     <string name="share_qq_zone">QQ Zone</string>
     <string name="upload_clear_pic">Upload a clear photo would greatly increase the match rate</string>
     <string name="take_picture">Shooting</string>
@@ -1011,7 +1011,7 @@
     <string name="later_see">Come back later</string>
     <string name="tab_sweet">SugarTown</string>
     <string name="choiceness">Featured</string>
-    <string name="someone_zan_your_square">%0$s Like your moments</string>
+    <string name="someone_zan_your_square">%1$s Like your moments</string>
     <string name="someone_comment_your_square">%1$s commented on your moments</string>
     <string name="someone_zan_your_comment">%1$s Like your comments</string>
     <string name="no_new_square">No more new moments</string>

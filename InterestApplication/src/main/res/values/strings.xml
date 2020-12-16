@@ -932,7 +932,7 @@
     <string name="you_have_published_toady">你今天已经发布过活动了，为了活动的有效性请明日再试，我们会为你保留最新发布的活动信息</string>
     <string name="tourist_title">你目前是游客</string>
     <string name="register_now">立即注册登录</string>
-    <string name="register_in">此为注册用户功能\n加入积糖，与 $s%d 位糖宝达成联系</string>
+    <string name="register_in">此为注册用户功能\n加入积糖，与 %s$d 位糖宝达成联系</string>
     <string name="share_qq_zone">QQ空间</string>
     <string name="upload_clear_pic">上传清晰的本人照片作为头像会极大提高匹配率</string>
     <string name="take_picture">拍摄</string>

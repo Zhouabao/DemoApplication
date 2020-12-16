@@ -106,20 +106,13 @@ class MyApplication : BaseApplication() {
         livenessList.add(LivenessTypeEnum.HeadRight)
     }
 
-    private val onLineClient: Observer<List<OnlineClient>> = Observer {
-        if (it == null || it.isEmpty()) {
-            return@Observer
-        } else {
-            TickDialog(applicationContext).show()
-        }
-
-    }
-
+    /**
+     * 登录状态观察
+     */
     private val userStatusObserver: Observer<StatusCode> by lazy {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
-                if (ActivityUtils.getTopActivity() != null)
-                    TickDialog(ActivityUtils.getTopActivity()).show()
+                TickDialog(applicationContext).show()
             }
         }
     }
@@ -498,9 +491,6 @@ class MyApplication : BaseApplication() {
             //自定义通知监听
             NIMClient.getService(MsgServiceObserve::class.java)
                 .observeCustomNotification(customNotificationObserver, true)
-            //多端互踢
-            NIMClient.getService(AuthServiceObserver::class.java)
-                .observeOtherClients(onLineClient, true)
             //在线状态
             NIMClient.getService(AuthServiceObserver::class.java)
                 .observeOnlineStatus(userStatusObserver, true)

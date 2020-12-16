@@ -130,7 +130,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     NIMClient.getService(AuthService::class.java).logout()
-                    UserManager.startToLogin(this@SettingsActivity)
+                    UserManager.startToLogin(this@SettingsActivity,true)
                     dialog.cancel()
                 }
 

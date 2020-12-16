@@ -31,7 +31,7 @@ class LoginOffSuccessDialog(val context1: Context) : Dialog(context1, R.style.My
     private fun initView() {
         loginOffSuccessBtn.onClick {
             dismiss()
-            UserManager.startToLogin(context1 as Activity)
+            UserManager.startToLogin(context1 as Activity,true)
         }
     }
 
