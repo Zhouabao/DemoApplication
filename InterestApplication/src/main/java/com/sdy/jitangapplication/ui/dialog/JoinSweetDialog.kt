@@ -162,9 +162,7 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
                 dismiss()
             }
             verifyNowBtn2.clickWithTrigger {
-                context1.startActivity<SweetHeartVerifyUploadActivity>("type" to SweetHeartVerifyUploadActivity.TYPE_PROFESSION)
-
-//                context1.startActivity<SweetHeartVerifyActivity>()
+                context1.startActivity<SweetHeartVerifyActivity>()
                 dismiss()
             }
 

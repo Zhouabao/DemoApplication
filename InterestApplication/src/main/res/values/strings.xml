@@ -672,7 +672,7 @@
     <string name="verify_has_commit">认证已提交</string>
     <string name="ok_1">好的</string>
     <string name="verifying_tip">你的认证正在审核中，审核结果稍后将以小助手形式通知您，请留意助手消息。审核大概需要1个工作日</string>
-    <string name="sweet_upload_id_card_figure">上传手持身份证、身份证正面及胸围测量\n请确保与本人头像一致，此流程不对外公开</string>
+    <string name="sweet_upload_id_card_education">上传手持身份证、身份证正面及学生证或毕业证等图片证明\n请确保与本人头像一致，此流程不对外公开</string>
     <string name="sweet_upload_id_card_job">上传手持身份证、身份证正面及工作牌等\n请确保与本人头像一致，此流程不对外公开</string>
     <string name="sweet_upload_id_card_car">上传手持身份证、身份证正面及驾驶证\n请确保与本人头像一致，照片不会对外公开</string>
     <string name="sweet_upload_id_card_house">上传手持身份证、身份证正面及所有权的房产证\n请确保与本人头像一致，照片不会对外公开</string>
@@ -857,7 +857,7 @@
     <string name="veriy_pass">认证通过</string>
     <string name="reach_auto_in_sweet">达成要求自动进入恋爱圈</string>
     <string name="upload_verify_video">上传认证视频</string>
-    <string name="verify_figure_or_job">认证职业</string>
+    <string name="verify_figure_or_job">认证职业或学历</string>
     <string name="login_off_tip">您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n 您即将离开积糖，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用</string>
     <string name="login_off_success">注销成功</string>
     <string name="login_off_success_content">15天内登录可取消注销\n过期数据将全部清空且不可恢复</string>
@@ -917,7 +917,7 @@
     <string name="upload_clear_front_pic">上传清晰的身份证正面照片</string>
     <string name="upload_driving_more_50">上传与身份证姓名一致的车辆行驶证\n要求车价大于50万</string>
     <string name="upload_house_licnese">上传与身份证姓名一致的房产证\n要求房产大于200平米</string>
-    <string name="upload_see_size">上传的测量图片能清晰看到卷尺标</string>
+    <string name="upload_see_size">上传清晰的学生证或毕业证照片\n照片不会对外公开</string>
     <string name="upload_see_job">上传与身份证姓名一致的工作证明信息</string>
     <string name="normal_pic">照片示例</string>
     <string name="make_sure_its_you">请确保与本人头像一致，照片不会对外公开</string>

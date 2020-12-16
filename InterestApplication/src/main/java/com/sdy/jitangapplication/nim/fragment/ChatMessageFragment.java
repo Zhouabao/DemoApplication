@@ -27,7 +27,6 @@ import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
-import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
 import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
@@ -709,9 +708,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid) {
-        if (content.getMsgType() == MsgTypeEnum.audio) {
-            uploadImgToQN(content, target_accid, ((AudioAttachment) content.getAttachment()).getPath());
-        } else if (content.getMsgType() == MsgTypeEnum.image) {
+//        if (content.getMsgType() == MsgTypeEnum.audio) {
+//            uploadImgToQN(content, target_accid, ((AudioAttachment) content.getAttachment()).getPath());
+//        } else
+        if (content.getMsgType() == MsgTypeEnum.image) {
             uploadImgToQN(content, target_accid, ((ImageAttachment) content.getAttachment()).getPath());
         } else if (content.getMsgType() == MsgTypeEnum.video) {
             uploadImgToQN(content, target_accid, ((VideoAttachment) content.getAttachment()).getPath());

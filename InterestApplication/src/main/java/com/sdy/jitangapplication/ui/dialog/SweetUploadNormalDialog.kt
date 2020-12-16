@@ -44,8 +44,8 @@ class SweetUploadNormalDialog(val context1: Context, val position: Int, val type
                 normalImage.setImageResource(R.drawable.icon_sweet_normal_houseid)
                 normalContent.text=context1.getString(R.string.upload_house_licnese)
             }
-            SweetHeartVerifyUploadActivity.TYPE_FIGURE -> {
-                normalImage.setImageResource(R.drawable.icon_sweet_normal_chest)
+            SweetHeartVerifyUploadActivity.TYPE_EDUCATION -> {
+                normalImage.setImageResource(R.drawable.icon_sweet_normal_education)
                 normalContent.text=context1.getString(R.string.upload_see_size)
             }
             SweetHeartVerifyUploadActivity.TYPE_PROFESSION -> {

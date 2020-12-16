@@ -59,26 +59,26 @@ class SweetHeartSquareUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     //type [int]	是	1资产证明 2豪车 3身材 4职业
     private fun initData() {
         when (type) {
-            1 -> {
+            SweetHeartVerifyUploadActivity.TYPE_WEALTH -> {
                 hotT1.text = getString(R.string.sweet_big_house_title)
                 uploadTitle.text = getString(R.string.sweet_rich_to_be_friend)
                 uploadType.text = getString(R.string.sweet_fullscreen_house)
                 tip.text = getString(R.string.sweet_upload_one_or_more_pic)
             }
-            2 -> {
+            SweetHeartVerifyUploadActivity.TYPE_CAR -> {
                 hotT1.text = getString(R.string.sweet_luxury_car_title)
                 uploadTitle.text = getString(R.string.sweet_car_to_be_friend)
                 uploadType.text = getString(R.string.sweet_car_and_man)
                 tip.text = getString(R.string.sweet_upload_one_or_more_pic)
 
             }
-            3 -> {
+            SweetHeartVerifyUploadActivity.TYPE_EDUCATION -> {
                 hotT1.text = getString(R.string.sweet_figure_title)
-                uploadTitle.text = getString(R.string.sweet_hot_figure)
-                uploadType.text = getString(R.string.sweet_swimsuit)
-                tip.text = getString(R.string.sweet_figure_pic_notice_scale)
+                uploadTitle.text = getString(R.string.sweet_education_rich)
+                uploadType.text = getString(R.string.sweet_schoolsuit)
+                tip.text = getString(R.string.sweet_school_pic_education)
             }
-            4 -> {
+            SweetHeartVerifyUploadActivity.TYPE_PROFESSION -> {
                 hotT1.text = getString(R.string.sweet_job_title)
                 uploadTitle.text = getString(R.string.sweet_funny_job)
                 uploadType.text = getString(R.string.sweet_appropriate_suit)

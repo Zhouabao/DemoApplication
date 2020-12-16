@@ -38,6 +38,7 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
     //    // public_type [int]	是	1非公开 2公开
     //    //type [int]	是	1资产证明 2豪车 3身材 4职业
     //    //photo [string]	是	json串
+    //    上传甜心圈资料的  type 1资产证明  2豪车     3身材    4职业   6学历
     companion object {
         const val REQUEST_VERIFY = 1001
         const val MAX_COUNT_MAN = 3
@@ -46,8 +47,9 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
         const val TYPE_CAR = 2
         const val TYPE_FIGURE = 3
         const val TYPE_PROFESSION = 4
-        const val TYPE_IDHAND = 5
-        const val TYPE_IDFACE = 6
+        const val TYPE_EDUCATION = 6
+        const val TYPE_IDHAND = 7
+        const val TYPE_IDFACE = 8
     }
 
     private val type by lazy { intent.getIntExtra("type", 0) }
@@ -82,8 +84,8 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
                     SweetUploadBean(R.drawable.icon_sweet_upload_drivingcard, TYPE_CAR)
                 }
 
-                TYPE_FIGURE -> {//胸围证明
-                    SweetUploadBean(R.drawable.icon_sweet_upload_chest, TYPE_FIGURE)
+                TYPE_EDUCATION -> {//学历证明
+                    SweetUploadBean(R.drawable.icon_sweet_upload_education, TYPE_EDUCATION)
                 }
                 else -> {//工作证明
                     SweetUploadBean(R.drawable.icon_sweet_upload_workcard, TYPE_PROFESSION)
@@ -103,9 +105,9 @@ class SweetHeartVerifyUploadActivity : BaseMvpActivity<SweetHeartVerifyUploadPre
             finish()
         }
 
-        if (type == TYPE_FIGURE ) {
+        if (type == TYPE_EDUCATION ) {
             hotT1.text = getString(R.string.sweet_figure_title)
-            t1.text = getString(R.string.sweet_upload_id_card_figure)
+            t1.text = getString(R.string.sweet_upload_id_card_education)
         }else if (type == TYPE_PROFESSION) {
             hotT1.text  = getString(R.string.sweet_job_title)
             t1.text = getString(R.string.sweet_upload_id_card_job)

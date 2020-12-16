@@ -18,7 +18,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="15dp"
-        android:text="@string/sweet_upload_id_card_figure"
+        android:text="@string/sweet_upload_id_card_education"
         android:textColor="#ff191919"
         android:textSize="18sp"
         android:textStyle="bold"
