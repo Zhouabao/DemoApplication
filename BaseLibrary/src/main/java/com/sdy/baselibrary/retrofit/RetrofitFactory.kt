@@ -2,6 +2,7 @@ package com.kotlin.base.data.net
 
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
+import com.blankj.utilcode.util.LanguageUtils
 import com.kotlin.base.common.BaseApplication.Companion.context
 import com.sdy.baselibrary.common.BaseConstant
 import com.sdy.baselibrary.retrofit.MyGsonConverterFactory
@@ -11,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /*
@@ -37,8 +39,16 @@ class RetrofitFactory private constructor() {
                 .addHeader("Content_Type", "application/json")
                 .addHeader("charset", "UTF-8")
                 .addHeader("os", "android")
+                .addHeader(
+                    "nation",
+                    if (LanguageUtils.getSystemLanguage().language == Locale.SIMPLIFIED_CHINESE.language) {
+                        "CN"
+                    } else {
+                        "EN"
+                    }
+                )
                 .addHeader("mac", DeviceUtils.getAndroidID())
-                .addHeader("machine",  "${DeviceUtils.getManufacturer()},${DeviceUtils.getModel()}"  )
+                .addHeader("machine", "${DeviceUtils.getManufacturer()},${DeviceUtils.getModel()}")
                 .addHeader(
                     "chnl", ChannelUtils.getChannel(context)
                 )
