@@ -28,7 +28,6 @@ import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.ToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
-import com.sdy.jitangapplication.utils.UserManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,12 +104,12 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     private void initAmap() {
         try {
             amap = mapView.getMap();
-            if (UserManager.INSTANCE.getOverseas()) {
-                amap.setWorldVectorMapStyle("style_en");
-            } else {
-                amap.setWorldVectorMapStyle("style_local");
-                amap.accelerateNetworkInChinese(true);
-            }
+//            if (UserManager.INSTANCE.getOverseas()) {
+//                amap.setWorldVectorMapStyle("style_en");
+//            } else {
+//                amap.setWorldVectorMapStyle("style_local");
+//                amap.accelerateNetworkInChinese(true);
+//            }
 
            /* amap.setCustomMapStyle(
                     new CustomMapStyleOptions()
