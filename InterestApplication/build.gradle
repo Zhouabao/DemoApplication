@@ -35,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 44
-        versionName "2.6.1"
+        versionCode 45
+        versionName "2.6.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -54,7 +54,7 @@ android {
         //设置支持的SO库架构
 //            abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
 //        }
-        ndk { abiFilters  "armeabi-v7a", 'arm64-v8a'}
+        ndk { abiFilters "armeabi-v7a", 'arm64-v8a' }
         // 只保留中文
 //        resConfigs "zh"
 
@@ -133,6 +133,7 @@ android {
         Yingyonghui {}//投放应用汇市场
         Samsung {}//投放三星市场
         Advertisement {}//运营投放渠道
+        Google {}//谷歌市场
 
         //manifestPlaceholders 使用相关的值替换了UMENG_CHANNEL_VALUE
         productFlavors.all {
