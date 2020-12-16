@@ -104,7 +104,7 @@ class CustomChatUpContentActivity : BaseMvpActivity<CustomChatUpContentPresenter
     override fun onSaveChatupMsg(success: Boolean, msg: String) {
         if (success) {
             saveDialog.show()
-            saveDialog.correctTip.text = getString(R.string.account_bind_success)
+            saveDialog.correctTip.text = getString(R.string.save_success)
             chatupEt.postDelayed({
                 saveDialog.dismiss()
             }, 500L)

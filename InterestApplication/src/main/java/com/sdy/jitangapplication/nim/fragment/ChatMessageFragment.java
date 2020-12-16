@@ -709,7 +709,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     inputPanel.restoreText(true);
                     FragmentUtils.add(
                             ((AppCompatActivity) ActivityUtils.getTopActivity()).getSupportFragmentManager(),
-                            new SnackBarFragment(new CustomerMsgBean(SnackBarFragment.SEND_FAILED, getString(R.string.send_failed), nimBeanBaseResp.getMsg(), R.drawable.icon_notice)),
+                            new SnackBarFragment(new CustomerMsgBean(SnackBarFragment.SEND_FAILED, getString(R.string.send_failed), nimBeanBaseResp.getMsg(), R.drawable.icon_send_msg_fail)),
                             android.R.id.content);
 //                    CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
                 }

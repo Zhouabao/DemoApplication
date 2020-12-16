@@ -1303,5 +1303,6 @@
     <string name="approve_education">能证明学历</string>
     <string name="s_photo">的照片\n</string>
     <string name="only_important_college">学历认证仅通过981/211在读或毕业生\n学历是受教和成长环境的最佳体现\n认证后将获得全局额外推荐</string>
+    <string name="save_success">保存成功</string>
 
 </resources>

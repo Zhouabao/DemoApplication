@@ -109,6 +109,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
     <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
@@ -157,5 +158,12 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-
+    <style name="s_true" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorOrange</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="s_false" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#E3E3E3</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

@@ -68,6 +68,14 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
 
         })
 
+        switchShowContact.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                switchShowContact.setSwitchTextAppearance(this,R.style.s_true)
+            } else {
+                switchShowContact.setSwitchTextAppearance(this,R.style.s_false)
+            }
+        }
+
     }
 
     override fun onLazyClick(v: View) {

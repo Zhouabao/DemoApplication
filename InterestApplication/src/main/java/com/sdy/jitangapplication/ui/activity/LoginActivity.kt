@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,6 +21,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
@@ -120,6 +120,12 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        loginFlashLottie.playAnimation()
+
+    }
+
     override fun onPause() {
         super.onPause()
         loginFlashLottie.pauseAnimation()
@@ -128,7 +134,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onRestart() {
         super.onRestart()
         loginFlashLottie.playAnimation()
-
     }
 
     override fun onResume() {
@@ -147,6 +152,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             onekeyLoginBtn.isEnabled = true
             UserManager.registerFileBean = data
             UserManager.overseas = data.region == 2
+            Constants.ASSISTANT_ACCID = if (data.region == 2) {
+                "01"
+            } else {
+                "002"
+            }
 //            UserManager.overseas = data.region == 2
             if (data.tourists) {
                 touristBtn.visibility = View.VISIBLE
@@ -160,6 +170,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         } else {
             onekeyLoginBtn.isEnabled = false
             mPresenter.getRegisterProcessType()
+            Constants.ASSISTANT_ACCID = "01"
         }
 
     }

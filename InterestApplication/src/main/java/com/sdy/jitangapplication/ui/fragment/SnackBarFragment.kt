@@ -55,7 +55,8 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
         intArrayOf(
             Color.parseColor("#FF6318"),
             Color.parseColor("#7CBAFD"),
-            Color.parseColor("#2BD683")
+            Color.parseColor("#2BD683"),
+            Color.parseColor("#FFFF7736")
         )
     }
 
@@ -67,7 +68,7 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
 //        contentView
 //        EventBus.getDefault().register(this)
         when (msgBean.type) {
-            SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS, SEND_FAILED -> {
+            SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS -> {
                 contentView.setCardBackgroundColor(colors[0])
             }
             FLASH_SUCCESS,
@@ -77,6 +78,9 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
             HELP_CANDY,
             GIVE_GIFT -> {
                 contentView.setCardBackgroundColor(colors[2])
+            }
+            SEND_FAILED -> {
+                contentView.setCardBackgroundColor(colors[3])
             }
         }
 
