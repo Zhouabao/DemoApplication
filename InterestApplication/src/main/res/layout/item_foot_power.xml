@@ -7,9 +7,8 @@
 
     <ImageView
         android:id="@+id/footPowerIv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_foot_price1" />
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 
     <TextView
         android:id="@+id/footPowerContent"

@@ -15,7 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
@@ -48,6 +52,7 @@ import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.event.UpdateStarEvent;
+import com.sdy.jitangapplication.model.CustomerMsgBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.model.SendTipBean;
@@ -75,6 +80,7 @@ import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.ui.dialog.ReceiveAccostGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.VerifyAddChatDialog;
 import com.sdy.jitangapplication.ui.dialog.VideoAddChatTimeDialog;
+import com.sdy.jitangapplication.ui.fragment.SnackBarFragment;
 import com.sdy.jitangapplication.utils.QNUploadManager;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
@@ -700,7 +706,12 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 } else if (nimBeanBaseResp.getCode() == 201) {// 门槛会员充值
                     CommonFunction.INSTANCE.startToFootPrice(getActivity());
                 } else {
-                    CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
+                    inputPanel.restoreText(true);
+                    FragmentUtils.add(
+                            ((AppCompatActivity) ActivityUtils.getTopActivity()).getSupportFragmentManager(),
+                            new SnackBarFragment(new CustomerMsgBean(SnackBarFragment.SEND_FAILED, getString(R.string.send_failed), nimBeanBaseResp.getMsg(), R.drawable.icon_notice)),
+                            android.R.id.content);
+//                    CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
                 }
             }
 

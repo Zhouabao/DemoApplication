@@ -55,9 +55,9 @@ class GreetHiView @JvmOverloads constructor(
 
     }
 
-    var url: String = ""
+    var url: Any = ""
     var accid: String = ""
-    fun loadImg(url: String, accid: String) {
+    fun loadImg(url: Any, accid: String) {
         this.url = url
         this.accid = accid
         GlideUtil.loadAvatorImg(context, url, greetIcon)

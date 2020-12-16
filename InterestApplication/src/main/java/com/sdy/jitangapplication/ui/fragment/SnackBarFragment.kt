@@ -34,6 +34,7 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
         const val CHAT_SUCCESS = 43//发消息
         const val HELP_CANDY = 51//助力
         const val GIVE_GIFT = 52//赠送礼物
+        const val SEND_FAILED = 53//发送消息失败
     }
 
 
@@ -66,7 +67,7 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
 //        contentView
 //        EventBus.getDefault().register(this)
         when (msgBean.type) {
-            SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS -> {
+            SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS, SEND_FAILED -> {
                 contentView.setCardBackgroundColor(colors[0])
             }
             FLASH_SUCCESS,

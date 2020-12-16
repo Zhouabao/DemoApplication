@@ -643,10 +643,10 @@
     <string name="sweet_luxury_car_title">豪车认证</string>
     <string name="sweet_car_to_be_friend">听说你的车很漂亮，她们想和你做朋友</string>
     <string name="sweet_car_and_man">豪车照片或人车合照</string>
-    <string name="sweet_figure_title">身材认证</string>
-    <string name="sweet_hot_figure">我咬了一口嘴巴，也太辣了吧</string>
-    <string name="sweet_swimsuit">游泳装或者私房写真照</string>
-    <string name="sweet_figure_pic_notice_scale">照片将对外展示\n注意照片尺度过大或导致无法通过认证</string>
+    <string name="sweet_figure_title">学历认证</string>
+    <string name="sweet_education_rich">听说你读过很多书见过许多人</string>
+    <string name="sweet_schoolsuit">着校服或校园内照片</string>
+    <string name="sweet_school_pic_education">上传一张或多张能体现你学校的图片，照片将对外展示</string>
     <string name="sweet_job_title">职业认证</string>
     <string name="sweet_funny_job">听说你的职业很有趣，我和她们不一样</string>
     <string name="sweet_appropriate_suit">得体穿着职业装（如制服、校服等）</string>
@@ -1298,5 +1298,10 @@
     <string name="custom_chat_up">自定搭讪语</string>
     <string name="input_custom_chat_up">请输入自定搭讪语</string>
     <string name="custom_chatup">自定义搭讪语</string>
+    <string name="send_failed">发送失败</string>
+    <string name="need_commit1">需要提交</string>
+    <string name="approve_education">能证明学历</string>
+    <string name="s_photo">的照片\n</string>
+    <string name="only_important_college">学历认证仅通过981/211在读或毕业生\n学历是受教和成长环境的最佳体现\n认证后将获得全局额外推荐</string>
 
 </resources>

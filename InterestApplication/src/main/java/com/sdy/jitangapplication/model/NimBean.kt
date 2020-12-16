@@ -57,14 +57,14 @@ data class ResidueCountBean(
     var rid_data: GiftBean? = null
 )
 
-data class CustomerMsgBean(
+data class CustomerMsgBean @JvmOverloads constructor(
+    val type: Int = 0,
+    val title: String = "",
+    val content: String = "",
+    val avatar: Any = "",
     val msg: String = "",
     val accid: String = "",
-    val type: Int = 0,
-    val extra: Any?,
-    val avatar: String,
-    val content: String,
-    val title: String
+    val extra: Any? = null
 )
 
 /**
