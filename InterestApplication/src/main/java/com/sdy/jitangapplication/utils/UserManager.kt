@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
 import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.auth.AuthService
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
@@ -184,14 +185,13 @@ object UserManager {
     /**
      * 跳至登录界面
      */
-    fun startToLogin(activity: Activity, fromNimNotification: Boolean = false) {
-        if (fromNimNotification) {
+    fun startToLogin(activity: Context, fromNimNotification: Boolean = false) {
             touristMode = false
             clearLoginData()
+            NIMClient.getService(AuthService::class.java).logout()
             AppManager.instance.finishAllActivity()
 //        ActivityUtils.startLauncherActivity()
             activity.startActivity<SplashActivity>()
-        }
     }
 
     /**

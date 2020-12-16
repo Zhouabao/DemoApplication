@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.tick_dialog_layout.*
  *    desc   :
  *    version: 1.0
  */
-class TickDialog(var context1: Context) : Dialog(ActivityUtils.getTopActivity(), R.style.MyDialog) {
+class TickDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow()
@@ -37,16 +37,11 @@ class TickDialog(var context1: Context) : Dialog(ActivityUtils.getTopActivity(),
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)
-        setCancelable(false)
-    }
-
-    override fun dismiss() {
-        super.dismiss()
-        UserManager.startToLogin(ActivityUtils.getTopActivity(), true)
     }
 
     fun initview() {
         confirm.onClick {
+            UserManager.startToLogin(context1,true)
             dismiss()
         }
     }

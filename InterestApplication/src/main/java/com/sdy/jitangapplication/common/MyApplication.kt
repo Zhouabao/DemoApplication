@@ -1,5 +1,9 @@
 package com.sdy.jitangapplication.common
 
+//import com.facebook.FacebookSdk
+//import com.facebook.appevents.AppEventsLogger
+//import iknow.android.utils.BaseUtils
+//import nl.bravobit.ffmpeg.FFmpeg
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,8 +17,6 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-//import com.facebook.FacebookSdk
-//import com.facebook.appevents.AppEventsLogger
 import com.google.gson.Gson
 import com.heytap.msp.push.HeytapPushManager
 import com.kotlin.base.common.BaseApplication
@@ -60,15 +62,14 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-//import iknow.android.utils.BaseUtils
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
-//import nl.bravobit.ffmpeg.FFmpeg
 import org.greenrobot.eventbus.EventBus
 
 
 class MyApplication : BaseApplication() {
     val appContext by lazy { this }
+
 
     init {
         SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
@@ -106,13 +107,22 @@ class MyApplication : BaseApplication() {
         livenessList.add(LivenessTypeEnum.HeadRight)
     }
 
-    /**
-     * 登录状态观察
-     */
+    private val onLineClient: Observer<List<OnlineClient>> = Observer {
+        if (it == null || it.isEmpty()) {
+            return@Observer
+        } else {
+            TickDialog(this).show()
+        }
+
+    }
+
     private val userStatusObserver: Observer<StatusCode> by lazy {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
-                TickDialog(applicationContext).show()
+                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
+                    TickDialog(ActivityUtils.getTopActivity()).show()
+                else
+                    UserManager.startToLogin(this)
             }
         }
     }
@@ -342,6 +352,8 @@ class MyApplication : BaseApplication() {
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
+
+        Constants.ASSISTANT_ACCID = "01"
         //初始化Umeng
         initUmeng()
 
@@ -472,7 +484,7 @@ class MyApplication : BaseApplication() {
 
         if (NIMUtil.isMainProcess(this)) {
             //oppo推送init
-            HeytapPushManager.init(this,true)
+            HeytapPushManager.init(this, true)
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
@@ -491,6 +503,9 @@ class MyApplication : BaseApplication() {
             //自定义通知监听
             NIMClient.getService(MsgServiceObserve::class.java)
                 .observeCustomNotification(customNotificationObserver, true)
+            //多端互踢
+            NIMClient.getService(AuthServiceObserver::class.java)
+                .observeOtherClients(onLineClient, true)
             //在线状态
             NIMClient.getService(AuthServiceObserver::class.java)
                 .observeOnlineStatus(userStatusObserver, true)
