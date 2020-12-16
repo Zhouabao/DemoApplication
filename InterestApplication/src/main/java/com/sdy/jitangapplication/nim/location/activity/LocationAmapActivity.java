@@ -19,7 +19,6 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
-import com.amap.api.maps.model.CustomMapStyleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
@@ -113,12 +112,12 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
                 amap.accelerateNetworkInChinese(true);
             }
 
-            amap.setCustomMapStyle(
+           /* amap.setCustomMapStyle(
                     new CustomMapStyleOptions()
                             .setEnable(true)
                             .setStyleData(getAssetsStyle("style.data"))
                             .setStyleExtraData(getAssetsStyle("style_extra.data"))
-            );
+            );*/
             amap.setOnCameraChangeListener(this);
 
             UiSettings uiSettings = amap.getUiSettings();

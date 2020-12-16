@@ -157,16 +157,16 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         locationMap.onCreate(savedInstanceState)
         //初始化地图控制器对象
         aMap = locationMap.map
-        aMap.setCustomMapStyle(
-            CustomMapStyleOptions()
-                .setEnable(true)
-                .setStyleData(getAssetsStyle("style.data"))
-                .setStyleExtraData(getAssetsStyle("style_extra.data"))
-        )
-        aMap.setWorldVectorMapStyle("style_local")
-        if (!UserManager.overseas) {
-            aMap.accelerateNetworkInChinese(true)
-        }
+//        aMap.setCustomMapStyle(
+//            CustomMapStyleOptions()
+//                .setEnable(true)
+//                .setStyleData(getAssetsStyle("style.data"))
+//                .setStyleExtraData(getAssetsStyle("style_extra.data"))
+//        )
+//        aMap.setWorldVectorMapStyle("style_local")
+//        if (!UserManager.overseas) {
+//            aMap.accelerateNetworkInChinese(true)
+//        }
         aMap.mapType = AMap.MAP_TYPE_NORMAL
 //        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
         aMap.uiSettings.isZoomControlsEnabled = false
