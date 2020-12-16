@@ -88,9 +88,15 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
             contentView.isVisible = false
             FragmentUtils.remove(this@SnackBarFragment)
         }
-        contentView.postDelayed({
-            showAnimation(250L)
-        }, 3000L)
+        contentView.postDelayed(
+            {
+                showAnimation(250L)
+            }, if (msgBean.type == SEND_FAILED) {
+                1500L
+            } else {
+                3000L
+            }
+        )
 
         GlideUtil.loadCircleImg(activity!!, msgBean.avatar, matchIcon)
         matchName.text = msgBean.title
@@ -115,6 +121,10 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
                 }
                 //闪聊
                 FLASH_SUCCESS -> {
+                }
+
+                SEND_FAILED->{
+                    FragmentUtils.remove(this@SnackBarFragment)
                 }
             }
         }

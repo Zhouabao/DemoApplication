@@ -126,11 +126,11 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
         }
 
         // progress bar indicator
-        if (status == MsgStatusEnum.sending || attachStatus == AttachStatusEnum.transferring) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
+//        if (status == MsgStatusEnum.sending || attachStatus == AttachStatusEnum.transferring) {
+//            progressBar.setVisibility(View.VISIBLE);
+//        } else {
             progressBar.setVisibility(View.GONE);
-        }
+//        }
 
         // unread indicator
         if (!NimUIKitImpl.getOptions().disableAudioPlayedStatusIcon

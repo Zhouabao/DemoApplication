@@ -15,7 +15,6 @@ import com.sdy.jitangapplication.nim.uikit.common.ui.imageview.MsgThumbImageView
 import com.sdy.jitangapplication.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.jitangapplication.nim.uikit.common.util.media.BitmapDecoder;
 import com.sdy.jitangapplication.nim.uikit.common.util.media.ImageUtil;
-import com.sdy.jitangapplication.nim.uikit.common.util.string.StringUtil;
 import com.sdy.jitangapplication.nim.uikit.common.util.sys.ScreenUtil;
 
 import java.io.File;
@@ -71,17 +70,17 @@ public abstract class MsgViewHolderThumbBase extends MsgViewHolderBase {
             }
         }
 
-        if (message.getStatus() == MsgStatusEnum.sending
-                || (isReceivedMessage() && message.getAttachStatus() == AttachStatusEnum.transferring)) {
-            progressCover.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-            progressLabel.setVisibility(View.VISIBLE);
-            progressLabel.setText(StringUtil.getPercentString(getMsgAdapter().getProgress(message)));
-        } else {
+//        if (message.getStatus() == MsgStatusEnum.sending
+//                || (isReceivedMessage() && message.getAttachStatus() == AttachStatusEnum.transferring)) {
+//            progressCover.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
+//            progressLabel.setVisibility(View.VISIBLE);
+//            progressLabel.setText(StringUtil.getPercentString(getMsgAdapter().getProgress(message)));
+//        } else {
             progressCover.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
             progressLabel.setVisibility(View.GONE);
-        }
+//        }
     }
 
     private void loadThumbnailImage(String path, boolean isOriginal, String ext) {

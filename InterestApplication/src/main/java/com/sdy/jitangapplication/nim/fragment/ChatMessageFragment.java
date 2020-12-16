@@ -31,6 +31,7 @@ import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
 import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
@@ -377,9 +378,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private void sendFailWithBlackList(int code, IMMessage msg) {
         if (code == ResponseCode.RES_IN_BLACK_LIST) {
             // 如果被对方拉入黑名单，发送的消息前不显示重发红点
-            msg.setStatus(MsgStatusEnum.success);
-            NIMClient.getService(MsgService.class).updateIMMessageStatus(msg);
-            messageListPanel.refreshMessageList();
+            setMessageStatus(msg, MsgStatusEnum.success);
             // 同时，本地插入被对方拒收的tip消息
             IMMessage tip = MessageBuilder.createTipMessage(msg.getSessionId(), msg.getSessionType());
             tip.setContent(getActivity().getString(R.string.black_list_send_tip));
@@ -616,10 +615,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
 
+    /**
+     * 上传媒体文件到七牛
+     * @param content
+     * @param target_accid
+     * @param imageUrl
+     */
     private void uploadImgToQN(IMMessage content, String target_accid, String imageUrl) {
-        if (loadingDialog == null)
-            loadingDialog = new LoadingDialog(getActivity());
-        loadingDialog.show();
         String key = Constants.FILE_NAME_INDEX + Constants.CHATCHECK + UserManager.INSTANCE.getAccid()
                 + System.currentTimeMillis() + RandomUtils.INSTANCE.getRandomString(16);
         QNUploadManager.INSTANCE.getInstance().put(imageUrl, key, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), (key1, info, response) -> {
@@ -627,17 +629,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             Log.d("sendMessage", "key1===" + key1);
             if (info.isOK()) {
                 sendMsgRequest(content, target_accid, key1);
-            } else {
-                loadingDialog.dismiss();
-                CommonFunction.INSTANCE.toast("消息发送失败");
             }
         }, null);
     }
 
     private void sendMsgRequest(IMMessage content, String target_accid, String qnMediaUrl) {
-        if (loadingDialog == null)
-            loadingDialog = new LoadingDialog(getActivity());
-        loadingDialog.show();
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
         if (content.getMsgType() == MsgTypeEnum.text) {
@@ -658,18 +654,12 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
+                setMessageStatus(content, MsgStatusEnum.fail);
             }
 
             @Override
             public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
                 if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
-                    inputPanel.restoreText(true);
                     // 搭讪礼物如果返回不为空，就代表成功领取对方的搭讪礼物
                     if (nimBeanBaseResp.getData().getRid_data() != null
                             && !nimBeanBaseResp.getData().getRid_data().getIcon().isEmpty()) {
@@ -691,7 +681,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         isSendChargePtVip = true;
                     }
                 } else if (nimBeanBaseResp.getCode() == 409) {// 用户被封禁
-
+                    setMessageStatus(content, MsgStatusEnum.fail);
                     new CommonAlertDialog.Builder(getActivity()).setTitle(getString(R.string.tip))
                             .setContent(nimBeanBaseResp.getMsg()).setCancelIconIsVisibility(false)
                             .setConfirmText(getString(R.string.iknow)).setCancelAble(false).setOnConfirmListener(dialog -> {
@@ -701,12 +691,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         getActivity().finish();
                     }).create().show();
                 } else if (nimBeanBaseResp.getCode() == 411) {// 糖果余额不足
+                    setMessageStatus(content, MsgStatusEnum.fail);
                     new AlertCandyEnoughDialog(getActivity(),
                             AlertCandyEnoughDialog.Companion.getFROM_SEND_GIFT()).show();
                 } else if (nimBeanBaseResp.getCode() == 201) {// 门槛会员充值
+                    setMessageStatus(content, MsgStatusEnum.fail);
                     CommonFunction.INSTANCE.startToFootPrice(getActivity());
                 } else {
-                    inputPanel.restoreText(true);
+                    setMessageStatus(content, MsgStatusEnum.fail);
                     FragmentUtils.add(
                             ((AppCompatActivity) ActivityUtils.getTopActivity()).getSupportFragmentManager(),
                             new SnackBarFragment(new CustomerMsgBean(SnackBarFragment.SEND_FAILED, getString(R.string.send_failed), nimBeanBaseResp.getMsg(), R.drawable.icon_send_msg_fail)),
@@ -718,11 +710,20 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         });
     }
 
+    private void setMessageStatus(IMMessage content, MsgStatusEnum msgStatusEnum) {
+        content.setStatus(msgStatusEnum);
+        NIMClient.getService(MsgService.class).updateIMMessageStatus(content);
+        messageListPanel.refreshMessageList();
+
+    }
+
     private void sendMsgRequest(IMMessage content, String target_accid) {
-//        if (content.getMsgType() == MsgTypeEnum.audio) {
-//            uploadImgToQN(content, target_accid, ((AudioAttachment) content.getAttachment()).getPath());
-//        } else
-        if (content.getMsgType() == MsgTypeEnum.image) {
+        inputPanel.restoreText(true);
+        setMessageStatus(content, MsgStatusEnum.sending);
+        messageListPanel.onMsgSend(content);
+        if (content.getMsgType() == MsgTypeEnum.audio) {
+            uploadImgToQN(content, target_accid, ((AudioAttachment) content.getAttachment()).getPath());
+        } else if (content.getMsgType() == MsgTypeEnum.image) {
             uploadImgToQN(content, target_accid, ((ImageAttachment) content.getAttachment()).getPath());
         } else if (content.getMsgType() == MsgTypeEnum.video) {
             uploadImgToQN(content, target_accid, ((VideoAttachment) content.getAttachment()).getPath());
@@ -764,12 +765,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         NIMClient.getService(MsgService.class).sendMessage(content, false).setCallback(new RequestCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // if (requestMsg) {
-                // sendMsgRequest(content, sessionId);
-                // }
-                if (sessionId.equals(Constants.ASSISTANT_ACCID) && content.getMsgType() == MsgTypeEnum.text) {
-                    aideSendMsg(content);
+                if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
+                    if (content.getMsgType() == MsgTypeEnum.text)
+                        aideSendMsg(content);
+                    messageListPanel.onMsgSend(content);
+                } else {
+                    setMessageStatus(content, MsgStatusEnum.success);
                 }
+//                messageListPanel.onMsgSend(content);
             }
 
             @Override
@@ -782,7 +785,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
             }
         });
-        messageListPanel.onMsgSend(content);
     }
 
     private void showConfirmSendDialog(final IMMessage message) {

@@ -116,7 +116,7 @@ public class UIKitOptions {
     /**
      * 文本框最大输入字符数目
      */
-    public int maxInputTextLength = 1000;
+    public int maxInputTextLength = 200;
 
     /**
      * 录音类型，默认aac

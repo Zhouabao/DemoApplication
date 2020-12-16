@@ -113,8 +113,8 @@
                     android:layout_width="20dip"
                     android:layout_height="20dip"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:indeterminate="true"
                     android:indeterminateDrawable="@drawable/nim_progress_small_white"
                     android:visibility="gone" />

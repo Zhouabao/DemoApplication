@@ -874,9 +874,9 @@ public class ChatMessageListPanelEx {
             int index = getItemIndex(message.getUuid());
             if (index >= 0 && index < items.size()) {
                 IMMessage item = items.get(index);
-                item.setStatus(MsgStatusEnum.sending);
+//                item.setStatus(MsgStatusEnum.sending);
                 deleteItem(item, true);
-                onMsgSend(item);
+//                onMsgSend(item);
             }
 
             container.proxy.sendMessage(message);
