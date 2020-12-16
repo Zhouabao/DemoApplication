@@ -2,7 +2,6 @@
     <string name="app_name">积糖</string>
 
     <string name="facebook_app_id">3546860392031186</string>
-    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
     <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
     <string name="server_client_id">325834510992-5o1upod7qkkgjh2bk9lg0th1abhfb6i7.apps.googleusercontent.com</string>
 
@@ -211,7 +210,6 @@
     <string name="user_title">用户协议</string>
 
     <string name="login_error">登录失败！请重试</string>
-    <string name="login_tip">登录即代表同意</string>
     <string name="login_tip_and"> 及 </string>
     <string name="tourist">游客模式</string>
     <string name="open_internet">请开启数据流量</string>
@@ -250,7 +248,6 @@
     <string name="label_no_choose">暂无选中的兴趣可保存</string>
 
 
-    <string name="label_publish_tip">马上发布兴趣动态，收获超多喜欢</string>
     <string name="permission_storage">文件存储权限被拒,请允许权限后再上传照片</string>
     <string name="permission_camera">相机权限被拒,请允许权限后再上传照片</string>
     <string name="upload_photo">请先选择要上传的图片</string>
