@@ -70,6 +70,9 @@ class RecommendSquareAdapter :
                 4 -> {
                     mContext.getString(R.string.sweet_job_title)
                 }
+                6->{
+                    mContext.getString(R.string.sweet_education_title)
+                }
                 else -> {
                     ""
                 }

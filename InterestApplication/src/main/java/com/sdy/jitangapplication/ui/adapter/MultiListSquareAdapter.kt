@@ -188,16 +188,22 @@ class MultiListSquareAdapter(
                 holder.itemView.squareSweetVerifyName.text = item.assets_audit_descr
                 holder.itemView.squareSweetVerifyContent.text = when (item.approve_type) {
                     1 -> {
-                        mContext.getString(R.string.he_is_rich)
+                        mContext.getString(R.string.sweet_rich_user)
                     }
                     2 -> {
-                        mContext.getString(R.string.he_has_luxury_car)
+                        mContext.getString(R.string.sweet_luxury_car)
                     }
                     3 -> {
-                        mContext.getString(R.string.she_is_hot)
+                        mContext.getString(R.string.sweet_good_shencai)
+                    }
+                    4 -> {
+                        mContext.getString(R.string.sweet_job)
+                    }
+                    6 -> {
+                        mContext.getString(R.string.sweet_education)
                     }
                     else -> {
-                        mContext.getString(R.string.she_is_professional)
+                        ""
                     }
                 }
 

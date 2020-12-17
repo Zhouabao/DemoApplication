@@ -617,6 +617,7 @@
     <string name="sweet_luxury_car">平台认证豪车用户，听说上车会很热呢</string>
     <string name="sweet_good_shencai">经平台评估身材具有吸引力和有一定高端约会意向</string>
     <string name="sweet_job">职业认证通过代表用户职业正当且有一定高端约会意向</string>
+    <string name="sweet_education">经平台认证用户为985/211高等学府毕业</string>
     <string name="verify_info">的认证资料</string>
     <string name="square_detail">动态详情</string>
     <string name="reply">回复</string>
@@ -644,6 +645,7 @@
     <string name="sweet_car_to_be_friend">听说你的车很漂亮，她们想和你做朋友</string>
     <string name="sweet_car_and_man">豪车照片或人车合照</string>
     <string name="sweet_figure_title">学历认证</string>
+    <string name="sweet_education_title">学历认证</string>
     <string name="sweet_education_rich">听说你读过很多书见过许多人</string>
     <string name="sweet_schoolsuit">着校服或校园内照片</string>
     <string name="sweet_school_pic_education">上传一张或多张能体现你学校的图片，照片将对外展示</string>

@@ -294,9 +294,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 3 -> {
                     getString(R.string.sweet_good_shencai)
                 }
-                else -> {
+                4 -> {
                     getString(R.string.sweet_job)
                 }
+                6 -> {
+                    getString(R.string.sweet_education)
+                }
+                else -> {
+                    ""
+                }
+
             }
             squareSweetVerifyContentCl.setBackgroundResource(
                 when (squareBean!!.approve_type) {

@@ -619,6 +619,7 @@
     <string name="sweet_luxury_car">SugarTown proved luxury car owner,  it\'s hot in the car</string>
     <string name="sweet_good_shencai">SugarTown proved good shape and attractive male(female) ,he(she) is intended to date</string>
     <string name="sweet_job">He(she) has legitimate profession and be intended to date if profession certification proved</string>
+    <string name="sweet_education">The verified users of the platform are 985/211 university graduates</string>
     <string name="verify_info">   certificated info</string>
     <string name="square_detail">Moments details</string>
     <string name="reply">Reply</string>
@@ -645,7 +646,8 @@
     <string name="sweet_luxury_car_title">Luxury car certification</string>
     <string name="sweet_car_to_be_friend">Hearing of your car is fancy,they wanna be friend of you</string>
     <string name="sweet_car_and_man">Photo of luxury car or photo of  car and man</string>
-    <string name="sweet_figure_title">Education certification</string>
+    <string name="sweet_figure_title">Figure certification</string>
+    <string name="sweet_education_title">Education certification</string>
     <string name="sweet_education_rich">I bitted my mouth,it\'s too spicy</string>
     <string name="sweet_schoolsuit">Photo in swimsuit or photo of pravite</string>
     <string name="sweet_school_pic_education">Photos will be display\n nude is forbiden for certificationt</string>
