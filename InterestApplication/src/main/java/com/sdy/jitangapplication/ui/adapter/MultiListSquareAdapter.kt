@@ -141,7 +141,7 @@ class MultiListSquareAdapter(
                     }
 
             if (item.descr.isNullOrEmpty()) {
-                holder.itemView.squareContent1.visibility = View.GONE
+                holder.itemView.squareContent1.visibility = View.INVISIBLE
             } else {
                 holder.itemView.squareContent1.visibility = View.VISIBLE
                 holder.itemView.squareContent1.setContent(item.descr)
