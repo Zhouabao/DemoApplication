@@ -30,10 +30,10 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class ExperienceCardDialog(
-    val context1: Context,
-    val experience_time: String,
-    val experience_amount: Int = 0,
-    val experience_title: String = ""
+   var context1: Context,
+    var experience_time: String = "",
+    var experience_amount: Int = 0,
+    var experience_title: String = ""
 ) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
