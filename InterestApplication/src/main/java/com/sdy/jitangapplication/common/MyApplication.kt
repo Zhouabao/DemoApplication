@@ -447,8 +447,10 @@ class MyApplication : BaseApplication() {
             )
             //微信平台
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
+            PlatformConfig.setWXFileProvider("com.sdy.jitangapplication.fileProvider")
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
+            PlatformConfig.setQQFileProvider("com.sdy.jitangapplication.fileProvider")
 
 //            PlatformConfig.setPinterest()
 
