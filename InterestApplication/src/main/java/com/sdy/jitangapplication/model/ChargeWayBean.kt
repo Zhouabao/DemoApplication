@@ -32,7 +32,7 @@ data class ChargeWayBeans(
     val direct_save_str: String = "",
     val platinum_vip_express: String = "",
     val experience_title: String = "",
-    val experience_amount: Int = 0,
+    val experience_amount: String = "",
     val experience_time: String = ""
 )
 
@@ -57,9 +57,8 @@ data class ChargeWayBean(
     var is_promote: Boolean = false,
     val ename: String? = "",
     val id: Int = 0,
-    var discount_price: Double = 0.0,
-    val limited_price: Float? = 0f,
-    var original_price: Double = 0.0,
+    var discount_price: String = "0",
+    var original_price: String = "0",
     val title: String? = "",
     val giving_amount: Int = 0,
     val giving_gold_day: String = "",
@@ -70,60 +69,7 @@ data class ChargeWayBean(
     var isfirst: Boolean = false,//是否首充  true  首充   false  常规
     var product_id: String = "",
     var checked: Boolean = false
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readByte() != 0.toByte(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readDouble(),
-        parcel.readValue(Float::class.java.classLoader) as? Float,
-        parcel.readDouble(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readString() ?: "",
-        parcel.readString(),
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString() ?: "",
-        parcel.readInt(),
-        parcel.readByte() != 0.toByte(),
-        parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeByte(if (is_promote) 1 else 0)
-        parcel.writeString(ename)
-        parcel.writeInt(id)
-        parcel.writeDouble(discount_price)
-        parcel.writeValue(limited_price)
-        parcel.writeDouble(original_price)
-        parcel.writeString(title)
-        parcel.writeInt(giving_amount)
-        parcel.writeString(giving_gold_day)
-        parcel.writeString(descr)
-        parcel.writeValue(type)
-        parcel.writeString(unit_price)
-        parcel.writeInt(amount)
-        parcel.writeByte(if (isfirst) 1 else 0)
-        parcel.writeString(product_id)
-        parcel.writeByte(if (checked) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ChargeWayBean> {
-        override fun createFromParcel(parcel: Parcel): ChargeWayBean {
-            return ChargeWayBean(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ChargeWayBean?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+)
 
 data class LabelChargeWayBean(
     var paylist: MutableList<PaywayBean> = mutableListOf(),

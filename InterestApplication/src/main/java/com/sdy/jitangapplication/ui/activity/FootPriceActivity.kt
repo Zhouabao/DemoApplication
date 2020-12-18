@@ -68,7 +68,8 @@ class FootPriceActivity : BaseActivity() {
         footPowerRv.adapter = adapter
         //立即加入
         joinNowBtn.clickWithTrigger {
-            CommonFunction.startToPay(this, chargeWayBeans[0], payways)
+            if (chargeWayBeans.size > 0)
+                CommonFunction.startToPay(this, chargeWayBeans[0], payways)
         }
 
 
@@ -105,6 +106,8 @@ class FootPriceActivity : BaseActivity() {
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
                         TickDialog(this@FootPriceActivity).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(this@FootPriceActivity))
                     }
                 }
             })

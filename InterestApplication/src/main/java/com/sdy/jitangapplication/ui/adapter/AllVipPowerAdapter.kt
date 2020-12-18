@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.content.Intent
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,11 +8,9 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import kotlinx.android.synthetic.main.item_power_pt_vip.view.*
-import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 
 /**
@@ -39,25 +36,20 @@ class AllVipPowerAdapter :
             }
         }
         if (promotePos == -1) promotePos = 0
-        helper.itemView.openVipBtn.text = "${CommonFunction.getNowMoneyUnit()}${if (data.list[promotePos].type == 1) {
-            BigDecimal(data.list[promotePos].original_price).setScale(
-                0,
-                BigDecimal.ROUND_HALF_UP
-            )
-        } else {
-            BigDecimal(data.list[promotePos].discount_price).setScale(
-                0,
-                BigDecimal.ROUND_HALF_UP
-            )
-        }} ${if (data.isplatinum) {
-            mContext.getString(R.string.vip_renew)
-        } else {
-            mContext.getString(R.string.vip_buy)
-        }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-            mContext.getString(R.string.vip_gold)
-        } else {
-            mContext.getString(R.string.vip_connection_card)
-        }}"
+        helper.itemView.openVipBtn.text =
+            "${CommonFunction.getNowMoneyUnit()}${if (data.list[promotePos].type == 1) {
+                data.list[promotePos].original_price
+            } else {
+                data.list[promotePos].discount_price
+            }} ${if (data.isplatinum) {
+                mContext.getString(R.string.vip_renew)
+            } else {
+                mContext.getString(R.string.vip_buy)
+            }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+                mContext.getString(R.string.vip_gold)
+            } else {
+                mContext.getString(R.string.vip_connection_card)
+            }}"
 
         val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
         val chargeManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
@@ -68,25 +60,20 @@ class AllVipPowerAdapter :
             for (data in chargePriceAdapter.data) {
                 data.is_promote = data == chargePriceAdapter.data[position]
             }
-            helper.itemView.openVipBtn.text = "${CommonFunction.getNowMoneyUnit()}${if (chargePriceAdapter.data[position].type == 1) {
-                BigDecimal(chargePriceAdapter.data[position].original_price).setScale(
-                    0,
-                    BigDecimal.ROUND_HALF_UP
-                )
-            } else {
-                BigDecimal(chargePriceAdapter.data[position].discount_price).setScale(
-                    0,
-                    BigDecimal.ROUND_HALF_UP
-                )
-            }} ${if (data.isplatinum) {
-                mContext.getString(R.string.vip_renew)
-            } else {
-                mContext.getString(R.string.vip_buy)
-            }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-                mContext.getString(R.string.vip_gold)
-            } else {
-                mContext.getString(R.string.vip_connection_card)
-            }}"
+            helper.itemView.openVipBtn.text =
+                "${CommonFunction.getNowMoneyUnit()}${if (chargePriceAdapter.data[position].type == 1) {
+                    chargePriceAdapter.data[position].original_price
+                } else {
+                    chargePriceAdapter.data[position].discount_price
+                }} ${if (data.isplatinum) {
+                    mContext.getString(R.string.vip_renew)
+                } else {
+                    mContext.getString(R.string.vip_buy)
+                }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+                    mContext.getString(R.string.vip_gold)
+                } else {
+                    mContext.getString(R.string.vip_connection_card)
+                }}"
             chargePriceAdapter.notifyDataSetChanged()
         }
 

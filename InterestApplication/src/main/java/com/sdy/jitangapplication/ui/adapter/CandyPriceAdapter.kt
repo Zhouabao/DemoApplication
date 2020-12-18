@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.adapter
 import android.annotation.SuppressLint
 import android.graphics.Typeface
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -33,59 +32,39 @@ class CandyPriceAdapter :
         if (item.isfirst) {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "${CommonFunction.getNowMoneyUnit()}${BigDecimal(item.discount_price).setScale(
-                        0,
-                        BigDecimal.ROUND_HALF_UP
-                    )}"
+                    "${CommonFunction.getNowMoneyUnit()}${item.discount_price}"
                 )
                 .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
                 .create()
 
             SpanUtils.with(holder.itemView.candyPrice)
-                .append(
-                    "${mContext.getString(R.string.original_price)}${BigDecimal(item.original_price).setScale(
-                        0,
-                        BigDecimal.ROUND_HALF_UP
-                    )},"
-                )
+                .append("${mContext.getString(R.string.original_price)}${item.original_price},")
                 .setStrikethrough()
                 .append(mContext.getString(R.string.first_charge_save))
-                .append(
-                    "${BigDecimal(item.original_price - item.discount_price).setScale(
-                        0,
-                        BigDecimal.ROUND_HALF_UP
-                    )}"
-                )
+                .append("${BigDecimal(item.original_price).minus(BigDecimal(item.discount_price))}")
                 .setForegroundColor(mContext.resources.getColor(R.color.colorOrange))
                 .create()
 
         } else {
             SpanUtils.with(holder.itemView.candyFirstPrice)
                 .append(
-                    "${CommonFunction.getNowMoneyUnit()}${BigDecimal(
-                        if (item.discount_price != 0.0) {
+                    "${CommonFunction.getNowMoneyUnit()}${
+                        if (BigDecimal(item.discount_price) > BigDecimal.ZERO) {
                             item.discount_price
                         } else {
                             item.original_price
                         }
-                    ).setScale(
-                        0,
-                        BigDecimal.ROUND_HALF_UP
-                    )}"
+                    }"
                 )
                 .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
                 .create()
 
-            holder.itemView.candyPrice.text = mContext.getString(R.string.cost) + BigDecimal(
-                if (item.discount_price != 0.0) {
+            holder.itemView.candyPrice.text = mContext.getString(R.string.cost) +
+                if (BigDecimal(item.discount_price) > BigDecimal.ZERO) {
                     item.discount_price
                 } else {
                     item.original_price
-                }
-            ).setScale(
-                0,
-                BigDecimal.ROUND_HALF_UP
-            ) + mContext.getString(R.string.money_unit)
+                }+ mContext.getString(R.string.money_unit)
 
         }
 

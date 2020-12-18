@@ -577,6 +577,8 @@
     <string name="please_choose_gender">请先选择性别</string>
     <string name="please_input_correct_phone_can_hide">请输入正确的手机号，可设置隐藏</string>
     <string name="please_input_correct_wechat_can_hide">请输入正确的微信号，可设置隐藏</string>
+    <string name="please_input_correct_whatsapp_can_hide">请输入正确的Whatsapp账号，可设置隐藏</string>
+    <string name="please_input_correct_Skpye_can_hide">请输入正确的Skype账号，可设置隐藏</string>
     <string name="please_input_correct_qq_can_hide">请输入正确的QQ号，可设置隐藏</string>
     <string name="avatar_upload_fail">头像上传失败</string>
     <string name="more_info_title">介绍一下自己吧</string>

@@ -50,6 +50,7 @@ import kotlinx.android.synthetic.main.dialog_confirm_recharge_candy.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.math.BigDecimal
 
 
 /**
@@ -89,7 +90,7 @@ class ConfirmPayCandyDialog(
     private fun initView() {
         price.text = "${CommonFunction.getNowMoneyUnit()}${
         if (!chargeBean.isfirst) {
-            if (chargeBean.discount_price != 0.0) {
+            if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
                 chargeBean.discount_price
             } else {
                 chargeBean.original_price
@@ -464,7 +465,7 @@ class ConfirmPayCandyDialog(
     private fun onBrainTreeSubmit() {
         val paypalRequest = PayPalRequest(
             "${if (!chargeBean.isfirst) {
-                if (chargeBean.discount_price != 0.0) {
+                if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
                     chargeBean.discount_price
                 } else {
                     chargeBean.original_price
