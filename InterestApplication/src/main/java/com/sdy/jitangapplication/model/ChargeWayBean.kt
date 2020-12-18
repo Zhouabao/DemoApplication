@@ -32,7 +32,7 @@ data class ChargeWayBeans(
     val direct_save_str: String = "",
     val platinum_vip_express: String = "",
     val experience_title: String = "",
-    val experience_amount: Int = 0,
+    val experience_amount: String = "",
     val experience_time: String = ""
 )
 

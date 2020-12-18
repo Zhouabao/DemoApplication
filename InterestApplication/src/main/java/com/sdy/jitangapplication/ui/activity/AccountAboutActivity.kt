@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.presenter.view.AccountAboutView
 import com.sdy.jitangapplication.ui.dialog.CorrectDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.activity_account_about.*
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
@@ -30,7 +31,8 @@ import org.jetbrains.anko.startActivityForResult
 /**
  * 账号相关
  */
-class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAboutView, View.OnClickListener {
+class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAboutView,
+    View.OnClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,14 +124,18 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
     private var wechat = ""
     override fun getAccountResult(accountBean: AccountBean) {
         phone = accountBean.phone
-        telNumber.text = accountBean.phone.replaceRange(3, 7, "****")
+        if (!UserManager.overseas)
+            telNumber.text = accountBean.phone.replaceRange(3, 7, "****")
+        else
+            telNumber.text = accountBean.phone
+
         if (accountBean.wechat.isNotEmpty()) {
             wechat = accountBean.wechat
             wechatNumber.text = accountBean.wechat
             wechatChangeBtn.text = getString(R.string.account_unbind)
         } else {
             wechatNumber.text = getString(R.string.account_not_bind)
-            wechatChangeBtn.text =getString(R.string.account_bind_wechat)
+            wechatChangeBtn.text = getString(R.string.account_bind_wechat)
         }
     }
 

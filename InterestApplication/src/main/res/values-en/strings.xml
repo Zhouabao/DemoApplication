@@ -72,7 +72,7 @@
     <string name="cancel">Cancel</string>
     <string name="clear_empty">Clear</string>
     <string name="iknow">Got it</string>
-    <string name="network_is_not_available">Network conectting failed.Check your network setting</string>
+    <string name="network_is_not_available">Network connectting failed.Check your network setting</string>
     <string name="readed">Readed</string>
     <string name="get_readed">Obtain receipt</string>
     <string name="sended">Sent</string>
@@ -388,7 +388,7 @@
     <string name="candy">Candy</string>
     <string name="original_price">Original:</string>
     <string name="forver">Permanent</string>
-    <string name="vip_verify">High-end Elite Certification</string>
+    <string name="vip_verify">Elite Verification</string>
     <string name="join_now">Join now</string>
     <string name="why_pay">Why need to pay?</string>
     <string name="inapp">in %1$s , we found \t</string>
@@ -588,6 +588,8 @@
     <string name="please_choose_gender">Select gender first</string>
     <string name="please_input_correct_phone_can_hide">Fill in correct number, No display is aviable for setting</string>
     <string name="please_input_correct_wechat_can_hide">Fill in correct WetChat acount, No display is aviable for setting</string>
+    <string name="please_input_correct_whatsapp_can_hide">Fill in correct Whatsapp acount, No display is aviable for setting</string>
+    <string name="please_input_correct_Skpye_can_hide">Fill in correct Skype acount, No display is aviable for setting</string>
     <string name="please_input_correct_qq_can_hide">Fill in correct QQ acount, No display is aviable  for setting</string>
     <string name="avatar_upload_fail">Avatar uploading failed</string>
     <string name="more_info_title">Introduce yourself</string>
@@ -758,7 +760,7 @@
     <string name="invite">Invite %1$d people</string>
     <string name="avatar">Avatar</string>
     <string name="dating">Activity</string>
-    <string name="per_month">//month</string>
+    <string name="per_month">/month</string>
     <string name="face_verify">Face Certification</string>
     <string name="goto_verify">Verify now</string>
     <string name="please_verify_face">Start Face Certification\n to ensure avatar from real person</string>
@@ -1045,7 +1047,7 @@
     <string name="today_visit1">Today\'s visit:%1$d</string>
     <string name="all_visit_1">Total visit:%1$d</string>
     <string name="open_vip_contact_them">To be a member of SugarTown to chat with them</string>
-    <string name="open_vip_contact_them1">There\'re %1$d Candy sugarbabies\n meet your needs</string>
+    <string name="open_vip_contact_them1">There\'re %2$d Candy sugarbabies\n meet your needs in %1$s</string>
     <string name="true_avatar_to_recommend">The current avatar is not your profile picture.Update with your profile picture to get personal profile recommendation.</string>
     <string name="empty_friend">No friend yet</string>
     <string name="no_square">No moments yet</string>
@@ -1119,7 +1121,7 @@
     <string name="cannot_repeat_label">Please do not add repetitive Interests traits</string>
     <string name="gift_wall_title">Gift wall</string>
     <string name="min_record_time">Recording time should not be less than 5S</string>
-    <string name="one_key_login">Log in with cellphone number</string>
+    <string name="one_key_login">Cellphone number</string>
     <string name="login_presents_you_agree">Sign up/Log in means you agree\t</string>
     <string name="and1">\tand\t</string>
     <string name="and2">\tand\t</string>
@@ -1303,13 +1305,14 @@
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="PM_1">PM</string>
-    <string name="send_a_experience_card">赠送你一张体验卡</string>
-    <string name="limit_free_experience">限时免费体验App所有功能\n感受被异性围绕的感觉</string>
-    <string name="include_all_visit_power">包含查看所有功能的权限</string>
-    <string name="get_vip_card">领取会员体验卡</string>
-    <string name="gold_experience_card">黄金会员\n体验卡</string>
-    <string name="expire_time">有效时间：%1$s</string>
-    <string name="they_greet_you">她们和你打了招呼</string>
-    <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
-    <string name="tobe_vip">成为积糖会员</string>
+    <string name="send_a_experience_card">Give you an experience card</string>
+    <string name="limit_free_experience">Free experience of all the functions \n feeling surrounded by the opposite sex</string>
+    <string name="include_all_visit_power">Contains permission to view all functions</string>
+    <string name="get_vip_card">Obtain</string>
+    <string name="gold_experience_card">Gold Membership \n Experience card</string>
+    <string name="expire_time">Expiration date：%1$s</string>
+    <string name="they_greet_you">They say hello to you</string>
+    <string name="to_be_vip_see_them">Become a sugar beaker and see who they are</string>
+    <string name="tobe_vip">To be memebership</string>
+
 </resources>

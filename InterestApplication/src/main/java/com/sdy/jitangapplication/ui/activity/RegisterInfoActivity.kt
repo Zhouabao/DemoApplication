@@ -94,6 +94,10 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
         userAvatorTake.setOnClickListener(this)
         userAvator.setOnClickListener(this)
 
+        chooseContactBtn.setImageResource(contactWaysIcon[0])
+        contactWayEt.hint = contactWaysHint[0]
+
+
         userNickName.setFilters(arrayOf<InputFilter>(InputFilter { source, start, end, dest, dstart, dend ->
             if (source.equals(" ") || source.toString().contentEquals("\n")) {
                 ""
@@ -500,6 +504,21 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             )
         }
     }
+    private val contactWaysHint by lazy {
+        if (UserManager.overseas) {
+            mutableListOf(
+                getString(R.string.please_input_correct_phone_can_hide),
+                getString(R.string.please_input_correct_whatsapp_can_hide),
+                getString(R.string.please_input_correct_Skpye_can_hide)
+            )
+        } else {
+            mutableListOf(
+                getString(R.string.please_input_correct_phone_can_hide),
+                getString(R.string.please_input_correct_wechat_can_hide),
+                getString(R.string.please_input_correct_qq_can_hide)
+            )
+        }
+    }
 
     private fun showContactPicker() {
         //条件选择器
@@ -507,17 +526,7 @@ class RegisterInfoActivity : BaseMvpActivity<RegisterInfoPresenter>(), RegisterI
             OnOptionsSelectListener { options1, options2, options3, v ->
                 chooseContactBtn.setImageResource(contactWaysIcon[options1])
                 contactWay = options1 + 1
-                contactWayEt.hint = "${when (options1) {
-                    0 -> {
-                        getString(R.string.please_input_correct_phone_can_hide)
-                    }
-                    1 -> {
-                        getString(R.string.please_input_correct_wechat_can_hide)
-                    }
-                    else -> {
-                        getString(R.string.please_input_correct_qq_can_hide)
-                    }
-                }}"
+                contactWayEt.hint = contactWaysHint[options1]
                 checkConfirmEnable()
             })
             .setSubmitText(getString(R.string.ok))

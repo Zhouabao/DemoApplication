@@ -5,24 +5,17 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.share.Sharer
-import com.facebook.share.model.ShareHashtag
-import com.facebook.share.model.ShareLinkContent
-import com.facebook.share.widget.ShareDialog
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
-import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -98,7 +91,9 @@ class MoreActionNewDialog(
 
 
         if (UserManager.overseas) {
-            transpondFacebook.isVisible = true
+
+            transpondFacebook.isVisible =
+                !squareBean?.photo_json.isNullOrEmpty() || !squareBean?.audio_json.isNullOrEmpty() || !squareBean?.video_json.isNullOrEmpty()
 //            umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.FACEBOOK)
             transpondIns.isVisible = umShareAPI.isInstall(
                 myContext as Activity,

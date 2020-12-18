@@ -30,9 +30,9 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class ExperienceCardDialog(
-   var context1: Context,
+    var context1: Context,
     var experience_time: String = "",
-    var experience_amount: Int = 0,
+    var experience_amount: String = "",
     var experience_title: String = ""
 ) : Dialog(context1, R.style.MyDialog) {
 
@@ -47,9 +47,9 @@ class ExperienceCardDialog(
     private fun initView() {
         SpanUtils.with(costPrice)
             .append(CommonFunction.getNowMoneyUnit())
-            .setFontSize(30,true)
-            .append("$experience_amount")
-            .setFontSize(60,true)
+            .setFontSize(30, true)
+            .append(experience_amount)
+            .setFontSize(60, true)
             .create()
         expireTime.text = context1.getString(R.string.expire_time, experience_time)
         goldVipCard.text = experience_title

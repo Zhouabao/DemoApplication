@@ -22,6 +22,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.RegisterFileBean
@@ -163,6 +164,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             onekeyLoginBtn.isEnabled = true
             UserManager.registerFileBean = data
             UserManager.overseas = data.region == 2
+            Constants.ASSISTANT_ACCID = if (data.region == 2) {
+                "002"
+            } else {
+                "01"
+            }
 //            UserManager.overseas = data.region == 2
             if (data.tourists) {
                 touristBtn.visibility = View.VISIBLE
@@ -175,6 +181,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             }
         } else {
             onekeyLoginBtn.isEnabled = false
+            Constants.ASSISTANT_ACCID = "01"
             mPresenter.getRegisterProcessType()
         }
 
@@ -327,8 +334,10 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
 
     override fun onError(p0: SHARE_MEDIA, p1: Int, p2: Throwable) {
         Log.e("VVV", "onError===$p0,$p1,$p2")
+        CommonFunction.toast(getString(R.string.network_is_not_available))
 
     }
+
 
     override fun onStart(p0: SHARE_MEDIA) {
         Log.e("VVV", "onStart===$p0")
