@@ -139,22 +139,17 @@ dependencies {
 
 
     //友盟统计
-    api 'com.umeng.umsdk:common:9.3.0'
-    api 'com.umeng.umsdk:asms:1.1.3' // asms包依赖(必选)
+    api 'com.umeng.umsdk:common:9.3.3'
+    api 'com.umeng.umsdk:asms:1.1.4' // asms包依赖(必选)
     api 'com.umeng.umsdk:crash:0.0.5' // native crash包依赖(必选)
-    //OAID目前为目前国内市场主流的Android Q设备标识。目前主流厂商（华为、oppo、vivo、联想、小米）均已在新版本系统中支持该标识的获取，具有权威性。您可根据需求选择接入（华为已默认接入无需额外添加jar包）
-    api 'com.umeng.umsdk:oaid_lenovo:1.0.0' // (可选)
-    api 'com.umeng.umsdk:oaid_mi:1.0.0' // (可选)
-    api 'com.umeng.umsdk:oaid_oppo:1.0.4' // (可选)
-    api 'com.umeng.umsdk:oaid_vivo:1.0.0.1' // (可选)
 
     //PushSDK必须依赖utdid库，所以需要加入对应依赖
 //    api 'com.umeng.umsdk:utdid:1.1.5.3'
     //分享核心库依赖：
-    api 'com.umeng.umsdk:share-core:7.1.2'
-    api 'com.umeng.umsdk:share-qq:7.1.2'
-    api 'com.umeng.umsdk:share-wx:7.1.2'
-    api 'com.umeng.umsdk:share-sina:7.1.2'
+    api 'com.umeng.umsdk:share-core:7.1.3'
+    api 'com.umeng.umsdk:share-qq:7.1.3'
+    api 'com.umeng.umsdk:share-wx:7.1.3'
+    api 'com.umeng.umsdk:share-sina:7.1.3'
     api 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
     //facebook分享
     api 'com.facebook.android:facebook-android-sdk:5.15.3'

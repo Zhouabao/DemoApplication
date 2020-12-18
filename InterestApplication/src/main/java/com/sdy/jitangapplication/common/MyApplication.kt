@@ -110,7 +110,7 @@ class MyApplication : BaseApplication() {
         if (it == null || it.isEmpty()) {
             return@Observer
         } else {
-            TickDialog(applicationContext).show()
+            TickDialog(this).show()
         }
 
     }
@@ -118,8 +118,10 @@ class MyApplication : BaseApplication() {
     private val userStatusObserver: Observer<StatusCode> by lazy {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
-                if (ActivityUtils.getTopActivity() != null)
-                    TickDialog(ActivityUtils.getTopActivity()).show()
+//                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
+//                    TickDialog(ActivityUtils.getTopActivity()).show()
+//                else
+                UserManager.startToLogin(this)
             }
         }
     }
@@ -349,6 +351,8 @@ class MyApplication : BaseApplication() {
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
+
+        Constants.ASSISTANT_ACCID = "01"
         //初始化Umeng
         initUmeng()
 
@@ -442,8 +446,10 @@ class MyApplication : BaseApplication() {
             )
             //微信平台
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
+            PlatformConfig.setWXFileProvider("com.sdy.jitangapplication.fileProvider")
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
+            PlatformConfig.setQQFileProvider("com.sdy.jitangapplication.fileProvider")
 
 //            PlatformConfig.setPinterest()
 
