@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.activity_vip_power1.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
-import java.math.BigDecimal
 
 class VipPowerActivity() :
     BaseMvpActivity<VipPowerPresenter>(), VipPowerView {
@@ -94,9 +93,11 @@ class VipPowerActivity() :
         initVp2()
     }
 
-    private val powerPriceAdapter by lazy { AllVipPowerAdapter().apply {
-        source_type = this@VipPowerActivity.source_type
-    } }
+    private val powerPriceAdapter by lazy {
+        AllVipPowerAdapter().apply {
+            source_type = this@VipPowerActivity.source_type
+        }
+    }
     private val powerInfoAdapter by lazy { PowerInfoAdapter() }
 
     var lastPosition = false
@@ -225,44 +226,11 @@ class VipPowerActivity() :
             }
         }
         if (promotePos == -1) promotePos = 0
-        openVipBtn.text = "${CommonFunction.getNowMoneyUnit()}${if (data.list[promotePos].type == 1) {
-            BigDecimal(data.list[promotePos].original_price).setScale(
-                0,
-                BigDecimal.ROUND_HALF_UP
-            )
-        } else {
-            BigDecimal(data.list[promotePos].discount_price).setScale(
-                0,
-                BigDecimal.ROUND_HALF_UP
-            )
-        }} ${if (data.isplatinum) {
-            getString(R.string.vip_renew)
-        } else {
-            getString(R.string.vip_buy)
-        }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
-            getString(R.string.vip_gold)
-        } else {
-            getString(R.string.vip_connection_card)
-        }}"
-        val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
-        val chargeManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        vipPriceRv.layoutManager = chargeManager
-        vipPriceRv.adapter = chargePriceAdapter
-        chargePriceAdapter.setNewData(data.list)
-        chargePriceAdapter.setOnItemClickListener { _, view, position ->
-            for (data in chargePriceAdapter.data) {
-                data.is_promote = data == chargePriceAdapter.data[position]
-            }
-            openVipBtn.text = "${CommonFunction.getNowMoneyUnit()}${if (chargePriceAdapter.data[position].type == 1) {
-                BigDecimal(chargePriceAdapter.data[position].original_price).setScale(
-                    0,
-                    BigDecimal.ROUND_HALF_UP
-                )
+        openVipBtn.text =
+            "${CommonFunction.getNowMoneyUnit()}${if (data.list[promotePos].type == 1) {
+                data.list[promotePos].original_price
             } else {
-                BigDecimal(chargePriceAdapter.data[position].discount_price).setScale(
-                    0,
-                    BigDecimal.ROUND_HALF_UP
-                )
+                data.list[promotePos].discount_price
             }} ${if (data.isplatinum) {
                 getString(R.string.vip_renew)
             } else {
@@ -272,6 +240,29 @@ class VipPowerActivity() :
             } else {
                 getString(R.string.vip_connection_card)
             }}"
+        val chargePriceAdapter by lazy { VipChargeAdapter(data.type) }
+        val chargeManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        vipPriceRv.layoutManager = chargeManager
+        vipPriceRv.adapter = chargePriceAdapter
+        chargePriceAdapter.setNewData(data.list)
+        chargePriceAdapter.setOnItemClickListener { _, view, position ->
+            for (data in chargePriceAdapter.data) {
+                data.is_promote = data == chargePriceAdapter.data[position]
+            }
+            openVipBtn.text =
+                "${CommonFunction.getNowMoneyUnit()}${if (chargePriceAdapter.data[position].type == 1) {
+                    chargePriceAdapter.data[position].original_price
+                } else {
+                    chargePriceAdapter.data[position].discount_price
+                }} ${if (data.isplatinum) {
+                    getString(R.string.vip_renew)
+                } else {
+                    getString(R.string.vip_buy)
+                }}${if (data.type == VipPowerBean.TYPE_GOLD_VIP) {
+                    getString(R.string.vip_gold)
+                } else {
+                    getString(R.string.vip_connection_card)
+                }}"
             chargePriceAdapter.notifyDataSetChanged()
         }
 

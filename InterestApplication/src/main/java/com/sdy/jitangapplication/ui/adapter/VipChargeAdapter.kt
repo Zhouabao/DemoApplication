@@ -14,7 +14,6 @@ import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.VipPowerBean
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.item_charge_vip.view.*
-import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -43,11 +42,12 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
         holder.itemView.layoutParams = params
 
         holder.itemView.vipLong.text = item.ename ?: ""
-        holder.itemView.vipNowPrice.text = CommonFunction.getNowMoneyUnit()+"${if (item.type == 1) {
-            BigDecimal(item.original_price).setScale(0, BigDecimal.ROUND_HALF_UP)
-        } else {
-            BigDecimal(item.discount_price).setScale(0, BigDecimal.ROUND_HALF_UP)
-        }}"
+        holder.itemView.vipNowPrice.text =
+            CommonFunction.getNowMoneyUnit() + "${if (item.type == 1) {
+                item.original_price
+            } else {
+                item.discount_price
+            }}"
         SpanUtils.with(holder.itemView.monthPrice)
             .append("${item.unit_price}")
             .setFontSize(30, true)
@@ -62,7 +62,8 @@ class VipChargeAdapter(val type: Int = VipPowerActivity.PURCHASE_PT_VIP) :
 
 
             if (item.giving_amount > 0) {
-                holder.itemView.vipSendCandy.text =  mContext.getString(R.string.give) + item.giving_amount + mContext.getString(R.string.candy)
+                holder.itemView.vipSendCandy.text =
+                    mContext.getString(R.string.give, item.giving_amount)
                 holder.itemView.vipSendCandy.isVisible = true
             } else {
                 holder.itemView.vipSendCandy.isVisible = false
