@@ -48,7 +48,7 @@ class GetRelationshipPresenter : BasePresenter<GetRelationshipView>() {
                     super.onError(e)
                     loading.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     }
                 }
             })
@@ -73,7 +73,7 @@ class GetRelationshipPresenter : BasePresenter<GetRelationshipView>() {
                     super.onError(e)
                     loading.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     }
                 }
             })

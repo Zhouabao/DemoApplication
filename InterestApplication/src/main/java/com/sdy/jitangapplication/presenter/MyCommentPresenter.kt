@@ -42,7 +42,7 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onError(context.getString(R.string.service_error))
                     }
@@ -68,7 +68,7 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onDeleteCommentResult(null, position)
                 }

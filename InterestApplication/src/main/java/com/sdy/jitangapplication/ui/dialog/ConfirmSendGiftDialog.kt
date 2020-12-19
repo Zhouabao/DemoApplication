@@ -172,7 +172,7 @@ class ConfirmSendGiftDialog(
                     super.onError(e)
                     loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context1).show()
+                        TickDialog.getInstance(context1).show()
                     }
                 }
             })

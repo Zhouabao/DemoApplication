@@ -53,7 +53,7 @@ class VideoVerifyPresenter : BasePresenter<VideoVerifyView>() {
                 override fun onError(e: Throwable?) {
                     loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(context.getString(R.string.verify_commit_fail))
                     }

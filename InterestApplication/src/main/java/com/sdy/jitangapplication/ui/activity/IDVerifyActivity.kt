@@ -375,7 +375,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(this@IDVerifyActivity).show()
+                        TickDialog.getInstance(this@IDVerifyActivity).show()
                     }
                     loadingDialog.dismiss()
                     CommonFunction.toast(getString(R.string.verify_commit_fail))

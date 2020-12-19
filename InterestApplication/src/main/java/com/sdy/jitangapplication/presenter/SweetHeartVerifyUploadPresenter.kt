@@ -57,7 +57,7 @@ class SweetHeartVerifyUploadPresenter : BasePresenter<SweetHeartVerifyUploadView
                     super.onError(e)
                     loading.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.uploadDataResult(false)
                     }
@@ -105,7 +105,7 @@ class SweetHeartVerifyUploadPresenter : BasePresenter<SweetHeartVerifyUploadView
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.getPicTplResult(arrayListOf())
                     }

@@ -41,7 +41,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
                 }
@@ -71,7 +71,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         mView.onError(context.getString(R.string.service_error))
@@ -110,7 +110,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                 override fun onError(e: Throwable?) {
                     if (!auto)
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onError(context.getString(R.string.service_error))
                         }
@@ -137,7 +137,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
                 }
@@ -163,7 +163,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
                 }
@@ -194,7 +194,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
                 }
@@ -221,7 +221,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
 
@@ -248,7 +248,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
 
@@ -276,7 +276,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
                 }
@@ -302,7 +302,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onRemoveMySquareResult(false)
                         mView.onError(context.getString(R.string.service_error))

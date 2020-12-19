@@ -37,7 +37,7 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onError(CommonFunction.getErrorMsg(context))
                     }
@@ -61,7 +61,7 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onRemoveBlockResult(false,position)
                     }

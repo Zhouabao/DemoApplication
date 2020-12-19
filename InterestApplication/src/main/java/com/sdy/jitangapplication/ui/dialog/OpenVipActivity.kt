@@ -306,7 +306,7 @@ class OpenVipActivity : BaseActivity() {
 
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
-                        TickDialog(this@OpenVipActivity).show()
+                        TickDialog.getInstance(this@OpenVipActivity).show()
                     }
                 }
             })

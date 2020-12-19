@@ -46,7 +46,7 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onTagClassifyListResult(false, null)
@@ -82,7 +82,7 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                     }

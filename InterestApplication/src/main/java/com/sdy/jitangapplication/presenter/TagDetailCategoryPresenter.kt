@@ -41,7 +41,7 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareRecommendResult(null, false)
                         }
@@ -68,7 +68,7 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareRecommendResult(null, false)
                         }
@@ -110,7 +110,7 @@ class TagDetailCategoryPresenter : BasePresenter<TagDetailCategoryView>() {
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onCheckBlockResult(false)

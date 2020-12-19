@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.utils
 
-import android.app.Activity
 import android.content.Context
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.SPUtils
@@ -186,12 +186,12 @@ object UserManager {
      * 跳至登录界面
      */
     fun startToLogin(activity: Context, fromNimNotification: Boolean = false) {
-            touristMode = false
-            clearLoginData()
-            NIMClient.getService(AuthService::class.java).logout()
-            AppManager.instance.finishAllActivity()
-//        ActivityUtils.startLauncherActivity()
-            activity.startActivity<SplashActivity>()
+        touristMode = false
+        clearLoginData()
+        NIMClient.getService(AuthService::class.java).logout()
+        AppManager.instance.finishAllActivity()
+        ActivityUtils.startLauncherActivity()
+//            activity.startActivity<SplashActivity>()
     }
 
     /**

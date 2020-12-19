@@ -68,7 +68,7 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onSaveRegisterInfo(false)

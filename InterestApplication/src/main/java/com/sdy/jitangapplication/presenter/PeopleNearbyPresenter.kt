@@ -55,7 +55,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                             loadingDialog.dismiss()
                         }
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else
                             mView.nearlyIndexResult(false, null)
                     }
@@ -86,7 +86,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                                     loadingDialog.dismiss()
                                 }
                                 if (e is BaseException) {
-                                    TickDialog(context).show()
+                                    TickDialog.getInstance(context).show()
                                 } else
                                     mView.nearlyIndexResult(false, null)
                             }
@@ -106,7 +106,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                             override fun onError(e: Throwable?) {
                                 super.onError(e)
                                 if (e is BaseException) {
-                                    TickDialog(context).show()
+                                    TickDialog.getInstance(context).show()
                                 } else
                                     mView.nearlyIndexResult(false, null)
                             }
@@ -126,7 +126,7 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
                             override fun onError(e: Throwable?) {
                                 super.onError(e)
                                 if (e is BaseException) {
-                                    TickDialog(context).show()
+                                    TickDialog.getInstance(context).show()
                                 } else
                                     mView.nearlyIndexResult(false, null)
                             }

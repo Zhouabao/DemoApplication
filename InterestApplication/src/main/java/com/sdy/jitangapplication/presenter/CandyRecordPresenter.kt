@@ -36,7 +36,7 @@ class CandyRecordPresenter : BasePresenter<CandyRecordView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else mView.onMyRedWithdrawLog(false, null)
                 }
             })

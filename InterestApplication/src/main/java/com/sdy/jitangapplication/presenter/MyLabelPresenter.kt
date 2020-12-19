@@ -43,7 +43,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
@@ -78,7 +78,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }

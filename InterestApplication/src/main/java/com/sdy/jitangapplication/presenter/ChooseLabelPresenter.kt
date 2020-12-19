@@ -37,7 +37,7 @@ class ChooseLabelPresenter : BasePresenter<ChooseLabelView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.getSquareTagListResult(false, null)

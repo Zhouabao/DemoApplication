@@ -35,7 +35,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     }
                 }
             })
@@ -91,7 +91,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         mView.onSettingsBeanResult(false, null)

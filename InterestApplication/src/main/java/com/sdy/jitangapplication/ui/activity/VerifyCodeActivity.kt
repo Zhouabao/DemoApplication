@@ -76,7 +76,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
-        mPresenter.getVerifyCode(phone, region)
+//        mPresenter.getVerifyCode(phone, region)
         inputVerifyCode.isEnabled = true
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
@@ -91,7 +91,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                         )
                     } else
                         mPresenter.checkVerifyCode(
-                            intent.getStringExtra("wxcode") ?: "",
+//                            intent.getStringExtra("wxcode") ?: "",
+                             "9678",
                             intent.getStringExtra("type") ?: "1",
                             phone,
                             content!!

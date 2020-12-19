@@ -38,7 +38,7 @@ class SomeoneGetGiftPresenter : BasePresenter<SomeoneGetGiftView>() {
                     if (t.code == 200)
                         mView.onGetSomeoneGiftList(true, t.data)
                     else if (t.code == 403) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onGetSomeoneGiftList(false, null)
                     }
@@ -48,7 +48,7 @@ class SomeoneGetGiftPresenter : BasePresenter<SomeoneGetGiftView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onGetSomeoneGiftList(false, null)
                     }

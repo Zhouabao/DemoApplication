@@ -38,7 +38,7 @@ class MyCandyPresenter : BasePresenter<MyCandyView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.ongoodsCategoryList(false, null)
 
@@ -64,7 +64,7 @@ class MyCandyPresenter : BasePresenter<MyCandyView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onMyCadnyResult(null)
 
@@ -88,7 +88,7 @@ class MyCandyPresenter : BasePresenter<MyCandyView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else mView.onMyBillList(false, null)
                 }
             })

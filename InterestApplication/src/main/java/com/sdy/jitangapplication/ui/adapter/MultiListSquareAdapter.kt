@@ -629,7 +629,7 @@ class MultiListSquareAdapter(
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(mContext).show()
+                        TickDialog.getInstance(mContext).show()
                     } else {
                         CommonFunction.toast(mContext.getString(R.string.service_error))
                     }
@@ -772,7 +772,7 @@ class MultiListSquareAdapter(
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(mContext).show()
+                        TickDialog.getInstance(mContext).show()
                     } else {
                         CommonFunction.toast(mContext.getString(R.string.service_error))
                         onRemoveMySquareResult(false, position)
@@ -804,7 +804,7 @@ class MultiListSquareAdapter(
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(mContext).show()
+                        TickDialog.getInstance(mContext).show()
                     } else {
                         CommonFunction.toast(mContext.getString(R.string.service_error))
                         onGetSquareCollectResult(position, null)
@@ -835,7 +835,7 @@ class MultiListSquareAdapter(
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(mContext).show()
+                        TickDialog.getInstance(mContext).show()
                     } else {
                         CommonFunction.toast(mContext.getString(R.string.service_error))
                         onGetSquareReport(null, position)

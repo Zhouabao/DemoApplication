@@ -111,7 +111,7 @@ class MyApplication : BaseApplication() {
         if (it == null || it.isEmpty()) {
             return@Observer
         } else {
-            TickDialog(this).show()
+            TickDialog.getInstance(this).show()
         }
 
     }
@@ -120,9 +120,12 @@ class MyApplication : BaseApplication() {
         Observer<StatusCode> {
             if (it.wontAutoLogin()) {
 //                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
-//                    TickDialog(ActivityUtils.getTopActivity()).show()
+//                    TickDialog.getInstance(ActivityUtils.getTopActivity()).show()
 //                else
-                UserManager.startToLogin(this)
+                if (ActivityUtils.getTopActivity() != null && ActivityUtils.isActivityAlive(ActivityUtils.getTopActivity()))
+                    TickDialog(ActivityUtils.getTopActivity()).show()
+                else
+                    UserManager.startToLogin(this)
             }
         }
     }

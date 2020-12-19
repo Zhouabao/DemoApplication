@@ -47,7 +47,7 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.getQualityResult(false, null)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
@@ -86,7 +86,7 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.addTagResult(false, null)

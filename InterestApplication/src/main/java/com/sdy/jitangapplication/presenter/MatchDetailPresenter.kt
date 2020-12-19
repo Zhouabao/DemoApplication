@@ -57,7 +57,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onError(context.getString(R.string.server_error))
                         mView.onGetSquareListResult(null, false)
@@ -104,7 +104,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onGetMatchDetailResult(false, null)
                 }
@@ -137,7 +137,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onError(CommonFunction.getErrorMsg(context))
                         mView.onGetUserActionResult(false, null)
@@ -164,7 +164,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onRemoveBlockResult(false)
                     }
@@ -190,7 +190,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onNeedNoticeResult(false)
                     }
@@ -223,7 +223,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onError(context.getString(R.string.service_error))
                         mView.onGetUserActionResult(false, null)

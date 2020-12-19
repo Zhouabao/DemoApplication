@@ -52,7 +52,7 @@ class AddAddressPresenter : BasePresenter<AddAddressView>() {
                     super.onError(e)
                     loading.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onAddAddressResult(false, null)
                 }
@@ -77,7 +77,7 @@ class AddAddressPresenter : BasePresenter<AddAddressView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onAddAddressResult(false, null)
                     }
@@ -104,7 +104,7 @@ class AddAddressPresenter : BasePresenter<AddAddressView>() {
                 override fun onError(e: Throwable?) {
                     super.onError(e)
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.delAddressResult(false)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))

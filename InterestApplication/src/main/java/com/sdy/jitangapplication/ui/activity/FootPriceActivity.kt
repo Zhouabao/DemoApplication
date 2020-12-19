@@ -105,7 +105,7 @@ class FootPriceActivity : BaseActivity() {
 
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
-                        TickDialog(this@FootPriceActivity).show()
+                        TickDialog.getInstance(this@FootPriceActivity).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(this@FootPriceActivity))
                     }

@@ -49,7 +49,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     }
 
                 }
@@ -77,7 +77,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     }
                 }
             })
@@ -116,7 +116,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         mView.onSettingsBeanResult(false, null)

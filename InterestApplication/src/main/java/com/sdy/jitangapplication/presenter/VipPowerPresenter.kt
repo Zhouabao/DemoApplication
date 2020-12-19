@@ -34,7 +34,7 @@ class VipPowerPresenter : BasePresenter<VipPowerView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e != null && e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.getChargeDataResult(null)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))

@@ -43,7 +43,7 @@ class DatingPresenter : BasePresenter<DatingView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareDatingResult(null, false)
                         }
@@ -75,7 +75,7 @@ class DatingPresenter : BasePresenter<DatingView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareDatingResult(null, false)
                         }

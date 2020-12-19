@@ -35,7 +35,7 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
 
                         override fun onError(e: Throwable?) {
                             if (e is BaseException) {
-                                TickDialog(context).show()
+                                TickDialog.getInstance(context).show()
                             } else {
                                 mView.onGetSquareTagResult(null, false)
                             }
@@ -60,7 +60,7 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
 
                         override fun onError(e: Throwable?) {
                             if (e is BaseException) {
-                                TickDialog(context).show()
+                                TickDialog.getInstance(context).show()
                             } else {
                                 mView.onGetSquareTagResult(null, false)
                             }
@@ -93,7 +93,7 @@ class TagSquarePresenter : BasePresenter<TagSquareView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onGetMarkTagResult(false)
                 }

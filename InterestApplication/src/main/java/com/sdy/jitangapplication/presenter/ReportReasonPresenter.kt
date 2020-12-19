@@ -38,7 +38,7 @@ class ReportReasonPresenter : BasePresenter<ReportResonView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
@@ -58,7 +58,7 @@ class ReportReasonPresenter : BasePresenter<ReportResonView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError(CommonFunction.getErrorMsg(context))
 

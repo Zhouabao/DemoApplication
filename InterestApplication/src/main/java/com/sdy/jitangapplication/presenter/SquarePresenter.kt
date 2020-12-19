@@ -49,7 +49,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareListResult(null, false, isRefresh)
                         }
@@ -77,7 +77,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareListResult(null, false, isRefresh)
                         }

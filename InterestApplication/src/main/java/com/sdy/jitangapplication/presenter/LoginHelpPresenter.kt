@@ -32,7 +32,7 @@ class LoginHelpPresenter : BasePresenter<LoginHelpView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.getHelpCenterResult(false, null)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))

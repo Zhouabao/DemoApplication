@@ -1,15 +1,16 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
+import com.kotlin.base.ext.onClick
+import com.sdy.baselibrary.ext.SingletonHolder
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.tick_dialog_layout.*
 
 /**
@@ -18,7 +19,9 @@ import kotlinx.android.synthetic.main.tick_dialog_layout.*
  *    desc   :
  *    version: 1.0
  */
-class TickDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
+class TickDialog(var context1: Context) : Dialog(ActivityUtils.getTopActivity(), R.style.MyDialog) {
+    companion object : SingletonHolder<TickDialog, Context>(::TickDialog)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow()
@@ -37,11 +40,12 @@ class TickDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)
+        setCancelable(false)
     }
 
     fun initview() {
         confirm.onClick {
-            UserManager.startToLogin(context1,true)
+            UserManager.startToLogin(context1, true)
             dismiss()
         }
     }

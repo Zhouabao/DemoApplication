@@ -46,7 +46,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         mView.getTagTraitInfoResult(false, null)
@@ -86,7 +86,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         mView.hideLoading()

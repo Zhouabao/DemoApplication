@@ -42,7 +42,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareRecommendResult(null, false)
                         }
@@ -70,7 +70,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
 
                     override fun onError(e: Throwable?) {
                         if (e is BaseException) {
-                            TickDialog(context).show()
+                            TickDialog.getInstance(context).show()
                         } else {
                             mView.onGetSquareRecommendResult(null, false)
                         }
@@ -115,7 +115,7 @@ class RecommendSquarePresenter : BasePresenter<RecommendSquareView>() {
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onCheckBlockResult(banner, false)

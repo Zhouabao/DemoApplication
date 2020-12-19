@@ -57,7 +57,7 @@ class ContentPresenter : BasePresenter<ContentView>() {
                     if (loadingDialog.isShowing)
                         loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onCheckBlockResult(false)
@@ -100,7 +100,7 @@ class ContentPresenter : BasePresenter<ContentView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onSquareAnnounceResult(type, false)
                     }

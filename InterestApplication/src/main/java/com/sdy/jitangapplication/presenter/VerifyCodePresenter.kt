@@ -66,7 +66,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 override fun onError(e: Throwable?) {
                     loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         mView.onConfirmVerifyCode(null, false)
@@ -108,7 +108,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 override fun onError(e: Throwable?) {
                     loadingDialog.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
                         mView.onConfirmVerifyCode(null, false)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
@@ -141,7 +141,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onGetVerifyCode(null)
                 }

@@ -36,7 +36,7 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         mView.onError("")
                 }

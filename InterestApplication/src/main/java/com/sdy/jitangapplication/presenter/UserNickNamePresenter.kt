@@ -60,7 +60,7 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
                 override fun onError(e: Throwable?) {
                     loadingDialg.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
@@ -130,7 +130,7 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
                     if (loadingDialg.isShowing)
                         loadingDialg.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
@@ -171,7 +171,7 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
                     if (loadingDialg.isShowing)
                         loadingDialg.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }

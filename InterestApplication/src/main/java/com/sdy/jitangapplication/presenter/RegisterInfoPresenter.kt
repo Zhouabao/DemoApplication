@@ -59,7 +59,7 @@ class RegisterInfoPresenter : BasePresenter<RegisterInfoView>() {
                 override fun onError(e: Throwable?) {
                     loadingDialg.dismiss()
                     if (e is BaseException) {
-                        TickDialog(context).show()
+                        TickDialog.getInstance(context).show()
                     } else {
 
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
