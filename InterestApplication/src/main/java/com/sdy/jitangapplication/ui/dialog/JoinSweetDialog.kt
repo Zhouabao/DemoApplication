@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.JoinSweetEvent
 import com.sdy.jitangapplication.model.SweetProgressBean
 import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
-import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyUploadActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import kotlinx.android.synthetic.main.dialog_join_sweet.*
 import org.greenrobot.eventbus.EventBus
@@ -171,7 +170,12 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
         val params = sweetPowerIv.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F + 10 * 2F)
         params.height = (params.width * (303F / 335)).toInt()
-        GlideUtil.loadImg(context1, progressBean.img, sweetPowerIv)
+        GlideUtil.loadRoundImgCenterCrop(
+            context1,
+            progressBean.img,
+            sweetPowerIv,
+            SizeUtils.dp2px(10F)
+        )
     }
 
     private fun initWindow() {

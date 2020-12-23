@@ -36,7 +36,7 @@ android {
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
         versionCode 47
-        versionName "2.6.0.2"
+        versionName "2.6.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -51,7 +51,7 @@ android {
             exclude 'META-INF/rxjava.properties'
         }
 //        ndk {
-        //设置支持的SO库架构
+//        设置支持的SO库架构
 //            abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
 //        }
         ndk { abiFilters  "armeabi-v7a", 'arm64-v8a'}
