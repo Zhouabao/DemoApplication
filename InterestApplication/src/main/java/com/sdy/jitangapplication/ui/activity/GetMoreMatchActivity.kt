@@ -41,10 +41,8 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
         setSwipeBackEnable(false)
 
         if (UserManager.getGender() == 1) {
-            lottieMoreMatch.imageAssetsFolder = "images_boy"
             lottieMoreMatch.setAnimation("data_boy_more_match.json")
         } else {
-            lottieMoreMatch.imageAssetsFolder = "images_girl"
             lottieMoreMatch.setAnimation("data_girl_more_match.json")
         }
 
