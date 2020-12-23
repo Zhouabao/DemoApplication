@@ -347,7 +347,6 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             openVipBtn.clickWithTrigger {
                 CommonFunction.startToFootPrice(activity!!)
             }
-            lottieMoreMatch.imageAssetsFolder = "images_boy"
             lottieMoreMatch.setAnimation("data_boy_more_match.json")
 
 
