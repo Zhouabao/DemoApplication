@@ -21,6 +21,7 @@
     <com.ctetin.expandabletextviewlibrary.ExpandableTextView
         android:id="@+id/squareContent1"
         android:layout_width="match_parent"
+        android:visibility="invisible"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -48,6 +49,7 @@
         android:id="@+id/squareSweetVerifyContentCl"
         android:layout_width="345dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:minHeight="59dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/icon_sweet_type_man"

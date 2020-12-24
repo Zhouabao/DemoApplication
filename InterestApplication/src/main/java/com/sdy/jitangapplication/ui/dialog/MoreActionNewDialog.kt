@@ -5,22 +5,35 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.PermissionUtils
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.share.Sharer
+import com.facebook.share.model.SharePhoto
+import com.facebook.share.model.SharePhotoContent
+import com.facebook.share.widget.ShareDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.SaveImgSuccessEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
+import com.sdy.jitangapplication.utils.SaveNetPhotoUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.UMShareAPI
@@ -31,6 +44,10 @@ import com.umeng.socialize.media.UMVideo
 import com.umeng.socialize.media.UMWeb
 import com.umeng.socialize.media.UMusic
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.io.File
 
 
 /**
@@ -147,8 +164,26 @@ class MoreActionNewDialog(
                 shareToThirdParty(SHARE_MEDIA.QZONE)
             }
             R.id.transpondFacebook -> {//facebook
-//                shareToFacebook()
-                shareToThirdParty(SHARE_MEDIA.FACEBOOK)
+                if (!PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.STORAGE
+                        )
+                    )
+                ) {
+                    PermissionUtils.permission(PermissionConstants.STORAGE)
+                        .callback(object : PermissionUtils.SimpleCallback {
+                            override fun onGranted() {
+                                downloadShareImg()
+                            }
+
+                            override fun onDenied() {
+                                CommonFunction.toast(myContext.getString(R.string.permission_storage))
+                            }
+
+                        })
+                        .request()
+                } else
+                    downloadShareImg()
             }
             R.id.transpondIns -> {//instagram
                 shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
@@ -157,7 +192,6 @@ class MoreActionNewDialog(
         }
 
     }
-
 
     /**
      * 封装分享
@@ -172,92 +206,67 @@ class MoreActionNewDialog(
 
 
     /**
+     * facebook分享先下载图片再分享
+     */
+    private fun downloadShareImg() {
+        val newImgPath = "share-${RandomUtils.getRandomString(16)}.jpg"
+        SaveNetPhotoUtils.savePhoto(
+            myContext, if (!squareBean?.video_json.isNullOrEmpty()) {
+                squareBean?.video_json!![0].url
+            } else if (!squareBean?.photo_json.isNullOrEmpty()) {
+                squareBean?.photo_json!![0].url
+            } else if (!squareBean?.audio_json.isNullOrEmpty()) {
+                squareBean?.audio_json!![0].url
+            } else {
+                squareBean?.avatar
+            }, newImgPath
+        )
+
+    }
+
+    /**
      * facebook分享单独封装
      */
-//    private fun shareToFacebook() {
-//        val shareDialog = ShareDialog(myContext as Activity)
-//        shareDialog.registerCallback((myContext as BaseActivity).callbackManager, this)
-//
-//
-//        val shareUrl = ShareLinkContent.Builder()
-//            .setContentUrl(
-//                Uri.parse(
-//                    if (!squareBean?.video_json.isNullOrEmpty()) {
-//                        squareBean?.video_json!![0].url
-//                    } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-//                        squareBean?.photo_json!![0].url
-//                    } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-//                        squareBean?.audio_json!![0].url
-//                    } else {
-//                        squareBean?.avatar
-//                    }
-//                )
-//            )
-//
-//            .setContentTitle(
-//                if (!squareBean?.video_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_video_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_pic_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_video_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else {
-//                    myContext.getString(
-//                        R.string.send_a_square_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                }
-//            )
-//            .setContentDescription(
-//                if (!squareBean?.descr.isNullOrEmpty()) {
-//                    squareBean?.descr
-//                } else myContext.getString(R.string.hurry_to_see_this)
-//            )
-//            .setQuote(
-//                if (!squareBean?.video_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_video_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else if (!squareBean?.photo_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_pic_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else if (!squareBean?.audio_json.isNullOrEmpty()) {
-//                    myContext.getString(
-//                        R.string.send_a_video_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                } else {
-//                    myContext.getString(
-//                        R.string.send_a_square_in_app,
-//                        squareBean?.nickname.toString()
-//                    )
-//                }
-//            )
-//            .setShareHashtag(
-//                ShareHashtag.Builder()
-//                    .setHashtag(
-//                        if (!squareBean?.descr.isNullOrEmpty()) {
-//                            squareBean?.descr
-//                        } else myContext.getString(R.string.hurry_to_see_this)
-//                    )
-//                    .build()
-//            )
-//            .build()
-//
-//        shareDialog.show(shareUrl)
-//    }
+    fun shareFacebook(newImgPath: File) {
+        val shareDialog = ShareDialog(myContext as Activity)
+        shareDialog.registerCallback(
+            (myContext as BaseActivity).callbackManager,
+            object : FacebookCallback<Sharer.Result> {
+                override fun onSuccess(result: Sharer.Result) {
+                    FileUtils.delete(newImgPath)
+                    Log.d("share===", "onresult ${result}================")
+                    addShare(SHARE_MEDIA.FACEBOOK)
+                    dismiss()
+                }
+
+                override fun onCancel() {
+                    Log.d("share===", "onCancel ================")
+
+                    TODO("Not yet implemented")
+                }
+
+                override fun onError(error: FacebookException?) {
+                    Log.d("share===", "onError ${error}================")
+
+                }
+
+            })
+
+        if (newImgPath.exists()) {
+            val shareMedia = SharePhoto.Builder()
+                .setImageUrl(Uri.fromFile(newImgPath))
+                .setCaption(
+                    if (!squareBean?.descr.isNullOrEmpty()) {
+                        squareBean?.descr
+                    } else myContext.getString(R.string.hurry_to_see_this)
+                )
+                .build()
+            val shareUrl = SharePhotoContent.Builder()
+                .addPhoto(shareMedia)
+                .build()
+            shareDialog.show(shareUrl)
+        }
+    }
 
 
     /**
@@ -275,7 +284,10 @@ class MoreActionNewDialog(
                 image.compressStyle = UMImage.CompressStyle.SCALE
                 image.compressFormat = Bitmap.CompressFormat.JPEG
                 image.title =
-                    myContext.getString(R.string.send_a_pic_in_app, squareBean?.nickname.toString())
+                    myContext.getString(
+                        R.string.send_a_pic_in_app,
+                        squareBean?.nickname.toString()
+                    )
                 image.description = if (!squareBean?.descr.isNullOrEmpty()) {
                     squareBean?.descr
                 } else myContext.getString(R.string.hurry_to_see_this)
@@ -325,7 +337,10 @@ class MoreActionNewDialog(
             thumbImg.compressFormat = Bitmap.CompressFormat.PNG
             video.setThumb(thumbImg)
             video.title =
-                myContext.getString(R.string.send_a_video_in_app, squareBean?.nickname.toString())
+                myContext.getString(
+                    R.string.send_a_video_in_app,
+                    squareBean?.nickname.toString()
+                )
             video.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
             } else myContext.getString(R.string.hurry_to_see_this)
@@ -339,7 +354,10 @@ class MoreActionNewDialog(
             audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
             audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
             audio.title =
-                myContext.getString(R.string.send_a_audio_in_app, squareBean?.nickname.toString())
+                myContext.getString(
+                    R.string.send_a_audio_in_app,
+                    squareBean?.nickname.toString()
+                )
             audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
             } else myContext.getString(R.string.hurry_to_see_this)
@@ -442,6 +460,19 @@ class MoreActionNewDialog(
     override fun dismiss() {
         super.dismiss()
         umShareAPI.release()
+        EventBus.getDefault().unregister(this)
+    }
+
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun saveImgSuccess(successEvent: SaveImgSuccessEvent) {
+        shareFacebook(successEvent.filePath)
+//        shareToIns(successEvent.filePath)
     }
 
 

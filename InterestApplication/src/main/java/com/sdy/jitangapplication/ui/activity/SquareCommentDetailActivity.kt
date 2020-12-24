@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -239,7 +240,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             )
 
         squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
-        squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
+        squareContent1.isInvisible = squareBean!!.descr.isNullOrEmpty()
         if (!squareBean!!.descr.isNullOrEmpty()) {
             squareContent1.setContent("${squareBean!!.descr}")
         }

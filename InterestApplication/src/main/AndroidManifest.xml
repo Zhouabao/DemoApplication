@@ -512,6 +512,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Transitions"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
+
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -521,13 +527,35 @@
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            tools:replace="android:launchMode,android:theme">
+            tools:replace="android:theme,android:launchMode">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity> <!-- 微信分享回调 -->
+
+        </activity>
+
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+
+        <!-- 微信分享回调 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -587,25 +615,57 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
                 tools:replace="name,resource" />
-        </provider> <!-- *****************自动适配********************** -->
+        </provider>
+
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter><action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="@string/fb_login_protocol_scheme"
+                    tools:ignore="ManifestResource" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
+            android:exported="true" />
+
+
+        <!-- <activity
+             android:name="com.umeng.facebook.FacebookActivity"
+             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+             android:label="@string/app_name"
+             android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             tools:ignore="Instantiatable" />
+
+         <meta-data
+             android:name="com.facebook.sdk.ApplicationId"
+             android:value="@string/facebook_app_id"
+             tools:ignore="ManifestResource" />-->
+
+
+        <!-- *****************自动适配********************** -->
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />
         <meta-data
             android:name="design_height_in_dp"
             android:value="667" />
-
-        <activity
-            android:name="com.umeng.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:ignore="Instantiatable" />
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"
-            tools:ignore="ManifestResource" />
 
 
         <activity
@@ -623,9 +683,9 @@
 
 
         <!-- *****************高德地图********************** -->
-<!--        <meta-data-->
-<!--            android:name="com.amap.api.v2.apikey"-->
-<!--            android:value="ed0911965c16cc04ec36bb2360dccaa2" />       -->
+        <!--        <meta-data-->
+        <!--            android:name="com.amap.api.v2.apikey"-->
+        <!--            android:value="ed0911965c16cc04ec36bb2360dccaa2" />       -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="3b6b810a7ad78b17f523bdd05279b48c" />
@@ -776,14 +836,13 @@
         </service>
 
 
-
         <!--Oppo推送配置项 需要配置以下两项-->
         <service
             android:name="com.netease.nimlib.mixpush.oppo.OppoPushService"
 
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
         <!--兼容Q以下版本-->
@@ -793,14 +852,11 @@
             android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
 
             <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
 
-                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
-
-
-
 
 
         <!-- 魅族配置的service和receiver -->

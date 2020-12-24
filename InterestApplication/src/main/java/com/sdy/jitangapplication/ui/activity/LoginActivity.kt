@@ -13,6 +13,10 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -36,6 +40,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import java.lang.ref.WeakReference
+import java.util.*
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
@@ -284,6 +289,44 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         mPresenter.loading.show()
         startActivityForResult(intent, RC_GOOGLE_SIGN_IN)
 //        }
+    }
+
+
+    fun initFaceBook() {
+        LoginManager.getInstance().apply {
+            registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
+                    if (result != null && result.accessToken != null) {
+                        Log.e("VVV", "onSuccess===facebook,${result.accessToken}")
+                        mPresenter.checkVerifyCode(
+                            result.accessToken.token,
+                            VerifyCodeActivity.TYPE_LOGIN_FACEBOOK
+                        )
+                    }
+                }
+
+                override fun onCancel() {
+                    Log.e("VVV", "onCancel===facebook")
+                }
+
+                override fun onError(error: FacebookException?) {
+                    Log.e("VVV", "onError===facebook,${error.toString()}")
+                }
+
+            })
+        }
+    }
+
+    fun facebookLogin() {
+        initFaceBook()
+//        val accessToken: AccessToken? = AccessToken.getCurrentAccessToken()
+//        if (accessToken != null && !accessToken.isExpired) {
+//            mPresenter.checkVerifyCode(
+//                accessToken.token,
+//                VerifyCodeActivity.TYPE_LOGIN_FACEBOOK
+//            )
+//        } else
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
     }
 
 

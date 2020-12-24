@@ -10,7 +10,9 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.kotlin.base.ext.onClick
+import com.sdy.baselibrary.utils.ChannelUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
@@ -18,6 +20,7 @@ import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
+import com.umeng.commonsdk.UMConfigure
 import kotlinx.android.synthetic.main.dialog_privacy.*
 import org.greenrobot.eventbus.EventBus
 
@@ -105,6 +108,7 @@ class PrivacyDialog(
             .create()
 
         agree.onClick {
+            CommonFunction.initUMeng(context1)
             UserManager.saveAlertProtocol(true)
             dismiss()
         }

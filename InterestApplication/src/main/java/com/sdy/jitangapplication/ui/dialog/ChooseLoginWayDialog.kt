@@ -15,7 +15,6 @@ import com.sdy.jitangapplication.ui.activity.OnekeyLoginActivity
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.WXEntryActivity
-import com.umeng.socialize.bean.SHARE_MEDIA
 import kotlinx.android.synthetic.main.dialog_choose_login_way.*
 import org.jetbrains.anko.startActivity
 
@@ -71,7 +70,8 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
 
             //facebook登录
             loginWithFacebookBtn.clickWithTrigger {
-                (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.FACEBOOK)
+                (context1 as LoginActivity).facebookLogin()
+//                (context1 as LoginActivity).umengThirdLogin(SHARE_MEDIA.FACEBOOK)
                 dismiss()
             }
 
@@ -134,8 +134,6 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
 
 
         }
-
-
 
 
     }

@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
@@ -14,7 +13,6 @@ import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.VibrateUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
@@ -114,8 +112,10 @@ class GreetHiDialog(val msgBean: CustomerMsgBean) :
     }
 
     override fun dismiss() {
-        media.stop()
-        media.release()
+        if (media.isPlaying) {
+            media.stop()
+            media.release()
+        }
         super.dismiss()
 
     }
