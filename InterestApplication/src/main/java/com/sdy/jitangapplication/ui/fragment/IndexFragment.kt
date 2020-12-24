@@ -124,53 +124,9 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
             EventBus.getDefault().post(SweetAddClickEvent())
         }
 
-
-        realMsgNotice.setDirection(GreetHiView.DIRECTION_LEFT)
-        unrealMsgNotice.setDirection(GreetHiView.DIRECTION_RIGHT)
     }
 
 
-    private fun initNewMessages(view1: GreetHiView, customerMsgBean: CustomerMsgBean) {
-        view1.loadImg(customerMsgBean.avatar, customerMsgBean.accid)
-        view1.isVisible = true
-        view1.clickWithTrigger {
-            if (UserManager.isUserFoot()) {
-                //男性解锁聊天
-                CommonFunction.checkChat(requireContext(), customerMsgBean.accid)
-            } else {
-                VisitorsPayChatDialog(requireActivity()).show()
-            }
-
-        }
-        val animatorSet = AnimatorSet().apply {
-            val scaleX = ObjectAnimator.ofFloat(view1, "scaleX", 0.8F, 1f, 0.8F)
-            scaleX.repeatCount = 5
-            scaleX.duration = 1000
-            val scaleY = ObjectAnimator.ofFloat(view1, "scaleY", 0.8F, 1f, 0.8F)
-            scaleY.repeatCount = 5
-            scaleY.duration = 1000
-            interpolator = AccelerateInterpolator()
-            playTogether(scaleX, scaleY)
-        }
-        animatorSet.start()
-
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                view1.isInvisible = true
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-
-        })
-    }
 
 
     private fun changeListStyle(styleList: Boolean) {
@@ -250,15 +206,6 @@ class IndexFragment : BaseMvpFragment<IndexPresenter>(), IndexView {
         EventBus.getDefault().unregister(this)
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateTodayWantEvent(event: UpdateNewMsgEvent) {
-        if (!unrealMsgNotice.isVisible || unrealMsgNotice.accid == event.customerMsgBean.accid) {
-            initNewMessages(unrealMsgNotice, event.customerMsgBean)
-        } else {
-            initNewMessages(realMsgNotice, event.customerMsgBean)
-        }
-    }
 
 
     /**

@@ -288,10 +288,10 @@ class ChatUpOpenPtVipDialog(
                         chatupContent.isVisible = true
                         if (chatUpBean.direct_residue_cnt > 0) {
                             chatupTitle.text = context1.getString(R.string.is_unlock_contact)
-                            chatupContent.text =
-                                context1.getString(R.string.today_free_chat) + chatUpBean.direct_residue_cnt + context1.getString(
-                                    R.string.time_contact
-                                )
+                            chatupContent.text = context1.getString(
+                                R.string.today_free_chat,
+                                chatUpBean.direct_residue_cnt
+                            )
                             openPtVipBtn.text = context1.getString(R.string.unlock_her)
                         } else {
 

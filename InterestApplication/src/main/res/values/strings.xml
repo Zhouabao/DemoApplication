@@ -789,8 +789,7 @@
     <string name="chat_cost_candy">聊天需要消耗糖果，向对方表达诚意</string>
     <string name="today_has">为表达交友诚意需向对方赠送%1$d糖果，您也可以充值会员每日获取%2$d次免费聊天机会</string>
     <string name="is_unlock_contact">是否解锁她的联系方式</string>
-    <string name="today_free_chat">您当日还可免费解锁</string>
-    <string name="time_contact">次联系方式</string>
+    <string name="today_free_chat">您当日还可免费解锁%1$d次联系方式</string>
     <string name="unlock_her">解锁她的联系方式</string>
     <string name="free_unlock_use_up">免费解锁次数已用完</string>
     <string name="use_candy_unlock_her_dont_miss">您当日还可以免费解锁0次联系方式\n使用糖果解锁，不错过心仪的她</string>

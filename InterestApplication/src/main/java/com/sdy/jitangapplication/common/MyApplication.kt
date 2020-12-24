@@ -70,7 +70,6 @@ import org.greenrobot.eventbus.EventBus
 class MyApplication : BaseApplication() {
     val appContext by lazy { this }
 
-
     init {
         SmartRefreshLayout.setDefaultRefreshInitializer { context, layout ->
             layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
@@ -288,8 +287,14 @@ class MyApplication : BaseApplication() {
                         UserManager.saveShowGuideWechat(true)
 
                     }
-                    401 -> { // 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
-                        EventBus.getDefault().post(UpdateNewMsgEvent(customerMsgBean))
+                    401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
+                        if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() !is SplashActivity && ActivityUtils.getTopActivity() !is ChatActivity)
+                            GreetHiDialog(customerMsgBean).show()
+//                            FragmentUtils.add(
+//                                (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,
+//                                GreetHiFragment(customerMsgBean),
+//                                android.R.id.content
+//                            )
 
                     }
 

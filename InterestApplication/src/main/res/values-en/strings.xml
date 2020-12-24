@@ -2,6 +2,7 @@
     <string name="app_name">SugarTown</string>
 
     <string name="facebook_app_id">3546860392031186</string>
+    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
     <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
     <string name="server_client_id">325834510992-5o1upod7qkkgjh2bk9lg0th1abhfb6i7.apps.googleusercontent.com</string>
 
@@ -29,14 +30,14 @@
     <string name="nim_status_bar_multi_messages_incoming">New message from %1$d contacts</string>
     <string name="nim_status_bar_ticker_text">%1$s new messege</string>
     <string name="nim_status_bar_image_message">%1$s sent you a picture </string>
-    <string name="nim_status_bar_audio_message">%1$s sent you a vocie message</string>
+    <string name="nim_status_bar_audio_message">%1$s sent you a voice message</string>
     <string name="nim_status_bar_video_message">%1$s sent you a video message</string>
     <string name="nim_status_bar_file_message">%1$s sent you a file</string>
     <string name="nim_status_bar_location_message">%1$s shared location with you</string>
     <string name="nim_status_bar_notification_message">%1$s:Notification</string>
     <string name="nim_status_bar_custom_message">%1$s:Sharing message</string>
     <string name="nim_status_bar_unsupported_message">%1$s:Content display failed</string>
-    <string name="nim_status_bar_hidden_msg_content">You recieved a new message</string>
+    <string name="nim_status_bar_hidden_msg_content">You received a new message</string>
 
 
     <string name="message_history_query">Record of cloud storage message</string>
@@ -57,9 +58,9 @@
     <string name="friends_map_navigation_web">Open in web</string>
     <string name="location_open_map_error">Open map error</string>
 
-    <string name="report_square">Comfirm to report this moments?</string>
-    <string name="report_dating">Comfirm to report this activity?</string>
-    <string name="dissolve_wechat">Comfirm to relieve Wechat binding?</string>
+    <string name="report_square">Confirm to report this moments?</string>
+    <string name="report_dating">Confirm to report this activity?</string>
+    <string name="dissolve_wechat">Confirm to relieve Wechat binding?</string>
 
 
     <string name="input_contact_panel">Contact info</string>
@@ -67,11 +68,11 @@
 
     <!-- common -->
     <string name="empty"></string>
-    <string name="ok">Comfirm</string>
+    <string name="ok">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="clear_empty">Clear</string>
     <string name="iknow">Got it</string>
-    <string name="network_is_not_available">Network conectting failed.Check your network setting</string>
+    <string name="network_is_not_available">Network connecting failed.Check your network setting</string>
     <string name="readed">Readed</string>
     <string name="get_readed">Obtain receipt</string>
     <string name="sended">Sent</string>
@@ -122,7 +123,7 @@
     <string name="look_video_fail">Video play failed</string>
     <string name="look_video_fail_try_again">Video play failed at the moment, retry</string>
     <string name="video_record">Video record</string>
-    <string name="connect_vedio_device_fail">Conecting video device failed,retry later</string>
+    <string name="connect_vedio_device_fail">Connecting video device failed,retry later</string>
     <string name="capture_video_size_in_kb">Video file size:%1$dKB,</string>
     <string name="capture_video_size_in_mb">Video file size:%1$.2fMB,</string>
     <string name="is_send_video">Send this video or not?</string>
@@ -187,11 +188,11 @@
     <string name="choose_video_duration_max_tip">You can only selected video within %d seconds,select after edited</string>
     <string name="choose_video_duration_min_tip">Video within 3 seconds cannot be imported</string>
     <string name="back">Return</string>
-    <string name="network_unavailable">Network conectting failed</string>
+    <string name="network_unavailable">Network connecting failed</string>
     <string name="send_d">Sending(%d)</string>
     <string name="video_network_not_good">Network no good,retry later</string>
     <string name="permission_request">Voice and camera permissions are required</string>
-    <string name="sure">Comfirm</string>
+    <string name="sure">Confirm</string>
 
 
     <!--活体认证-->
@@ -276,7 +277,7 @@
     <string name="input_new_phone">Fill in new number</string>
     <string name="get_verify_code">Obtain</string>
     <string name="account_change_title">Alternate account</string>
-    <string name="account_confirm_change">Alteration comfirm</string>
+    <string name="account_confirm_change">Alteration confirm</string>
     <string name="seconds_resend">Resend after  ( )  seconds</string>
     <string name="account_login_offtip1">Please select " if you want to  cancel account</string>
     <string name="account_login_offtip2">Cancel account</string>
@@ -304,7 +305,7 @@
     <string name="label_all">All Interestss</string>
     <string name="label_title_hot">Select hustags</string>
     <string name="lable_title_most">At most select</string>
-    <string name="label_title_most_2">XX  topics</string>
+    <string name="label_title_most_2"> topics</string>
     <string name="label_title_max_length">The maximum characters of a heading is 24</string>
 
 
@@ -313,7 +314,7 @@
     <string name="try_listen">Test listen</string>
     <string name="playing">Playing</string>
     <string name="pause">Pause</string>
-    <string name="click_record">Kick to record</string>
+    <string name="click_record">Click to record</string>
     <string name="dating_person_choose">Select sugarbaby type</string>
     <string name="dating_pay_estimated">Spending forcast</string>
     <string name="dating_later_plan">Follow-up activities</string>
@@ -344,7 +345,7 @@
     <string name="choose_later_plan">Select follow-up activities</string>
     <string name="share_mood">Sharing current mood</string>
     <string name="click_listen">Click and test listen</string>
-    <string name="confirm_use">Comfirm</string>
+    <string name="confirm_use">Confirm</string>
 
 
     <string name="choose_friend">Select freind</string>
@@ -373,9 +374,9 @@
     <string name="verify_pass">Certified</string>
     <string name="verify_checking">Certification under review</string>
     <string name="video_checking_waiting">Video is being reviewed, Please wait patiently.</string>
-    <string name="video_verify_first_then_introduce">Please record video introduceduction before real person certification</string>
+    <string name="video_verify_first_then_introduce">Please record video introduction before real person certification</string>
     <string name="real_verify">Real person certification</string>
-    <string name="video_introduce">Video introduceduction</string>
+    <string name="video_introduce">Video introduction</string>
     <string name="has">%1$d Sugardaddy joined</string>
     <string name="give">Give %1$d Candies as gift</string>
     <string name="candy">Candy</string>
@@ -475,7 +476,7 @@
     <string name="at_least_main">Keep %1$d Interests at least</string>
     <string name="add_label">Add Interests</string>
     <string name="deleta_label">Delect Interests</string>
-    <string name="is_confirm_delete">Comfirm to delect Interests?</string>
+    <string name="is_confirm_delete">Confirm to delect Interests?</string>
     <string name="most_maintain">At most have %1$d Interests</string>
     <string name="withdraw_record">Record</string>
     <string name="has_withdraw">Cash withdrawal already</string>
@@ -487,7 +488,7 @@
     <string name="choose_birthday">Select your birthday</string>
     <string name="height">Height</string>
     <string name="save_content">Save content</string>
-    <string name="is_save_content">Comfirm to save the edited content?</string>
+    <string name="is_save_content">Confirm to save the edited content?</string>
     <string name="give_up">Abandon</string>
     <string name="least_upload_count">At least upload 1 picture</string>
     <string name="click_first_to_replace_avatar">Kick first picture to replace the real avatar, can be reviewed again</string>
@@ -599,7 +600,7 @@
     <string name="upload_shot">Upload screenshot</string>
     <string name="commit_report">Submit report</string>
     <string name="notice">Tips</string>
-    <string name="cannot_change_gender">Gender cannot be changed once comfirmed</string>
+    <string name="cannot_change_gender">Gender cannot be changed once confirmed</string>
     <string name="i_know">Got it</string>
     <string name="super_man">Elite male</string>
     <string name="magic_woman">Attractive female</string>
@@ -684,7 +685,7 @@
     <string name="commit_unopen_verify">Submit for non-public review</string>
     <string name="publish_square">Post moments</string>
     <string name="finish">Complete</string>
-    <string name="self_introduce">Personal introduceduction</string>
+    <string name="self_introduce">Personal introduction</string>
     <string name="label_introduce_tip">Warning!!! Check this out\n what is your wish?\n introduce twishes what you can help other to make it \n type here about「Wishing Welfare Society」etc. \n data shows that rate of been flirting would increase \n do it now</string>
     <string name="see_other_how_to_write">Check out texts from others</string>
     <string name="replace">Edit</string>
@@ -730,7 +731,7 @@
     <string name="years">  years old</string>
     <string name="shw_want_to_with_you">She want to:</string>
     <string name="who_see_me">Who checked my profile</string>
-    <string name="many_people_see_you"> XX by optimized selection\n XX user got you</string>
+    <string name="many_people_see_you">  by optimized selection\n  user got you</string>
     <string name="tobe_choiceness">To be optimized user\n obtain more chance to chat</string>
     <string name="tobe_choiceness1">Upgrade member</string>
     <string name="upgrade_vip">Gloden member</string>
@@ -750,7 +751,7 @@
     <string name="invite">Invite %1$d people</string>
     <string name="avatar">Avatar</string>
     <string name="dating">Activity</string>
-    <string name="per_month">//month</string>
+    <string name="per_month">/month</string>
     <string name="face_verify">Face Certification</string>
     <string name="goto_verify">Verify now</string>
     <string name="please_verify_face">Start Face Certification\n to ensure avatar from real person</string>
@@ -789,8 +790,7 @@
     <string name="chat_cost_candy">Chat will cost Candy to show sincerity to  her(him)</string>
     <string name="today_has">To show your sincerity in making friends, you need to give %1$d candies to each other. You can also recharge your membership and get %2$d free chat opportunities every day</string>
     <string name="is_unlock_contact">Unlock her contact info?</string>
-    <string name="today_free_chat">You can unlock  XX today for free</string>
-    <string name="time_contact"> contact info</string>
+    <string name="today_free_chat">You can unlock %1$d contact info today for free</string>
     <string name="unlock_her">Unlock her contact info</string>
     <string name="free_unlock_use_up">Free unlock opportunity run out</string>
     <string name="use_candy_unlock_her_dont_miss">You have 0 opportunity to unlock the contact info \n  Use Candies to unlock chat, don\'t miss your type</string>
@@ -804,7 +804,7 @@
     <string name="tobe_choiceness_user">To be the optimized user</string>
     <string name="tobe_gold_to_first_see_you">To be Golden Member and  bring sugarbabies into notice</string>
     <string name="open_gold_vip">To be a member of SugarTown</string>
-    <string name="upload_video_to_first_see_you">Upload the video introduceduction, let the quality male notice you at first sight.</string>
+    <string name="upload_video_to_first_see_you">Upload the video introduction, let the quality male notice you at first sight.</string>
     <string name="add_video_introduce">Add video introduce</string>
     <string name="copy_comment">Copy comment</string>
     <string name="reply_comment">Reply comment</string>
@@ -819,7 +819,7 @@
     <string name="pay_fail">Payment failed！</string>
     <string name="unload_wechat">Failed to find WeChat</string>
     <string name="pay_result">Payment result</string>
-    <string name="confirm_pay">Comfirm to pay</string>
+    <string name="confirm_pay">Confirm to pay</string>
     <string name="other_pay_way">Other payment methods</string>
     <string name="pay_alipay">Alipay</string>
     <string name="pay_wechat">Wechat Pay</string>
@@ -960,7 +960,7 @@
     <string name="mv_fail_content">Your video introduce isn\'t approved, you can re-record it provided that the video is consistent with your avatar</string>
     <string name="mv_pass_content">Your video introduce has been approved</string>
     <string name="verify_know">Certification notice</string>
-    <string name="verify_notice1">The audit will be proofread with your avatar，Video is open to member users for your video introduceduction，Please click the record button and introduceduce yourself</string>
+    <string name="verify_notice1">The audit will be proofread with your avatar，Video is open to member users for your video introduction，Please click the record button and introduceduce yourself</string>
     <string name="verify_then_chat">Please get certificated to unlock the chat</string>
     <string name="verify_then_chat_content">SugarTown is human certification dating app,To protect the Interestsand authenticity of paying customers,Face verification is neccesary</string>
     <string name="verify_then_unlock">Please get certificated to unlock the contact info</string>
@@ -986,7 +986,7 @@
     <string name="input_money">Enter the amount</string>
     <string name="alipay">Alipay</string>
     <string name="click_input">Click to fill in</string>
-    <string name="confirm_withdraw">Comfirm to cash withdrawal</string>
+    <string name="confirm_withdraw">Confirm to cash withdrawal</string>
     <string name="apply_withdraw_success">Apply for cash withdrawal succeed</string>
     <string name="apply_waiting_time">Money would arrive  within 7 working days after passing the audit. Please wait patiently</string>
     <string name="apply_time">Time of Application</string>
@@ -1017,7 +1017,7 @@
     <string name="someone_comment_your_square">%1$s commented on your moments</string>
     <string name="someone_zan_your_comment">%1$s Like your comments</string>
     <string name="no_new_square">No more new moments</string>
-    <string name="assistant">Offical assistant</string>
+    <string name="assistant">Official assistant</string>
     <string name="no_assistant_msg">No assistant message</string>
     <string name="squre_message">Push notification</string>
     <string name="no_square_message">No push notifications yet</string>
@@ -1092,7 +1092,7 @@
     <string name="unsupport_type">This type does not support forward</string>
     <string name="pay_error">Payment error, please try again</string>
     <string name="delete_friend">Delete he/she?</string>
-    <string name="is_confirm_delete_friend">Comfirm to delete he/she?</string>
+    <string name="is_confirm_delete_friend">Confirm to delete he/she?</string>
     <string name="gift_has_opend">Gift has been unpacked</string>
     <string name="gift_has_revoked">Gift has been refund</string>
     <string name="cost_candy_count">Candy cost %1$d</string>
@@ -1231,7 +1231,7 @@
     <string name="Increase_exposure_rights">improve exposure</string>
     <string name="my_privilege">my privilege</string>
     <string name="my_candy">candies</string>
-    <string name="seen_mine">visitor</string>
+    <string name="seen_mine">visitors</string>
     <string name="my_footprint">tracks</string>
     <string name="likes_comments">likes,comments…</string>
     <string name="my_conversation">my conversation</string>
@@ -1287,7 +1287,7 @@
     <string name="send_a_experience_card">Give you an experience card</string>
     <string name="limit_free_experience">Free experience of all the functions \n Feeling surrounded by the opposite sex</string>
     <string name="include_all_visit_power">Contains permission to view all functions</string>
-    <string name="get_vip_card">Obtail</string>
+    <string name="get_vip_card">Obtain</string>
     <string name="gold_experience_card">Gold Membership \n Experience card</string>
     <string name="expire_time">Expiration date：%1$s</string>
     <string name="they_greet_you">They say hello to you</string>
