@@ -58,9 +58,9 @@
     <string name="friends_map_navigation_web">Open in web</string>
     <string name="location_open_map_error">Open map error</string>
 
-    <string name="report_square">Confirm to report this moments?</string>
-    <string name="report_dating">Confirm to report this activity?</string>
-    <string name="dissolve_wechat">Confirm to relieve Wechat binding?</string>
+    <string name="report_square">Comfirm to report this moments?</string>
+    <string name="report_dating">Comfirm to report this activity?</string>
+    <string name="dissolve_wechat">Comfirm to relieve Wechat binding?</string>
 
 
     <string name="input_contact_panel">Contact info</string>
@@ -737,7 +737,7 @@
     <string name="has_payed">Paid</string>
     <string name="not_pay">Unpaid</string>
     <string name="out_time">Expired</string>
-    <string name="years">  years old</string>
+    <string name="years"> </string>
     <string name="shw_want_to_with_you">She want to:</string>
     <string name="who_see_me">Who checked my profile</string>
     <string name="many_people_see_you">  by optimized selection\n  user got you</string>
