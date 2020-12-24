@@ -11,7 +11,7 @@ object Constants {
     const val END_BASE_URL = "/v1.json"
 
     //是否处于测试环境
-    const val TEST = true
+    const val TEST = false
 
 
     const val BaseUrl = ""
