@@ -6,6 +6,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.blankj.utilcode.util.LanguageUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.baselibrary.common.BaseConstant
@@ -13,6 +14,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import kotlinx.android.synthetic.main.activity_protocol.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import java.util.*
 
 /**
  * 用户隐私政策  https://ppsns.duluduludala.com/ppsns//protocol/privacyProtocol/v1.json   1
@@ -105,10 +107,23 @@ class ProtocolActivity : BaseActivity() {
             }
         }
 
+        //todo http://170.106.39.128//ppsns/protocol/privacyProtocol/v1.json?nation=en
+        val nation =
+            "?nation=" + if (LanguageUtils.getSystemLanguage().language == Locale.SIMPLIFIED_CHINESE.language) {
+                "CN"
+            } else {
+                "EN"
+            }
         when (type) {
-            TYPE_PRIVACY_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol${Constants.END_BASE_URL}")
-            TYPE_USER_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol${Constants.END_BASE_URL}")
-            TYPE_CANDY_USAGE -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/candyHelp${Constants.END_BASE_URL}")
+            TYPE_PRIVACY_PROTOCOL -> webView.loadUrl(
+                "${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol${Constants.END_BASE_URL}${nation}"
+            )
+            TYPE_USER_PROTOCOL -> webView.loadUrl(
+                "${BaseConstant.SERVER_ADDRESS}protocol/userProtocol${Constants.END_BASE_URL}${nation}"
+            )
+            TYPE_CANDY_USAGE -> webView.loadUrl(
+                "${BaseConstant.SERVER_ADDRESS}protocol/candyHelp${Constants.END_BASE_URL}${nation}"
+            )
             TYPE_OTHER -> webView.loadUrl(intent.getStringExtra("url"))
         }
 

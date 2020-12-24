@@ -1,5 +1,9 @@
 package com.sdy.jitangapplication.common
 
+//import com.facebook.FacebookSdk
+//import com.facebook.appevents.AppEventsLogger
+//import iknow.android.utils.BaseUtils
+//import nl.bravobit.ffmpeg.FFmpeg
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,8 +17,6 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
-//import com.facebook.FacebookSdk
-//import com.facebook.appevents.AppEventsLogger
 import com.google.gson.Gson
 import com.heytap.msp.push.HeytapPushManager
 import com.kotlin.base.common.BaseApplication
@@ -37,6 +39,7 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
@@ -45,11 +48,9 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.api.UIKitOptions
-import com.sdy.jitangapplication.ui.activity.GetMoreMatchActivity
-import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
-import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.fragment.GreetHiDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -60,10 +61,8 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-//import iknow.android.utils.BaseUtils
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
-//import nl.bravobit.ffmpeg.FFmpeg
 import org.greenrobot.eventbus.EventBus
 
 
@@ -260,8 +259,8 @@ class MyApplication : BaseApplication() {
                     SnackBarFragment.SOMEONE_LIKE_YOU,
                     SnackBarFragment.SOMEONE_MATCH_SUCCESS,
                     SnackBarFragment.FLASH_SUCCESS,
-                    SnackBarFragment.CHAT_SUCCESS,
                     SnackBarFragment.HELP_CANDY,
+                    SnackBarFragment.CHAT_SUCCESS,
                     SnackBarFragment.GREET_SUCCESS,
                     SnackBarFragment.GIVE_GIFT -> {
                         if (ActivityUtils.getTopActivity() is MainActivity)
@@ -285,7 +284,13 @@ class MyApplication : BaseApplication() {
 
                     }
                     401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
-                        EventBus.getDefault().post(UpdateNewMsgEvent(customerMsgBean))
+                        if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() !is SplashActivity && ActivityUtils.getTopActivity() !is ChatActivity)
+                            GreetHiDialog(customerMsgBean).show()
+//                            FragmentUtils.add(
+//                                (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,
+//                                GreetHiFragment(customerMsgBean),
+//                                android.R.id.content
+//                            )
 
                     }
 
@@ -485,7 +490,7 @@ class MyApplication : BaseApplication() {
 
         if (NIMUtil.isMainProcess(this)) {
             //oppo推送init
-            HeytapPushManager.init(this,true)
+            HeytapPushManager.init(this, true)
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
