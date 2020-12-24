@@ -93,7 +93,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     private val linearLayoutManager by lazy {
         LinearLayoutManager(
-            activity!!,
+            requireActivity(),
             RecyclerView.VERTICAL,
             false
         )
@@ -104,14 +104,14 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         loadData()
     }
 
-    private val joinSweetDialog by lazy { JoinSweetDialog(activity!!, progressBean) }
+    private val joinSweetDialog by lazy { JoinSweetDialog(requireActivity(), progressBean) }
     fun loadData() {
 
         EventBus.getDefault().register(this)
 
         mPresenter = PeopleNearbyPresenter()
         mPresenter.mView = this
-        mPresenter.context = activity!!
+        mPresenter.context = requireActivity()
 
         refreshPeopleNearby.setOnRefreshListener(this)
         refreshPeopleNearby.setOnLoadMoreListener(this)
@@ -219,7 +219,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
                     verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
                     verifyNowBtn1.clickWithTrigger {
-                        CommonFunction.startToVip(activity!!, VipPowerActivity.SOURCE_BIG_CHARGE)
+                        CommonFunction.startToVip(requireActivity(), VipPowerActivity.SOURCE_BIG_CHARGE)
                     }
                 }
 
@@ -304,7 +304,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                 }
 
                 verifyNowBtn1.clickWithTrigger {
-                    CommonFunction.startToVideoIntroduce(activity!!)
+                    CommonFunction.startToVideoIntroduce(requireActivity())
                 }
                 verifyNowBtn2.clickWithTrigger {
                     startActivity<SweetHeartVerifyActivity>()
@@ -317,7 +317,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
             params.height = (params.width * (588 / 1035f)).toInt()
             GlideUtil.loadRoundImgCenterCrop(
-                activity!!,
+                requireActivity(),
                 progressBean.img,
                 sweetPowerIv,
                 SizeUtils.dp2px(10F)
@@ -335,17 +335,16 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             statePeopleNearby.isInvisible = true
             openVipCl.isVisible = true
 
-            t2.text =
-                getString(
-                    R.string.open_vip_contact_them1,
-                    UserManager.getCity(), UserManager.registerFileBean?.people_amount ?: 0
-                )
+            t2.text = getString(
+                R.string.open_vip_contact_them1,
+                UserManager.getCity(), UserManager.registerFileBean?.people_amount ?: 0
+            )
 
             openVipBtn.text = getString(R.string.open_vip_contact_them)
 
-            GlideUtil.loadCircleImg(activity!!, UserManager.getAvator(), myAvator)
+            GlideUtil.loadCircleImg(requireActivity(), UserManager.getAvator(), myAvator)
             openVipBtn.clickWithTrigger {
-                CommonFunction.startToFootPrice(activity!!)
+                CommonFunction.startToFootPrice(requireActivity())
             }
             lottieMoreMatch.setAnimation("data_boy_more_match.json")
 
@@ -446,15 +445,15 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //是否今日缘分
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
-                    PrivacyDialog(activity!!, nearBean, indexRecommends).show()
+                    PrivacyDialog(requireActivity(), nearBean, indexRecommends).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
-                        TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
+                        TodayFateWomanDialog(requireActivity(), nearBean, indexRecommends).show()
                 } else if (!UserManager.showCompleteUserCenterDialog) {
                     if (nearBean?.today_pull_share == false) {
-                        InviteFriendDialog(activity!!).show()
+                        InviteFriendDialog(requireActivity()).show()
                     } else if (nearBean?.today_pull_dating == false) {
-                        PublishDatingDialog(activity!!).show()
+                        PublishDatingDialog(requireActivity()).show()
                     }
                 }
             }

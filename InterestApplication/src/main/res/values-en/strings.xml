@@ -2,7 +2,7 @@
     <string name="app_name">SugarTown</string>
 
     <string name="facebook_app_id">3546860392031186</string>
-    <string name="fb_login_protocol_scheme">fb3546860392031186</string>
+   <!-- <string name="fb_login_protocol_scheme">fb3546860392031186</string>-->
     <!--    <string name="server_client_id">325834510992-m2n30p8cckv8gfm6jufa0an93un5r6os.apps.googleusercontent.com</string>-->
     <string name="server_client_id">325834510992-5o1upod7qkkgjh2bk9lg0th1abhfb6i7.apps.googleusercontent.com</string>
 
@@ -1034,7 +1034,7 @@
     <string name="today_visit1">Today\'s visit:%1$d</string>
     <string name="all_visit_1">Total visit:%1$d</string>
     <string name="open_vip_contact_them">To be a member of SugarTown to chat with them</string>
-    <string name="open_vip_contact_them1">There\'re %1$d Candy sugarbabies\n meet your needs</string>
+    <string name="open_vip_contact_them1">There\'re %2$d Candy sugarbabies\n in %1$s meet your needs</string>
     <string name="true_avatar_to_recommend">The current avatar is not your profile picture.Update with your profile picture to get personal profile recommendation.</string>
     <string name="empty_friend">No friend yet</string>
     <string name="no_square">No moments yet</string>
