@@ -63,3 +63,8 @@ class UpdateSettingEvent
  * 更新推送开关
  */
 class UpdateWechatSettingsEvent(val isFollowPublic: Boolean)
+
+/**
+ * 更新男性选择特质按钮开启状态
+ */
+class UpdateManTapBtnEvent()

@@ -160,6 +160,15 @@ interface Api {
     fun getCard(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
 
 
+
+    /**
+     * 男性进入首页后获取想要的列表
+     */
+    @FormUrlEncoded
+    @POST("Home/getManTaps${Constants.END_BASE_URL}")
+    fun getManTaps(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<MyTapsBean>?>>
+
+
     /************************广场列表*****************************/
     /**
      * 广场获取兴趣

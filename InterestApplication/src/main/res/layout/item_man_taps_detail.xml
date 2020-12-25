@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/innerBeing"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:background="@drawable/shape_gray_f1f1f1_7dp"
+    android:button="@null"
+    android:enabled="true"
+    android:gravity="center"
+    android:paddingLeft="12dp"
+    android:paddingTop="7dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="7dp"
+    android:text="内在涵养"
+    android:textColor="@color/colorBlack19"
+    android:textSize="13sp" />
+

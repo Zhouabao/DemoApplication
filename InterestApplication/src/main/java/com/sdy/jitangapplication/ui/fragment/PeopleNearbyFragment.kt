@@ -219,7 +219,10 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
                     verifyNowBtn1.setBackgroundColor(Color.WHITE)
                     verifyNowBtn1.text = "${progressBean.now_money}/${progressBean.normal_money}"
                     verifyNowBtn1.clickWithTrigger {
-                        CommonFunction.startToVip(requireActivity(), VipPowerActivity.SOURCE_BIG_CHARGE)
+                        CommonFunction.startToVip(
+                            requireActivity(),
+                            VipPowerActivity.SOURCE_BIG_CHARGE
+                        )
                     }
                 }
 
@@ -446,6 +449,8 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(requireActivity(), nearBean, indexRecommends).show()
+                } else if (nearBean?.want_step_man_pull == true) {
+                    ChooseCharacterDialog(requireContext()).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
                         TodayFateWomanDialog(requireActivity(), nearBean, indexRecommends).show()

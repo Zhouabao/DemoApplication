@@ -143,7 +143,9 @@ class PrivacyDialog(
         //是否今日缘分
         //是否今日意向
         //资料完善度
-        if (!indexRecommends?.list.isNullOrEmpty()) {
+        if (nearBean?.want_step_man_pull == true) {
+            ChooseCharacterDialog(context1).show()
+        } else if (!indexRecommends?.list.isNullOrEmpty()) {
 //            if (UserManager.getGender() == 1)\
 //                TodayFateDialog(context1, nearBean, indexRecommends).show()
 //            else

@@ -22,197 +22,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/tv7"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/manTapRv"
         android:layout_width="wrap_content"
+        android:minHeight="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="自身优势"
-        android:textColor="#ff191919"
-        android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/title" />
-
-    <RadioGroup
-        android:id="@+id/rgAdvantage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/tv7">
-
-        <RadioButton
-            android:id="@+id/houseAndCar"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="有房有车"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/appearance"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="外貌条件"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/innerBeing"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="内在涵养"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-    </RadioGroup>
-
-
-    <TextView
-        android:id="@+id/tvLocationRoming"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="30dp"
-        android:gravity="center"
-        android:text="期望相处方式"
-        android:textColor="#ff191919"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/rgAdvantage" />
-
-
-    <RadioGroup
-        android:id="@+id/rgGetAlongWay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/tvLocationRoming">
-
-        <RadioButton
-            android:id="@+id/Inseparable"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="形影不离"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/personalSpace"
-            android:layout_width="89dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="有个人空间"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/netLove"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="网恋都行"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-    </RadioGroup>
-
-
-
-    <TextView
-        android:id="@+id/tv6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
-        android:text="递进关系方式"
-        android:textColor="#ff191919"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/rgGetAlongWay" />
-
-
-    <RadioGroup
-        android:id="@+id/rgProgressiveRelation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/tv6">
-
-        <RadioButton
-            android:id="@+id/trialMarriage"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="优先试婚"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/privateDate"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="私密约会"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-        <RadioButton
-            android:id="@+id/travelTogether"
-            android:layout_width="76dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/selector_check_online"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:text="一起旅行"
-            android:textColor="@color/color_selector_check_online"
-            android:textSize="13sp" />
-
-    </RadioGroup>
-
 
 
     <Button
@@ -224,16 +40,16 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/selector_confirm_btn_25dp"
+        android:enabled="false"
         android:text="确认选项"
         android:textColor="@color/colorWhite"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:enabled="false"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rgProgressiveRelation" />
+        app:layout_constraintTop_toBottomOf="@+id/manTapRv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

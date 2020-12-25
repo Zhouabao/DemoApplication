@@ -126,6 +126,7 @@ data class NearBean(
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var today_find_pull: Boolean = false,
     var today_pull_share: Boolean = true,
+    var want_step_man_pull: Boolean = true,//为true则需要拉起弹出男性选择特质
     var today_pull_dating: Boolean = true,
     var has_face_url: Boolean = false,  //是否进行过人脸验证，true验证过 false未验证
     val complete_percent: Int,//（我的资料完整度）
