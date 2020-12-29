@@ -211,7 +211,6 @@
     <string name="user_title">用户协议</string>
 
     <string name="login_error">登录失败！请重试</string>
-    <string name="login_tip">登录即代表同意</string>
     <string name="login_tip_and"> 及 </string>
     <string name="tourist">游客模式</string>
     <string name="open_internet">请开启数据流量</string>
@@ -250,7 +249,6 @@
     <string name="label_no_choose">暂无选中的兴趣可保存</string>
 
 
-    <string name="label_publish_tip">马上发布兴趣动态，收获超多喜欢</string>
     <string name="permission_storage">文件存储权限被拒,请允许权限后再上传照片</string>
     <string name="permission_camera">相机权限被拒,请允许权限后再上传照片</string>
     <string name="upload_photo">请先选择要上传的图片</string>
@@ -420,7 +418,6 @@
     <string name="my_reward">我的奖励</string>
     <string name="comple_label_quality">完善兴趣特质</string>
     <string name="more_choose">再选 %1$d个</string>
-    <string name="count">个</string>
     <string name="choose_least">至少选择 %1$d 个</string>
     <string name="choose_most">最多选择  %1$d 个兴趣</string>
     <string name="lazy_choose">懒人直选</string>
@@ -481,7 +478,6 @@
     <string name="label_manager">兴趣管理</string>
     <string name="delete">删除</string>
     <string name="at_least_main">至少保留 %1$d 个兴趣</string>
-    <string name="label_count">个兴趣</string>
     <string name="add_label">添加兴趣</string>
     <string name="deleta_label">删除兴趣</string>
     <string name="is_confirm_delete">您确定要删除兴趣「 %1$s 」吗？</string>
@@ -696,7 +692,6 @@
     <string name="label_introduce_tip">此处高能预警！！！看过来\n你的愿望是什么？\n也介绍下自己能为他人实现的愿望吧？\n在这里写下你关于「许愿福利社」的等等等等\n研究表明，介绍写的越详细越能无限提升被翻牌几率\n就现在，开始吧</string>
     <string name="see_other_how_to_write">看看别人怎么写</string>
     <string name="replace">修改</string>
-    <string name="choose_video">选择视频</string>
     <string name="current_version_unsupport">当前系统版本暂不支持视频拍摄功能</string>
     <string name="start_record">开始录制视频</string>
     <string name="record_fail">录制视频失败</string>
@@ -889,7 +884,6 @@
     <string name="share_sina">微博</string>
     <string name="tobe_vip_close_touch">成为会员和她们亲密接触</string>
     <string name="thaey_are_waitinf_for_you">她们在翘首期待你的加入</string>
-    <string name="total_has">共有</string>
     <string name="sugar_girl_count">%1$d个糖宝女孩</string>
     <string name="find_standard_girl">在%1$s找到符合标准的</string>
     <string name="person_cpunt">%1$s名%2$s</string>
@@ -1123,8 +1117,6 @@
     <string name="login_presents_you_agree">登录注册代表你已同意 </string>
     <string name="and1"> 和 </string>
     <string name="and2"> 以及 </string>
-    <string name="cannot_cause_duration_short">视频长不足 %1$d 秒,无法上传</string>
-    <string name="alreadey_choose">\"已选取 \"</string>
     <string name="hour">时</string>
     <string name="minute">分</string>
     <string name="second">秒</string>
@@ -1186,18 +1178,15 @@
     <string name="login_with_phone">手机号</string>
     <string name="login_with_wechat">微信</string>
     <string name="continue_with_facebook">Facebook登录</string>
-    <string name="continue_with_twitter">Continue with Twitter</string>
     <string name="continue_with_google">Google登录</string>
 
 
     <string name="install_face_book_first">请先安装Facebook</string>
     <string name="install_twitter_first">请先安装Twitter</string>
-    <string name="install_google_first">请先安装Google</string>
     <string name="waiting">等待中</string>
     <string name="qqZone">QQ空间</string>
     <string name="facebook">Facebook</string>
     <string name="instagram">Instagram</string>
-    <string name="pinterest">Pinterest</string>
     <string name="choose_country_or_region">选择国家和地区</string>
     <string name="The_picture_is_saved_in">图片保存在:</string>
     <string name="take_fail">拍照失败</string>
@@ -1267,7 +1256,6 @@
     <string name="only_woman">只看女士</string>
     <string name="only_man">只看男士</string>
     <string name="other_login_way">其他方式登录</string>
-    <string name="drag_10s">拖动选择你要发表的10秒以内片段</string>
     <string name="pay_paypal">PayPal</string>
     <string name="pay_google">Google Pay</string>
     <string name="withdraw_paypal">PayPal</string>
@@ -1275,8 +1263,6 @@
     <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
     <string name="contact_whatsapp">whatsapp</string>
     <string name="contact_skype">skype</string>
-    <string name="okay">好的</string>
-    <string name="currencyCode">¥</string>
     <string name="input_channel_you_know_us">请输入你看到积糖的渠道</string>
     <string name="what_are_you_looking_for">你想在积糖寻求什么关系</string>
     <string name="wechat_receive_message">微信接收消息通知</string>

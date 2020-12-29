@@ -329,7 +329,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_rectangle_gray_20dp"
             android:gravity="center"
-            android:text="好的"
+            android:text="@string/ok_1"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             android:visibility="gone"

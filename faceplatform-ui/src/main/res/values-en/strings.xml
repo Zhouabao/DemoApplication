@@ -17,8 +17,7 @@
 	<string name="detect_occ_chin">Chin is blocked</string>
 	<string name="detect_low_light">Please make the ambient light again</string>
 	<string name="detect_keep">Please hold your phone and look at the screen</string>
-	<string name="detect_standard">Please positive phone</string>
-	<string name="detect_timeout">Test the timeout, please follow the prompts.</string>
+    <string name="detect_timeout">Test the timeout, please follow the prompts.</string>
 	<string name="detect_left_eye_close">The left eye is not open</string>
 	<string name="detect_right_eye_close">The right eye is not open</string>
 	<string name="liveness_eye">Blink</string>

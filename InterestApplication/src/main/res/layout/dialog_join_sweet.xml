@@ -37,8 +37,7 @@
         android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sweetHeartTitle">
@@ -50,6 +49,7 @@
             android:background="@drawable/circle_pink"
             android:gravity="center"
             android:text="1"
+            android:visibility="gone"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -91,8 +91,7 @@
         android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:padding="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sweetVerifyRequset1">
@@ -104,12 +103,10 @@
             android:background="@drawable/circle_pink"
             android:gravity="center"
             android:text="2"
+            android:visibility="gone"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/verifyTitle2"
@@ -140,10 +137,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_sweet_heart_verify_condition_man"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/sweetVerifyRequset2"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/sweetVerifyRequset2"
         app:layout_constraintLeft_toLeftOf="@id/sweetVerifyRequset1"
-        app:layout_constraintTop_toTopOf="@id/sweetVerifyRequset1" />
+        app:layout_constraintTop_toBottomOf="@id/sweetVerifyRequset1" />
 
     <ImageView
         android:id="@+id/sweetPowerIv"

@@ -58,7 +58,7 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     CommonFunction.toast(t.msg)
-                    mView.onGreetApproveResult(type, t.code == 200)
+                    mView.switchSetResult(type, t.code == 200)
 
                 }
 

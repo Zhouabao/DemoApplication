@@ -310,6 +310,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 }
 
                 override fun onError(error: FacebookException?) {
+                    CommonFunction.toast(error.toString())
                     Log.e("VVV", "onError===facebook,${error.toString()}")
                 }
 
