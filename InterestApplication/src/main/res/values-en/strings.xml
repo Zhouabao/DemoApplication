@@ -895,9 +895,11 @@
     <string name="already_has">%1$d Elite male have joined</string>
     <string name="forver_time">/ ever</string>
     <string name="higher_man_verify">Elite certification</string>
-    <string name="privacy_t1">Dear user, welcome to SugarTown. \n In accordance with the latest laws and regulations,to better fit our business situation, we updated</string>
+    <string name="privacy_t1">Dear user, welcome to SugarTown. \n\nIn accordance with the latest laws and regulations,to better fit our business situation, we updated</string>
     <string name="privacy_t2">, hereby remind you: \n\n</string>
-    <string name="privacy_t3">Please carefully read the related terms,and be sure you\'ve fully understood and agreed them before using the SugarTown products and services.Click here to indicate that you have read and agree to the terms presented.</string>
+    <string name="privacy_t3">Please carefully read the related terms,and be sure you\'ve fully understood and agreed them before using the SugarTown products and services.\n</string>
+    <string name="privacy_t7">In order to provide you with one-click sharing service, Our App has integrated Umeng+  U-Share SDK , which will collect your device identifiable information (such as IMEI/android ID/IDFA, etc.) and public information of social account in order to share information with social account.\n</string>
+    <string name="privacy_t8">Click here to indicate that you have read and agree to the terms presented.</string>
     <string name="privacy_t4">If you do not agree, it may affect the use of SugarTown products and services. \n\n We will take corresponding security protection measures in accordance with the requirements of laws and regulations and try our best to protect your personal info.</string>
     <string name="privacy_t5">You need agree with "</string>
     <string name="privacy_t6">" before continue using our products and services</string>

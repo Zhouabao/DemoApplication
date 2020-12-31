@@ -40,7 +40,10 @@ import com.sdy.jitangapplication.ui.activity.SweetHeartVerifyActivity
 import com.sdy.jitangapplication.ui.activity.VipPowerActivity
 import com.sdy.jitangapplication.ui.adapter.PeopleNearBigCardAdapter
 import com.sdy.jitangapplication.ui.adapter.PeopleNearSmallListAdapter
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.InviteFriendDialog
+import com.sdy.jitangapplication.ui.dialog.JoinSweetDialog
+import com.sdy.jitangapplication.ui.dialog.PublishDatingDialog
+import com.sdy.jitangapplication.ui.dialog.TodayFateWomanDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -445,9 +448,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             //否则直接判断有没有显示过引导页面
             //是否今日缘分
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
-                if (!UserManager.getAlertProtocol()) {
-                    PrivacyDialog(activity!!, nearBean, indexRecommends).show()
-                } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
+                if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {
                     if (UserManager.getGender() == 2)
                         TodayFateWomanDialog(activity!!, nearBean, indexRecommends).show()
                 } else if (!UserManager.showCompleteUserCenterDialog) {

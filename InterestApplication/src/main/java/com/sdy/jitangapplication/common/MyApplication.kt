@@ -358,8 +358,6 @@ class MyApplication : BaseApplication() {
         super.onCreate()
 
         Constants.ASSISTANT_ACCID = "01"
-        //初始化Umeng
-        initUmeng()
 
         //自适应size
         configUnits()
@@ -406,23 +404,6 @@ class MyApplication : BaseApplication() {
     }
 
 
-    private fun initUmeng() {
-        if (ThreadUtils.isMainThread()) {
-            if (UserManager.getAlertProtocol())
-                CommonFunction.initUMeng(this)
-            else
-                UMConfigure.preInit(this, Constants.UMENG_APPKEY, ChannelUtils.getChannel(this))
-
-
-
-//            PlatformConfig.setPinterest()
-
-            //twitter
-//            PlatformConfig.setTwitter("","")
-
-
-        }
-    }
 
     private fun configPlayer() {
         //系统内核模式

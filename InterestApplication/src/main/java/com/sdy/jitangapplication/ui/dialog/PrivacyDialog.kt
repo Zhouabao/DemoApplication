@@ -10,19 +10,13 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.SpanUtils
-import com.blankj.utilcode.util.ThreadUtils
 import com.kotlin.base.ext.onClick
-import com.sdy.baselibrary.utils.ChannelUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.ShowGuideChangeStyleEvent
-import com.sdy.jitangapplication.model.NearBean
-import com.sdy.jitangapplication.model.TodayFateBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
+import com.sdy.jitangapplication.ui.activity.SplashActivity
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.commonsdk.UMConfigure
 import kotlinx.android.synthetic.main.dialog_privacy.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -30,11 +24,7 @@ import org.greenrobot.eventbus.EventBus
  *    desc   :隐私协议弹窗
  *    version: 1.0
  */
-class PrivacyDialog(
-    val context1: Context,
-    val nearBean: NearBean?,
-    val indexRecommends: TodayFateBean?
-) :
+class PrivacyDialog(val context1: Context) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +85,10 @@ class PrivacyDialog(
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
             .append(context1.getString(R.string.privacy_t3))
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
+            .append(context1.getString(R.string.privacy_t7))
+            .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
+            .append(context1.getString(R.string.privacy_t8))
+            .setForegroundColor(context1.resources.getColor(R.color.color_333333))
             .append("《${context1.resources.getString(R.string.user_protocol)}》")
             .setClickSpan(clickSpanProtocol)
             .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
@@ -107,11 +101,11 @@ class PrivacyDialog(
             .setForegroundColor(context1.resources.getColor(R.color.color_333333))
             .create()
 
-        agree.onClick {
-            CommonFunction.initUMeng(context1)
-            UserManager.saveAlertProtocol(true)
-            dismiss()
-        }
+//        agree.onClick {
+//            UserManager.saveAlertProtocol(true)
+//            dismiss()
+//            (context1 as SplashActivity).initPermissionsAndlogin()
+//        }
         disAgree.onClick {
             CommonFunction.toast(
                 context1.getString(R.string.privacy_t5)
@@ -135,6 +129,7 @@ class PrivacyDialog(
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
+        setCancelable(false)
         setCanceledOnTouchOutside(false)
         setOnKeyListener { dialogInterface, keyCode, event ->
             keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
@@ -143,25 +138,6 @@ class PrivacyDialog(
 
     override fun dismiss() {
         super.dismiss()
-        //否则直接判断有没有显示过引导页面
-        //是否今日缘分
-        //是否今日意向
-        //资料完善度
-        if (!indexRecommends?.list.isNullOrEmpty()) {
-//            if (UserManager.getGender() == 1)\
-//                TodayFateDialog(context1, nearBean, indexRecommends).show()
-//            else
-            TodayFateWomanDialog(context1, nearBean, indexRecommends).show()
-        } else if (nearBean?.today_pull_share == false) {
-            //邀请有礼
-            InviteFriendDialog(context1).show()
-        } else if (nearBean?.today_pull_dating == false) {
-            //发布约会
-            PublishDatingDialog(context1).show()
-        } else {
-            EventBus.getDefault().post(ShowGuideChangeStyleEvent())
-        }
-
     }
 
 

@@ -87,7 +87,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     View.OnClickListener, TextWatcher, LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
-        const val AUTHORITY = "com.sdy.jitangapplication.provider" //FileProvider的签名 7.0以上要用
+        const val AUTHORITY = "com.sdy.jitangapplication.fileProvider" //FileProvider的签名 7.0以上要用
         const val REQUEST_CODE_CAPTURE_RAW = 6 //拍照
         const val REQUEST_CODE_VIDEO = 10 //视频选择
         const val REQUEST_CODE_LABEL = 20 //兴趣选择

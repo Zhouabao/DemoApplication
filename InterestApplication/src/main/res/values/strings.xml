@@ -896,7 +896,9 @@
     <string name="higher_man_verify">高端精英认证</string>
     <string name="privacy_t1">尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了</string>
     <string name="privacy_t2">，特此向您提示：\n\n</string>
-    <string name="privacy_t3">请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。点击同意即代表您已经阅读并同意</string>
+    <string name="privacy_t3">请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。\n</string>
+    <string name="privacy_t7">为了向您提供一键分享服务，我们的产品集成友盟+ U-Share SDK，友盟+SDK需要收集您的设备Mac地址、唯一设备识别码（IMEI/android ID/IDFA/OPENUDID/GUID、SIM 卡 IMSI 信息）以提供统计分析服务，并通过地理位置校准报表数据准确性，提供基础反作弊能力。\n</string>
+    <string name="privacy_t8">点击同意即代表您已经阅读并同意</string>
     <string name="privacy_t4">，如果您不同意，将可能影响使用积糖产品和服务。\n\n我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。</string>
     <string name="privacy_t5">您需要同意《</string>
     <string name="privacy_t6">》才能继续使用我们的产品及服务</string>
