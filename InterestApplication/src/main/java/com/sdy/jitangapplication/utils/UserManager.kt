@@ -462,7 +462,7 @@ object UserManager {
          */
         SPUtils.getInstance(Constants.SPNAME).remove("isShowSettingNew")
         SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideWechat")
-        SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
+//        SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         SPUtils.getInstance(Constants.SPNAME).remove("notice")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")

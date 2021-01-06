@@ -3,19 +3,14 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.ThreadUtils
 import com.chuanglan.shanyan_sdk.OneKeyLoginManager
 import com.kotlin.base.ui.activity.BaseActivity
-import com.sdy.baselibrary.utils.ChannelUtils
 import com.sdy.baselibrary.utils.StatusBarUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.ui.dialog.PrivacyDialog
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.commonsdk.UMConfigure
 import kotlinx.android.synthetic.main.dialog_privacy.*
 import org.jetbrains.anko.startActivity
 
@@ -74,13 +69,13 @@ class SplashActivity : BaseActivity() {
 
     //初始化Umeng
     private fun initUmeng() {
-        if (ThreadUtils.isMainThread()) {
-            if (UserManager.getAlertProtocol())
-                CommonFunction.initUMeng(this)
-            else
-                UMConfigure.preInit(this, Constants.UMENG_APPKEY, ChannelUtils.getChannel(this))
-
-        }
+//        if (ThreadUtils.isMainThread()) {
+//            if (UserManager.getAlertProtocol())
+//                CommonFunction.initUMeng(this)
+//            else
+//                UMConfigure.preInit(this, Constants.UMENG_APPKEY, ChannelUtils.getChannel(this))
+//
+//        }
     }
 
     override fun onDestroy() {

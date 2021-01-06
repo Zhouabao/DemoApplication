@@ -34,9 +34,6 @@ import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.ui.dialog.ChooseLoginWayDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.socialize.UMAuthListener
-import com.umeng.socialize.UMShareAPI
-import com.umeng.socialize.bean.SHARE_MEDIA
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import java.lang.ref.WeakReference
@@ -44,8 +41,8 @@ import java.util.*
 
 
 //(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
-class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener,
-    UMAuthListener {
+class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.OnErrorListener/*,
+    UMAuthListener*/ {
     private var syCode = 0
 
     companion object {
@@ -110,7 +107,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             .setClickSpan(Color.parseColor("#FF6796FA"), true) {
                 startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
             }
-            .append(getString(R.string.privacy_for_share))
+//            .append(getString(R.string.privacy_for_share))
             .create()
 
 
@@ -335,7 +332,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
      * facebook登录 twitter登录（暂时没做）
      * @param platform 三方登录平台
      */
-    fun umengThirdLogin(platform: SHARE_MEDIA) {
+/*    fun umengThirdLogin(platform: SHARE_MEDIA) {
         if (!UMShareAPI.get(this).isInstall(this as Activity, platform)) {
             when (platform) {
                 SHARE_MEDIA.FACEBOOK -> {
@@ -348,8 +345,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             return
         }
 
-        UMShareAPI.get(this).getPlatformInfo(this, platform, this)
-    }
+//        UMShareAPI.get(this).getPlatformInfo(this, platform, this)
+    }*/
 
 
     /**
@@ -361,31 +358,31 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
      * accessToken=EAAyZA2cm8I9IBAMZA0zIsbPPZA5dYEZBdrxSuI6pyf5Q4bgoQFZBRAYfKByV1nI8ZCL0xNDGZAznzyJxZCZB6ZA9m9v88W4aaStlQAAuJVtN474SPWJz7HHbgTmZBrSzDmwOFz66QnDLc7vUZB6VaH4CcSr43mejCZCqtw0STlFvVzpmanae6pgksZBYH4cPPwZAeSbFEiw7jX1ZAvL5OVywt0WxKI0AZB71hy5YSEMYSNFikadb5TWS10EwsNjsD,
      * first_name=Tang, profilePictureUri=https://graph.facebook.com/123175219579566/picture?height=200&width=200&migration_overrides=%7Boctober_2012%3Atrue%7D, linkUri=}
      */
-    override fun onComplete(platform: SHARE_MEDIA, action: Int, data: MutableMap<String, String>) {
-        Log.e("VVV", "onComplete===$platform,$action,$data")
-        if (platform == SHARE_MEDIA.FACEBOOK && data["accessToken"] != null) {
-            mPresenter.checkVerifyCode(
-                "${data["accessToken"]}",
-                VerifyCodeActivity.TYPE_LOGIN_FACEBOOK
-            )
-        }
-    }
-
-    override fun onCancel(p0: SHARE_MEDIA, p1: Int) {
-        Log.e("VVV", "onCancel===$p0,$p1")
-
-    }
-
-    override fun onError(p0: SHARE_MEDIA, p1: Int, p2: Throwable) {
-        Log.e("VVV", "onError===$p0,$p1,$p2")
-        CommonFunction.toast(getString(R.string.network_is_not_available))
-
-    }
-
-
-    override fun onStart(p0: SHARE_MEDIA) {
-        Log.e("VVV", "onStart===$p0")
-
-    }
+//    override fun onComplete(platform: SHARE_MEDIA, action: Int, data: MutableMap<String, String>) {
+//        Log.e("VVV", "onComplete===$platform,$action,$data")
+//        if (platform == SHARE_MEDIA.FACEBOOK && data["accessToken"] != null) {
+//            mPresenter.checkVerifyCode(
+//                "${data["accessToken"]}",
+//                VerifyCodeActivity.TYPE_LOGIN_FACEBOOK
+//            )
+//        }
+//    }
+//
+//    override fun onCancel(p0: SHARE_MEDIA, p1: Int) {
+//        Log.e("VVV", "onCancel===$p0,$p1")
+//
+//    }
+//
+//    override fun onError(p0: SHARE_MEDIA, p1: Int, p2: Throwable) {
+//        Log.e("VVV", "onError===$p0,$p1,$p2")
+//        CommonFunction.toast(getString(R.string.network_is_not_available))
+//
+//    }
+//
+//
+//    override fun onStart(p0: SHARE_MEDIA) {
+//        Log.e("VVV", "onStart===$p0")
+//
+//    }
 
 }

@@ -5,11 +5,13 @@ import android.util.Log
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateAccountEvent
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.WechatNameBean
@@ -20,16 +22,20 @@ import com.sdy.jitangapplication.ui.activity.VerifyCodeActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI.COMMAND_SENDAUTH
+import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.SendAuth
-import com.umeng.socialize.weixin.view.WXCallbackActivity
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
  * 微信回调界面
  */
-class WXEntryActivity : WXCallbackActivity() {
+class WXEntryActivity : BaseActivity(), IWXAPIEventHandler {
+    private val wxApi by lazy { WXAPIFactory.createWXAPI(this, Constants.WECHAT_APP_ID) }
+
     companion object {
         const val WECHAT_LOGIN = "wechat_login"
         const val WECHAT_AUTH = "wechat_auth"
@@ -38,6 +44,7 @@ class WXEntryActivity : WXCallbackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wxentry)
+        wxApi.handleIntent(intent,this)
     }
 
 
@@ -52,9 +59,11 @@ class WXEntryActivity : WXCallbackActivity() {
             } else {
                 finish()
             }
-        } else {
-            super.onResp(resp)//一定要加super，实现我们的方法，否则不能回调
         }
+    }
+
+    override fun onReq(p0: BaseReq?) {
+
     }
 
 

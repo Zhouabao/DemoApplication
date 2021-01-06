@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.nim.uikit.common.util.sys;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.sdy.jitangapplication.R;
-import com.umeng.socialize.utils.ContextUtil;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -150,9 +150,9 @@ public class TimeUtil {
         Date preyesterday = new Date(yesterdaybegin.getTime() - 3600 * 24 * 1000);
 
         if (!currentTime.before(todaybegin)) {
-            dataString = ContextUtil.getContext().getString(R.string.today);
+            dataString = ActivityUtils.getTopActivity().getString(R.string.today);
         } else if (!currentTime.before(yesterdaybegin)) {
-            dataString = ContextUtil.getContext().getString(R.string.yesterday);
+            dataString = ActivityUtils.getTopActivity().getString(R.string.yesterday);
         } /*else if (!currentTime.before(preyesterday)) {
             dataString = "前天";
         } else if (isSameWeekDates(currentTime, today)) {
@@ -189,13 +189,13 @@ public class TimeUtil {
         SimpleDateFormat timeformatter1to12 = new SimpleDateFormat("hh:mm", Locale.getDefault());
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         if (hour >= 0 && hour < 5) {
-            return ContextUtil.getContext().getString(R.string.AM_ling) + timeformatter0to11.format(date);
+            return ActivityUtils.getTopActivity().getString(R.string.AM_ling) + timeformatter0to11.format(date);
         } else if (hour >= 5 && hour < 12) {
-            return ContextUtil.getContext().getString(R.string.am) + timeformatter0to11.format(date);
+            return ActivityUtils.getTopActivity().getString(R.string.am) + timeformatter0to11.format(date);
         } else if (hour >= 12 && hour < 18) {
-            return ContextUtil.getContext().getString(R.string.pm) + timeformatter1to12.format(date);
+            return ActivityUtils.getTopActivity().getString(R.string.pm) + timeformatter1to12.format(date);
         } else if (hour >= 18 && hour < 24) {
-            return ContextUtil.getContext().getString(R.string.PM_1) + timeformatter1to12.format(date);
+            return ActivityUtils.getTopActivity().getString(R.string.PM_1) + timeformatter1to12.format(date);
         }
         return "";
     }
@@ -207,13 +207,13 @@ public class TimeUtil {
      * @return
      */
     public static String getWeekOfDate(Date date) {
-        String[] weekDaysName = {ContextUtil.getContext().getString(R.string.sunday),
-                ContextUtil.getContext().getString(R.string.monday),
-                ContextUtil.getContext().getString(R.string.tuesday),
-                ContextUtil.getContext().getString(R.string.wednesday),
-                ContextUtil.getContext().getString(R.string.thursday),
-                ContextUtil.getContext().getString(R.string.friday),
-                ContextUtil.getContext().getString(R.string.saturday)};
+        String[] weekDaysName = {ActivityUtils.getTopActivity().getString(R.string.sunday),
+                ActivityUtils.getTopActivity().getString(R.string.monday),
+                ActivityUtils.getTopActivity().getString(R.string.tuesday),
+                ActivityUtils.getTopActivity().getString(R.string.wednesday),
+                ActivityUtils.getTopActivity().getString(R.string.thursday),
+                ActivityUtils.getTopActivity().getString(R.string.friday),
+                ActivityUtils.getTopActivity().getString(R.string.saturday)};
         // String[] weekDaysCode = { "0", "1", "2", "3", "4", "5", "6" };
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

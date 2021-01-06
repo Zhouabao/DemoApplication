@@ -4,15 +4,16 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.facebook.FacebookCallback
@@ -35,14 +36,6 @@ import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.utils.SaveNetPhotoUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.socialize.ShareAction
-import com.umeng.socialize.UMShareAPI
-import com.umeng.socialize.UMShareListener
-import com.umeng.socialize.bean.SHARE_MEDIA
-import com.umeng.socialize.media.UMImage
-import com.umeng.socialize.media.UMVideo
-import com.umeng.socialize.media.UMWeb
-import com.umeng.socialize.media.UMusic
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -77,6 +70,10 @@ class MoreActionNewDialog(
         setContentView(R.layout.dialog_more_action_new)
         initWindow()
         initView()
+
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
     }
 
 
@@ -94,7 +91,7 @@ class MoreActionNewDialog(
     }
 
 
-    private val umShareAPI by lazy { UMShareAPI.get(myContext) }
+//    private val umShareAPI by lazy { UMShareAPI.get(myContext) }
     private fun initView() {
         transpondFriend.isVisible = type != TYPE_SHARE_VIP_URL
         transpondFriend.setOnClickListener(this)
@@ -108,30 +105,21 @@ class MoreActionNewDialog(
 
 
         if (UserManager.overseas) {
-
             transpondFacebook.isVisible =
                 !squareBean?.photo_json.isNullOrEmpty() || !squareBean?.audio_json.isNullOrEmpty() || !squareBean?.video_json.isNullOrEmpty()
-//            umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.FACEBOOK)
-            transpondIns.isVisible = umShareAPI.isInstall(
-                myContext as Activity,
-                SHARE_MEDIA.INSTAGRAM
-            ) && !squareBean?.photo_json.isNullOrEmpty()
+            transpondIns.isVisible =
+                AppUtils.isAppInstalled("com.instagram.android") && !squareBean?.photo_json.isNullOrEmpty()
             transpondWechat.isVisible = false
             transpondWechatZone.isVisible = false
             transpondQQ.isVisible = false
             transpondQQZone.isVisible = false
             transpondWebo.isVisible = false
         } else {
-            transpondWechat.isVisible =
-                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.WEIXIN)
-            transpondWechatZone.isVisible =
-                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.WEIXIN)
-            transpondQQ.isVisible =
-                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.QQ)
-            transpondQQZone.isVisible =
-                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.QQ)
-            transpondWebo.isVisible =
-                umShareAPI.isInstall(myContext as Activity, SHARE_MEDIA.SINA)
+            transpondWechat.isVisible = AppUtils.isAppInstalled("com.tencent.mm")
+            transpondWechatZone.isVisible = AppUtils.isAppInstalled("com.tencent.mm")
+            transpondQQ.isVisible = AppUtils.isAppInstalled("com.tencent.mobileqq")
+            transpondQQZone.isVisible = AppUtils.isAppInstalled("com.tencent.mobileqq")
+            transpondWebo.isVisible = AppUtils.isAppInstalled("com.sina.weibo")
 
             transpondFacebook.isVisible = false
             transpondIns.isVisible = false
@@ -147,21 +135,21 @@ class MoreActionNewDialog(
                 }
             }
             R.id.transpondWebo -> {//微博
-                shareToThirdParty(SHARE_MEDIA.SINA)
+//                shareToThirdParty(SHARE_MEDIA.SINA)
             }
             R.id.transpondWechat -> {//微信
-                shareToThirdParty(SHARE_MEDIA.WEIXIN)
+//                shareToThirdParty(SHARE_MEDIA.WEIXIN)
             }
             R.id.transpondWechatZone -> {//朋友圈
-                shareToThirdParty(SHARE_MEDIA.WEIXIN_CIRCLE)
+//                shareToThirdParty(SHARE_MEDIA.WEIXIN_CIRCLE)
 
             }
             R.id.transpondQQ -> {//QQ
-                shareToThirdParty(SHARE_MEDIA.QQ)
+//                shareToThirdParty(SHARE_MEDIA.QQ)
 
             }
             R.id.transpondQQZone -> {//QQ空间
-                shareToThirdParty(SHARE_MEDIA.QZONE)
+//                shareToThirdParty(SHARE_MEDIA.QZONE)
             }
             R.id.transpondFacebook -> {//facebook
                 if (!PermissionUtils.isGranted(
@@ -173,6 +161,7 @@ class MoreActionNewDialog(
                     PermissionUtils.permission(PermissionConstants.STORAGE)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
+                                shareWay = 1
                                 downloadShareImg()
                             }
 
@@ -182,11 +171,15 @@ class MoreActionNewDialog(
 
                         })
                         .request()
-                } else
+                } else {
+                    shareWay = 1
                     downloadShareImg()
+                }
             }
             R.id.transpondIns -> {//instagram
-                shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
+                shareWay=2
+                downloadShareImg()
+//                shareToThirdParty(SHARE_MEDIA.INSTAGRAM)
             }
 
         }
@@ -196,13 +189,13 @@ class MoreActionNewDialog(
     /**
      * 封装分享
      */
-    private fun shareToThirdParty(platformConfig: SHARE_MEDIA) {
-        if (type == TYPE_SHARE_VIP_URL) {
-            shareWeb(platformConfig)
-        } else {
-            shareSquare(platformConfig)
-        }
-    }
+//    private fun shareToThirdParty(platformConfig: SHARE_MEDIA) {
+//        if (type == TYPE_SHARE_VIP_URL) {
+//            shareWeb(platformConfig)
+//        } else {
+//            shareSquare(platformConfig)
+//        }
+//    }
 
 
     /**
@@ -235,7 +228,7 @@ class MoreActionNewDialog(
                 override fun onSuccess(result: Sharer.Result) {
                     FileUtils.delete(newImgPath)
                     Log.d("share===", "onresult ${result}================")
-                    addShare(SHARE_MEDIA.FACEBOOK)
+                    addShare()
                     dismiss()
                 }
 
@@ -268,6 +261,26 @@ class MoreActionNewDialog(
         }
     }
 
+    /**
+     * 分享到Ins(本地图片)
+     */
+
+    private fun sharedToIns(newImgPath: File) {
+        val loadingDialog = LoadingDialog(myContext)
+        loadingDialog.show()
+        val type = "image/*"
+        val uri = Uri.fromFile(newImgPath)
+//            Uri.parse("android.resource://" + context?.getPackageName() + "/" + R.mipmap.img_share_toins)
+        val share = Intent(Intent.ACTION_SEND)
+        share.type = type
+        share.putExtra(Intent.EXTRA_STREAM, uri)
+        share.putExtra(Intent.EXTRA_TITLE, "share SugarTown")
+        share.setPackage("com.instagram.android")
+//        myContext.startActivity(Intent.createChooser(share,"share SugarTown"))
+        myContext.startActivity(share)
+        loadingDialog.dismiss()
+    }
+
 
     /**
      * 分享动态
@@ -275,172 +288,171 @@ class MoreActionNewDialog(
     const val VIDEO = 2
     const val AUDIO = 3
      */
-    private fun shareSquare(platformConfig: SHARE_MEDIA) {
-        if (squareBean?.type == SquareBean.PIC) {
-            //多图上传,需要带文字描述
-            if (!squareBean?.photo_json.isNullOrEmpty()) {
-                val image = UMImage(myContext, squareBean?.photo_json?.get(0)?.url)//
-                //大小压缩，默认为大小压缩，适合普通很大的图
-                image.compressStyle = UMImage.CompressStyle.SCALE
-                image.compressFormat = Bitmap.CompressFormat.JPEG
-                image.title =
-                    myContext.getString(
-                        R.string.send_a_pic_in_app,
-                        squareBean?.nickname.toString()
-                    )
-                image.description = if (!squareBean?.descr.isNullOrEmpty()) {
-                    squareBean?.descr
-                } else myContext.getString(R.string.hurry_to_see_this)
-                ShareAction(myContext as Activity)
-                    .setPlatform(platformConfig)
-                    .withText(
-                        if (!squareBean?.descr.isNullOrEmpty()) {
-                            squareBean?.descr
-                        } else myContext.getString(R.string.hurry_to_see_this)
-                    )//分享内容
-                    .withMedia(image)//多张图片
-                    //                    .withMedias(*images)//多张图片
-                    .setCallback(callback)
-                    .share()
-
-            } else {            //文本分享
-                //                http://www.baidu.com
-                val web = UMWeb("http://")
-                web.title = myContext.getString(
-                    R.string.send_a_square_in_app,
-                    squareBean?.nickname.toString()
-                )//标题
-                web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
-                web.description = squareBean?.descr ?: ""//描述
-                if (platformConfig == SHARE_MEDIA.QQ) {
-                    ShareAction(myContext as Activity)
-                        .setPlatform(platformConfig)
-                        .withText(squareBean?.descr ?: "")
-                        .withMedia(web)
-                        .setCallback(callback)
-                        .share()
-                } else {
-                    ShareAction(myContext as Activity)
-                        .setPlatform(platformConfig)
-                        .withText(squareBean?.descr ?: "")
-                        .setCallback(callback)
-                        .share()
-                }
-
-
-            }
-        } else if (squareBean?.type == SquareBean.VIDEO) {//视频分享
-            val video = UMVideo(squareBean?.video_json?.get(0)?.url)//
-            val thumbImg = UMImage(myContext, squareBean?.cover_url ?: "")
-            //大小压缩，默认为大小压缩，适合普通很大的图
-            thumbImg.compressStyle = UMImage.CompressStyle.SCALE
-            thumbImg.compressFormat = Bitmap.CompressFormat.PNG
-            video.setThumb(thumbImg)
-            video.title =
-                myContext.getString(
-                    R.string.send_a_video_in_app,
-                    squareBean?.nickname.toString()
-                )
-            video.description = if (!squareBean?.descr.isNullOrEmpty()) {
-                squareBean?.descr
-            } else myContext.getString(R.string.hurry_to_see_this)
-            ShareAction(myContext as Activity)
-                .setPlatform(platformConfig)
-                .withMedia(video)
-                .setCallback(callback)
-                .share()
-        } else if (squareBean?.type == SquareBean.AUDIO) {
-            val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
-            audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
-            audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
-            audio.title =
-                myContext.getString(
-                    R.string.send_a_audio_in_app,
-                    squareBean?.nickname.toString()
-                )
-            audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
-                squareBean?.descr
-            } else myContext.getString(R.string.hurry_to_see_this)
-            ShareAction(myContext as Activity)
-                .setPlatform(platformConfig)
-                .withText(squareBean?.descr ?: "")
-                .withMedia(audio)
-                .setCallback(callback)
-                .share()
-        }
-    }
+//    private fun shareSquare(platformConfig: SHARE_MEDIA) {
+//        if (squareBean?.type == SquareBean.PIC) {
+//            //多图上传,需要带文字描述
+//            if (!squareBean?.photo_json.isNullOrEmpty()) {
+//                val image = UMImage(myContext, squareBean?.photo_json?.get(0)?.url)//
+//                //大小压缩，默认为大小压缩，适合普通很大的图
+//                image.compressStyle = UMImage.CompressStyle.SCALE
+//                image.compressFormat = Bitmap.CompressFormat.JPEG
+//                image.title =
+//                    myContext.getString(
+//                        R.string.send_a_pic_in_app,
+//                        squareBean?.nickname.toString()
+//                    )
+//                image.description = if (!squareBean?.descr.isNullOrEmpty()) {
+//                    squareBean?.descr
+//                } else myContext.getString(R.string.hurry_to_see_this)
+//                ShareAction(myContext as Activity)
+//                    .setPlatform(platformConfig)
+//                    .withText(
+//                        if (!squareBean?.descr.isNullOrEmpty()) {
+//                            squareBean?.descr
+//                        } else myContext.getString(R.string.hurry_to_see_this)
+//                    )//分享内容
+//                    .withMedia(image)//多张图片
+//                    //                    .withMedias(*images)//多张图片
+//                    .setCallback(callback)
+//                    .share()
+//
+//            } else {            //文本分享
+//                //                http://www.baidu.com
+//                val web = UMWeb("http://")
+//                web.title = myContext.getString(
+//                    R.string.send_a_square_in_app,
+//                    squareBean?.nickname.toString()
+//                )//标题
+//                web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
+//                web.description = squareBean?.descr ?: ""//描述
+//                if (platformConfig == SHARE_MEDIA.QQ) {
+//                    ShareAction(myContext as Activity)
+//                        .setPlatform(platformConfig)
+//                        .withText(squareBean?.descr ?: "")
+//                        .withMedia(web)
+//                        .setCallback(callback)
+//                        .share()
+//                } else {
+//                    ShareAction(myContext as Activity)
+//                        .setPlatform(platformConfig)
+//                        .withText(squareBean?.descr ?: "")
+//                        .setCallback(callback)
+//                        .share()
+//                }
+//
+//
+//            }
+//        } else if (squareBean?.type == SquareBean.VIDEO) {//视频分享
+//            val video = UMVideo(squareBean?.video_json?.get(0)?.url)//
+//            val thumbImg = UMImage(myContext, squareBean?.cover_url ?: "")
+//            //大小压缩，默认为大小压缩，适合普通很大的图
+//            thumbImg.compressStyle = UMImage.CompressStyle.SCALE
+//            thumbImg.compressFormat = Bitmap.CompressFormat.PNG
+//            video.setThumb(thumbImg)
+//            video.title =
+//                myContext.getString(
+//                    R.string.send_a_video_in_app,
+//                    squareBean?.nickname.toString()
+//                )
+//            video.description = if (!squareBean?.descr.isNullOrEmpty()) {
+//                squareBean?.descr
+//            } else myContext.getString(R.string.hurry_to_see_this)
+//            ShareAction(myContext as Activity)
+//                .setPlatform(platformConfig)
+//                .withMedia(video)
+//                .setCallback(callback)
+//                .share()
+//        } else if (squareBean?.type == SquareBean.AUDIO) {
+//            val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
+//            audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
+//            audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
+//            audio.title =
+//                myContext.getString(
+//                    R.string.send_a_audio_in_app,
+//                    squareBean?.nickname.toString()
+//                )
+//            audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
+//                squareBean?.descr
+//            } else myContext.getString(R.string.hurry_to_see_this)
+//            ShareAction(myContext as Activity)
+//                .setPlatform(platformConfig)
+//                .withText(squareBean?.descr ?: "")
+//                .withMedia(audio)
+//                .setCallback(callback)
+//                .share()
+//        }
+//    }
 
 
     /**
      * 链接分享
      */
-    private fun shareWeb(platformConfig: SHARE_MEDIA) {
-        val web = UMWeb(url)
-        web.title = title
-        web.description = content
-        web.setThumb(UMImage(myContext, pic)) //缩略图
-        ShareAction(myContext as Activity)
-            .setPlatform(platformConfig)
-            .withMedia(web)
-            .setCallback(callback)
-            .share()
-    }
+//    private fun shareWeb(platformConfig: SHARE_MEDIA) {
+//        val web = UMWeb(url)
+//        web.title = title
+//        web.description = content
+//        web.setThumb(UMImage(myContext, pic)) //缩略图
+//        ShareAction(myContext as Activity)
+//            .setPlatform(platformConfig)
+//            .withMedia(web)
+//            .setCallback(callback)
+//            .share()
+//    }
 
 
     /*第三方平台分享回调*/
-    private val callback = object : UMShareListener {
-        /**
-         * @descrption 分享成功的回调
-         * @param platform 平台类型
-         */
-        override fun onResult(p0: SHARE_MEDIA) {
-            Log.d("share===", "onresult ${p0?.getName()}================")
-            if (type == TYPE_SHARE_SQUARE)
-                addShare(p0)
-            else
-                dismiss()
-        }
-
-        /**
-         * @descrption 分享取消的回调
-         * @param platform 平台类型
-         */
-        override fun onCancel(p0: SHARE_MEDIA?) {
-            Log.d("share===", "cancel ${p0?.getName()}================")
-
-            dismiss()
-        }
-
-        /**
-         * @descrption 分享失败的回调
-         * @param platform 平台类型
-         * @param t 错误原因
-         */
-        override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
-            Log.d("share===", "onerror ${p0.getName()}================${p1.message ?: ""}")
-            CommonFunction.toast(myContext.getString(R.string.share_fail))
-        }
-
-        /**
-         * @descrption 分享开始的回调
-         * @param platform 平台类型
-         */
-        override fun onStart(p0: SHARE_MEDIA) {
-            Log.d("share===", "onStart ${p0.getName()}================")
-        }
-
-    }
+//    private val callback = object : UMShareListener {
+//        /**
+//         * @descrption 分享成功的回调
+//         * @param platform 平台类型
+//         */
+//        override fun onResult(p0: SHARE_MEDIA) {
+//            Log.d("share===", "onresult ${p0?.getName()}================")
+//            if (type == TYPE_SHARE_SQUARE)
+//                addShare(p0)
+//            else
+//                dismiss()
+//        }
+//
+//        /**
+//         * @descrption 分享取消的回调
+//         * @param platform 平台类型
+//         */
+//        override fun onCancel(p0: SHARE_MEDIA?) {
+//            Log.d("share===", "cancel ${p0?.getName()}================")
+//
+//            dismiss()
+//        }
+//
+//        /**
+//         * @descrption 分享失败的回调
+//         * @param platform 平台类型
+//         * @param t 错误原因
+//         */
+//        override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
+//            Log.d("share===", "onerror ${p0.getName()}================${p1.message ?: ""}")
+//            CommonFunction.toast(myContext.getString(R.string.share_fail))
+//        }
+//
+//        /**
+//         * @descrption 分享开始的回调
+//         * @param platform 平台类型
+//         */
+//        override fun onStart(p0: SHARE_MEDIA) {
+//            Log.d("share===", "onStart ${p0.getName()}================")
+//        }
+//
+//    }
 
 
     /*-------------------------分享成功回调----------------------------*/
-    private fun addShare(sharePlat: SHARE_MEDIA) {
+    private fun addShare() {
         val params = hashMapOf<String, Any>()
         params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
             .addShare(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    if (sharePlat != SHARE_MEDIA.INSTAGRAM)
                         CommonFunction.toast(t.msg)
                     dismiss()
                 }
@@ -453,13 +465,13 @@ class MoreActionNewDialog(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        umShareAPI.release()
+//        umShareAPI.release()
 
     }
 
     override fun dismiss() {
         super.dismiss()
-        umShareAPI.release()
+//        umShareAPI.release()
         EventBus.getDefault().unregister(this)
     }
 
@@ -469,9 +481,15 @@ class MoreActionNewDialog(
     }
 
 
+    private var shareWay = 1 //1 facebook 2 instagarm
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun saveImgSuccess(successEvent: SaveImgSuccessEvent) {
-        shareFacebook(successEvent.filePath)
+        if (shareWay == 1) {
+            shareFacebook(successEvent.filePath)
+        } else {
+            sharedToIns(successEvent.filePath)
+        }
 //        shareToIns(successEvent.filePath)
     }
 

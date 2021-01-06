@@ -32,7 +32,6 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
-import com.sdy.baselibrary.utils.ChannelUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
@@ -58,9 +57,6 @@ import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 import org.greenrobot.eventbus.EventBus

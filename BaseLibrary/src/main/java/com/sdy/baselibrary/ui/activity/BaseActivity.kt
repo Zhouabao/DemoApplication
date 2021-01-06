@@ -17,7 +17,6 @@ import com.facebook.CallbackManager
 import com.kotlin.base.common.AppManager
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
-import com.umeng.socialize.UMShareAPI
 import org.jetbrains.anko.find
 
 
@@ -65,7 +64,7 @@ open class BaseActivity : SwipeBackActivity(), BraintreeListener {
     override fun onDestroy() {
         super.onDestroy()
         AppManager.instance.finishActivity(this)
-        UMShareAPI.get(this).release()
+//        UMShareAPI.get(this).release()
 
     }
 
@@ -106,7 +105,7 @@ open class BaseActivity : SwipeBackActivity(), BraintreeListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
+//        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
