@@ -405,7 +405,7 @@
     <string name="contact_us">Contact us</string>
     <string name="invite_gift_content">Sharing the profit of commission once invite friends to recharge and pay,Invite more for extra income,If you have a large number of user channels, you can contact customer service directly</string>
     <string name="invite_beizhu">,remark「invite new one」</string>
-    <string name="invite_gift_wechat">jitangkefu</string>
+    <string name="invite_gift_wechat">jitangapp</string>
     <string name="copy_link">Copy link</string>
     <string name="link_has_copy">Sharing link copied</string>
     <string name="person_count">people</string>
@@ -476,7 +476,7 @@
     <string name="job_setting_fail">Profession set failed, re-try</string>
     <string name="job">Profession</string>
     <string name="label_manager">Interests managment</string>
-    <string name="delete">Delect</string>
+    <string name="delete">Delete</string>
     <string name="at_least_main">Keep %1$d Interests at least</string>
     <string name="add_label">Add Interests</string>
     <string name="deleta_label">Delect Interests</string>
@@ -1051,6 +1051,7 @@
     <string name="make_top">At the top</string>
     <string name="make_bottom">At the buttom</string>
     <string name="tab_square">Moments</string>
+    <string name="tab_activities">Activities</string>
     <string name="verify_to_more_expode">Complete certification to increase exposure rate.</string>
     <string name="unverify_only_some_can_chat">%1$d opportunities for unauthorized user daily.</string>
     <string name="unverify_residue_count">%1$d chat opportunities left.Finish certification to unlock more opportunities.</string>
@@ -1301,5 +1302,6 @@
     <string name="they_greet_you">They say hello to you</string>
     <string name="to_be_vip_see_them">Become a sugar beaker and see who they are</string>
     <string name="tobe_vip">To be memebership</string>
+    <string name="visit_cnt">visits</string>
 
 </resources>

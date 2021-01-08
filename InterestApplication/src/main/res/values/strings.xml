@@ -405,7 +405,7 @@
     <string name="contact_us">联系我们</string>
     <string name="invite_gift_content">分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信</string>
     <string name="invite_beizhu">，备注「拉新」</string>
-    <string name="invite_gift_wechat">jitangkefu</string>
+    <string name="invite_gift_wechat">jitangapp</string>
     <string name="copy_link">复制链接</string>
     <string name="link_has_copy">分享链接已复制</string>
     <string name="person_count">人</string>
@@ -1050,6 +1050,7 @@
     <string name="make_top">置于顶部</string>
     <string name="make_bottom">置于底部</string>
     <string name="tab_square">动态</string>
+    <string name="tab_activities">动态</string>
     <string name="verify_to_more_expode">完成认证获取更多曝光</string>
     <string name="unverify_only_some_can_chat">未认证每天仅能和 %1$d 个用户聊天</string>
     <string name="unverify_residue_count">还有 %1$d 次聊天机会，认证后增加</string>
@@ -1299,5 +1300,6 @@
     <string name="they_greet_you">她们和你打了招呼</string>
     <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
     <string name="tobe_vip">成为积糖会员</string>
+    <string name="visit_cnt">来访次数</string>
 
 </resources>

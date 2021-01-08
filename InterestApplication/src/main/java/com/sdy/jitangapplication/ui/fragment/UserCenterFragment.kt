@@ -166,7 +166,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     private val mStack = Stack<Fragment>()
     private val titles by lazy {
         arrayOf(
-            getString(R.string.tab_square), getString(R.string.tab_dating), getString(
+            getString(R.string.tab_square), getString(R.string.tab_activities), getString(
                 R.string.tab_label
             )
         )
@@ -231,7 +231,7 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
     }
 
     private fun showWechatGuide() {
-        if (!UserManager.isShowGuideWechat()) {
+        if (!UserManager.overseas && !UserManager.isShowGuideWechat()) {
             noticeSettingIv.isVisible = true
             val trans = ObjectAnimator.ofFloat(
                 noticeSettingIv,

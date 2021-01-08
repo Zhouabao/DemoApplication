@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/colorOrange"
     android:fitsSystemWindows="true"
     tools:context=".ui.activity.MyInvitedActivity">
 
@@ -14,6 +14,7 @@
         android:id="@+id/stateMyInvite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llTitle"
         app:msv_errorView="@layout/error_layout"
@@ -24,6 +25,7 @@
             android:id="@+id/refreshMyInvited"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorWhite"
             app:srlDisableContentWhenLoading="true"
             app:srlDisableContentWhenRefresh="true"
             app:srlEnableAutoLoadMore="false"
@@ -106,8 +108,8 @@
                             android:text="再邀请0人可升级为二级XXX，享0%分佣"
                             android:textColor="#ff888d92"
                             android:textSize="14sp"
-                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintLeft_toLeftOf="@id/t1"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/rewardsPercent" />
 
 
@@ -164,10 +166,10 @@
                                 android:layout_marginTop="15dp"
                                 android:layout_marginBottom="15dp"
                                 android:background="@drawable/rectangle_solid_orange_18dp"
+                                android:gravity="center"
                                 android:minWidth="24dp"
                                 android:paddingLeft="6dp"
                                 android:paddingRight="6dp"
-                                android:gravity="center"
                                 android:text="0"
                                 android:textColor="#ffffffff"
                                 android:textSize="16sp"

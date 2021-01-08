@@ -7,7 +7,7 @@
     android:fitsSystemWindows="false"
     tools:context=".ui.activity.LoginActivity">
 
-    <VideoView
+    <com.sdy.jitangapplication.widgets.FullscreenVideoView
         android:id="@+id/videoPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
