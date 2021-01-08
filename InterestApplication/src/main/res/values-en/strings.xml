@@ -268,7 +268,7 @@
 
     <string name="candy_charge">Candy recharge</string>
     <string name="candy_balance">Candy balance</string>
-    <string name="candy_usage">The use of Candy: start intentional invitation、Give gifts、Unlock chat etc.</string>
+    <string name="candy_usage">Usage:start intentional invitation、Give gifts、Unlock chat etc.</string>
 
 
     <string name="candy_record_title">Record of cash withdrawal</string>
@@ -333,9 +333,9 @@
     <string name="write_mind">Fill in your current mood</string>
     <string name="text_or_audio_must">Text discription or vioce decription is necessary</string>
     <string name="dating_publish_success">Activity post succeed</string>
-    <string name="dating_publish_warning">Pornographic and whoring info is forbiden, otherwise account would be blocked ever</string>
+    <string name="dating_publish_warning">Account would be blocked by posting pornographnic or whoring info</string>
     <string name="dating_content">Activity content</string>
-    <string name="input_dating_content">Fill in specific content of activities</string>
+    <string name="input_dating_content">Fill in activities content</string>
     <string name="dating_place">Activity location</string>
     <string name="choose_dating_place">Select  location</string>
     <string name="dating_person">Activity sugarbaby</string>
@@ -578,7 +578,7 @@
     <string name="dating_publish_active_content">Be honest to the applicants, behavior of insult is forbidden</string>
     <string name="dating_publish_limit">Upper limit of activity post and activity display</string>
     <string name="dating_publish_limit_content">At most post 1 activity in 1 day, keep the last posted activity info</string>
-    <string name="dating_publish">Post activity</string>
+    <string name="dating_publish">Post Activity</string>
     <string name="dating_check_toggle">Check the switch and click start post activity</string>
     <string name="quick_sign">Sign quikly</string>
     <string name="please_choose_gender">Select gender first</string>
@@ -1035,7 +1035,7 @@
     <string name="has_copy_to_board">Copied content to clipboard</string>
     <string name="publish_first_dating">You haven\'t Postd any activities \n Post your first activity.</string>
     <string name="update_dating">Update activities</string>
-    <string name="add_label_tag">And Interests traits</string>
+    <string name="add_label_tag">Add Traits</string>
     <string name="add_label_tag_1">You haven\'t add any Interests\n Come on! Add some Interests now</string>
     <string name="today_expose">Today\'s exposure rate:%1$d</string>
     <string name="unlock_to_see">Unlock to check:%1$d</string>
@@ -1043,7 +1043,7 @@
     <string name="all_visit_1">Total visit:%1$d</string>
     <string name="open_vip_contact_them">To be a member of SugarTown to chat with them</string>
     <string name="open_vip_contact_them1">There\'re %2$d Candy sugarbabies\n meet your needs in %1$s</string>
-    <string name="true_avatar_to_recommend">The current avatar is not your profile picture.Update with your profile picture to get personal profile recommendation.</string>
+    <string name="true_avatar_to_recommend">Picture isn\'t real.Please update ASAP</string>
     <string name="empty_friend">No friend yet</string>
     <string name="no_square">No moments yet</string>
     <string name="positive_make_more_friend">Greeting to meet more firends\n Friends\' posted moments can be find here.</string>
