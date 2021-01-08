@@ -318,7 +318,11 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
             val params = sweetPowerIv.layoutParams as ConstraintLayout.LayoutParams
             params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F)
-            params.height = (params.width * (588 / 1035f)).toInt()
+            params.height = if (progressBean.gender == 1) {
+                (params.width * (303F / 335)).toInt()
+            } else {
+                (params.width * (234F / 335)).toInt()
+            }
             GlideUtil.loadRoundImgCenterCrop(
                 requireActivity(),
                 progressBean.img,

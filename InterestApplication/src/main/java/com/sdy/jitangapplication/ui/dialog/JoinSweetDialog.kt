@@ -167,9 +167,16 @@ class JoinSweetDialog(val context1: Context, var progressBean: SweetProgressBean
 
         }
 
+
+        //335 234
+        //335 303
         val params = sweetPowerIv.layoutParams as ConstraintLayout.LayoutParams
         params.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 2F + 10 * 2F)
-        params.height = (params.width * (303F / 335)).toInt()
+        params.height = if (progressBean.gender == 1) {
+            (params.width * (303F / 335)).toInt()
+        } else {
+            (params.width * (234F / 335)).toInt()
+        }
         GlideUtil.loadRoundImgCenterCrop(
             context1,
             progressBean.img,
