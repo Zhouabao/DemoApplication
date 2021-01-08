@@ -92,7 +92,7 @@ data class RegisterFileBean(
     var threshold: Boolean = false,//门槛开关 开启true 关闭false
     var living_btn: Boolean = false,//活体认证的性别判断
     var tourists: Boolean = false,//	游客模式 开启true 关闭false
-    var experience_state: Boolean = true,//	体验券状态 true开 flase 关闭
+    var experience_state: Boolean = false,//	体验券状态 true开 flase 关闭
     var region: Int = 0  //2为海外模式
 
 )

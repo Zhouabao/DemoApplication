@@ -76,6 +76,14 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
         } else {
             openPushStatus.text = getString(R.string.not_open)
         }
+        if (UserManager.overseas) {
+            wechatTv.isVisible = false
+            switchWechat.isVisible = false
+            switchWechatBtn.isVisible = false
+            wechatPublicTv.isVisible = false
+            wechatPublic.isVisible = false
+        }
+
     }
 
 
@@ -112,7 +120,7 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             }
             switchMessageBtn -> {//短信通知开关
                 mPresenter.switchSet(
-                    3, if (switchMessage.isChecked) {
+                    1, if (switchMessage.isChecked) {
                         2
                     } else {
                         1
@@ -142,20 +150,28 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
     }
 
 
-    //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论  3短信提醒   4 微信推送
+    //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论
     override fun onGreetApproveResult(type: Int, success: Boolean) {
         EventBus.getDefault().post(UpdateSettingEvent())
         when (type) {
             1 -> {
                 switchDianzan.isChecked = !switchDianzan.isChecked
             }
+
             2 -> {
                 switchComment.isChecked = !switchComment.isChecked
             }
-            3 -> {
+        }
+    }
+
+
+    //接收推送开关 参数 type（int）型    1短信提醒   4 微信推送
+    override fun switchSetResult(type: Int, success: Boolean) {
+        EventBus.getDefault().post(UpdateSettingEvent())
+        when (type) {
+            1 -> {
                 switchMessage.isChecked = !switchMessage.isChecked
             }
-
             4 -> {
                 switchWechat.isChecked = !switchWechat.isChecked
                 if (switchWechat.isChecked) {
@@ -173,8 +189,8 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
                 }
 
             }
-
         }
+
     }
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
@@ -183,9 +199,11 @@ class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), Notificat
             switchComment.isChecked = settingsBean.notify_square_comment_state
             switchMessage.isChecked = settingsBean.sms_state
             if (UserManager.overseas) {
-                wechatPublic.isVisible = false
-                wechatPublicTv.isVisible = false
+                wechatTv.isVisible = false
                 switchWechat.isVisible = false
+                switchWechatBtn.isVisible = false
+                wechatPublicTv.isVisible = false
+                wechatPublic.isVisible = false
             } else {
                 wechatPublicState = settingsBean.we_openid
                 wechatState = settingsBean.wechat_tem_state

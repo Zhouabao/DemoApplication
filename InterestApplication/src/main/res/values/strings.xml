@@ -1042,7 +1042,7 @@
     <string name="make_top">置于顶部</string>
     <string name="make_bottom">置于底部</string>
     <string name="tab_square">动态</string>
-    <string name="tab_activities">动态</string>
+    <string name="tab_activities">活动</string>
     <string name="verify_to_more_expode">完成认证获取更多曝光</string>
     <string name="unverify_only_some_can_chat">未认证每天仅能和 %1$d 个用户聊天</string>
     <string name="unverify_residue_count">还有 %1$d 次聊天机会，认证后增加</string>
@@ -1309,6 +1309,11 @@
     <string name="only_important_college">学历认证仅通过985/211在读或毕业生\n学历是受教和成长环境的最佳体现\n认证后将获得全局额外推荐</string>
     <string name="save_success">保存成功</string>
     <string name="visit_cnt">来访次数</string>
+    <string name="add_jitang_wechat"><![CDATA[<font color=\'#ff6318\'>*</font>可添加微信公众号：jitangapp 描述相应问题]]></string>
+    <string name="commit_feedback">提交反馈</string>
+    <string name="pay_problems">支付遇到问题</string>
+    <string name="please_descripe_your_problem">在此描述您遇到的问题，我们将尽力为您解答</string>
+    <string name="have_pay_problem">支付遇到问题？</string>
 
 
 </resources>

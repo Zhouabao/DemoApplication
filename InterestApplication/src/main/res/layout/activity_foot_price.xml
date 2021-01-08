@@ -140,6 +140,19 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/joinNowBtn" />
+
+        <TextView
+            android:id="@+id/payProblemBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/have_pay_problem"
+            android:textColor="#ff6796fa"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/whyPayBtn" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

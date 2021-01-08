@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center_horizontal"
+    android:layout_margin="10dp"
+    android:background="@drawable/rectangle_white_15dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:text="@string/pay_problems"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/close" />
+
+
+    <EditText
+        android:id="@+id/feedbackEt"
+        android:layout_width="match_parent"
+        android:layout_height="166dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/shape_rectangle_gray8_10dp"
+        android:padding="10dp"
+        android:gravity="start"
+        android:hint="@string/please_descripe_your_problem"
+        android:textColorHint="#FFC5C6C8"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/feedbackNotice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/add_jitang_wechat"
+        android:textColor="#FFC5C6C8"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/feedbackBtn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rectangle_orange_bottom_15dp"
+        android:gravity="center"
+        android:text="@string/commit_feedback"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

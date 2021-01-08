@@ -1311,5 +1311,9 @@
     <string name="only_important_college">Education certification only 981/211 current or graduate education \n best reflects the education and growth environment \n Will receive global additional recommendations after certification</string>
     <string name="save_success">Save success</string>
     <string name="visit_cnt">visits</string>
-
+    <string name="add_jitang_wechat"><![CDATA[<font color=\'#ff6318\'>*</font>You can add our wechat public:jitangapp to describe your problem.]]></string>
+    <string name="commit_feedback">Submit</string>
+    <string name="pay_problems">Payment Problems</string>
+    <string name="please_descripe_your_problem">Describe your problem here and we will do our best to answer it.</string>
+    <string name="have_pay_problem">Having payment problems?</string>
 </resources>

@@ -25,9 +25,9 @@ import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.ChargeWayBeans
-import com.sdy.jitangapplication.model.FootDescr
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.adapter.FootPowerAdapter
+import com.sdy.jitangapplication.ui.dialog.PayProblemDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.WhyPayDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -76,6 +76,12 @@ class FootPriceActivity : BaseActivity() {
         //为什么要付费
         whyPayBtn.clickWithTrigger {
             WhyPayDialog(this).show()
+        }
+
+
+        //支付遇到问题
+        payProblemBtn.clickWithTrigger {
+            PayProblemDialog(this).show()
         }
     }
 

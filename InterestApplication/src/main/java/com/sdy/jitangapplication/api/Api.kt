@@ -882,6 +882,14 @@ interface Api {
     fun androidCheck(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GoogleTokenBean>>
 
 
+    /**
+     * 支付遇到问题
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/payFeedback${Constants.END_BASE_URL}")
+    fun payFeedback(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
     /*--------------------------------账号相关---------------------------------*/
 
     /**

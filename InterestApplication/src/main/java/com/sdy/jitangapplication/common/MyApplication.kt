@@ -39,7 +39,6 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
@@ -48,7 +47,11 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.api.UIKitOptions
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.nim.uikit.business.session.fragment.MessageFragment
+import com.sdy.jitangapplication.ui.activity.GetMoreMatchActivity
+import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
+import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.GreetHiDialog
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
@@ -120,7 +123,10 @@ class MyApplication : BaseApplication() {
 //                if (ActivityUtils.getTopActivity() != null && !ActivityUtils.getTopActivity().isFinishing)
 //                    TickDialog.getInstance(ActivityUtils.getTopActivity()).show()
 //                else
-                if (ActivityUtils.getTopActivity() != null && ActivityUtils.isActivityAlive(ActivityUtils.getTopActivity()))
+                if (ActivityUtils.getTopActivity() != null && ActivityUtils.isActivityAlive(
+                        ActivityUtils.getTopActivity()
+                    )
+                )
                     TickDialog(ActivityUtils.getTopActivity()).show()
                 else
                     UserManager.startToLogin(this)
@@ -287,7 +293,10 @@ class MyApplication : BaseApplication() {
 
                     }
                     401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
-                        if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() !is SplashActivity && ActivityUtils.getTopActivity() !is ChatActivity)
+                        if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() is MainActivity
+                            && FragmentUtils.getTopShow((ActivityUtils.getTopActivity() as MainActivity).supportFragmentManager) != null
+                            && FragmentUtils.getTopShow((ActivityUtils.getTopActivity() as MainActivity).supportFragmentManager) !is MessageFragment
+                        )
                             GreetHiDialog(customerMsgBean).show()
 //                            FragmentUtils.add(
 //                                (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,

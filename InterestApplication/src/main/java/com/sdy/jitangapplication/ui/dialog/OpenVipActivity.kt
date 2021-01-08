@@ -249,6 +249,11 @@ class OpenVipActivity : BaseActivity() {
         }
 
 
+        //支付遇到问题
+        payProblemBtn.clickWithTrigger {
+            PayProblemDialog(this).show()
+        }
+
         //取消支付
         refuseBtn.clickWithTrigger {
             finish()

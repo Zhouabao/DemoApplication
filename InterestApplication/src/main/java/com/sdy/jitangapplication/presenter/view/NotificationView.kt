@@ -13,6 +13,8 @@ interface NotificationView : BaseView {
 
 
     fun onGreetApproveResult(type: Int, success: Boolean)
+    fun switchSetResult(type: Int, success: Boolean)
+
 
     fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?)
 
