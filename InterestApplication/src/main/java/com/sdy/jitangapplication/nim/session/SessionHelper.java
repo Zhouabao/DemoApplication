@@ -267,13 +267,18 @@ public class SessionHelper {
                 if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {
                     return false;
                 } else {
-                    boolean sendMan =
-                            ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount()))
-                                    .getGenderEnum() == GenderEnum.MALE;
-                    boolean differentGender =
-                            ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId()))
-                                    .getGenderEnum() != ((NimUserInfo) NimUIKit.getUserInfoProvider()
-                                            .getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
+                    boolean sendMan = false;
+                    if ((NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount()))!=null
+                            && ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum()!=null)
+                        sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
+                    boolean differentGender = false;
+                    if (NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())!=null
+                            && ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum() !=null
+                            && NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid()) !=null
+                            && ((NimUserInfo)NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum()!=null)
+                        differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId()))
+                                .getGenderEnum() != ((NimUserInfo) NimUIKit.getUserInfoProvider()
+                                .getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
                     if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
                             && message.getMsgType() != MsgTypeEnum.tip && message.getMsgType() != MsgTypeEnum.custom
                             && sendMan && differentGender && UserManager.INSTANCE.getShowCandyMessage()

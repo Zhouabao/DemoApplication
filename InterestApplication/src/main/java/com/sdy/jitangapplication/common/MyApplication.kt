@@ -47,13 +47,13 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.nim.uikit.api.NimUIKit
 import com.sdy.jitangapplication.nim.uikit.api.UIKitOptions
-import com.sdy.jitangapplication.nim.uikit.business.session.fragment.MessageFragment
 import com.sdy.jitangapplication.ui.activity.GetMoreMatchActivity
 import com.sdy.jitangapplication.ui.activity.GetRelationshipActivity
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.GreetHiDialog
+import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -295,7 +295,7 @@ class MyApplication : BaseApplication() {
                     401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
                         if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() is MainActivity
                             && FragmentUtils.getTopShow((ActivityUtils.getTopActivity() as MainActivity).supportFragmentManager) != null
-                            && FragmentUtils.getTopShow((ActivityUtils.getTopActivity() as MainActivity).supportFragmentManager) !is MessageFragment
+                            && FragmentUtils.getTopShow((ActivityUtils.getTopActivity() as MainActivity).supportFragmentManager) !is MessageListFragment
                         )
                             GreetHiDialog(customerMsgBean).show()
 //                            FragmentUtils.add(
