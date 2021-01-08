@@ -40,7 +40,7 @@ class BindPayPalAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
         hotT1.text = getString(R.string.withdraw_paypal)
         rightBtn1.isVisible = true
         rightBtn1.text = getString(R.string.save)
-
+        etPaypalAccount.addTextChangedListener(this)
 
 
         rightBtn1.onClick {

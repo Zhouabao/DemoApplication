@@ -153,8 +153,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
 
     override fun onSquareAnnounceResult(b: Boolean, code: Int) {
         if (b) {
-            ActivityUtils.finishAllActivities()
-            startActivity<MainActivity>()
+            MainActivity.start(this,true)
         }
         publish.isEnabled = true
     }

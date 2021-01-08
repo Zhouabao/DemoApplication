@@ -379,7 +379,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
                         android:gravity="center"
-                        android:text="分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信jitangkefu，备注「拉新」"
+                        android:text="分享邀请好友充值付费即享分佣收益，多邀请享更多额外收益，如您有大量用户渠道可直接联系客服微信jitangapp，备注「拉新」"
                         android:textColor="#ff888d92"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"

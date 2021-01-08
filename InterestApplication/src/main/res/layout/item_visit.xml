@@ -77,7 +77,7 @@
 
     <TextView
             android:id="@+id/count"
-            android:text="来访次数"
+            android:text="@string/visit_cnt"
             android:textColor="#ff333333"
             android:textSize="12sp"
             android:layout_marginRight="15dp"

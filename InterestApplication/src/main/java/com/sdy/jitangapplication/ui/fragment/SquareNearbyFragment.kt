@@ -117,9 +117,7 @@ class SquareNearbyFragment : BaseMvpFragment<TagDetailCategoryPresenter>(),
             stateNearbySquare.viewState = MultiStateView.VIEW_STATE_ERROR
         }
         if (refreshNearbySquare.state == RefreshState.Refreshing) {
-            if (data?.list.isNullOrEmpty()) {
-                adapter.isUseEmpty(true)
-            }
+
             adapter.data.clear()
             adapter.notifyDataSetChanged()
             rvNearbySquare.scrollToPosition(0)
@@ -139,6 +137,10 @@ class SquareNearbyFragment : BaseMvpFragment<TagDetailCategoryPresenter>(),
                 data.originalLikeCount = data.like_cnt
             }
             adapter.addData(data?.list ?: mutableListOf())
+        }
+
+        if (adapter.data.isEmpty()) {
+            adapter.isUseEmpty(true)
         }
     }
 

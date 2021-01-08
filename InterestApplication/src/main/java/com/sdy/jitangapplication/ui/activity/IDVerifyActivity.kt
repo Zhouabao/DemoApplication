@@ -14,10 +14,8 @@ import com.baidu.idl.face.platform.FaceStatusNewEnum
 import com.baidu.idl.face.platform.listener.IInitCallback
 import com.baidu.idl.face.platform.model.ImageInfo
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -309,6 +307,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
         if (!NetWorkUtils.isNetWorkAvailable(this)) {
             return
         }
+        loadingDialog.show()
         QNUploadManager.getInstance().put(
             filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
@@ -322,12 +321,13 @@ class IDVerifyActivity : FaceLivenessActivity() {
                         )
                     )
                 } else {
+                    loadingDialog.dismiss()
                     CommonFunction.toast(getString(R.string.verify_commit_fail))
+                    startPreview()
                 }
             }, null
         )
     }
-
 
 
     /**
@@ -379,6 +379,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
                     }
                     loadingDialog.dismiss()
                     CommonFunction.toast(getString(R.string.verify_commit_fail))
+                    startPreview()
                 }
             })
 

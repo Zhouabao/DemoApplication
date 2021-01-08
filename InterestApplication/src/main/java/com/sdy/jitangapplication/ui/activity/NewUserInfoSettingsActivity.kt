@@ -1057,6 +1057,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 saveBtn.isEnabled = true
             })
             .setSubmitText(getString(R.string.ok))
+            .setCancelText(getString(R.string.cancel))
             .setTitleText(title)
             .setTitleColor(resources.getColor(R.color.colorBlack))
             .setTitleSize(16)

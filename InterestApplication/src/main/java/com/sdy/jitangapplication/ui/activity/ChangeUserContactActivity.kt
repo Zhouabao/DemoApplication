@@ -110,18 +110,34 @@ class ChangeUserContactActivity : BaseMvpActivity<ChangeUserContactPresenter>(),
      */
     private var contactWay = 1 //1 电话 2 微信 3 qq 99隐藏
     private val contactWays by lazy {
-        mutableListOf(
-            getString(R.string.contact_phone),
-            getString(R.string.contact_wechat),
-            getString(R.string.contact_QQ)
-        )
+        if (UserManager.overseas) {
+            mutableListOf(
+                getString(R.string.contact_phone),
+                getString(R.string.contact_whatsapp),
+                getString(R.string.contact_skype)
+            )
+        } else {
+            mutableListOf(
+                getString(R.string.contact_phone),
+                getString(R.string.contact_wechat),
+                getString(R.string.contact_QQ)
+            )
+        }
     }
     private val contactWaysIcon by lazy {
-        mutableListOf(
-            R.drawable.icon_phone_circle,
-            R.drawable.icon_wechat_circle,
-            R.drawable.icon_qq_circle
-        )
+        if (UserManager.overseas) {
+            mutableListOf(
+                R.drawable.icon_phone_reg,
+                R.drawable.icon_whatsapp_reg,
+                R.drawable.icon_skype_reg
+            )
+        } else {
+            mutableListOf(
+                R.drawable.icon_phone_reg,
+                R.drawable.icon_wechat_reg,
+                R.drawable.icon_qq_reg
+            )
+        }
     }
 
     private fun showContactPicker() {

@@ -119,7 +119,11 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
 
 
     fun checkWithdrawEnable() {
-        confirmWithdraw.isEnabled = !inputWithdrawMoney.text.trim().isNullOrEmpty() &&
+        confirmWithdraw.isEnabled = (if (fromCandy) {
+            pullWithdrawBean?.money_amount ?: 0F > 0
+        } else {
+            pullWithdrawBean?.red_balance_money ?: 0F > 0
+        }) && !inputWithdrawMoney.text.trim().isNullOrEmpty() &&
                 !wirteAlipayAcount.text.trim().isNullOrEmpty() &&
                 if (inputWithdrawMoney.text.isNullOrEmpty()) {
                     0F
@@ -248,7 +252,8 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                                 t.data?.candy_amount.toString() + context.getString(
                                     R.string.count_unit
                                 )
-                            withdrawMoney1.text = "${CommonFunction.getNowMoneyUnit()}${t.data?.money_amount}"
+                            withdrawMoney1.text =
+                                "${CommonFunction.getNowMoneyUnit()}${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
                         } else {
@@ -281,7 +286,8 @@ class WithdrawCandyDialog(val myContext: Context, val fromCandy: Boolean = true)
                             withdrawCandy.text = "${t.data?.candy_amount}${context.getString(
                                 R.string.count_unit
                             )}"
-                            withdrawMoney1.text = "${CommonFunction.getNowMoneyUnit()}${t.data?.money_amount}"
+                            withdrawMoney1.text =
+                                "${CommonFunction.getNowMoneyUnit()}${t.data?.money_amount}"
                             EventBus.getDefault()
                                 .post(RefreshMyWithDraw(t.data?.money_amount ?: 0F))
                         } else {

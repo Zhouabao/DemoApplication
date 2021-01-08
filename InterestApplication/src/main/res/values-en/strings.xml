@@ -1043,6 +1043,7 @@
     <string name="make_top">At the top</string>
     <string name="make_bottom">At the buttom</string>
     <string name="tab_square">Moments</string>
+    <string name="tab_activities">Activities</string>
     <string name="verify_to_more_expode">Complete certification to increase exposure rate.</string>
     <string name="unverify_only_some_can_chat">%1$d opportunities for unauthorized user daily.</string>
     <string name="unverify_residue_count">%1$d chat opportunities left.Finish certification to unlock more opportunities.</string>
@@ -1309,4 +1310,6 @@
     <string name="s_photo">\n</string>
     <string name="only_important_college">Education certification only 981/211 current or graduate education \n best reflects the education and growth environment \n Will receive global additional recommendations after certification</string>
     <string name="save_success">Save success</string>
+    <string name="visit_cnt">visits</string>
+
 </resources>

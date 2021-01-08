@@ -188,9 +188,6 @@ class SquareRecommendFragment : BaseMvpFragment<RecommendSquarePresenter>(),
             }
         }
         if (refreshRecommendSquare.state == RefreshState.Refreshing) {
-            if (data?.list.isNullOrEmpty()) {
-                adapter.isUseEmpty(true)
-            }
             adapter.data.clear()
             adapter.notifyDataSetChanged()
             rvRecommendSquare.scrollToPosition(0)
@@ -212,6 +209,9 @@ class SquareRecommendFragment : BaseMvpFragment<RecommendSquarePresenter>(),
             adapter.addData(data?.list ?: mutableListOf())
         }
 
+        if (adapter.data.isEmpty()) {
+            adapter.isUseEmpty(true)
+        }
     }
 
     override fun onCheckBlockResult(bannerBean: SquareBannerBean, b: Boolean) {
