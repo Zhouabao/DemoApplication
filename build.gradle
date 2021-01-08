@@ -24,7 +24,7 @@ buildscript {
     ext.circle_imageView_version = "2.1.0"
 
     ext.multi_state_view_version = '2.0'
-    ext.gsy_video_version = '7.1.2'
+    ext.gsy_video_version = '8.0.0'
 
     ext.lottieVersion = '3.4.1'
     repositories {
