@@ -262,21 +262,30 @@ dependencies {
 
 
     //谷歌服务
+    //google account login
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    //Google Actions, Base Client Library
+    implementation 'com.google.android.gms:play-services-base:17.5.0'
+    //google gcm
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    //google map
+    implementation 'com.google.android.gms:play-services-maps:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-nearby:17.0.0'
+
+    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+
+
+
+    //firebaase
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
-
-    //谷歌推送
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.android.gms:play-services-base:17.1.0'
-    implementation 'com.google.firebase:firebase-core:17.2.3'
-//    implementation 'com.google.firebase:firebase-messaging-ktx'
-//    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
     //google 结算
     implementation 'com.android.billingclient:billing-ktx:3.0.2'
-//    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
-//    implementation 'com.braintreepayments.api:google-payment:3.3.1'
 
 
 //    implementation 'com.google.firebase:firebase-core:19.0.0'

@@ -348,7 +348,7 @@
         <activity
             android:name=".ui.activity.IDVerifyActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
@@ -648,17 +648,6 @@
             android:exported="true" />
 
 
-        <!-- <activity
-             android:name="com.umeng.facebook.FacebookActivity"
-             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-             android:label="@string/app_name"
-             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-             tools:ignore="Instantiatable" />
-
-         <meta-data
-             android:name="com.facebook.sdk.ApplicationId"
-             android:value="@string/facebook_app_id"
-             tools:ignore="ManifestResource" />-->
 
 
         <!-- *****************自动适配********************** -->
@@ -906,6 +895,11 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
