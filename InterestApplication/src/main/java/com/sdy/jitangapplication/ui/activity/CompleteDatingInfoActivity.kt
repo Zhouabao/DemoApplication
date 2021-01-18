@@ -18,7 +18,6 @@ import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.amap.api.services.core.PoiItem
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.blankj.utilcode.constant.PermissionConstants
@@ -34,6 +33,7 @@ import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateMyDatingEvent
 import com.sdy.jitangapplication.model.CheckBean
 import com.sdy.jitangapplication.model.DatingOptionsBean
+import com.sdy.jitangapplication.model.LocationBean
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
 import com.sdy.jitangapplication.player.UpdateVoiceTimeThread
@@ -603,7 +603,7 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
         //                switchActionState()
     }
 
-    private var positionItem: PoiItem? = null
+    private var positionItem: LocationBean? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -612,20 +612,11 @@ class CompleteDatingInfoActivity : BaseMvpActivity<CompleteDatingInfoPresenter>(
                     datingProjectContentEt.text = data?.getStringExtra("datingContent")
                 }
                 REQUEST_CODE_DATING_PLACE -> {
-                    if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
-                        positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
-                        chooseDatingPlaceBtn.text =
-                            (positionItem!!.cityName
-                                ?: "") + if (!positionItem!!.cityName.isNullOrEmpty()) {
-                                "·"
-                            } else {
-                                ""
-                            } + positionItem!!.title
-                        params["place"] = positionItem!!.title
-                        params["province_name"] = positionItem?.provinceName ?: ""
-                        params["city_name"] = positionItem?.cityName ?: ""
-                        params["lat"] = positionItem?.latLonPoint?.latitude ?: 0F
-                        params["lng"] = positionItem?.latLonPoint?.longitude ?: 0F
+                    if (data?.getParcelableExtra<LocationBean>("poiItem") != null) {
+                        positionItem = data!!.getParcelableExtra("poiItem") as LocationBean
+                        chooseDatingPlaceBtn.text = positionItem?.placeName ?: ""
+                        params["lat"] = positionItem?.latitude ?: 0F
+                        params["lng"] = positionItem?.longitude ?: 0F
                         chooseDatingPlaceBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
                         chooseDatingPlaceBtn.maxLines = 1
                         chooseDatingPlaceBtn.isSelected = true

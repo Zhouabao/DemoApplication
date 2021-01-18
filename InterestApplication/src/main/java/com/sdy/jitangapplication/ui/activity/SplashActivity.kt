@@ -41,7 +41,7 @@ class SplashActivity : BaseActivity() {
     }
 
     fun initPermissionsAndlogin() {
-        PermissionUtils.permission(
+        PermissionUtils.permissionGroup(
             PermissionConstants.STORAGE,
             PermissionConstants.LOCATION,
             PermissionConstants.PHONE

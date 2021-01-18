@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -121,7 +119,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             )
 
         //如果定位信息没有就重新定位
-        AMapManager.initLocation(this)
+        if (UserManager.getlatitude() == "0" || UserManager.getlongtitude() == "0")
+            AMapManager.initLocation(this)
 
 
 
@@ -151,7 +150,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //        }
 
     }
-
 
 
     override fun onNewIntent(intent: Intent?) {
@@ -650,7 +648,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     private var accountDangerDialog: AccountDangerDialog? = null
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

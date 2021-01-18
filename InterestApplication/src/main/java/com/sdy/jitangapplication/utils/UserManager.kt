@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.utils
 
-import android.app.Activity
 import android.content.Context
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
@@ -186,12 +185,12 @@ object UserManager {
      * 跳至登录界面
      */
     fun startToLogin(activity: Context, fromNimNotification: Boolean = false) {
-            touristMode = false
-            clearLoginData()
-            NIMClient.getService(AuthService::class.java).logout()
-            AppManager.instance.finishAllActivity()
+        touristMode = false
+        clearLoginData()
+        NIMClient.getService(AuthService::class.java).logout()
+        AppManager.instance.finishAllActivity()
 //        ActivityUtils.startLauncherActivity()
-            activity.startActivity<SplashActivity>()
+        activity.startActivity<SplashActivity>()
     }
 
     /**
@@ -231,10 +230,10 @@ object UserManager {
     fun saveLocation(
         latitude: String?,
         longtitude: String?,
-        province: String?,
-        city: String?,
-        district: String?,
-        code: String?
+        province: String? = null,
+        city: String? = null,
+        district: String? = null,
+        code: String? = null
     ) {
         if (latitude != null)
             SPUtils.getInstance(Constants.SPNAME).put("latitude", latitude)
@@ -269,7 +268,7 @@ object UserManager {
     /**
      * 获取城市码
      */
-    fun getCityCode(): String {
+    fun getCountryCode(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("citycode", "")
     }
 
@@ -533,8 +532,6 @@ object UserManager {
     fun saveShowGuideWechat(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideWechat", isShow)
     }
-
-
 
 
     /**

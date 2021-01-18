@@ -5,6 +5,7 @@
 
     <uses-sdk tools:overrideLibrary="com.huawei.android.hms.base,com.huawei.android.hms.push" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
@@ -348,7 +349,7 @@
         <activity
             android:name=".ui.activity.IDVerifyActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".nim.uikit.common.media.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
@@ -514,12 +515,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Transitions"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
-<!--
-        <activity
-            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+        <!--
+                <activity
+                    android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+                    android:configChanges="keyboardHidden|orientation"
+                    android:exported="false"
+                    android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
         <activity
             android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -537,24 +538,24 @@
 
         </activity>
 
-<!--
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+        <!--
+                <activity
+                    android:name="com.tencent.tauth.AuthActivity"
+                    android:launchMode="singleTask"
+                    android:noHistory="true">
+                    <intent-filter>
+                        <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                        <category android:name="android.intent.category.DEFAULT" />
+                        <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent100424468" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+                        <data android:scheme="tencent100424468" />
+                    </intent-filter>
+                </activity>
+                <activity
+                    android:name="com.tencent.connect.common.AssistActivity"
+                    android:configChanges="orientation|keyboardHidden|screenSize"
+                    android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
 
 
         <!-- 微信分享回调 -->
@@ -646,8 +647,6 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider3546860392031186"
             android:exported="true" />
-
-
 
 
         <!-- *****************自动适配********************** -->
@@ -898,8 +897,9 @@
 
 
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api_key" />
+
     </application>
 
 </manifest>

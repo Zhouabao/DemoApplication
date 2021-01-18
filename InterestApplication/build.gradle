@@ -50,11 +50,9 @@ android {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'
         }
-//        ndk {
         //设置支持的SO库架构
-//            abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
-//        }
-        ndk { abiFilters "armeabi-v7a", 'arm64-v8a' }
+        ndk { abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64" }
+//        ndk { abiFilters "armeabi-v7a", 'arm64-v8a' }
         // 只保留中文
 //        resConfigs "zh"
 
@@ -269,13 +267,16 @@ dependencies {
     //google gcm
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     //google map
-    implementation 'com.google.android.gms:play-services-maps:17.1.0'
+//    implementation 'com.google.android.gms:play-services-maps:17.1.0'
+    implementation 'com.google.maps.android:maps-ktx:2.1.1'
+    implementation 'com.google.maps.android:maps-utils-ktx:2.1.1'
+    implementation 'com.google.maps.android:places-ktx:0.4.0'
+
     implementation 'com.google.android.gms:play-services-location:17.1.0'
-    implementation 'com.google.android.gms:play-services-nearby:17.0.0'
+//    implementation 'com.google.android.gms:play-services-nearby:17.0.0'
 
-    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
-    implementation 'com.google.android.libraries.places:places:2.4.0'
-
+//    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
+//    implementation 'com.google.android.libraries.places:places:2.4.0'
 
 
     //firebaase

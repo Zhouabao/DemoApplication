@@ -18,7 +18,7 @@ buildscript {
     ext.retrofit_version = '2.9.0'
 
 
-    ext.glide_version = "4.9.0"
+    ext.glide_version = "4.11.0"
 //    ext.glide_version = "4.11.0"
 
     ext.circle_imageView_version = "2.1.0"

@@ -131,7 +131,7 @@ class ConfirmPayCandyDialog(
             if (UserManager.overseas) {
                 if (alipayCheck.isChecked) {
                     //PayPal支付
-                    initBraintreeFragment()
+//                    initBraintreeFragment()
                     payCreate(source_type, chargeBean.id)
                 } else {
                     //谷歌支付

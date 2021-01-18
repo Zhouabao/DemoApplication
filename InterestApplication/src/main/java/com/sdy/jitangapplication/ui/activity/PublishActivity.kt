@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.*
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
@@ -1106,7 +1105,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             super.onBackPressed()
     }
 
-    private var positionItem: PoiItem? = null
+    private var positionItem: LocationBean? = null
     override fun onClick(view: View) {
         when (view.id) {
             R.id.locationCity -> {
@@ -1174,7 +1173,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 val dialog = DeleteDialog(this)
                 dialog.show()
                 dialog.title.text = getString(R.string.re_record)
-                dialog.tip.text =  getString(R.string.confirm_re_record)
+                dialog.tip.text = getString(R.string.confirm_re_record)
                 dialog.confirm.onClick {
                     isTopPreview = false
                     mMediaRecorderHelper.cancel()
@@ -1327,15 +1326,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             }
             //地图返回
             else if (requestCode == REQUEST_CODE_MAP) {
-                if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
-                    positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
-                    locationCity.text =
-                        (positionItem!!.cityName
-                            ?: "") + if (!positionItem!!.cityName.isNullOrEmpty()) {
-                            "·"
-                        } else {
-                            ""
-                        } + positionItem!!.title
+                if (data?.getParcelableExtra<LocationBean>("poiItem") != null) {
+                    positionItem = data!!.getParcelableExtra("poiItem") as LocationBean
+                    locationCity.text = positionItem!!.placeName
+
 //                    +  + (positionItem!!.adName ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
 
                     locationCity.ellipsize = TextUtils.TruncateAt.MARQUEE
@@ -1373,7 +1367,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
 
     private fun startToUploadAndPublsih() {
         if (!mPresenter.checkNetWork()) {
-            CommonFunction.toast( getString(R.string.open_internet))
+            CommonFunction.toast(getString(R.string.open_internet))
             return
         }
 
@@ -1406,28 +1400,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
             } else {
-                positionItem!!.latLonPoint?.latitude ?: 0.0
+                positionItem!!.latitude
             },
             "lng" to if (positionItem == null) {
                 UserManager.getlongtitude()
             } else {
-                positionItem!!.latLonPoint?.longitude ?: 0.0
+                positionItem!!.longitude
             },
-            "province_name" to if (positionItem == null) {
-                UserManager.getProvince()
-            } else {
-                positionItem!!.provinceName ?: ""
-            },
-            "city_name" to if (positionItem == null) {
-                UserManager.getCity()
-            } else {
-                positionItem!!.cityName ?: ""
-            },
-            "city_code" to (if (positionItem == null) {
-                UserManager.getCityCode()
-            } else {
-                positionItem!!.cityCode ?: ""
-            }),
             "puber_address" to if (locationCity.text.toString() == getString(R.string.dont_show_location)) {
                 ""
             } else {
@@ -1579,29 +1558,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
             } else {
-                positionItem!!.latLonPoint?.latitude ?: 0.0
+                positionItem!!.latitude
             },
             "lng" to if (positionItem == null) {
                 UserManager.getlongtitude()
             } else {
-                positionItem!!.latLonPoint?.longitude ?: 0.0
+                positionItem!!.longitude
             },
-            "province_name" to if (positionItem == null) {
-                UserManager.getProvince()
-            } else {
-                positionItem!!.provinceName ?: ""
-            },
-            "city_name" to if (positionItem == null) {
-                UserManager.getCity()
-            } else {
-                positionItem!!.cityName ?: ""
-            },
-            "city_code" to (if (positionItem == null) {
-                UserManager.getCityCode()
-            } else {
-                positionItem!!.cityCode ?: ""
-            }),
-            "puber_address" to if (locationCity.text.toString() ==  getString(R.string.dont_show_location)) {
+            "puber_address" to if (locationCity.text.toString() == getString(R.string.dont_show_location)) {
                 ""
             } else {
                 locationCity.text.toString()

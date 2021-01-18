@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
@@ -36,7 +35,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_add_label_success.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
 
 /**
  * 添加兴趣成功
@@ -128,7 +126,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                 "lng" to UserManager.getlongtitude(),
                 "province_name" to UserManager.getProvince(),
                 "city_name" to UserManager.getCity(),
-                "city_code" to UserManager.getCityCode(),
+                "city_code" to UserManager.getCountryCode(),
                 "puber_address" to "",
                 //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
                 "type" to 1,

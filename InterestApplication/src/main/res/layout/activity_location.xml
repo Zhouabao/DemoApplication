@@ -15,8 +15,9 @@
 
         <include layout="@layout/layout_actionbar" />
 
-        <com.amap.api.maps.MapView
-            android:id="@+id/locationMap"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="253dp"
@@ -31,7 +32,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="15dp"
             android:src="@drawable/icon_locate_mylocation"
-            app:layout_constraintBottom_toBottomOf="@id/locationMap"
+            app:layout_constraintBottom_toBottomOf="@id/map"
             app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,9 +56,9 @@
             android:id="@+id/expandBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:layout_gravity="center_horizontal"
             android:src="@drawable/icon_search_expand" />
 
         <androidx.appcompat.widget.SearchView

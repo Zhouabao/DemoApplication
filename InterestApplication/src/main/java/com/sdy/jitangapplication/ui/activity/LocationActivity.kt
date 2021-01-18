@@ -1,65 +1,73 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.location.AMapLocationListener
-import com.amap.api.maps.AMap
-import com.amap.api.maps.CameraUpdateFactory
-import com.amap.api.maps.model.*
-import com.amap.api.maps.model.animation.TranslateAnimation
-import com.amap.api.services.core.LatLonPoint
-import com.amap.api.services.core.PoiItem
-import com.amap.api.services.poisearch.PoiResult
-import com.amap.api.services.poisearch.PoiSearch
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse
+import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.LocationBean
 import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import java.io.IOException
-import java.io.InputStream
-import kotlin.math.sqrt
+import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * 选择定位页面
  */
-class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnClickListener,
-    AMapLocationListener {
+class LocationActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
+    OnFailureListener, OnSuccessListener<FindAutocompletePredictionsResponse>,
+    GoogleMap.OnMapClickListener {
+    private lateinit var mGoogleMap: GoogleMap
+    private lateinit var mLastLocation: Location
+    private lateinit var mLocationRequest: LocationRequest
 
-    private var mLocationClient: AMapLocationClient? = null
-
-    //创建AMapLocationClientOption对象
-    private val mLocationOption by lazy { AMapLocationClientOption() }
-    private var location: AMapLocation? = null
-
-    //关键字搜素
-    private var mQuery: PoiSearch.Query? = null
-    private var mPoiSearch: PoiSearch? = null
 
     private val adapter by lazy { LocationAdapter() }
 
-    private lateinit var aMap: AMap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
         initView()
         initMap(savedInstanceState)
-        initLocation()
 
     }
 
@@ -115,11 +123,12 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 //            if (adapter.checkPosition != position) {
             adapter.checkPosition = position
             adapter.notifyDataSetChanged()
-            if (position != 0) {
+            if (position != 0 && adapter.data[position].latitude != 0.0) {
                 isTouch = false
+                latLng = LatLng(adapter.data[position].latitude, adapter.data[position].longitude)
                 moveMapCamera(
-                    adapter.data[position].latLonPoint.latitude,
-                    adapter.data[position].latLonPoint.longitude
+                    adapter.data[position].latitude,
+                    adapter.data[position].longitude
                 )
             }
             searchLocation.clearFocus()
@@ -152,245 +161,189 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
     private var isTouch = false
+    private lateinit var placeClient: PlacesClient
     private fun initMap(savedInstanceState: Bundle?) {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
-        locationMap.onCreate(savedInstanceState)
-        //初始化地图控制器对象
-        aMap = locationMap.map
-        aMap.setCustomMapStyle(
-            CustomMapStyleOptions()
-                .setEnable(true)
-                .setStyleData(getAssetsStyle("style.data"))
-                .setStyleExtraData(getAssetsStyle("style_extra.data"))
-        )
-        aMap.setWorldVectorMapStyle("style_local")
-        if (!UserManager.overseas) {
-            aMap.accelerateNetworkInChinese(true)
-        }
-        aMap.mapType = AMap.MAP_TYPE_NORMAL
-//        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
-        aMap.uiSettings.isZoomControlsEnabled = false
-        // 对amap添加移动地图事件监听器
-        aMap.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
-            override fun onCameraChangeFinish(p0: CameraPosition) {
-                if (isTouch)
-                    doWhenLocationSuccess(p0.target.latitude, p0.target.longitude)
-                screenMoveMarker!!.position = LatLng(p0.target.latitude, p0.target.longitude)
-                startJumpAnimation()
-            }
+//        locationMap.onCreate(savedInstanceState)
+        mapFragment!!.getMapAsync(this)
 
-            override fun onCameraChange(p0: CameraPosition) {
-
-            }
-
-        })
-
-        aMap.setOnMapClickListener {
-            doWhenLocationSuccess(it.latitude, it.longitude)
-            screenMoveMarker!!.position = it
-            startJumpAnimation()
-        }
-
-        // 对amap添加触摸地图事件监听器
-        aMap.setOnMapTouchListener {
-            isTouch = true
-        }
-
+        Places.initialize(this, getString(R.string.google_map_api_key))
+        placeClient = Places.createClient(this)
     }
 
-    private fun initLocation() {
-        if (mLocationClient == null) {
-            mLocationClient = AMapLocationClient(this)
-            //获取定位结果
-            mLocationClient!!.setLocationListener(this)
-            mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-            mLocationClient!!.setLocationOption(mLocationOption)
-            //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-//            mLocationClient!!.stopLocation()
-            mLocationClient!!.startLocation()
-        }
 
+    fun findPlaceById(placeId: String, placeName: String) {
+        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+        val request = FetchPlaceRequest.newInstance(placeId, placeFields)
+        placeClient.fetchPlace(request)
+            .addOnSuccessListener {
+                if (it != null) {
+                    LogUtils.e(it)
+                    adapter.addData(
+                        LocationBean(
+                            it.place.address ?: placeName,
+                            0.0, 0.0,
+                            it.place.id
+                        )
+                    )
+                }
+            }
     }
-
 
     private val zoom = 19f//地图缩放级别
     private fun moveMapCamera(latitude: Double, longitude: Double) {
-        if (aMap != null) {
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), zoom))
-        }
-
-        startJumpAnimation()
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+        addScreenMoveMarker()
     }
 
 
     private val poiCode by lazy { getString(R.string.poi_name) }
 
-    private fun doWhenLocationSuccess(latitude: Double, longitude: Double) {
-        //120200楼宇 190107街道
-//        地名地址信息|道路附属设施|公共设施  地名地址信息|道路附属设施|公共设施|商务住宅
-        mQuery = if (UserManager.overseas) {
-            PoiSearch.Query(UserManager.getCity(), poiCode, "")
-        } else {
-            PoiSearch.Query("", poiCode, "")
-        }
+    private fun doWhenLocationSuccess(p0: LatLng, islocated: Boolean = true) {
+        moveMapCamera(p0.latitude, p0.longitude)
+        thread {
+            val addresses = Geocoder(
+                ActivityUtils.getTopActivity(),
+                Locale.getDefault()
+            ).getFromLocation(
+                p0.latitude,
+                p0.longitude,
+                20
+            )
+            if (addresses.isNotEmpty()) {
+                val address = addresses[0]
+                if (islocated) {
+                    UserManager.saveLocation(
+                        "${address.latitude}",
+                        "${address.longitude}",
+                        address.adminArea,
+                        address.locality,
+                        address.thoroughfare,
+                        address.countryCode
+                    )
+                }
+                runOnUiThread {
+                    adapter.data.clear()
+                    adapter.notifyDataSetChanged()
+                    if (!adapter.data.contains(
+                            LocationBean(
+                                getString(R.string.no_yaoqiu),
+                                0.0, 0.0,
+                                ""
+                            )
+                        )
+                    ) {
+                        adapter.addData(
+                            LocationBean(
+                                getString(R.string.no_yaoqiu),
+                                0.0, 0.0,
+                                ""
+                            )
+                        )
+                    }
+                    for (i in 0 until address.maxAddressLineIndex) {
+                        adapter.addData(
+                            LocationBean(
+                                address.getAddressLine(i),
+                                address.latitude, address.longitude, ""
+                            )
+                        )
+                    }
 
-        mQuery!!.pageSize = 100
-        mQuery!!.pageNum = 0//设置查询第一页
-        mPoiSearch = PoiSearch(this, mQuery)
-        mPoiSearch!!.setOnPoiSearchListener(this)
-        mPoiSearch!!.bound =
-            PoiSearch.SearchBound(LatLonPoint(latitude, longitude), 10 * 1000, true)
-        mPoiSearch!!.searchPOIAsyn()// 异步搜索
+
+                    rightBtn1.isEnabled = true
+                    if (adapter.data.size > 1) {
+                        adapter.checkPosition = 1
+                    } else {
+                        adapter.checkPosition = 0
+                    }
+                }
+            }
+        }.run()
+
+//        val token = AutocompleteSessionToken.newInstance()
+//        val request = FindAutocompletePredictionsRequest.builder()
+//            .setQuery(UserManager.getCity() + search)
+//            .setCountry(UserManager.getCountryCode())
+//            .setSessionToken(token)
+//            .build()
+//
+//        placeClient.findAutocompletePredictions(request)
+//            .addOnSuccessListener(this)
+//            .addOnFailureListener(this)
 
     }
 
     private fun keyWordSearch(keyword: String) {
         if (TextUtils.isEmpty(keyword)) {
-//            mLocationClient?.stopLocation()
-            mLocationClient?.startLocation()
+            startLocationUpdates()
             return
         }
 
+        val token = AutocompleteSessionToken.newInstance()
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(UserManager.getCity() + keyword)
+            .setCountry(UserManager.getCountryCode())
+            .setOrigin(LatLng(mLastLocation.latitude, mLastLocation.longitude))
+            .setTypeFilter(TypeFilter.ESTABLISHMENT)
+            .setSessionToken(token)
+            .build()
+
+        placeClient.findAutocompletePredictions(request)
+            .addOnSuccessListener(this)
+            .addOnFailureListener(this)
+
+
         //120200楼宇 190107街道
 //        地名地址信息|道路附属设施|公共设施
-        mQuery = PoiSearch.Query(keyword, poiCode, UserManager.getCity())
-        mQuery!!.pageSize = 100
-        mQuery!!.pageNum = 0//设置查询第一页
-        mPoiSearch = PoiSearch(this, mQuery)
-        mPoiSearch!!.setOnPoiSearchListener(this)
-        mPoiSearch!!.searchPOIAsyn()// 异步搜索
+//        mQuery = PoiSearch.Query(keyword, poiCode, UserManager.getCity())
+//        mQuery!!.pageSize = 100
+//        mQuery!!.pageNum = 0//设置查询第一页
+//        mPoiSearch = PoiSearch(this, mQuery)
+//        mPoiSearch!!.setOnPoiSearchListener(this)
+//        mPoiSearch!!.searchPOIAsyn()// 异步搜索
     }
 
     private var screenMoveMarker: Marker? = null
-    private var growMarker: Marker? = null
-
     private fun addScreenMoveMarker() {
-        if (screenMoveMarker == null) {
-            val latLng = aMap.cameraPosition.target
-            val screenPoint = aMap.projection.toScreenLocation(latLng)
-            screenMoveMarker = aMap.addMarker(
-                MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_anchor))
-                    .position(LatLng(location!!.latitude, location!!.longitude))
-                    .anchor(0.5f, 0.5f)
-            )
-            screenMoveMarker!!.setPositionByPixels(screenPoint.x, screenPoint.y)
-        }
-    }
-
-    fun startJumpAnimation() {
-        if (screenMoveMarker == null) {
-            addScreenMoveMarker()
-        } else
-            if (screenMoveMarker != null) {
-                val latLng = screenMoveMarker!!.position
-                val point = aMap.projection.toScreenLocation(latLng)
-                point.y = point.y - SizeUtils.dp2px(125F)
-
-                val target = aMap.projection.fromScreenLocation(point)
-                val animation = TranslateAnimation(target)
-                animation.setInterpolator { it ->
-                    (if (it <= 0.5f) {
-                        0.5F - 2 * (0.5f - it) * (0.5f - it)
-                    } else {
-                        0.5F - sqrt((it - 0.5F) * (1.5f - it))
-                    })
-                }
-                animation.setDuration(600)
-                screenMoveMarker!!.setAnimation(animation)
-                screenMoveMarker!!.startAnimation()
-            }
+        mGoogleMap.clear()
+        mGoogleMap.addMarker(
+            MarkerOptions()
+                .position(
+                    LatLng(
+                        latLng.latitude,
+                        latLng.longitude
+                    )
+                )
+                .draggable(false)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_anchor))
+        )
 
     }
-
 
     override fun onPause() {
         super.onPause()
-        locationMap.onPause()
-        if (null != mLocationClient) {
-            mLocationClient!!.stopLocation()
-            mLocationClient!!.onDestroy();
-            mLocationClient = null
-
-        }
+//        locationMap.onPause()
+//        locationUtil.stopLocation()
     }
 
     override fun onResume() {
         super.onResume()
-        locationMap.onResume()
+//        locationMap.onResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        locationMap.onDestroy()
-        if (null != mLocationClient) {
-            mLocationClient!!.stopLocation()
-            mLocationClient!!.onDestroy()
-            mLocationClient = null
-        }
-    }
-
-    override fun onPoiItemSearched(p0: PoiItem?, p1: Int) {
-    }
-
-    override fun onPoiSearched(result: PoiResult?, rCode: Int) {
-        if (rCode == 1000) {
-            if (result != null && result.query != null) {
-                adapter.setNewData(result.pois)
-                if (!adapter.data.contains(
-                        PoiItem(
-                            "",
-                            LatLonPoint(0.0, 0.0),
-                            getString(R.string.no_yaoqiu),
-                            ""
-                        )
-                    )
-                )
-                    adapter.addData(
-                        0,
-                        PoiItem("", LatLonPoint(0.0, 0.0), getString(R.string.no_yaoqiu), "")
-                    )
-                rightBtn1.isEnabled = true
-
-                if (adapter.data.size > 1) {
-                    adapter.checkPosition = 1
-                } else {
-                    adapter.checkPosition = 0
-                }
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
-
-
-    override fun onLocationChanged(it: AMapLocation?) {
-        if (it != null) {
-            if (mLocationClient != null) mLocationClient!!.stopLocation()
-            if (it.errorCode == 0) {
-                location = it
-                //可在其中解析amapLocation获取相应内容。
-                UserManager.saveLocation(
-                    "${it.latitude}",
-                    "${it.longitude}",
-                    it.province,
-                    it.city,
-                    it.district,
-                    it.cityCode
-                )
-                addScreenMoveMarker()
-                doWhenLocationSuccess(location!!.latitude, location!!.longitude)
-                moveMapCamera(location!!.latitude, location!!.longitude)
-            } else {
-                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-            }
-        }
+//        locationMap.onDestroy()
+//        locationUtil.stopLocation()
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.backToMyLocationBtn -> {
-                mLocationClient?.stopLocation()
-                mLocationClient?.startLocation()
+                stopLocationUpdates()
+                startLocationUpdates()
             }
             R.id.rightBtn1 -> {
                 setResult(
@@ -404,23 +357,118 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
     }
 
 
-    private fun getAssetsStyle(fileName: String): ByteArray? {
-        var buffer1: ByteArray? = null
-        var is1: InputStream? = null
-        try {
-            is1 = resources.assets.open(fileName)
-            val length1 = is1.available()
-            buffer1 = ByteArray(length1)
-            is1.read(buffer1)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                is1?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
+    private val mLocationCallback: LocationCallback by lazy {
+        object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult?) {
+                super.onLocationResult(p0)
+                if (p0 != null) {
+                    LogUtils.d(p0)
+                    mLastLocation = p0.lastLocation
+                    latLng = LatLng(mLastLocation.latitude, mLastLocation.longitude)
+                    UserManager.saveLocation(
+                        "${p0.lastLocation.latitude}",
+                        "${p0.lastLocation.longitude}"
+                    )
+                    doWhenLocationSuccess(latLng, true)
+                    stopLocationUpdates()
+
+                }
+
             }
         }
-        return buffer1
     }
+
+
+    //开始定位
+    private fun startLocationUpdates() {
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(
+            mLocationRequest, mLocationCallback,
+            Looper.myLooper()
+        )
+
+    }
+
+    //停止定位
+    private fun stopLocationUpdates() {
+        LocationServices.getFusedLocationProviderClient(this)
+            .removeLocationUpdates(mLocationCallback)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        mGoogleMap = googleMap ?: return
+        setMapLocation()
+        startLocationUpdates()
+    }
+
+    private var latLng = LatLng(
+        UserManager.getlatitude().toDouble(),
+        UserManager.getlongtitude().toDouble()
+    )
+
+    private fun setMapLocation() {
+        with(mGoogleMap) {
+            moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
+            mapType = GoogleMap.MAP_TYPE_NORMAL
+            isMyLocationEnabled = true
+            isBuildingsEnabled = true
+            isIndoorEnabled = true
+            uiSettings.isZoomGesturesEnabled = true
+//            uiSettings.isZoomControlsEnabled = true
+            uiSettings.isMyLocationButtonEnabled = false
+            uiSettings.isScrollGesturesEnabled = true
+            setOnMapClickListener(this@LocationActivity)
+        }
+        mLocationRequest = LocationRequest()
+//        mLocationRequest.interval = 1000
+//        mLocationRequest.fastestInterval = 1000
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    override fun onSuccess(result: FindAutocompletePredictionsResponse?) {
+        if (result != null && result.autocompletePredictions != null) {
+            LogUtils.e(result.autocompletePredictions)
+            adapter.data.clear()
+            if (!adapter.data.contains(
+                    LocationBean(
+                        getString(R.string.no_yaoqiu),
+                        0.0, 0.0,
+                        ""
+                    )
+                )
+            )
+                adapter.addData(
+                    LocationBean(
+                        getString(R.string.no_yaoqiu),
+                       0.0, 0.0,
+                        ""
+                    )
+                )
+            result.autocompletePredictions.forEach {
+                findPlaceById(
+                    it.placeId,
+                    it.getFullText(null).toString()
+                )
+            }
+
+            rightBtn1.isEnabled = true
+            if (adapter.data.size > 1) {
+                adapter.checkPosition = 1
+            } else {
+                adapter.checkPosition = 0
+            }
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onFailure(p0: Exception) {
+
+
+    }
+
+    override fun onMapClick(p0: LatLng) {
+        latLng = p0
+        doWhenLocationSuccess(p0)
+    }
+
+
 }

@@ -663,7 +663,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
         if (params["lng"] == 0.0F) {
             params["lat"] = UserManager.getlongtitude().toFloat()
             params["lng"] = UserManager.getlatitude().toFloat()
-            params["city_code"] = UserManager.getCityCode()
+            params["city_code"] = UserManager.getCountryCode()
         }
     }
 
