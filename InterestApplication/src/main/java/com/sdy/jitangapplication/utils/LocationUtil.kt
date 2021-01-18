@@ -22,6 +22,7 @@ import java.util.*
 class LocationUtil {
     private val mLocationRequest: LocationRequest
     private var mFusedLocationClient: FusedLocationProviderClient? = null
+    var myLocationCallback: MyLocationCallback? = null
 
     constructor() {
         mLocationRequest = LocationRequest()
@@ -35,6 +36,7 @@ class LocationUtil {
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
                 if (p0 != null) {
+                    myLocationCallback?.locationSuccess(p0.lastLocation)
                     UserManager.saveLocation(
                         "${p0.lastLocation.latitude}",
                         "${p0.lastLocation.longitude}"
@@ -78,6 +80,8 @@ class LocationUtil {
 //                    intent.putExtra(Constants.LOCATION_DATA_EXTRA, p0!!.lastLocation)
 //                    ActivityUtils.getTopActivity().startService(intent)
                     stopLocation()
+                } else {
+                    myLocationCallback?.locationFailure()
                 }
 
                 LogUtils.e("定位结果：po = ${p0}")

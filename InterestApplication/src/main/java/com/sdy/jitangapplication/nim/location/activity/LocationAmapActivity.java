@@ -2,6 +2,8 @@ package com.sdy.jitangapplication.nim.location.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,30 +14,32 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
-import com.amap.api.maps.UiSettings;
-import com.amap.api.maps.model.CameraPosition;
-import com.amap.api.maps.model.CustomMapStyleOptions;
-import com.amap.api.maps.model.LatLng;
+import com.blankj.utilcode.util.ActivityUtils;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
-import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
-import com.sdy.jitangapplication.nim.location.model.NimLocation;
 import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.ToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
+import com.sdy.jitangapplication.utils.LocationUtil;
+import com.sdy.jitangapplication.utils.MyLocationCallback;
 import com.sdy.jitangapplication.utils.UserManager;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.jetbrains.annotations.NotNull;
 
-public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListener, OnClickListener
-        , NimLocationManager.NimLocationListener {
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickListener, OnClickListener
+        , OnMapReadyCallback, GoogleMap.OnCameraChangeListener, MyLocationCallback {
 
 //	private static final String TAG = "LocationAmapActivity";
 
@@ -44,7 +48,7 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     private View pinInfoPanel;
     private TextView pinInfoTextView;
 
-    private NimLocationManager locationManager = null;
+    private LocationUtil locationManager = null;
 
     private double latitude; // 经度
     private double longitude; // 维度
@@ -57,10 +61,10 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     private String cacheAddressInfo;
 
     private boolean locating = true; // 正在定位的时候不用去查位置
-    private NimGeocoder geocoder;
+//    private NimGeocoder geocoder;
 
-    AMap amap;
-    private MapView mapView;
+    GoogleMap googleMap;
+    private SupportMapFragment mapView;
     private Button btnMyLocation;
 
     public static void start(Context context, LocationProvider.Callback callback) {
@@ -72,16 +76,13 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view_amap_layout);
-        mapView = findViewById(R.id.autonavi_mapView);
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
-
+        mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.autonavi_mapView);
+        mapView.getMapAsync(this);
         ToolBarOptions options = new NimToolBarOptions(0);
         setToolBar(R.id.toolbar, options);
 
         initView();
-        initAmap();
-        initLocation();
-        updateSendStatus();
+
     }
 
     private void initView() {
@@ -105,23 +106,9 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
 
     private void initAmap() {
         try {
-            amap = mapView.getMap();
-            if (UserManager.INSTANCE.getOverseas()) {
-                amap.setWorldVectorMapStyle("style_en");
-            } else {
-                amap.setWorldVectorMapStyle("style_local");
-                amap.accelerateNetworkInChinese(true);
-            }
+            googleMap.setOnCameraChangeListener(this);
 
-            amap.setCustomMapStyle(
-                    new CustomMapStyleOptions()
-                            .setEnable(true)
-                            .setStyleData(getAssetsStyle("style.data"))
-                            .setStyleExtraData(getAssetsStyle("style_extra.data"))
-            );
-            amap.setOnCameraChangeListener(this);
-
-            UiSettings uiSettings = amap.getUiSettings();
+            UiSettings uiSettings = googleMap.getUiSettings();
             uiSettings.setZoomControlsEnabled(true);
             // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
             uiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
@@ -132,45 +119,26 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         }
     }
 
-    private byte[] getAssetsStyle(String fileName) {
-        byte[] buffer1 = null;
-        InputStream is1 = null;
-        try {
-            is1 = getResources().getAssets().open(fileName);
-            int lenght1 = is1.available();
-            buffer1 = new byte[lenght1];
-            is1.read(buffer1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (is1 != null) {
-                    is1.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return buffer1;
-    }
 
 
     private void initLocation() {
-        locationManager = new NimLocationManager(this, this);
-        Location location = locationManager.getLastKnownLocation();
+        locationManager = new LocationUtil();
+        locationManager.setMyLocationCallback(this);
+        locationManager.requestLocationUpdate(this);
+
 
         Intent intent = getIntent();
         float zoomLevel = intent.getIntExtra(LocationExtras.ZOOM_LEVEL, LocationExtras.DEFAULT_ZOOM_LEVEL);
 
         LatLng latlng;
-        if (location == null) {
+        if (UserManager.INSTANCE.getlongtitude().equals("0")) {
             latlng = new LatLng(39.90923, 116.397428);
         } else {
-            latlng = new LatLng(location.getLatitude(), location.getLongitude());
+            latlng = new LatLng(Double.parseDouble(UserManager.INSTANCE.getlatitude()),Double.parseDouble( UserManager.INSTANCE.getlongtitude()));
         }
         CameraUpdate camera = CameraUpdateFactory.newCameraPosition(new CameraPosition(latlng, zoomLevel, 0, 0));
-        amap.moveCamera(camera);
-        geocoder = new NimGeocoder(this, geocoderListener);
+        googleMap.moveCamera(camera);
+//        geocoder = new NimGeocoder(this, geocoderListener);
     }
 
     private void updateSendStatus() {
@@ -201,14 +169,14 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        locationManager.stop();
+        if (locationManager!=null)
+            locationManager.stopLocation();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        locationManager.request();
     }
 
 
@@ -217,7 +185,7 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         super.onDestroy();
         mapView.onDestroy();
         if (locationManager != null) {
-            locationManager.stop();
+            locationManager.stopLocation();
         }
 
         callback = null;
@@ -238,7 +206,7 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         intent.putExtra(LocationExtras.LONGITUDE, longitude);
         addressInfo = TextUtils.isEmpty(addressInfo) ? getString(R.string.location_address_unkown) : addressInfo;
         intent.putExtra(LocationExtras.ADDRESS, addressInfo);
-        intent.putExtra(LocationExtras.ZOOM_LEVEL, amap.getCameraPosition().zoom);
+        intent.putExtra(LocationExtras.ZOOM_LEVEL, googleMap.getCameraPosition().zoom);
         intent.putExtra(LocationExtras.IMG_URL, getStaticMapUrl());
 
         if (callback != null) {
@@ -266,13 +234,13 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
     }
 
     private void locationAddressInfo(double lat, double lng, String address) {
-        if (amap == null) {
+        if (googleMap == null) {
             return;
         }
 
         LatLng latlng = new LatLng(lat, lng);
-        CameraUpdate camera = CameraUpdateFactory.newCameraPosition(new CameraPosition(latlng, amap.getCameraPosition().zoom, 0, 0));
-        amap.moveCamera(camera);
+        CameraUpdate camera = CameraUpdateFactory.newCameraPosition(new CameraPosition(latlng, googleMap.getCameraPosition().zoom, 0, 0));
+        googleMap.moveCamera(camera);
         addressInfo = address;
         latitude = lat;
         longitude = lng;
@@ -294,26 +262,22 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         updateSendStatus();
     }
 
-    @Override
-    public void onLocationChanged(NimLocation location) {
-        if (location != null && location.hasCoordinates()) {
-            cacheLatitude = location.getLatitude();
-            cacheLongitude = location.getLongitude();
-            cacheAddressInfo = location.getAddrStr();
-
-            if (locating) {
-                locating = false;
-                locationAddressInfo(cacheLatitude, cacheLongitude, cacheAddressInfo);
-            }
-        }
-    }
-
-    @Override
-    public void onCameraChange(CameraPosition arg0) {
-    }
+//    @Override
+//    public void onLocationChanged(NimLocation location) {
+//        if (location != null && location.hasCoordinates()) {
+//            cacheLatitude = location.getLatitude();
+//            cacheLongitude = location.getLongitude();
+//            cacheAddressInfo = location.getAddrStr();
+//
+//            if (locating) {
+//                locating = false;
+//                locationAddressInfo(cacheLatitude, cacheLongitude, cacheAddressInfo);
+//            }
+//        }
+//    }
 
     @Override
-    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+    public void onCameraChange(CameraPosition cameraPosition) {
         if (!locating) {
             queryLatLngAddress(cameraPosition.target);
         } else {
@@ -323,6 +287,8 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         updateMyLocationStatus(cameraPosition);
     }
 
+
+
     private void updateMyLocationStatus(CameraPosition cameraPosition) {
         if (Math.abs(-1 - cacheLatitude) < 0.1f) {
             // 定位失败
@@ -330,9 +296,9 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         }
         LatLng source = new LatLng(cacheLatitude, cacheLongitude);
         LatLng target = cameraPosition.target;
-        float distance = AMapUtils.calculateLineDistance(source, target);
-        boolean showMyLocation = distance > 50;
-        btnMyLocation.setVisibility(showMyLocation ? View.VISIBLE : View.GONE);
+//        float distance = AMapUtils.calculateLineDistance(source, target);
+//        boolean showMyLocation = distance > 50;
+//        btnMyLocation.setVisibility(showMyLocation ? View.VISIBLE : View.GONE);
         updateSendStatus();
     }
 
@@ -344,8 +310,8 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         Handler handler = getHandler();
         handler.removeCallbacks(runable);
         handler.postDelayed(runable, 20 * 1000);// 20s超时
-        geocoder.queryAddressNow(latlng.latitude, latlng.longitude);
-
+//        geocoder.queryAddressNow(latlng.latitude, latlng.longitude);
+        queryLocation(latlng.latitude,latlng.longitude,false);
         latitude = latlng.latitude;
         longitude = latlng.longitude;
 
@@ -358,28 +324,90 @@ public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListe
         handler.removeCallbacks(runable);
     }
 
-    private NimGeocoder.NimGeocoderListener geocoderListener = new NimGeocoder.NimGeocoderListener() {
-        @Override
-        public void onGeoCoderResult(NimLocation location) {
-            if (latitude == location.getLatitude() && longitude == location.getLongitude()) { // 响应的是当前查询经纬度
-                if (location.hasAddress()) {
-                    LocationAmapActivity.this.addressInfo = location.getFullAddr();
-                } else {
-                    addressInfo = getString(R.string.location_address_unkown);
+    private  void queryLocation(Double latitude,Double longtitude,Boolean fromLocation){
+        new Thread(() -> {
+            try {
+                List<Address> addresses = new Geocoder(ActivityUtils.getTopActivity(), Locale.getDefault())
+                        .getFromLocation(latitude, longtitude, 1);
+                if (!addresses.isEmpty()) {
+                    runOnUiThread(() -> {
+                        Address address = addresses.get(0);
+                            if (this.latitude == latitude && this.longitude == longtitude) { // 响应的是当前查询经纬度
+                                if (address.getMaxAddressLineIndex() != -1) {
+                                    LocationAmapActivity.this.addressInfo = address.getAddressLine(0);
+                                } else {
+                                    addressInfo = getString(R.string.location_address_unkown);
+                                }
+                                setPinInfoPanel(true);
+                                clearTimeoutHandler();
+                            }
+
+                    });
                 }
-                setPinInfoPanel(true);
-                clearTimeoutHandler();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
+        }).start();
+    }
+
+//    private NimGeocoder.NimGeocoderListener geocoderListener = new NimGeocoder.NimGeocoderListener() {
+//        @Override
+//        public void onGeoCoderResult(NimLocation location) {
+//            if (latitude == location.getLatitude() && longitude == location.getLongitude()) { // 响应的是当前查询经纬度
+//                if (location.hasAddress()) {
+//                    LocationAmapActivity.this.addressInfo = location.getFullAddr();
+//                } else {
+//                    addressInfo = getString(R.string.location_address_unkown);
+//                }
+//                setPinInfoPanel(true);
+//                clearTimeoutHandler();
+//            }
+//        }
+//    };
+
+
+    private Runnable runable = () -> {
+        LocationAmapActivity.this.addressInfo = getString(R.string.location_address_unkown);
+        setPinInfoPanel(true);
     };
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        initAmap();
+        initLocation();
+        updateSendStatus();
 
-    private Runnable runable = new Runnable() {
-        @Override
-        public void run() {
-            LocationAmapActivity.this.addressInfo = getString(R.string.location_address_unkown);
-            setPinInfoPanel(true);
+
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        queryLatLngAddress(latLng);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void locationFailure() {
+
+    }
+
+    @Override
+    public void locationSuccess(@NotNull Location location) {
+        if (location != null && location.getLongitude()!=0) {
+            cacheLatitude = location.getLatitude();
+            cacheLongitude = location.getLongitude();
+            queryLocation(location.getLatitude(),location.getLongitude(),true);
+
+            if (locating) {
+                locating = false;
+                locationAddressInfo(cacheLatitude, cacheLongitude, cacheAddressInfo);
+            }
+
         }
-    };
-
+    }
 }

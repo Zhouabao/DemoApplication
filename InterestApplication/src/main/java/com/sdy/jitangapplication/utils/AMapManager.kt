@@ -1,15 +1,8 @@
 package com.sdy.jitangapplication.utils
 
 import android.content.Context
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
 import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.PermissionUtils
-import com.sdy.jitangapplication.event.UpdateRoamingLocationEvent
-import com.sdy.jitangapplication.ui.activity.RoamingLocationActivity
-import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM

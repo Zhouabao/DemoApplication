@@ -23,8 +23,9 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.amap.api.maps.MapView
+    <fragment
         android:id="@+id/autonavi_mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar_layout" />

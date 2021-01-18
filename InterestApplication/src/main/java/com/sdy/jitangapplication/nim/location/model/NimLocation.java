@@ -2,8 +2,8 @@ package com.sdy.jitangapplication.nim.location.model;
 
 import android.location.Location;
 import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSONObject;
-import com.amap.api.location.AMapLocation;
 
 public class NimLocation {
 
@@ -203,10 +203,7 @@ public class NimLocation {
 
     public double getLatitude() {
         if (location != null) {
-            if (type.equals(AMap_Location))
-                latitude = ((AMapLocation) location).getLatitude();
-            else if (type.equals(System_Location))
-                latitude = ((Location) location).getLatitude();
+            latitude = ((Location) location).getLatitude();
         }
 
         return latitude;
@@ -214,10 +211,7 @@ public class NimLocation {
 
     public double getLongitude() {
         if (location != null) {
-            if (type.equals(AMap_Location))
-                longitude = ((AMapLocation) location).getLongitude();
-            else if (type.equals(System_Location))
-                longitude = ((Location) location).getLongitude();
+            longitude = ((Location) location).getLongitude();
         }
         return longitude;
     }

@@ -1,13 +1,9 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.graphics.Color
 import android.view.View
-import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.Place
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LocationBean
 import kotlinx.android.synthetic.main.item_location.view.*

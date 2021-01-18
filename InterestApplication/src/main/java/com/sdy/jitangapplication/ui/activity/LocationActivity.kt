@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -42,11 +43,13 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LocationBean
+import com.sdy.jitangapplication.nim.uikit.api.model.location.LocationProvider
 import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivity
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -59,9 +62,17 @@ class LocationActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallbac
     private lateinit var mGoogleMap: GoogleMap
     private lateinit var mLastLocation: Location
     private lateinit var mLocationRequest: LocationRequest
-
-
     private val adapter by lazy { LocationAdapter() }
+
+
+    companion object {
+        lateinit var callback: LocationProvider.Callback
+        fun start(context: Context, callback: LocationProvider.Callback? = null) {
+            if (callback != null)
+                LocationActivity.callback = callback
+            context.startActivity<LocationActivity>()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -439,7 +450,7 @@ class LocationActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallbac
                 adapter.addData(
                     LocationBean(
                         getString(R.string.no_yaoqiu),
-                       0.0, 0.0,
+                        0.0, 0.0,
                         ""
                     )
                 )

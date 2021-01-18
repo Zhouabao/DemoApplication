@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.nim.session;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.activity.LocationAmapActivity;
@@ -24,27 +23,17 @@ public class NimDemoLocationProvider implements LocationProvider {
             final EasyAlertDialog alertDialog = new EasyAlertDialog(context);
             alertDialog.setMessage(context.getString(R.string.unopen_location));
             alertDialog.addNegativeButton(context.getString(R.string.cancel), EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
-                    new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
+                    v -> alertDialog.dismiss());
             alertDialog.addPositiveButton(context.getString(R.string.setting), EasyAlertDialog.NO_TEXT_COLOR, EasyAlertDialog.NO_TEXT_SIZE,
-                    new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            try {
-                                context.startActivity(intent);
-                            } catch (Exception e) {
-                                LogUtil.e("LOC", "start ACTION_LOCATION_SOURCE_SETTINGS error");
-                            }
-
+                    v -> {
+                        alertDialog.dismiss();
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        try {
+                            context.startActivity(intent);
+                        } catch (Exception e) {
+                            LogUtil.e("LOC", "start ACTION_LOCATION_SOURCE_SETTINGS error");
                         }
+
                     });
             alertDialog.show();
             return;

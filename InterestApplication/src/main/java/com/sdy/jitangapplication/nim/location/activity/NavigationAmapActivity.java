@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,12 +13,22 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import com.amap.api.maps.*;
-import com.amap.api.maps.model.*;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.location.adapter.IconListAdapter;
 import com.sdy.jitangapplication.nim.location.helper.MapHelper;
-import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
 import com.sdy.jitangapplication.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.ToastHelper;
@@ -24,18 +36,25 @@ import com.sdy.jitangapplication.nim.uikit.common.activity.ToolBarOptions;
 import com.sdy.jitangapplication.nim.uikit.common.activity.UI;
 import com.sdy.jitangapplication.nim.uikit.common.ui.dialog.CustomAlertDialog;
 import com.sdy.jitangapplication.nim.uikit.common.util.string.StringUtil;
+import com.sdy.jitangapplication.utils.LocationUtil;
+import com.sdy.jitangapplication.utils.MyLocationCallback;
+import com.sdy.jitangapplication.utils.UserManager;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class NavigationAmapActivity extends UI implements
-        OnClickListener, LocationExtras, NimLocationManager.NimLocationListener,
-        AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
+        OnClickListener, LocationExtras,/* NimLocationManager.NimLocationListener,*/
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.InfoWindowAdapter, OnMapReadyCallback, MyLocationCallback {
 
     private TextView sendButton;
-    private MapView mapView;
+    private SupportMapFragment mapView;
+    private LocationUtil locationUtil = null;
 
-    private NimLocationManager locationManager = null;
 
     private LatLng myLatLng;
     private LatLng desLatLng;
@@ -51,22 +70,20 @@ public class NavigationAmapActivity extends UI implements
 
     private String myLocationFormatText;
 
-    AMap amap;
+    GoogleMap googleMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_view_amap_navigation_layout);
-        mapView = (MapView) findViewById(R.id.autonavi_mapView);
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.autonavi_mapView);
+        mapView.getMapAsync(this);
 
         ToolBarOptions options = new NimToolBarOptions();
         setToolBar(R.id.toolbar, options);
 
         initView();
-        initAmap();
-        initLocation();
-        updateSendStatus();
+
     }
 
     private void initView() {
@@ -80,16 +97,14 @@ public class NavigationAmapActivity extends UI implements
 
     private void initAmap() {
         try {
-            amap = mapView.getMap();
-
-            UiSettings uiSettings = amap.getUiSettings();
+            UiSettings uiSettings = googleMap.getUiSettings();
             uiSettings.setZoomControlsEnabled(true);
             // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
             uiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
 
-            amap.setOnMarkerClickListener(this); // 标记点击
-            amap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
-            amap.setInfoWindowAdapter(this); // 必须 信息窗口显示
+            googleMap.setOnMarkerClickListener(this); // 标记点击
+            googleMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
+            googleMap.setInfoWindowAdapter(this); // 必须 信息窗口显示
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,8 +112,8 @@ public class NavigationAmapActivity extends UI implements
     }
 
     private void initLocation() {
-        locationManager = new NimLocationManager(this, this);
-        Location location = locationManager.getLastKnownLocation();
+        locationUtil =new  LocationUtil();
+        locationUtil.setMyLocationCallback(this);
 
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra(LATITUDE, -100);
@@ -112,17 +127,17 @@ public class NavigationAmapActivity extends UI implements
 
         float zoomLevel = intent.getIntExtra(ZOOM_LEVEL, DEFAULT_ZOOM_LEVEL);
 
-        if (location == null) {
+        if (UserManager.INSTANCE.getlatitude()=="0") {
             myLatLng = new LatLng(39.90923, 116.397428);
         } else {
-            myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            myLatLng = new LatLng(Double.parseDouble(UserManager.INSTANCE.getlatitude()), Double.parseDouble(UserManager.INSTANCE.getlongtitude()));
         }
 
         createNavigationMarker();
         startLocationTimeout();
 
         CameraUpdate camera = CameraUpdateFactory.newCameraPosition(new CameraPosition(desLatLng, zoomLevel, 0, 0));
-        amap.moveCamera(camera);
+        googleMap.moveCamera(camera);
     }
 
     private void startLocationTimeout() {
@@ -154,8 +169,8 @@ public class NavigationAmapActivity extends UI implements
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        if (locationManager != null) {
-            locationManager.stop();
+        if (locationUtil != null) {
+            locationUtil.stopLocation();
         }
     }
 
@@ -163,15 +178,14 @@ public class NavigationAmapActivity extends UI implements
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        locationManager.request();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if (locationManager != null) {
-            locationManager.stop();
+        if (locationUtil != null) {
+            locationUtil.stopLocation();
         }
     }
 
@@ -188,30 +202,6 @@ public class NavigationAmapActivity extends UI implements
                 navigate();
                 break;
         }
-    }
-
-    @Override
-    public void onLocationChanged(NimLocation location) {
-        if (location != null && location.hasCoordinates()) {
-            if (firstLocation) {
-                firstLocation = false;
-                myAddressInfo = location.getFullAddr();
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                myLatLng = new LatLng(latitude, longitude);
-                // 缩放到可见区
-                int boundPadding = getResources().getDimensionPixelSize(R.dimen.friend_map_bound_padding);
-                LatLngBounds bounds = LatLngBounds.builder().include(myLatLng).include(desLatLng).build();
-                CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(bounds, boundPadding);
-                amap.moveCamera(camera);
-                updateMyMarkerLatLng();
-
-                updateSendStatus();
-            }
-        } else {
-            showLocationFailTip();
-        }
-        clearTimeoutHandler();
     }
 
     private void updateMyMarkerLatLng() {
@@ -249,12 +239,12 @@ public class NavigationAmapActivity extends UI implements
     }
 
     private void createNavigationMarker() {
-        desMaker = amap.addMarker(defaultMarkerOptions());
+        desMaker = googleMap.addMarker(defaultMarkerOptions());
         desMaker.setPosition(desLatLng);
         desMaker.setTitle(desAddressInfo);
         desMaker.showInfoWindow();
 
-        myMaker = amap.addMarker(defaultMarkerOptions());
+        myMaker = googleMap.addMarker(defaultMarkerOptions());
         myMaker.setPosition(myLatLng);
     }
 
@@ -296,38 +286,6 @@ public class NavigationAmapActivity extends UI implements
         }
     }
 
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        marker.hideInfoWindow();
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        if (marker == null) {
-            return false;
-        }
-        String text = null;
-        if (marker.equals(desMaker)) {
-            text = desAddressInfo;
-        } else if (marker.equals(myMaker)) {
-            text = myAddressInfo;
-        }
-        if (!TextUtils.isEmpty(text)) {
-            marker.setTitle(text);
-            marker.showInfoWindow();
-        }
-        return true;
-    }
-
-    @Override
-    public View getInfoContents(Marker pmarker) {
-        return getMarkerInfoView(pmarker);
-    }
-
-    @Override
-    public View getInfoWindow(Marker pmarker) {
-        return getMarkerInfoView(pmarker);
-    }
 
     private View getMarkerInfoView(Marker pmarker) {
         String text = null;
@@ -347,4 +305,92 @@ public class NavigationAmapActivity extends UI implements
         return view;
     }
 
+    @Override
+    public View getInfoWindow(com.google.android.gms.maps.model.Marker marker) {
+        return getMarkerInfoView(marker);
+    }
+
+    @Override
+    public View getInfoContents(com.google.android.gms.maps.model.Marker marker) {
+        return getMarkerInfoView(marker);
+    }
+
+    @Override
+    public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
+        marker.hideInfoWindow();
+
+    }
+
+    @Override
+    public boolean onMarkerClick(com.google.android.gms.maps.model.Marker marker) {
+
+        if (marker == null) {
+            return false;
+        }
+        String text = null;
+        if (marker.equals(desMaker)) {
+            text = desAddressInfo;
+        } else if (marker.equals(myMaker)) {
+            text = myAddressInfo;
+        }
+        if (!TextUtils.isEmpty(text)) {
+            marker.setTitle(text);
+            marker.showInfoWindow();
+        }
+        return true;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        initAmap();
+        initLocation();
+        locationUtil.requestLocationUpdate(this);
+        updateSendStatus();
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void locationFailure() {
+
+    }
+
+    @Override
+    public void locationSuccess(@NotNull Location location) {
+        if (location != null) {
+            if (firstLocation) {
+                firstLocation = false;
+                new Thread(() -> {
+                    try {
+                        List<Address> address =    new Geocoder(this, Locale.getDefault()).getFromLocation(location.getLatitude(), location.getLongitude(),1);
+                        if (!address.isEmpty() && address.get(0).getMaxAddressLineIndex()!=-1) {
+                            myAddressInfo = address.get(0).getAddressLine(0);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).run();
+
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                myLatLng = new LatLng(latitude, longitude);
+                // 缩放到可见区
+                int boundPadding = getResources().getDimensionPixelSize(R.dimen.friend_map_bound_padding);
+                LatLngBounds bounds = LatLngBounds.builder().include(myLatLng).include(desLatLng).build();
+                CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(bounds, boundPadding);
+                googleMap.moveCamera(camera);
+                updateMyMarkerLatLng();
+
+                updateSendStatus();
+            }
+        } else {
+            showLocationFailTip();
+        }
+        clearTimeoutHandler();
+    }
 }

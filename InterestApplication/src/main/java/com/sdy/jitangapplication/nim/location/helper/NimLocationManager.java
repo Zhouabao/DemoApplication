@@ -1,14 +1,15 @@
 package com.sdy.jitangapplication.nim.location.helper;
 
 import android.content.Context;
-import android.location.*;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
 import com.sdy.jitangapplication.nim.uikit.common.framework.infra.TaskExecutor;
 import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class NimLocationManager implements AMapLocationListener {
+public class NimLocationManager /*implements AMapLocationListener*/ {
 
     public interface NimLocationListener {
         void onLocationChanged(NimLocation location);
@@ -41,7 +42,7 @@ public class NimLocationManager implements AMapLocationListener {
     /**
      * AMap location
      */
-    private AMapLocationClient client;
+//    private AMapLocationClient client;
 
     private Geocoder mGeocoder;
 
@@ -62,58 +63,58 @@ public class NimLocationManager implements AMapLocationListener {
         return !TextUtils.isEmpty(bestProvider);
     }
 
-    public Location getLastKnownLocation() {
-        try {
-            if (criteria == null) {
-                criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-                criteria.setAltitudeRequired(false);
-                criteria.setBearingRequired(false);
-                criteria.setCostAllowed(false);
-            }
-            return client.getLastKnownLocation();
-        } catch (Exception e) {
-            LogUtil.i(TAG, "get last known location failed: " + e.toString());
-        }
-        return null;
-    }
+//    public Location getLastKnownLocation() {
+//        try {
+//            if (criteria == null) {
+//                criteria = new Criteria();
+//                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+//                criteria.setAltitudeRequired(false);
+//                criteria.setBearingRequired(false);
+//                criteria.setCostAllowed(false);
+//            }
+//            return client.getLastKnownLocation();
+//        } catch (Exception e) {
+//            LogUtil.i(TAG, "get last known location failed: " + e.toString());
+//        }
+//        return null;
+//    }
 
-    public void request() {
-        if (client == null) {
-            AMapLocationClientOption option = new AMapLocationClientOption();
-            option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-            option.setInterval(30 * 1000);
-            option.setHttpTimeOut(10 * 1000);
-            client = new AMapLocationClient(mContext);
-            client.setLocationOption(option);
-            client.setLocationListener(this);
-            client.startLocation();
-        }
-    }
+//    public void request() {
+//        if (client == null) {
+//            AMapLocationClientOption option = new AMapLocationClientOption();
+//            option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+//            option.setInterval(30 * 1000);
+//            option.setHttpTimeOut(10 * 1000);
+//            client = new AMapLocationClient(mContext);
+//            client.setLocationOption(option);
+//            client.setLocationListener(this);
+//            client.startLocation();
+//        }
+//    }
+//
+//    public void stop() {
+//        if (client != null) {
+//            client.unRegisterLocationListener(this);
+//            client.stopLocation();
+//            client.onDestroy();
+//        }
+//        mMsgHandler.removeCallbacksAndMessages(null);
+//        client = null;
+//    }
 
-    public void stop() {
-        if (client != null) {
-            client.unRegisterLocationListener(this);
-            client.stopLocation();
-            client.onDestroy();
-        }
-        mMsgHandler.removeCallbacksAndMessages(null);
-        client = null;
-    }
-
-    @Override
-    public void onLocationChanged(final AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    getAMapLocationAddress(aMapLocation);
-                }
-            });
-        } else {
-            onLocation(null, MSG_LOCATION_ERROR);
-        }
-    }
+//    @Override
+//    public void onLocationChanged(final AMapLocation aMapLocation) {
+//        if (aMapLocation != null) {
+//            executor.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    getAMapLocationAddress(aMapLocation);
+//                }
+//            });
+//        } else {
+//            onLocation(null, MSG_LOCATION_ERROR);
+//        }
+//    }
 
     private void onLocation(NimLocation location, int what) {
         Message msg = mMsgHandler.obtainMessage();
