@@ -1304,5 +1304,6 @@
     <string name="to_be_vip_see_them">Become a sugar beaker and see who they are</string>
     <string name="tobe_vip">To be memebership</string>
     <string name="visit_cnt">visits</string>
+    <string name="error_configuration">Error configuration</string>
 
 </resources>

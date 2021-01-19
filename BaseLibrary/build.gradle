@@ -134,6 +134,7 @@ dependencies {
 
 
     //paypal
-    api 'com.braintreepayments.api:braintree:3.14.2'
-    api 'com.braintreepayments.api:drop-in:5.0.1'
+//    api 'com.braintreepayments.api:braintree:3.14.2'
+//    api 'com.braintreepayments.api:drop-in:5.0.1'
+    api 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 }

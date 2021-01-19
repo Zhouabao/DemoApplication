@@ -107,7 +107,7 @@ class ProtocolActivity : BaseActivity() {
             }
         }
 
-        //todo http://170.106.39.128//ppsns/protocol/privacyProtocol/v1.json?nation=en
+        // http://170.106.39.128//ppsns/protocol/privacyProtocol/v1.json?nation=en
         val nation =
             "?nation=" + if (LanguageUtils.getSystemLanguage().language == Locale.SIMPLIFIED_CHINESE.language) {
                 "CN"

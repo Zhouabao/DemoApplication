@@ -812,9 +812,7 @@ object CommonFunction {
     }
 
 
-    /**
-     * todo 验证是国内还是国外用户，拉起不同的支付
-     */
+
     fun startToPay(
         context: Context,
         chargeBean: ChargeWayBean? = null,

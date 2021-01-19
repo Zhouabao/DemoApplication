@@ -51,7 +51,7 @@ class ChooseLoginWayDialog(val context1: Context, val syCode: Int = 0) :
 
 
     private fun initView() {
-        //todo check language to show type
+        //
         if (UserManager.overseas) {
             loginWithFacebookBtn.isVisible = true
             loginWithGoogleBtn.isVisible = true

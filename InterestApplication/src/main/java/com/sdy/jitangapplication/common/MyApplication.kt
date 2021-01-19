@@ -279,7 +279,7 @@ class MyApplication : BaseApplication() {
                         UserManager.saveShowGuideWechat(true)
 
                     }
-                    401 -> { //todo 系统假消息，以及真人的第一条搭讪语打招呼成功 发送系统消息
+                    401 -> {
                         if (ActivityUtils.getTopActivity() != null && ActivityUtils.getTopActivity() !is SplashActivity && ActivityUtils.getTopActivity() !is ChatActivity)
                             GreetHiDialog(customerMsgBean).show()
 //                            FragmentUtils.add(

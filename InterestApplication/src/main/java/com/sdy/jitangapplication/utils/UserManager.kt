@@ -708,7 +708,7 @@ object UserManager {
                     )
                 )
             } else if (registerFileBean?.threshold == true && !data.extra_data.isvip && !data.extra_data.my_experience_card_state) {//门槛付费
-                //todo want_steps填写了，并且门槛开启，用户不是会员或者用户的体验卡状态为false
+                // want_steps填写了，并且门槛开启，用户不是会员或者用户的体验卡状态为false
                 OpenVipActivity.start(
                     context, MoreMatchBean(
                         data.extra_data.city_name,

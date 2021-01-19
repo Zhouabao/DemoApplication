@@ -7,7 +7,6 @@
     <string name="server_client_id">325834510992-5o1upod7qkkgjh2bk9lg0th1abhfb6i7.apps.googleusercontent.com</string>
     <string name="google_map_api_key">AIzaSyD1zwX4L0wPXLBzZVhwSTi7d0icm04I8YM</string>
 
-
     <string name="service_error">服务器出错，请重试</string>
     <string name="retry_net_error">网络异常，点击重试</string>
     <string name="retry_load_error">加载失败，请稍后重试</string>
@@ -1302,5 +1301,6 @@
     <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
     <string name="tobe_vip">成为积糖会员</string>
     <string name="visit_cnt">来访次数</string>
+    <string name="error_configuration">配置错误</string>
 
 </resources>
