@@ -120,7 +120,6 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
     }
 
 
-
     private void initLocation() {
         locationManager = new LocationUtil();
         locationManager.setMyLocationCallback(this);
@@ -134,7 +133,7 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
         if (UserManager.INSTANCE.getlongtitude().equals("0")) {
             latlng = new LatLng(39.90923, 116.397428);
         } else {
-            latlng = new LatLng(Double.parseDouble(UserManager.INSTANCE.getlatitude()),Double.parseDouble( UserManager.INSTANCE.getlongtitude()));
+            latlng = new LatLng(Double.parseDouble(UserManager.INSTANCE.getlatitude()), Double.parseDouble(UserManager.INSTANCE.getlongtitude()));
         }
         CameraUpdate camera = CameraUpdateFactory.newCameraPosition(new CameraPosition(latlng, zoomLevel, 0, 0));
         googleMap.moveCamera(camera);
@@ -169,7 +168,7 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        if (locationManager!=null)
+        if (locationManager != null)
             locationManager.stopLocation();
     }
 
@@ -288,7 +287,6 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
     }
 
 
-
     private void updateMyLocationStatus(CameraPosition cameraPosition) {
         if (Math.abs(-1 - cacheLatitude) < 0.1f) {
             // 定位失败
@@ -311,7 +309,7 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
         handler.removeCallbacks(runable);
         handler.postDelayed(runable, 20 * 1000);// 20s超时
 //        geocoder.queryAddressNow(latlng.latitude, latlng.longitude);
-        queryLocation(latlng.latitude,latlng.longitude,false);
+        queryLocation(latlng.latitude, latlng.longitude, false);
         latitude = latlng.latitude;
         longitude = latlng.longitude;
 
@@ -324,7 +322,7 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
         handler.removeCallbacks(runable);
     }
 
-    private  void queryLocation(Double latitude,Double longtitude,Boolean fromLocation){
+    private void queryLocation(Double latitude, Double longtitude, Boolean fromLocation) {
         new Thread(() -> {
             try {
                 List<Address> addresses = new Geocoder(ActivityUtils.getTopActivity(), Locale.getDefault())
@@ -332,15 +330,15 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
                 if (!addresses.isEmpty()) {
                     runOnUiThread(() -> {
                         Address address = addresses.get(0);
-                            if (this.latitude == latitude && this.longitude == longtitude) { // 响应的是当前查询经纬度
-                                if (address.getMaxAddressLineIndex() != -1) {
-                                    LocationAmapActivity.this.addressInfo = address.getAddressLine(0);
-                                } else {
-                                    addressInfo = getString(R.string.location_address_unkown);
-                                }
-                                setPinInfoPanel(true);
-                                clearTimeoutHandler();
+                        if (this.latitude == latitude && this.longitude == longtitude) { // 响应的是当前查询经纬度
+                            if (address.getMaxAddressLineIndex() != -1) {
+                                LocationAmapActivity.this.addressInfo = address.getAddressLine(0);
+                            } else {
+                                addressInfo = getString(R.string.location_address_unkown);
                             }
+                            setPinInfoPanel(true);
+                            clearTimeoutHandler();
+                        }
 
                     });
                 }
@@ -366,7 +364,7 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
 //    };
 
 
-    private Runnable runable = () -> {
+    private final Runnable runable = () -> {
         LocationAmapActivity.this.addressInfo = getString(R.string.location_address_unkown);
         setPinInfoPanel(true);
     };
@@ -398,10 +396,10 @@ public class LocationAmapActivity extends UI implements GoogleMap.OnMapClickList
 
     @Override
     public void locationSuccess(@NotNull Location location) {
-        if (location != null && location.getLongitude()!=0) {
+        if (location != null && location.getLongitude() != 0) {
             cacheLatitude = location.getLatitude();
             cacheLongitude = location.getLongitude();
-            queryLocation(location.getLatitude(),location.getLongitude(),true);
+            queryLocation(location.getLatitude(), location.getLongitude(), true);
 
             if (locating) {
                 locating = false;
