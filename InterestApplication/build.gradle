@@ -209,9 +209,9 @@ dependencies {
 //    implementation 'com.amap.api:3dmap:latest.integration'
 //    implementation 'com.amap.api:map2d:latest.integration'
     //定位功能
-    implementation 'com.amap.api:location:latest.integration'
+//    implementation 'com.amap.api:location:latest.integration'
     //搜索功能
-    implementation 'com.amap.api:search:latest.integration'
+//    implementation 'com.amap.api:search:latest.integration'
     //卡片模式
 //    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
     //伸缩的TextView

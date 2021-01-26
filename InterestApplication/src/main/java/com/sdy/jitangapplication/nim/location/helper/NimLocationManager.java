@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.amap.api.location.AMapLocation;
 import com.sdy.jitangapplication.nim.location.model.NimLocation;
 import com.sdy.jitangapplication.nim.uikit.common.framework.infra.TaskExecutor;
 import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
@@ -17,6 +16,8 @@ import com.sdy.jitangapplication.nim.uikit.common.util.log.LogUtil;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+//import com.amap.api.location.AMapLocation;
 
 public class NimLocationManager /*implements AMapLocationListener*/ {
 
@@ -170,28 +171,28 @@ public class NimLocationManager /*implements AMapLocationListener*/ {
 
     }
 
-    private void getAMapLocationAddress(final AMapLocation loc) {
-        if (TextUtils.isEmpty(loc.getAddress())) {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    getLocationAddress(new NimLocation(loc, NimLocation.AMap_Location));
-                }
-            });
-        } else {
-            NimLocation location = new NimLocation(loc, NimLocation.AMap_Location);
-            location.setAddrStr(loc.getAddress());
-            location.setProvinceName(loc.getProvince());
-            location.setCityName(loc.getCity());
-            location.setCityCode(loc.getCityCode());
-            location.setDistrictName(loc.getDistrict());
-            location.setStreetName(loc.getStreet());
-            location.setStreetCode(loc.getAdCode());
-
-            onLocation(location, MSG_LOCATION_WITH_ADDRESS_OK);
-        }
-
-    }
+//    private void getAMapLocationAddress(final AMapLocation loc) {
+//        if (TextUtils.isEmpty(loc.getAddress())) {
+//            executor.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    getLocationAddress(new NimLocation(loc, NimLocation.AMap_Location));
+//                }
+//            });
+//        } else {
+//            NimLocation location = new NimLocation(loc, NimLocation.AMap_Location);
+//            location.setAddrStr(loc.getAddress());
+//            location.setProvinceName(loc.getProvince());
+//            location.setCityName(loc.getCity());
+//            location.setCityCode(loc.getCityCode());
+//            location.setDistrictName(loc.getDistrict());
+//            location.setStreetName(loc.getStreet());
+//            location.setStreetCode(loc.getAdCode());
+//
+//            onLocation(location, MSG_LOCATION_WITH_ADDRESS_OK);
+//        }
+//
+//    }
 
     private boolean getLocationAddress(NimLocation location) {
         List<Address> list;
