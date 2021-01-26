@@ -1,19 +1,19 @@
 package com.sdy.jitangapplication.common
 
+// TODO: 2021/1/19 切换到线上和测试环境
 object Constants {
     //云信新账号
     const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
 //    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
+
+    //    const val PAYPAL_CONFIG_CLIENT_ID = "Aa6zB7t_RqowQjHlMbZ6UwcN1kHEpyVikUUdT0hOPd97KW7eOJKYOsgJYSxT9ERdxdOzZfnmsomxZw6l"//sandbox
+    const val PAYPAL_CONFIG_CLIENT_ID = "AQsymGdNmZSD9ayJEe4JdgMk3FiK4C6g_qui8oWy79Obb3UjU-8C64ubKC-0fwaXX2CyFGg-mJ1K_ilY"//正式
     //是否处于测试环境
     const val TEST = false
-//    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
 
 
     //基地址末尾
     const val END_BASE_URL = "/v1.json"
-
-
-
     const val BaseUrl = ""
     const val DEFAULT_TIME = 500L
     const val READ_TIME = 500L

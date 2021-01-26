@@ -125,8 +125,7 @@ data class PayBean(
 )
 
 data class PaypalTokenBean(
-    var order_id: String = "",
-    var clientoken: String = ""
+    var order_id: String = ""
 )
 
 data class GoogleTokenBean(

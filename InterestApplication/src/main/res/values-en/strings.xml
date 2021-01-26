@@ -1316,4 +1316,5 @@
     <string name="pay_problems">Payment Problems</string>
     <string name="please_descripe_your_problem">Describe your problem here and we will do our best to answer it.</string>
     <string name="have_pay_problem">Having payment problems?</string>
+    <string name="error_configuration">配置错误</string>
 </resources>

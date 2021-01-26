@@ -863,16 +863,16 @@ interface Api {
      * 预创建订单 token
      */
     @FormUrlEncoded
-    @POST("PayOrder/payCreate${Constants.END_BASE_URL}")
-    fun payCreate(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
+    @POST("PayOrder/createPaypal${Constants.END_BASE_URL}")
+    fun createPaypal(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
 
 
     /**
      * 海外安卓 支付回传 验证结果
      */
     @FormUrlEncoded
-    @POST("PayOrder/checkNotify${Constants.END_BASE_URL}")
-    fun checkNotify(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
+    @POST("PayOrder/checkPaypal${Constants.END_BASE_URL}")
+    fun checkPaypal(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PaypalTokenBean>>
 
     /**
      * 海外安卓 支付回传 验证结果/ppsns//androidCheck/v1.json

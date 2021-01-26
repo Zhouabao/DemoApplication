@@ -154,7 +154,7 @@ dependencies {
 //    api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 
     //facebook分享
-    api 'com.facebook.android:facebook-android-sdk:5.15.3'
+    api 'com.facebook.android:facebook-android-sdk:8.2.0'
 //    api 'com.twitter.sdk.android:twitter-core:3.1.1'
 //    api 'com.twitter.sdk.android:tweet-composer:3.1.1'
 
@@ -163,6 +163,7 @@ dependencies {
 
 
     //paypal
-    api 'com.braintreepayments.api:braintree:3.14.2'
-    api 'com.braintreepayments.api:drop-in:5.0.1'
+//    api 'com.braintreepayments.api:braintree:3.14.2'
+//    api 'com.braintreepayments.api:drop-in:5.0.1'
+    api 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 }

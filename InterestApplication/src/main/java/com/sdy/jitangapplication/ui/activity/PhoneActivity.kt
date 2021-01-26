@@ -95,7 +95,11 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
 
 
                 btnVerifyCode.isEnabled =
-                    etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
+                    etPhone.text.toString().isNotEmpty() && if (UserManager.overseas) {
+                        etPhone.text.toString().isNotEmpty()
+                    } else {
+                        etPhone.text.toString().length == 11
+                    }
 
             }
 
@@ -138,15 +142,24 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
                 etPhone.setText("")
             }
             R.id.btnVerifyCode -> {
-                if (RegexUtils.isMobileSimple(etPhone.text.toString())) {
+                if (!UserManager.overseas) {
+                    if (RegexUtils.isMobileSimple(etPhone.text.toString())) {
+                        startActivity<VerifyCodeActivity>(
+                            "phone" to etPhone.text.toString(),
+                            "wxcode" to wxcode,
+                            "type" to login_type,
+                            "region" to nowCountryCode
+                        )
+                    } else {
+                        toast(getString(R.string.please_input_correct_phone))
+                    }
+                } else {
                     startActivity<VerifyCodeActivity>(
                         "phone" to etPhone.text.toString(),
                         "wxcode" to wxcode,
                         "type" to login_type,
                         "region" to nowCountryCode
                     )
-                } else {
-                    toast(getString(R.string.please_input_correct_phone))
                 }
             }
             R.id.countryCode -> {

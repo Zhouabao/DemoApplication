@@ -2,8 +2,6 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Activity.RESULT_CANCELED
-import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Typeface
@@ -14,17 +12,10 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alipay.sdk.app.PayTask
 import com.android.billingclient.api.Purchase
 import com.blankj.utilcode.util.ActivityUtils
-import com.braintreepayments.api.BraintreeFragment
-import com.braintreepayments.api.dropin.DropInActivity
-import com.braintreepayments.api.dropin.DropInRequest
-import com.braintreepayments.api.dropin.DropInResult
-import com.braintreepayments.api.exceptions.InvalidArgumentException
-import com.braintreepayments.api.models.PayPalRequest
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -39,6 +30,7 @@ import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.CloseRegVipEvent
 import com.sdy.jitangapplication.event.PayPalResultEvent
 import com.sdy.jitangapplication.googlepay.GooglePayUtils
+import com.sdy.jitangapplication.googlepay.PayPalHelper
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -65,6 +57,7 @@ class ConfirmPayCandyDialog(
     val payways: MutableList<PaywayBean>, val source_type: Int = -1
 ) : Dialog(myContext, R.style.MyDialog) {
 
+    private val paypalHelper by lazy { PayPalHelper.instance }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_confirm_recharge_candy)
@@ -131,8 +124,9 @@ class ConfirmPayCandyDialog(
             if (UserManager.overseas) {
                 if (alipayCheck.isChecked) {
                     //PayPal支付
-                    initBraintreeFragment()
-                    payCreate(source_type, chargeBean.id)
+//                    initBraintreeFragment()
+                    paypalHelper.startPayPalService(myContext)
+                    createPaypal(source_type, chargeBean.id)
                 } else {
                     //谷歌支付
                     googlePay(chargeBean.product_id)
@@ -334,33 +328,15 @@ class ConfirmPayCandyDialog(
 
 
     /************************   Paypal   ***************************/
-    lateinit var mBraintreeFragment: BraintreeFragment
-
-    /**
-     * 初始化braintreeFragment
-     */
-    fun initBraintreeFragment() {
-        try {
-            mBraintreeFragment =
-                BraintreeFragment.newInstance(
-                    myContext as AppCompatActivity,
-                    Constants.TOKENIZATION_KEYS
-                )
-        } catch (e: InvalidArgumentException) {
-
-        }
-
-    }
-
 
     private var clientToken = PaypalTokenBean()
 
     /**
      * paypal支付先从服务器获取clientToken
      */
-    private fun payCreate(source_type: Int, product_id: Int) {
+    private fun createPaypal(source_type: Int, product_id: Int) {
         RetrofitFactory.instance.create(Api::class.java)
-            .payCreate(
+            .createPaypal(
                 UserManager.getSignParams(
                     hashMapOf(
                         "source_type" to source_type,
@@ -376,11 +352,23 @@ class ConfirmPayCandyDialog(
 
                 override fun onNext(t: BaseResp<PaypalTokenBean>) {
                     loadingDialog.dismiss()
-                    clientToken = t.data
-                    if (!clientToken.clientoken.isEmpty()) {
-                        onBrainTreeSubmit()
+                    if (t.code == 200) {
+                        clientToken = t.data
+                        paypalHelper.doPayPalPay(
+                            myContext,
+                            if (!chargeBean.isfirst) {
+                                if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
+                                    chargeBean.discount_price
+                                } else {
+                                    chargeBean.original_price
+                                }
+                            } else {
+                                chargeBean.discount_price
+                            }
+                            , chargeBean.title ?: ""
+                        )
                     } else {
-                        payCreate(source_type, chargeBean.id)
+                        createPaypal(source_type, chargeBean.id)
                     }
                 }
 
@@ -395,12 +383,12 @@ class ConfirmPayCandyDialog(
     /**
      * paypal支付回传结果
      */
-    private fun checkNotify(nonce: String, order_id: String) {
+    private fun checkPaypal(paypal_id: String, order_id: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .checkNotify(
+            .checkPaypal(
                 UserManager.getSignParams(
                     hashMapOf(
-                        "nonce" to nonce,
+                        "paypal_id" to paypal_id,
                         "order_id" to order_id
                     )
                 )
@@ -415,6 +403,8 @@ class ConfirmPayCandyDialog(
                     loadingDialog.dismiss()
 //                    clientToken = t.data
 //                    onBrainTreeSubmit()
+                    showAlert(myContext, myContext.getString(R.string.pay_success), true)
+
                 }
 
                 override fun onError(e: Throwable?) {
@@ -459,61 +449,39 @@ class ConfirmPayCandyDialog(
     }
 
 
-    /**
-     * 发起订单支付
-     */
-    private fun onBrainTreeSubmit() {
-        val paypalRequest = PayPalRequest(
-            "${if (!chargeBean.isfirst) {
-                if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
-                    chargeBean.discount_price
-                } else {
-                    chargeBean.original_price
-                }
-            } else {
-                chargeBean.discount_price
-            }}"
-        )
-            .currencyCode("USD")
-            .intent(PayPalRequest.INTENT_SALE)
-        val dropInRequest = DropInRequest()
-            .paypalRequest(paypalRequest)
-            .clientToken(clientToken.clientoken)
-
-
-        (myContext as Activity).startActivityForResult(
-            dropInRequest.getIntent(myContext),
-            REQUEST_CODE_PAYPAL
-        )
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPayPalResultEvent(event: PayPalResultEvent) {
-        if (event.requestCode == REQUEST_CODE_PAYPAL) {
-            if (event.resultCode == RESULT_OK) {
-                val result: DropInResult? =
-                    event.data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                if (result != null) {
-                    result.paymentMethodNonce
-                    Log.d("onPayPalResultEvent", result.toString())
-                    Log.d(
-                        "onPayPalResultEvent",
-                        "nonce=${result!!.paymentMethodNonce!!.nonce},order_id=${clientToken.order_id}"
-                    )
-                    // 上传给服务器端 支付成功
-                    checkNotify(result!!.paymentMethodNonce!!.nonce, clientToken.order_id)
-                }
-                showAlert(myContext, myContext.getString(R.string.pay_success), true)
-            } else if (event.resultCode == RESULT_CANCELED) {
-                Log.d("onPayPalResultEvent", "用户取消支付")
-                showAlert(myContext, myContext.getString(R.string.pay_cancel), false, true)
-            } else {
-                val error: Exception? =
-                    event.data?.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception?
-                Log.d("onPayPalResultEvent", error.toString())
-                showAlert(myContext, error.toString(), false)
-            }
+        if (event.requestCode == PayPalHelper.REQUEST_CODE_PAYMENT) {
+            paypalHelper.confirmPayResult(
+                event.requestCode,
+                event.resultCode,
+                event.data,
+                object : PayPalHelper.DoResult {
+                    override fun confirmSuccess(orderBackId: String) {
+                        checkPaypal(orderBackId, clientToken.order_id)
+                    }
+
+                    override fun confirmNetWorkError() {
+                        showAlert(myContext, CommonFunction.getErrorMsg(myContext), false)
+                    }
+
+                    override fun customerCanceled() {
+                        showAlert(myContext, myContext.getString(R.string.pay_cancel), false, true)
+                    }
+
+                    override fun confirmFuturePayment() {
+                    }
+
+                    override fun invalidPaymentConfiguration() {
+                        showAlert(
+                            myContext,
+                            myContext.getString(R.string.error_configuration),
+                            false
+                        )
+                    }
+
+                })
         }
     }
 
@@ -561,6 +529,7 @@ class ConfirmPayCandyDialog(
     }
 
     override fun dismiss() {
+        paypalHelper.stopPayPalService(myContext)
         super.dismiss()
     }
 
