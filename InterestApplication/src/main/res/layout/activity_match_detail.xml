@@ -118,7 +118,6 @@
                                 app:type="round" />
 
                             <com.github.mmin18.widget.RealtimeBlurView
-                                android:id="@+id/userVideoCoverBg"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/shape_transparent_10dp"

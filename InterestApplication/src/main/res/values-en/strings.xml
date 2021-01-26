@@ -874,12 +874,7 @@
     <string name="share">Share</string>
     <string name="black">Black list</string>
     <string name="dissolve_match">Terminate match</string>
-    <string name="send_a_pic_in_app">%1$s posted a photo on SugarTown</string>
     <string name="hurry_to_see_this">Hey, take a look at this first</string>
-    <string name="send_a_square_in_app">%1$s posted a moments on SugarTown</string>
-    <string name="send_a_video_in_app">%1$s posted a video on SugarTown</string>
-    <string name="send_a_audio_in_app">%1$s posted an audio on SugarTown</string>
-    <string name="share_fail">Shared failed</string>
     <string name="share_jitang_friend">SugarTown Friends</string>
     <string name="share_wechat_friend">Wechat friends</string>
     <string name="share_wechat_zone">Moments</string>
@@ -1186,8 +1181,6 @@
     <string name="continue_with_google">Google</string>
 
 
-    <string name="install_face_book_first">install facebook first</string>
-    <string name="install_twitter_first">install Twitter first</string>
     <string name="waiting">accessing</string>
     <string name="qqZone">QQ zone</string>
     <string name="facebook">Facebook</string>
@@ -1279,7 +1272,6 @@
     <string name="Bind_now">Bind now</string>
     <string name="sign_up">Sign Up</string>
     <string name="wechat_push">WeChat Notification</string>
-    <string name="privacy_for_share">\nOur App has integrated Umeng+ U-Share SDK , which will collect your device identifiable information and public information of social account in order to share information with social account.</string>
     <string name="empty_contact1">The contact list is empty</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>

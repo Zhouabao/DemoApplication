@@ -872,12 +872,7 @@
     <string name="share">分享</string>
     <string name="black">拉黑</string>
     <string name="dissolve_match">解除配对</string>
-    <string name="send_a_pic_in_app">%1$s 在积糖发了一张照片</string>
     <string name="hurry_to_see_this">「你先抓紧看看这个」</string>
-    <string name="send_a_square_in_app">%1$s 在积糖发了动态</string>
-    <string name="send_a_video_in_app">%1$s 在积糖发了一段视频</string>
-    <string name="send_a_audio_in_app">%1$s 在积糖发了一段语音</string>
-    <string name="share_fail">分享失败</string>
     <string name="share_jitang_friend">积糖好友</string>
     <string name="share_wechat_friend">微信好友</string>
     <string name="share_wechat_zone">朋友圈</string>
@@ -1184,8 +1179,6 @@
     <string name="continue_with_google">Google登录</string>
 
 
-    <string name="install_face_book_first">请先安装Facebook</string>
-    <string name="install_twitter_first">请先安装Twitter</string>
     <string name="waiting">等待中</string>
     <string name="qqZone">QQ空间</string>
     <string name="facebook">Facebook</string>
@@ -1276,7 +1269,6 @@
     <string name="Bind_now">去绑定</string>
     <string name="sign_up">加入积糖</string>
     <string name="wechat_push">微信推送</string>
-    <string name="privacy_for_share">\n为了提供分享功能，我们的产品集成友盟+SDK，SDK将采集您的设备标识和您需要分享的社交账户。</string>
     <string name="empty_contact1">通讯录为空</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>

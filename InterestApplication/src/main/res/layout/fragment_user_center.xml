@@ -220,7 +220,6 @@
 
 
                             <TextView
-                                android:id="@+id/addPowerBtn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="right|center_vertical"
