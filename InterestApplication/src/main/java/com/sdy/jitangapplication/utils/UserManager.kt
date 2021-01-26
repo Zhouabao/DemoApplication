@@ -187,6 +187,7 @@ object UserManager {
     fun startToLogin(activity: Context, fromNimNotification: Boolean = false) {
         touristMode = false
         clearLoginData()
+//        Firebase.auth.signOut()
         NIMClient.getService(AuthService::class.java).logout()
         AppManager.instance.finishAllActivity()
 //        ActivityUtils.startLauncherActivity()

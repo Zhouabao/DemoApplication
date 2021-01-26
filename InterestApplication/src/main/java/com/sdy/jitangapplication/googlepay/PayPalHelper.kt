@@ -203,16 +203,17 @@ class PayPalHelper {
     companion object {
         private const val TAG = "PayPalHelper"
 
-        //配置何种支付环境，一般沙盒，正式
-        private const val CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX
+        // 配置何种支付环境，一般沙盒，正式
+        private const val CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION
 
         // note that these credentials will differ between live & sandbox environments.
         //你所注册的APP Id
         const val REQUEST_CODE_PAYMENT = 1
         const val REQUEST_CODE_FUTURE_PAYMENT = 2
         const val REQUEST_CODE_PROFILE_SHARING = 3
-        private val config =
-            PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(Constants.PAYPAL_CONFIG_CLIENT_ID)
+        private val config = PayPalConfiguration()
+            .environment(CONFIG_ENVIRONMENT)
+            .clientId(Constants.PAYPAL_CONFIG_CLIENT_ID)
 
         //以下配置是授权支付的时候用到的
         //            .merchantName("Example Merchant")

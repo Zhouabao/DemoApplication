@@ -50,6 +50,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_code)
         initView()
+        mPresenter.getVerifyCode(phone, region)
+
     }
 
 
@@ -76,7 +78,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
-        mPresenter.getVerifyCode(phone, region)
         inputVerifyCode.isEnabled = true
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {

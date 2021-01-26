@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.utils.UserManager
  *    用户还会收到包含交易收据的电子邮件，其中包含订单 ID 或交易的唯一 ID。用户每次购买一次性商品时，
  *    都会收到包含唯一订单 ID 的电子邮件。此外，用户最初购买订阅时以及后续定期自动续订时，也会收到这样的电子邮件。
  *    您可以在 Google Play 管理中心内使用订单 ID 来管理退款。有关详情，请参阅查看应用的订单和订阅及办理退款。
- *    version: 1.0
+ *    version: 1.0w
  */
 class GooglePayUtils(
     val context: Context,

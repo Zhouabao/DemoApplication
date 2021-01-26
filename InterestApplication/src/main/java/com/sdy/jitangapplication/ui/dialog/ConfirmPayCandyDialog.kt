@@ -355,7 +355,8 @@ class ConfirmPayCandyDialog(
                     if (t.code == 200) {
                         clientToken = t.data
                         paypalHelper.doPayPalPay(
-                            myContext, if (!chargeBean.isfirst) {
+                            myContext,
+                            if (!chargeBean.isfirst) {
                                 if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
                                     chargeBean.discount_price
                                 } else {
@@ -363,7 +364,8 @@ class ConfirmPayCandyDialog(
                                 }
                             } else {
                                 chargeBean.discount_price
-                            }, chargeBean.descr ?: ""
+                            }
+                            , chargeBean.title ?: ""
                         )
                     } else {
                         createPaypal(source_type, chargeBean.id)
@@ -446,25 +448,6 @@ class ConfirmPayCandyDialog(
             })
     }
 
-
-    /**
-     * 发起订单支付
-     */
-    private fun onBrainTreeSubmit() {
-        paypalHelper.doPayPalPay(
-            myContext, if (!chargeBean.isfirst) {
-                if (BigDecimal(chargeBean.discount_price) > BigDecimal.ZERO) {
-                    chargeBean.discount_price
-                } else {
-                    chargeBean.original_price
-                }
-            } else {
-                chargeBean.discount_price
-            }, chargeBean.descr ?: ""
-        )
-
-//        REQUEST_CODE_PAYPAL
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

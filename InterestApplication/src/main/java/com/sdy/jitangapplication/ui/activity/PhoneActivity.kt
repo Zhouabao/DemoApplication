@@ -94,8 +94,7 @@ class PhoneActivity : BaseActivity(), OnLazyClickListener {
                 }
 
 
-                btnVerifyCode.isEnabled =
-                    etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
+                btnVerifyCode.isEnabled = etPhone.text.toString().isNotEmpty()
 
             }
 

@@ -196,16 +196,20 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
             mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
         } else {
             OneKeyLoginManager.getInstance().setLoadingVisibility(false)
+            mPresenter.loading.dismiss()
+
         }
     }
 
 
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
         if (success) {
+            mPresenter.loading.dismiss()
             UserManager.startToPersonalInfoActivity(this, nothing, data)
             OneKeyLoginManager.getInstance().finishAuthActivity()
             OneKeyLoginManager.getInstance().removeAllListener()
         } else {
+            mPresenter.loading.dismiss()
             CommonFunction.toast(resources.getString(R.string.login_error))
             OneKeyLoginManager.getInstance().setLoadingVisibility(false)
         }
@@ -220,7 +224,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_GOOGLE_SIGN_IN) {
-            mPresenter.loading.dismiss()
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 if (task != null && task.isSuccessful) {
@@ -237,6 +240,8 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
                 }
             } catch (e: ApiException) {
                 Log.e(TAG1, "google error---${e}")
+                mPresenter.loading.dismiss()
+                CommonFunction.toast(getString(R.string.login_error))
             }
         }
     }

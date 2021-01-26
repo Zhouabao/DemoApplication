@@ -35,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 51
-        versionName "2.6.1.4"
+        versionCode 52
+        versionName "2.6.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -170,7 +170,7 @@ dependencies {
     //闪验
 //    implementation files('libs\\facebook-login.aar')
     implementation files('libs/shanyan_sdk_v2.3.2.3.aar')
-    implementation files('libs/AMap3DMap_V7.4.10_80.jar')
+//    implementation files('libs/AMap3DMap_V7.4.10_80.jar')
     // 支付宝支付
     implementation(name: 'alipaySdk-15.6.5-20190718211159-noUtdid', ext: 'aar')
     //微信支付
