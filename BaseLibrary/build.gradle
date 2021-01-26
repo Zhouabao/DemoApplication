@@ -109,14 +109,10 @@ dependencies {
     //屏幕适配
     api 'me.jessyan:autosize:1.2.1'
     //GSYVideoPlayer
-    api "com.shuyu:GSYVideoPlayer:$gsy_video_version"
-//    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
+    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
     //根据你的需求ijk模式的so
-//    api "com.shuyu:gsyVideoPlayer-armv5:$gsy_video_version"
-//    api "com.shuyu:gsyVideoPlayer-armv7a:$gsy_video_version"
-//    api "com.shuyu:gsyVideoPlayer-arm64:$gsy_video_version"
-//    api "com.shuyu:gsyVideoPlayer-x64:$gsy_video_version"
-//    api "com.shuyu:gsyVideoPlayer-x86:$gsy_video_version"
+    api "com.shuyu:gsyVideoPlayer-armv7a:$gsy_video_version"
+    api "com.shuyu:gsyVideoPlayer-arm64:$gsy_video_version"
 
 
     //TabLayout
