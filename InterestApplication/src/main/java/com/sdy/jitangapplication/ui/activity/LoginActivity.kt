@@ -87,7 +87,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         }
 
 
-        //加入积糖
+        //加入奢媛
         onekeyLoginBtn.clickWithTrigger(1000L) {
             touristBtn.isEnabled = false
             ChooseLoginWayDialog(this, syCode).show()

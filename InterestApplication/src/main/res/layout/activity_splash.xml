@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
+    android:layout_gravity="center_horizontal|bottom"
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
-    android:gravity="center"
+    android:gravity="center_horizontal|bottom"
     android:orientation="vertical"
     tools:context=".ui.activity.SplashActivity">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="67dp"
         android:src="@drawable/icon_splash" />
 
 </LinearLayout>

@@ -72,7 +72,7 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
         if (UserManager.getAvator().isNullOrEmpty() || UserManager.getAvator()
                 .contains(Constants.DEFAULT_AVATAR)
         )
-            GlideUtil.loadCircleImg(this, R.drawable.icon_logo_orange_circle, myAvator)
+            GlideUtil.loadCircleImg(this, R.drawable.icon_logo, myAvator)
         else
             GlideUtil.loadCircleImg(this, UserManager.getAvator(), myAvator)
 

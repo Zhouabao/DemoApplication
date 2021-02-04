@@ -33,7 +33,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/icon_login_bg"
+        android:background="@drawable/gradient_login_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -65,7 +65,7 @@
             android:background="@drawable/shape_rectangle_white_27dp"
             android:gravity="center"
             android:text="@string/join_sugartown"
-            android:textColor="@color/colorOrange"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:enabled="false"
@@ -113,7 +113,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/user_protocol"
-                android:textColor="#ffffffff"
+                android:textColor="#FF333333"
                 android:textSize="12sp" />
 
         </LinearLayout>
