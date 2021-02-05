@@ -99,11 +99,11 @@ class ConfirmPayCandyDialog(
             }
             dismiss()
         }
-        wechatCl.onClick {
+        wechatBtn.onClick {
             wechatCheck.isChecked = true
             alipayCheck.isChecked = false
         }
-        alipayCl.onClick {
+        alipayBtn.onClick {
             alipayCheck.isChecked = true
             wechatCheck.isChecked = false
         }

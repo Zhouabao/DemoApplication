@@ -91,8 +91,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                         )
                     } else
                         mPresenter.checkVerifyCode(
-//                            intent.getStringExtra("wxcode") ?: "",
-                             "9678",
+                            intent.getStringExtra("wxcode") ?: "",
                             intent.getStringExtra("type") ?: "1",
                             phone,
                             content!!
