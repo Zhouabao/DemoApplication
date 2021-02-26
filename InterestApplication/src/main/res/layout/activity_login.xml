@@ -7,10 +7,33 @@
     android:fitsSystemWindows="false"
     tools:context=".ui.activity.LoginActivity">
 
-    <com.sdy.jitangapplication.widgets.FullscreenVideoView
+    <VideoView
         android:id="@+id/videoPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loginFlashLottie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_imageAssetsFolder="images_login_gif/"
+        app:lottie_fileName="data_login_gif.json"
+        app:lottie_repeatCount="-1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_login_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -18,6 +41,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginCl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible">
@@ -41,7 +65,7 @@
             android:background="@drawable/shape_rectangle_white_27dp"
             android:gravity="center"
             android:text="@string/join_sugartown"
-            android:textColor="#191919"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:enabled="false"
@@ -70,13 +94,13 @@
         <LinearLayout
             android:id="@+id/t2"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:gravity="center"
             android:orientation="horizontal"
             android:visibility="visible"
-            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
@@ -89,7 +113,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/user_protocol"
-                android:textColor="#ffffffff"
+                android:textColor="#FF333333"
                 android:textSize="12sp" />
 
         </LinearLayout>

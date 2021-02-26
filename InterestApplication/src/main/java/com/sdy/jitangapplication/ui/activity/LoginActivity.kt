@@ -55,10 +55,10 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         setContentView(R.layout.activity_login)
         syCode = intent.getIntExtra("syCode", 0)
 
-        BarUtils.setStatusBarColor(this, Color.BLACK)
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
         BarUtils.setStatusBarLightMode(this, false)
         initView()
-        showVideoPreview()
+//        showVideoPreview()
         mPresenter.getRegisterProcessType()
     }
 
@@ -123,42 +123,31 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, MediaPlayer.
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        loginFlashLottie.playAnimation()
 
-    private fun showVideoPreview() {
-//        videoPreview.setMediaController(MediaController(this))
-        videoPreview.setVideoURI(Uri.parse("android.resource://com.sdy.jitangapplication/${R.raw.login_video}"))
-        videoPreview.setOnCompletionListener {
-            videoPreview.start()
-        }
-        videoPreview.setOnErrorListener(this)
-
-
-        videoPreview.start()
     }
 
     override fun onPause() {
         super.onPause()
-//        videoPreview.pause()
+        loginFlashLottie.pauseAnimation()
     }
 
     override fun onRestart() {
         super.onRestart()
-        showVideoPreview()
-
+        loginFlashLottie.playAnimation()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!videoPreview.isPlaying) {
-            videoPreview.start()
-        }
+        loginFlashLottie.resumeAnimation()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 //        UMShareAPI.get(this).release()
-        videoPreview.stopPlayback()
-//        EventBus.getDefault().unregister(this)
+        loginFlashLottie.cancelAnimation()
     }
 
     override fun onGetRegisterProcessType(data: RegisterFileBean?) {
