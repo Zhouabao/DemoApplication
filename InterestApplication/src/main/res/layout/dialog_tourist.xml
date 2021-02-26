@@ -35,7 +35,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="此为注册用户功能\n加入积糖，与XXX位糖宝达成联系"
+        android:text="此为注册用户功能\n加入奢媛，与XXX位糖宝达成联系"
         android:textColor="#ff191919"
         android:textSize="16sp" />
 

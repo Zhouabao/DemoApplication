@@ -67,7 +67,7 @@
             android:background="@drawable/rectangle_white_5dp"
             android:padding="7dp"
             android:lineSpacingMultiplier="1.1"
-            android:text="积糖送你每天20次免费右滑奥\n快去使用开始交友吧"
+            android:text="奢媛送你每天20次免费右滑奥\n快去使用开始交友吧"
             android:textColor="@color/colorBlack"
             android:textSize="13sp"
             android:gravity="center"

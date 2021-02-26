@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">积糖</string>
+    <string name="app_name">奢媛</string>
 
     <string name="facebook_app_id">3546860392031186</string>
     <string name="fb_login_protocol_scheme">fb3546860392031186</string>
@@ -205,8 +205,8 @@
     <string name="living_begin">开始识别</string>
 
 
-    <string name="user_protocol">积糖用户协议</string>
-    <string name="privacy_protocol">积糖隐私协议</string>
+    <string name="user_protocol">奢媛用户协议</string>
+    <string name="privacy_protocol">奢媛隐私协议</string>
     <string name="privacy_title">隐私条款</string>
     <string name="user_title">用户协议</string>
 
@@ -395,7 +395,7 @@
     <string name="get_quick_match">获取更精准配对</string>
     <string name="input_knoe_channel">请先填写了解的渠道奥</string>
     <string name="check_option">请先勾选相应项</string>
-    <string name="where_did_you_know">首先，您在哪里得知的积糖呢</string>
+    <string name="where_did_you_know">首先，您在哪里得知的奢媛呢</string>
     <string name="verify_notice">认证提醒</string>
     <string name="verify_compare_with_avatar">审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示</string>
     <string name="take_time_out">采集超时,请退出重试</string>
@@ -568,7 +568,7 @@
     <string name="choose_publish_location">选择发布位置</string>
     <string name="choose_hot_topic">选择热门话题</string>
     <string name="dating_publish_tip">活动发布提示</string>
-    <string name="dating_publish_warming">感谢您成为积糖的轻奢约会社区的一员，这里有一些使用须知希望您能记住并与其他用户达成一致</string>
+    <string name="dating_publish_warming">感谢您成为奢媛的轻奢约会社区的一员，这里有一些使用须知希望您能记住并与其他用户达成一致</string>
     <string name="dating_publish_reliable">发布的活动真实可信</string>
     <string name="dating_publish_reliable_content">活动真实性保证且有明确意向，不以活动目的导流</string>
     <string name="dating_publish_legal">发布内容不违规</string>
@@ -866,14 +866,14 @@
     <string name="reach_auto_in_sweet">达成要求自动进入甜心圈</string>
     <string name="upload_verify_video">上传认证视频</string>
     <string name="verify_figure_or_job">认证职业或身材</string>
-    <string name="login_off_tip">您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n 您即将离开积糖，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用</string>
+    <string name="login_off_tip">您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n 您即将离开奢媛，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用</string>
     <string name="login_off_success">注销成功</string>
     <string name="login_off_success_content">15天内登录可取消注销\n过期数据将全部清空且不可恢复</string>
     <string name="share">分享</string>
     <string name="black">拉黑</string>
     <string name="dissolve_match">解除配对</string>
     <string name="hurry_to_see_this">「你先抓紧看看这个」</string>
-    <string name="share_jitang_friend">积糖好友</string>
+    <string name="share_jitang_friend">奢媛好友</string>
     <string name="share_wechat_friend">微信好友</string>
     <string name="share_wechat_zone">朋友圈</string>
     <string name="share_sina">微博</string>
@@ -889,12 +889,12 @@
     <string name="already_has">已有%1$d名高端男士加入</string>
     <string name="forver_time">/永久</string>
     <string name="higher_man_verify">高端精英认证</string>
-    <string name="privacy_t1">尊敬的用户，欢迎使用积糖。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了</string>
+    <string name="privacy_t1">尊敬的用户，欢迎使用奢媛。\n依据最新法律法规、监管政策等要求及业务实际情况，更新了</string>
     <string name="privacy_t2">，特此向您提示：\n\n</string>
-    <string name="privacy_t3">请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用积糖相关产品及服务。\n</string>
+    <string name="privacy_t3">请您务必仔细阅读并理解相关条款内容，在确认充分理解的前提下同意后使用奢媛相关产品及服务。\n</string>
     <string name="privacy_t7">为了向您提供一键分享服务，我们的产品集成友盟+ U-Share SDK，友盟+SDK需要收集您的设备Mac地址、唯一设备识别码（IMEI/android ID/IDFA/OPENUDID/GUID、SIM 卡 IMSI 信息）以提供统计分析服务，并通过地理位置校准报表数据准确性，提供基础反作弊能力。\n</string>
     <string name="privacy_t8">点击同意即代表您已经阅读并同意</string>
-    <string name="privacy_t4">，如果您不同意，将可能影响使用积糖产品和服务。\n\n我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。</string>
+    <string name="privacy_t4">，如果您不同意，将可能影响使用奢媛产品和服务。\n\n我们将按照法律法规要求，采取相应安全保护措施，尽力保护您的个人信息安全。</string>
     <string name="privacy_t5">您需要同意《</string>
     <string name="privacy_t6">》才能继续使用我们的产品及服务</string>
     <string name="warming_notice">温馨提示</string>
@@ -938,7 +938,7 @@
     <string name="you_have_published_toady">你今天已经发布过活动了，为了活动的有效性请明日再试，我们会为你保留最新发布的活动信息</string>
     <string name="tourist_title">你目前是游客</string>
     <string name="register_now">立即注册登录</string>
-    <string name="register_in">此为注册用户功能\n加入积糖，与 $s%d 位糖宝达成联系</string>
+    <string name="register_in">此为注册用户功能\n加入奢媛，与 $s%d 位糖宝达成联系</string>
     <string name="share_qq_zone">QQ空间</string>
     <string name="upload_clear_pic">上传清晰的本人照片作为头像会极大提高匹配率</string>
     <string name="take_picture">拍摄</string>
@@ -1171,7 +1171,7 @@
     <string name="find_history">查找聊天记录</string>
     <string name="clear_history">清空聊天记录</string>
     <string name="reported">投诉举报</string>
-    <string name="join_sugartown">加入积糖</string>
+    <string name="join_sugartown">加入奢媛</string>
     <string name="create_profile_start_date">创建个人资料，开始你的约会</string>
     <string name="login_with_phone">手机号</string>
     <string name="login_with_wechat">微信</string>
@@ -1241,7 +1241,7 @@
     <string name="initiated_event_registration">发起了活动报名</string>
     <string name="view_event">查看活动</string>
     <string name="homepage">个人主页</string>
-    <string name="sugar_gift">积糖礼物</string>
+    <string name="sugar_gift">奢媛礼物</string>
     <string name="unlock_contact">解锁联系方式</string>
     <string name="edit_tag">编辑兴趣</string>
     <string name="single_take_long_record">单击拍照，长按录像</string>
@@ -1259,15 +1259,15 @@
     <string name="paypal_notice">alert:After confirmation, the payment will be made to the designated account. Our company will not be responsible for failure to receive the payment due to errors in filling</string>
     <string name="contact_whatsapp">whatsapp</string>
     <string name="contact_skype">skype</string>
-    <string name="input_channel_you_know_us">请输入你看到积糖的渠道</string>
-    <string name="what_are_you_looking_for">你想在积糖寻求什么关系</string>
+    <string name="input_channel_you_know_us">请输入你看到奢媛的渠道</string>
+    <string name="what_are_you_looking_for">你想在奢媛寻求什么关系</string>
     <string name="wechat_receive_message">微信接收消息通知</string>
-    <string name="jitang_wechat_public">积糖微信公众账号</string>
-    <string name="focus_sugartown">开启微信推送需要先关注积糖微信公众号\n 请保存二维码并使用微信扫一扫关注绑定</string>
+    <string name="jitang_wechat_public">奢媛微信公众账号</string>
+    <string name="focus_sugartown">开启微信推送需要先关注奢媛微信公众号\n 请保存二维码并使用微信扫一扫关注绑定</string>
     <string name="save_and_goto_wechat">保存并前往微信扫码</string>
     <string name="Binded">已绑定</string>
     <string name="Bind_now">去绑定</string>
-    <string name="sign_up">加入积糖</string>
+    <string name="sign_up">加入奢媛</string>
     <string name="wechat_push">微信推送</string>
     <string name="empty_contact1">通讯录为空</string>
     <string name="today">今天</string>
@@ -1290,8 +1290,8 @@
     <string name="gold_experience_card">黄金会员\n体验卡</string>
     <string name="expire_time">有效时间：%1$s</string>
     <string name="they_greet_you">她们和你打了招呼</string>
-    <string name="to_be_vip_see_them">成为积糖会员，看看她们都是谁</string>
-    <string name="tobe_vip">成为积糖会员</string>
+    <string name="to_be_vip_see_them">成为奢媛会员，看看她们都是谁</string>
+    <string name="tobe_vip">成为奢媛会员</string>
     <string name="visit_cnt">来访次数</string>
     <string name="error_configuration">配置错误</string>
 
