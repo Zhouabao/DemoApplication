@@ -194,6 +194,8 @@ class UserCenterFragment : BaseMvpFragment<UserCenterPresenter>(), UserCenterVie
             malePowerLl.isVisible = false
         }
 
+        //是否显示红包
+        shareRedBtn.isVisible = userInfoBean?.red_packet_btn==true
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
 

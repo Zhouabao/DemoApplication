@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.utils
 
 import com.qiniu.android.common.FixedZone
+import com.qiniu.android.common.Zone
 import com.qiniu.android.storage.Configuration
 import com.qiniu.android.storage.UploadManager
 
@@ -19,7 +20,6 @@ object QNUploadManager {
             .connectTimeout(10)           // 链接超时。默认10秒
             .useHttps(true)               // 是否使用https上传域名
             .responseTimeout(60)          // 服务器响应超时。默认60秒
-            .zone(FixedZone.zone0)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
             .build()
     }
 

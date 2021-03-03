@@ -252,7 +252,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void updateApproveEvent(UpdateApproveEvent event) {
-        getTargetInfo(sessionId);
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID))
+            getTargetInfo(sessionId);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -617,6 +618,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     /**
      * 上传媒体文件到七牛
+     *
      * @param content
      * @param target_accid
      * @param imageUrl
