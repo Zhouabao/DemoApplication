@@ -44,6 +44,8 @@ class UpdateAccostListEvent()
 
 class HideContactLlEvent()
 
+class HideChatLlEvent()
+
 
 class UpdateStarEvent(val star: Boolean)
 

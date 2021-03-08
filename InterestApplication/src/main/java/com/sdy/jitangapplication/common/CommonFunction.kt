@@ -309,8 +309,11 @@ object CommonFunction {
                             startToFootPrice(context1)
                         }
                         206 -> {
-                            if (ActivityUtils.getTopActivity() !is ChatActivity)
+                            if (ActivityUtils.getTopActivity() !is ChatActivity) {
                                 ChatActivity.start(context1, target_accid)
+                            } else {
+                                EventBus.getDefault().post(HideChatLlEvent())
+                            }
                         }
                         207 -> { //女性对男性搭讪
                             //随机发送一条招呼文本消息

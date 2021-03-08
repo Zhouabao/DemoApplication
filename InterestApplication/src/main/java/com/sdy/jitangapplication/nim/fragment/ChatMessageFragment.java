@@ -47,6 +47,7 @@ import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.event.HideChatLlEvent;
 import com.sdy.jitangapplication.event.HideContactLlEvent;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.event.StarEvent;
@@ -265,6 +266,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void hideContactLlEvent(HideContactLlEvent event) {
         unlockContactLl.setVisibility(View.GONE);
         nimBean.set_unlock_contact(true);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void hideChatLlEvent(HideChatLlEvent event) {
+        nimBean.setLockbtn(false);
+        showLockChat();
 
     }
 
@@ -535,13 +543,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else {
             verifyLl.setVisibility(View.INVISIBLE);
         }
-
-        // 显示糖果解锁聊天
-        if (nimBean.getLockbtn()) {
-            unlockChatLl.setVisibility(View.VISIBLE);
-        } else {
-            unlockChatLl.setVisibility(View.GONE);
-        }
+        showLockChat();
 
         // 显示解锁联系方式
         // 0没有留下联系方式 1 电话 2 微信 3 qq 99隐藏
@@ -613,6 +615,15 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         }
 
+    }
+
+    private void showLockChat() {
+        // 显示糖果解锁聊天
+        if (nimBean.getLockbtn()) {
+            unlockChatLl.setVisibility(View.VISIBLE);
+        } else {
+            unlockChatLl.setVisibility(View.GONE);
+        }
     }
 
 
