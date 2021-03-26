@@ -140,7 +140,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     heights
                 } else {
                     item.child
-                }
+                }, position
             )
         }
 
@@ -177,13 +177,26 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     choosePosition = vh.layoutPosition
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.CAMERA)) ||
-                                !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                        (!PermissionUtils.isGranted(
+                            *PermissionConstants.getPermissions(
+                                PermissionConstants.CAMERA
+                            )
+                        ) ||
+                                !PermissionUtils.isGranted(
+                                    *PermissionConstants.getPermissions(
+                                        PermissionConstants.STORAGE
+                                    )
+                                ))
                     ) {
                         PermissionUtils.permission(PermissionConstants.CAMERA)
                             .callback(object : PermissionUtils.SimpleCallback {
                                 override fun onGranted() {
-                                    if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                                    if (!PermissionUtils.isGranted(
+                                            *PermissionConstants.getPermissions(
+                                                PermissionConstants.STORAGE
+                                            )
+                                        )
+                                    )
                                         PermissionUtils.permission(PermissionConstants.STORAGE)
                                             .callback(object : PermissionUtils.SimpleCallback {
                                                 override fun onGranted() {
@@ -269,38 +282,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userBirth.text = "${data.birth}/${data.constellation}"
 
 
-
             //	新增字段 认证状态 0 未认证且无视频 1 认证通过的 2 认证中 3认证不通过-需要更换头像认证
             //verifyNotice.isVisible = data.mv_faced == 3
             //updateVerifyState(data.mv_faced)
 
-            if (data.score_rule != null) {
-                var scorePhoto = 0
-                if (!data.photos_wall.isNullOrEmpty()) {
-                    scorePhoto = (data.photos_wall.size - 1) * data.score_rule.photo
-                }
-                setScroeProgress(scorePhoto)
-            }
 
-            if (!data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()) {
-                userNickSign.text = "${data.sign}"
-                userScoreAboutMe.isVisible = false
-            } else
-                userScoreAboutMe.isVisible = true
-
-            updateScoreStatus(
-                userScoreAboutMe,
-                data.score_rule?.about ?: 0,
-                !data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()
-            )
             moreInfoAdapter.setNewData(data.answer_list)
-            for (data in moreInfoAdapter.data) {
-                updateScoreStatus(
-                    null,
-                    data.point,
-                    data.find_tag != null && data.find_tag!!.id != 0
-                )
-            }
+
 
             for (photoWallBean in (data.photos_wall ?: mutableListOf()).withIndex()) {
                 photoWallBean.value?.type = MyPhotoBean.PHOTO
@@ -331,6 +319,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     scrollToPosition(0, scrollUser.getChildAt(0).height)
                 }, 100L)
             }
+            setScroeProgress()
 
         }
     }
@@ -419,13 +408,26 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 choosePosition = 0
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.CAMERA)) ||
-                            !PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE)))
+                    (!PermissionUtils.isGranted(
+                        *PermissionConstants.getPermissions(
+                            PermissionConstants.CAMERA
+                        )
+                    ) ||
+                            !PermissionUtils.isGranted(
+                                *PermissionConstants.getPermissions(
+                                    PermissionConstants.STORAGE
+                                )
+                            ))
                 ) {
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(*PermissionConstants.getPermissions(PermissionConstants.STORAGE))) {
+                                if (!PermissionUtils.isGranted(
+                                        *PermissionConstants.getPermissions(
+                                            PermissionConstants.STORAGE
+                                        )
+                                    )
+                                ) {
                                 }
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
@@ -473,7 +475,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.removeAt(position)
             adapter.notifyDataSetChanged()
             refreshLayout()
-            setScroeProgress(-data!!.score_rule!!.photo)
+            setScroeProgress()
             dialog.dismiss()
 
         }
@@ -631,7 +633,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.add(result)
             adapter.notifyDataSetChanged()
             refreshLayout()
-            updateScoreStatus(score = data!!.score_rule!!.photo, update = true)
+            setScroeProgress()
         }
     }
 
@@ -731,13 +733,16 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 105 -> {//关于我
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
+                    this.data!!.sign = data?.getStringExtra("content") ?: ""
 
-                    if (userScoreAboutMe.isVisible)
-                        updateScoreStatus(
-                            userScoreAboutMe,
-                            this.data!!.score_rule?.about ?: 0,
-                            update = true
-                        )
+//                    if (userScoreAboutMe.isVisible)
+//                        updateScoreStatus(
+//                            userScoreAboutMe,
+//                            this.data!!.score_rule?.about ?: 0,
+//                            update = true
+//                        )
+                    setScroeProgress()
+                    userScoreAboutMe.isVisible = false
                     isChange = true
                     checkSaveEnable()
                 }
@@ -770,6 +775,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         super.onDestroy()
         scrollUser.clearAnimation()
     }
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnBack -> {
@@ -988,29 +994,45 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 //        }
 
         if (update == true)
-            setScroeProgress(score)
+            setScroeProgress()
 
 
     }
 
 
-    private var totalGetScore = 0//用户资料目前总的得分
-    private fun setScroeProgress(score: Int) {
+    private fun setScroeProgress(score: Int = 0) {
         val params = userFinishProgress.layoutParams as RelativeLayout.LayoutParams
         params.leftMargin = SizeUtils.dp2px(70F)
         params.rightMargin = SizeUtils.dp2px(15F)
         userFinishProgress.layoutParams = params
-
-
-        totalGetScore += score //汇总每次的得分
-        var progress =
-            (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
-        userScore20.text = "${progress}%"
-
-        if (!UserManager.isUserVip()) {
-            progress = (progress * 0.8).toInt()
+        //汇总每次的得分
+        var totalGetScore = 0
+        //相册的分数
+        if (!data!!.photos_wall.isNullOrEmpty()) {
+            totalGetScore += (data!!.photos_wall.size - 2) * data!!.score_rule.photo
+        }
+        //个签分数
+        if (!data!!.sign.isNullOrEmpty() && data!!.sign.trim().isNotEmpty()) {
+            userNickSign.text = data!!.sign
+            userScoreAboutMe.isVisible = false
+            totalGetScore += data!!.score_rule.about
+        } else {
+            userScoreAboutMe.isVisible = true
+            userScoreAboutMe.tvAddScoreSmile.text = "+${data!!.score_rule.about}"
+        }
+        //更多信息分數
+        for (data in moreInfoAdapter.data) {
+           if (data!!.find_tag != null && data.find_tag!!.title.isNotEmpty()) {
+                totalGetScore += data.point
+            }
         }
 
+
+        var progress = (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
+        userScore20.text = "${progress}%"
+        if (!UserManager.isUserVip() && UserManager.getGender() == 1) {
+            progress = (progress * 0.8).toInt()
+        }
         if (Build.VERSION.SDK_INT >= 24) {
             userFinishProgress.setProgress(progress, true)
         } else {
@@ -1018,18 +1040,15 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
 
         Log.d("setScroeProgress", "${userFinishProgress.progress}")
-
         val translate = ObjectAnimator.ofFloat(
             userScore20, "translationX",
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15 * 2) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
         )
         translate.duration = 100
         translate.start()
 
 
-
     }
-
 
 
     /**
@@ -1042,7 +1061,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         title: String,
         param: String,
         findTagBean: FindTagBean? = null,
-        optionsItems1: MutableList<FindTagBean>
+        optionsItems1: MutableList<FindTagBean>,
+        indexOfData: Int
     ) {
         //条件选择器
         val pvOptions = OptionsPickerBuilder(this,
@@ -1052,8 +1072,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 else
                     moreInfoAdapter.params[param] = optionsItems1[options1].id
                 textview.text = "${optionsItems1[options1].title}"
-                if (scoreView != null && scoreView.isVisible)
-                    updateScoreStatus(scoreView, score, update = true)
+//                if (scoreView != null && scoreView.isVisible)
+//                updateScoreStatus(scoreView, score, update = true)
+                moreInfoAdapter.data[indexOfData].find_tag =
+                    FindTagBean(optionsItems1[options1].id, optionsItems1[options1].title)
+                setScroeProgress()
                 saveBtn.isEnabled = true
             })
             .setSubmitText(getString(R.string.ok))
