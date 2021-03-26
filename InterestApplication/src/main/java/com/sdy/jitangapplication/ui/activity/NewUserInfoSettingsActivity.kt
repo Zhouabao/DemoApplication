@@ -734,13 +734,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
                     this.data!!.sign = data?.getStringExtra("content") ?: ""
-
-//                    if (userScoreAboutMe.isVisible)
-//                        updateScoreStatus(
-//                            userScoreAboutMe,
-//                            this.data!!.score_rule?.about ?: 0,
-//                            update = true
-//                        )
                     setScroeProgress()
                     userScoreAboutMe.isVisible = false
                     isChange = true
@@ -784,7 +777,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             R.id.userScore20 -> {
                 ReminderScoreDialog(this, 20).show()
-//                userScore20.setImageResource(R.drawable.icon_twenty_click)
             }
             R.id.userNickName -> {//昵称
                 startActivityForResult<NickNameActivity>(
@@ -900,8 +892,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             dialog.confirm.onClick {
                 updatePhotos(1)
                 dialog.dismiss()
-//                setResult(Activity.RESULT_OK)
-//                super.onBackPressed()
             }
         } else {
             setResult(Activity.RESULT_OK)
@@ -919,85 +909,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
     }
 
-
-    /*------------------更新分数--------------------*/
-    /**
-     * 更新添加分数的状态
-     * 资料新增后就要改变状态实现动画
-     */
-    private fun updateScoreStatus(view: View? = null, score: Int, update: Boolean? = false) {
-        //会员的时候不显示添加分数
-        view?.isVisible = false
-//        if (view != null) {
-//            view.tvAddScoreSmile.text = "+$score"
-//            //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
-//            if (view.isVisible && update == true) {
-//                val translateAnimationRight = TranslateAnimation(
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0f,
-//                    TranslateAnimation.ABSOLUTE,
-//                    (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0f,
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0F
-//
-//                )
-//                translateAnimationRight.duration = 500
-//                translateAnimationRight.fillAfter = true
-//                translateAnimationRight.interpolator = LinearInterpolator()
-//
-//                val translateAnimationTop = TranslateAnimation(
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0f,
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0F,
-//                    TranslateAnimation.RELATIVE_TO_SELF,
-//                    0f,
-//                    TranslateAnimation.RELATIVE_TO_PARENT,
-//                    -0.7F
-//
-//                )
-//                translateAnimationTop.duration = 500
-//                translateAnimationTop.fillAfter = true
-//                translateAnimationTop.interpolator = DecelerateInterpolator()
-//                val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
-//                scaleAnimation.duration = 500
-//                scaleAnimation.fillAfter = true
-//                val alphaAnimation = AlphaAnimation(0F, 1F)
-//                alphaAnimation.duration = 500
-//                alphaAnimation.fillAfter = true
-//                val animationSet = AnimationSet(true)
-//                animationSet.addAnimation(translateAnimationTop)
-//                animationSet.addAnimation(scaleAnimation)
-//                animationSet.addAnimation(alphaAnimation)
-//                animationSet.fillAfter = true
-//
-//                translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
-//                    override fun onAnimationRepeat(p0: Animation?) {
-//
-//                    }
-//
-//                    override fun onAnimationEnd(p0: Animation?) {
-//                        view.postDelayed({
-//                            view.isVisible = false
-//                        }, 200)
-//                    }
-//
-//                    override fun onAnimationStart(p0: Animation?) {
-//                        view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
-//                        view.tvAddScoreSmile.startAnimation(animationSet)
-//                    }
-//                })
-//                view.ivAddScoreSmile.startAnimation(translateAnimationRight)
-//            }
-//        }
-
-        if (update == true)
-            setScroeProgress()
-
-
-    }
 
 
     private fun setScroeProgress(score: Int = 0) {
@@ -1017,7 +928,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userScoreAboutMe.isVisible = false
             totalGetScore += data!!.score_rule.about
         } else {
-            userScoreAboutMe.isVisible = true
+            userScoreAboutMe.isVisible = false
             userScoreAboutMe.tvAddScoreSmile.text = "+${data!!.score_rule.about}"
         }
         //更多信息分數
@@ -1072,8 +983,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 else
                     moreInfoAdapter.params[param] = optionsItems1[options1].id
                 textview.text = "${optionsItems1[options1].title}"
-//                if (scoreView != null && scoreView.isVisible)
-//                updateScoreStatus(scoreView, score, update = true)
                 moreInfoAdapter.data[indexOfData].find_tag =
                     FindTagBean(optionsItems1[options1].id, optionsItems1[options1].title)
                 setScroeProgress()
@@ -1139,7 +1048,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     SimpleDateFormat("yyyy-MM-dd")
                 )}/${getZodiacEn(TimeUtils.getZodiac(date))}"
             savePersonalParams["birth"] = TimeUtils.date2Millis(date) / 1000L
-//            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
             isChange = true
             checkSaveEnable()
         })
