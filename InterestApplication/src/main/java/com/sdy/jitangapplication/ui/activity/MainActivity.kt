@@ -71,10 +71,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         const val POSITION_MESSAGE = 3
         const val POSITION_MINE = 4
 
-        fun start(context: Context, intent: Intent) {
-            context.startActivity(intent.setClass(context, MainActivity::class.java))
-        }
-
         fun start(context: Context, clearTop: Boolean = true) {
             if (clearTop)
                 context.startActivity(context.intentFor<MainActivity>().clearTask().newTask())
@@ -503,18 +499,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }
+        super.onBackPressed()
 
-        val secondTime = System.currentTimeMillis()
-        if (secondTime - firstClickTime > 2000) {
-            CommonFunction.toast(getString(R.string.click_to_exit))
-            firstClickTime = secondTime
-        } else {
-            AppUtils.exitApp()
-//            ActivityUtils.finishAllActivities()
-//            AppManager.instance.finishAllActivity()
-//            System.exit(0)//正常退出
-//            AppManager.instance.exitApp(this)
-        }
+//        val secondTime = System.currentTimeMillis()
+//        if (secondTime - firstClickTime > 2000) {
+//            CommonFunction.toast(getString(R.string.click_to_exit))
+//            firstClickTime = secondTime
+//        } else {
+//            AppUtils.exitApp()
+////            ActivityUtils.finishAllActivities()
+////            AppManager.instance.finishAllActivity()
+////            System.exit(0)//正常退出
+////            AppManager.instance.exitApp(this)
+//        }
     }
 
 

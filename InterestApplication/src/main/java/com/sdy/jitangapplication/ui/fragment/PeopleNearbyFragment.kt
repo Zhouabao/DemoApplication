@@ -445,6 +445,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
 
     private lateinit var progressBean: SweetProgressBean
     private var isHoney = false
+    private var showCompleteInfo = false
     override fun nearlyIndexResult(success: Boolean, nearBean: NearBean?) {
         if (success) {
             //如果没有显示过协议
@@ -453,6 +454,9 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(requireActivity(), nearBean, indexRecommends).show()
+                } else if (!showCompleteInfo && nearBean!!.complete_percent < nearBean.complete_percent_normal) {
+                    CompleteInfoDialog(activity!!, nearBean, indexRecommends).show()
+                    showCompleteInfo = true
                 } else if (nearBean?.want_step_man_pull == true) {
                     ChooseCharacterDialog(requireContext()).show()
                 } else if (!indexRecommends?.list.isNullOrEmpty() && indexRecommends?.today_pull == false && !UserManager.showIndexRecommend) {

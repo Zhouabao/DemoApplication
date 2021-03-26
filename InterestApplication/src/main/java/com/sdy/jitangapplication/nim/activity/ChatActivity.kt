@@ -89,11 +89,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                         NIMClient.getService(MsgService::class.java)
                             .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         EventBus.getDefault().post(UpdateContactBookEvent())
-                        val intent = Intent()
-                        intent.setClass(this@ChatActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                        MainActivity.start(this)
                     }
                 }
                 Log.d(

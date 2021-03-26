@@ -244,7 +244,7 @@ class OpenVipActivity : BaseActivity() {
                 if (UserManager.getGender() == 1) {
                     startActivity<RegisterInfoActivity>()
                 } else
-                    startActivity<MainActivity>()
+                    MainActivity.start(this,false)
             }
         }
 

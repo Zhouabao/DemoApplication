@@ -729,7 +729,7 @@ object UserManager {
                 //跳到主页
                 //保存个人信息
                 saveUserInfo(data)
-                context.startActivity<MainActivity>()
+                MainActivity.start(context)
             }
         } else if (data.userinfo.gender == 2) {//女生流程：性别、填写个人信息、活体、更多配对、更多关系、充值VIP、落地
             data.userinfo.gender.let { saveGender(it) }
@@ -760,7 +760,7 @@ object UserManager {
             } else {
                 //跳到主页
                 saveUserInfo(data)
-                context.startActivity<MainActivity>()
+                MainActivity.start(context)
             }
         }
     }
@@ -773,7 +773,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("birth", moreMatchBean?.birth ?: 0)
             SPUtils.getInstance(Constants.SPNAME)
                 .put("people_amount", moreMatchBean?.people_amount ?: 0)
-            context.startActivity<MainActivity>()
+            MainActivity.start(context)
         } else {
             context.startActivity<GetMoreMatchActivity>("morematchbean" to moreMatchBean)
         }

@@ -218,7 +218,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             EventBus.getDefault().post(UpdateMyLabelEvent())
             EventBus.getDefault().post(UserCenterEvent(true))
             if (from == FROM_REGISTER) {
-                startActivity<MainActivity>()
+                MainActivity.start(this)
                 finish()
             }
             finish()
