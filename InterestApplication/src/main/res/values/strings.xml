@@ -995,7 +995,7 @@
     <string name="tab_recommend">推荐</string>
     <string name="tab_label">兴趣</string>
     <string name="tab_nearby">附近</string>
-    <string name="publish_progress">正在发布%1$d  \%</string>
+    <string name="publish_progress">正在发布%1$d</string>
     <string name="publish_square_success">动态发布成功!</string>
     <string name="re_edit_obey">内容违规请重新编辑</string>
     <string name="edit">编辑</string>

@@ -279,8 +279,10 @@ class ContentFragment : BaseMvpFragment<ContentPresenter>(), ContentView {
                 btnClose.isVisible = false
                 uploadProgressBar.progress =
                     (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
-                uploadProgressTv.text =
-                    getString(R.string.publish_progress, uploadProgressBar.progress)
+                uploadProgressTv.text = getString(
+                    R.string.publish_progress,
+                    uploadProgressBar.progress
+                )
                 uploadFl.isVisible = true
             } else {
                 UserManager.cancelUpload = true

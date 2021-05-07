@@ -454,7 +454,7 @@ class PeopleNearbyFragment(var type: Int = TYPE_RECOMMEND) :
             if (!(UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) && type == TYPE_RECOMMEND) {
                 if (!UserManager.getAlertProtocol()) {
                     PrivacyDialog(requireActivity(), nearBean, indexRecommends).show()
-                } else if (!showCompleteInfo && nearBean!!.complete_percent < nearBean.complete_percent_normal) {
+                } else if (type == TYPE_RECOMMEND && !showCompleteInfo && nearBean!!.complete_percent < nearBean.complete_percent_normal) {
                     CompleteInfoDialog(activity!!, nearBean, indexRecommends).show()
                     showCompleteInfo = true
                 } else if (nearBean?.want_step_man_pull == true) {
